@@ -475,7 +475,29 @@ paths {
             }
         }
     }
-    ["/api/adapters/{id}"] {
+    ["/api/adapters"] {
+        get {
+            summary = "Get all custom adapters"
+            description = "Get an adapter with the given id"
+            operationId = "getAdapterById"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetAdaptersResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/adapter/{id}"] {
         parameters {
             new {
                 name = "id"
@@ -556,7 +578,7 @@ paths {
             }
         }
     }
-    ["/api/adapters/upload"] {
+    ["/api/adapter/upload"] {
         parameters {
           new {
             name = "id"
@@ -595,7 +617,7 @@ paths {
             }
         }
     }
-    ["/api/adapters/{lang}"] {
+    ["/api/adapter/{lang}"] {
         get {
             summary = "Get adapters by language"
             operationId = "getAdaptersByLang"

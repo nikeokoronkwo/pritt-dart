@@ -3,11 +3,7 @@
   "private": "true",
   "description": "",
   "scripts": {
-    "schema": "pkl eval config/main.pkl --project-dir config -f yaml -o config/out/openapi.yaml",
-    "schema:gen": "deno run --allow-run --allow-read --allow-write scripts/schema.ts --no-go-gen"
+    "schema": "pkl eval config/main.pkl --project-dir config -f yaml -o config/out/openapi.yaml"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "packageManager": "pnpm@9.15.2+sha256.022309bb31359142b65bfa889e0406d2eebd5acfffca47e6944acf29d9d6a66b"
 }

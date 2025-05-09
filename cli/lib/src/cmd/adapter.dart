@@ -1,5 +1,7 @@
 
 
+import 'package:args/command_runner.dart';
+
 class AdapterCommand extends Command {
   @override
   String name = "adapter";

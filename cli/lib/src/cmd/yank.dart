@@ -11,5 +11,13 @@ class YankCommand extends PrittCommand {
   String description = "Yank ('remove') a package from Pritt";
 
   @override
-  FutureOr? run() {}
+  FutureOr? run() {
+    // get package name to remove
+
+    // get user info if logged in
+
+    // check for package availability /api/package/{name}
+
+    // if package available, yank
+  }
 }

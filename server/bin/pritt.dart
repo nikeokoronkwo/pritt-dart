@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:pritt_server/pritt_server.dart';
-import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 
 var app = createRouter();
 
-void main(List<String> args) {
+void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 
@@ -18,6 +17,6 @@ void main(List<String> args) {
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final server = await serve(handler, ip, port);
+  final server = await io.serve(handler, ip, port);
   print('Server listening on port ${server.port}');
 }

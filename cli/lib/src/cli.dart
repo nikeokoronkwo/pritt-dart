@@ -1,3 +1,5 @@
+import 'package:pritt_cli/src/cmd/adapter.dart';
+
 import 'cli/base.dart';
 
 import 'cmd/add.dart';
@@ -21,6 +23,7 @@ Future run(List<String> args) async {
     ..addCommand(PackageCommand())
     ..addCommand(PublishCommand())
     ..addCommand(YankCommand())
+    ..addCommand(AdapterCommand())
     ..run(args);
   return runner;
 }

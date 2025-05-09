@@ -306,7 +306,21 @@ paths:
       required: true
       schema:
         type: string
-  '/api/adapters/{id}':
+  /api/adapters:
+    get:
+      summary: Get all custom adapters
+      description: Get an adapter with the given id
+      operationId: getAdapterById
+      responses:
+        '200':
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAdaptersResponse'
+      security:
+      - bearerAuth: []
+  '/api/adapter/{id}':
     get:
       summary: Get an adapter with the given id
       description: Get an adapter with the given id
@@ -359,7 +373,7 @@ paths:
       required: true
       schema:
         type: string
-  /api/adapters/upload:
+  /api/adapter/upload:
     post:
       summary: Upload an adapter to the Pritt Server
       description: This API Endpoint is used to upload the tarball for the processed adapter
@@ -385,7 +399,7 @@ paths:
       required: true
       schema:
         type: string
-  '/api/adapters/{lang}':
+  '/api/adapter/{lang}':
     get:
       summary: Get adapters by language
       description: Get the adapters for a particular language
@@ -442,6 +456,11 @@ components:
     GetAdaptersByLangResponse:
       type: object
       title: schema
+      properties: {}
+      additionalProperties: false
+    GetAdaptersResponse:
+      type: object
+      title: GetAdaptersResponse
       properties: {}
       additionalProperties: false
     GetPackageByVersionResponse:

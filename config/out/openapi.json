@@ -53,7 +53,13 @@
           },
           "404": {
             "description": "Not Found Response",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
           }
         }
       },
@@ -100,12 +106,73 @@
           }
         ]
       },
+      "delete": {
+        "summary": "Yank an empty package",
+        "description": "This endpoint is for yanking packages from the pritt registry",
+        "operationId": "yankPackageByName",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/YankPackageRequest"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YankPackageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
       "parameters": [
         {
           "description": "The name of the package",
           "name": "name",
           "in": "path",
           "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "description": "The language associated with the package",
+          "name": "lang",
+          "in": "query",
+          "required": false,
           "schema": {
             "type": "string"
           }
@@ -125,6 +192,16 @@
                   "$ref": "#/components/schemas/GetPackageByVersionResponse"
                 },
                 "example": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
               }
             }
           }
@@ -163,6 +240,58 @@
                   "$ref": "#/components/schemas/UnauthorizedError"
                 },
                 "example": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Yank a version of a package ",
+        "description": "This endpoint is for yanking a published version of a package from the pritt registry",
+        "operationId": "yankPackageByNameAndVersion",
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YankPackageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Could not yank package as it is in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Could not yank package as it is in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
               }
             }
           }
@@ -249,7 +378,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
+                  "$ref": "#/components/schemas/NotFoundError"
                 },
                 "example": {}
               }
@@ -367,10 +496,200 @@
           }
         }
       ]
+    },
+    "/api/adapters": {
+      "get": {
+        "summary": "Get all custom adapters",
+        "description": "Get an adapter with the given id",
+        "operationId": "getAdapterById",
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdaptersResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/adapter/{id}": {
+      "get": {
+        "summary": "Get an adapter with the given id",
+        "description": "Get an adapter with the given id",
+        "operationId": "getAdapterById",
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdapterResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create or update an adapter with the given id",
+        "description": "Create or update an adapter with the given id",
+        "operationId": "addAdapterWithId",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdapterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddAdapterResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Yank an adapter with the given id",
+        "description": "Yank an adapter with the given id",
+        "operationId": "yankAdapterWithId",
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YankAdapterResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The id of the adapter",
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/api/adapter/upload": {
+      "post": {
+        "summary": "Upload an adapter to the Pritt Server",
+        "description": "This API Endpoint is used to upload the tarball for the processed adapter",
+        "operationId": "uploadAdapterWithToken",
+        "requestBody": {
+          "content": {
+            "application/gzip": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadAdapterResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "description": "The token id of the adapter used to identify the adapter",
+          "name": "id",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/api/adapter/{lang}": {
+      "get": {
+        "summary": "Get adapters by language",
+        "description": "Get the adapters for a particular language",
+        "operationId": "getAdaptersByLang",
+        "responses": {
+          "200": {
+            "description": "OK Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdaptersByLangResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddAdapterRequest": {
+        "type": "object",
+        "title": "schema",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "AddAdapterResponse": {
+        "type": "object",
+        "title": "schema",
+        "properties": {},
+        "additionalProperties": false
+      },
       "AddUserRequest": {
         "type": "object",
         "title": "AddUserRequest",
@@ -388,6 +707,24 @@
         "type": "object",
         "title": "Error",
         "description": "The generic error type returned from an invalid request\n\nMost of the time, this module may be used as is, but for special cases it is extended to provide more information or context in such applications",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "GetAdapterResponse": {
+        "type": "object",
+        "title": "schema",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "GetAdaptersByLangResponse": {
+        "type": "object",
+        "title": "schema",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "GetAdaptersResponse": {
+        "type": "object",
+        "title": "GetAdaptersResponse",
         "properties": {},
         "additionalProperties": false
       },
@@ -539,21 +876,60 @@
         "properties": {},
         "additionalProperties": false
       },
+      "UploadAdapterResponse": {
+        "type": "object",
+        "title": "schema",
+        "properties": {},
+        "additionalProperties": false
+      },
       "UploadPackageResponse": {
         "type": "object",
         "title": "UploadPackageResponse",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "YankAdapterResponse": {
+        "type": "object",
+        "title": "schema",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "YankPackageByVersionResponse": {
+        "type": "object",
+        "title": "YankPackageByVersionRequest",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "YankPackageRequest": {
+        "type": "object",
+        "title": "YankPackageRequest",
+        "description": "The schema of the request object for the add user endpoint `api/user/{id}`\n\nThe object gets important information such as necessary information for registering the user",
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "The version of the package"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "version"
+        ]
+      },
+      "YankPackageResponse": {
+        "type": "object",
+        "title": "YankPackageResponse",
+        "description": "The schema of the request object for the add user endpoint ``\n\nReturns the info about the yanked package",
         "properties": {},
         "additionalProperties": false
       }
     },
     "securitySchemes": {
       "bearerAuth": {
-        "type": "http",
+        "type": "apiKey",
         "description": "The request sent is authorized by a bearer issued to the user. \nThe token is sent in a header in the following format: `Authorization: Bearer {token}`",
         "name": "Authorization",
         "in": "header",
-        "scheme": "Bearer",
-        "bearerFormat": "APIKey"
+        "scheme": "Bearer"
       }
     }
   },
