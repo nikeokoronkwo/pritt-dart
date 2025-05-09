@@ -1,0 +1,3 @@
+module UnauthorizedError
+
+extends "../Error/schema.pkl"

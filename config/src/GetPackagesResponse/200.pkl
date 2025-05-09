@@ -1,0 +1,13 @@
+amends "./schema.pkl"
+
+import "../../lib/package.pkl"
+
+next_url = "https://example.com/foo"
+
+packages = new Listing {
+    new package.Package {
+        name = "pritt"
+        description = "The Pritt Package itself!"
+        latest = "0.1.0"
+    }
+}

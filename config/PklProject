@@ -1,0 +1,16 @@
+amends "pkl:Project"
+
+dependencies {
+  ["openapi-contrib"] {
+    uri = "package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1.0.3"
+  }
+  ["openapi"] {
+    uri = "package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2.1.2"
+  }
+  ["toml"] {
+    uri = "package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0"
+  }
+  ["go"] {
+    uri = "package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.8.0"
+  }
+}

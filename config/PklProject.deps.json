@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "resolvedDependencies": {
+    "package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1.0.3",
+      "checksums": {
+        "sha256": "da5191e7b92645424915695d3292aa9d11367e7e476e07d3e7515d6f070cae74"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2.1.2",
+      "checksums": {
+        "sha256": "ec41c96ec766b6cb945c504b7e459ac97f8169dffc32027b831b6aab77ba5bfe"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-go/pkl.golang@0": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-go/pkl.golang@0.8.0",
+      "checksums": {
+        "sha256": "75c7687642f5a2177c94ffa9546c2f1a00810c426698dcc7b4dc63d6c89c27f7"
+      }
+    },
+    "package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1": {
+      "type": "remote",
+      "uri": "projectpackage://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0",
+      "checksums": {
+        "sha256": "ab5ec52c453bda3db3b4cb7302a8700ddb4565febc532d5173c0b97e317785d1"
+      }
+    }
+  }
+}

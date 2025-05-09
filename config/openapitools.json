@@ -1,0 +1,9 @@
+{
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.10.0"
+  },
+  "packageName": "pritt-server-openapi",
+  "npmName": "@pritt/client",
+  "supportsES6": true
+}

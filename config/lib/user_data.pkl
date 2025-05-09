@@ -1,0 +1,15 @@
+@go.Package { name = "github.com/pritt/cli/config" }
+module UserDataConfigSchema
+
+import "@go/go.pkl"
+
+class UserMetadata {
+    /// The ID of the user, used to access the user's info 
+    id: String
+}
+
+/// The URL to the pritt instance being used
+instance: Uri
+
+/// Metadata information about a given user
+user: UserMetadata

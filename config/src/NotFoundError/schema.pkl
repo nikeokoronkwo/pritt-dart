@@ -1,0 +1,3 @@
+module NotFoundError
+
+extends "../Error/schema.pkl"

@@ -1,0 +1,388 @@
+/// The OpenAPI Spec for the Pritt Server
+amends "@openapi/Document.pkl"
+
+import "@openapi-contrib/SchemaGenerator.pkl"
+
+import* "./src/*/schema.pkl" as s
+import* "./src/*/200.pkl" as o
+import* "./src/*/404.pkl" as n
+import* "./src/*/401.pkl" as u
+
+local function typeRegex(name: String): Regex = Regex("./src/([A-Za-z]+)/" + name + ".pkl")
+
+local function transform(mapping: Mapping, regex: Regex): Mapping =
+    mapping.toMap()
+        .mapKeys((key, value) -> regex.findMatchesIn(key).map((it) -> it.groups[1].value).first)
+        .toMapping()
+
+local function transformSchema(mapping: Mapping, regex: Regex): Mapping =
+    mapping.toMap()
+        .mapKeys((key, value) -> regex.findMatchesIn(key).map((it) -> it.groups[1].value).first)
+        .mapValues((key, value) -> SchemaGenerator.generate(value))
+        .toMapping()
+
+local function schemaRef(name: String): Reference = new Reference {
+    `$ref` = "#/components/schemas/\(name)"
+}
+
+local schemaRegex = Regex("./src/([A-Za-z]+)/schema.pkl")
+
+local schemaMaps = transformSchema(s, schemaRegex)
+local oks = transform(o, typeRegex("200"))
+local notFounds = transform(n, typeRegex("404"))
+local unauthorizeds = transform(u, typeRegex("401"))
+
+info {
+    title = "Pritt OpenAPI Specification"
+    description = """
+    The Pritt OpenAPI specification used for integrating Pritt with its internal tools (i.e generating schemas for endpoints on the Rust Server and Frontends (CLI and Web)), 
+    as well as integrating with other tools.
+    """
+    version = "0.1.0"
+}
+
+security {
+    new {
+        ["bearerAuth"] {}
+    }
+}
+
+paths {
+    ["/api/packages"] {
+        get {
+            summary = "Get all packages from the Pritt Server"
+            operationId = "getPackages"
+            description = "This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackagesResponse")
+                            example = oks["GetPackagesResponse"]
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/package/{name}"] {
+        parameters {
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the package"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            operationId = "getPackageByName"
+            summary = "Get a package from the Pritt Server with the given name"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackageResponse")
+                            example = oks["GetPackageResponse"]
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+
+                    }
+                }
+            }
+        }
+        post {
+            summary = "Publish a package to the Pritt Server"
+            operationId = "publishPackage"
+            description = "This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed"
+            requestBody {
+                required = true
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("PublishPackageRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                            example = unauthorizeds["PublishPackageResponse"]
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/package/{name}/{version}"] {
+        parameters {
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the package"
+                schema {
+                    type = "string"
+                }
+            }
+            new {
+                name = "version"
+                `in` = "path"
+                required = true
+                description = "The version of the package"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            operationId = "getPackageByNameAndVersion"
+            summary = "Get a package from the Pritt Server with the given name and specified version"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackageByVersionResponse")
+                            example = oks["GetPackageByVersionResponse"]
+                        }
+                    }
+                }
+            }
+        }
+        post {
+            summary = "Publish a package to the Pritt Server with a specified version"
+            operationId = "publishPackageWithVersion"
+            description = "This endpoint is used for publishing new versions of existing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed. To publish a new package, use the `/api/package/{name}` POST"
+            requestBody {
+                required = true
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("PublishPackageByVersionRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageByVersionResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                            example = unauthorizeds["PublishPackageByVersionResponse"]
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/package/upload"] {
+        parameters {
+          new {
+            name = "id"
+            `in` = "query"
+            required = true
+            description = "The token id of the package used to identify the package"
+            schema {
+              type = "string"
+            }
+          }
+        }
+        description = "Upload a package to the Pritt Server: This API Endpoint is called after a subsequent call to /api/package/{name}(/{version})"
+        post {
+            summary = "Upload a package to the Pritt Server"
+            description = "This API Endpoint is used to upload the tarball for the package"
+            operationId = "uploadPackageWithToken"
+            requestBody {
+              required = true
+              content {
+                ["application/gzip"] {
+                    schema {
+                      type = "string"
+                      format = "binary"
+                    }
+                }
+              }
+            }
+            responses {
+              ["200"] {
+                description = "OK Response"
+                content {
+                  ["application/json"] {
+                    schema = schemaRef("UploadPackageResponse")
+                  }
+                }
+              }
+              ["401"] {
+                description = "Unauthorized Response"
+                content {
+                  ["application/json"] {
+                    schema = schemaRef("UnauthorizedError")
+                    example = unauthorizeds["UploadPackageResponse"]
+                  }
+                }
+              }
+              ["402"] {
+                description = "Token Expired"
+                content {
+                  ["application/json"] {
+                    schema = schemaRef("UnauthorizedError")
+                    example = transform(import*("./src/*/402.pkl"), typeRegex("402"))["UploadPackageResponse"]
+                  }
+                }
+              }
+              ["404"] {
+                description = "Not Found Response"
+                content {
+                  ["application/json"] {
+                    schema = schemaRef("UnauthorizedError")
+                    example = notFounds["UploadPackageResponse"]
+                  }
+                }
+              }
+            }
+            security {
+              new {
+                ["bearerAuth"] {}
+              }
+            }
+        }
+    }
+    ["/api/users"] {
+        get {
+            summary = "List users from the Pritt Server"
+            operationId = "getUsers"
+            responses {
+              ["default"] {
+                description = "Normal response"
+                content {
+                  ["application/json"] {
+                    schema = schemaRef("GetUsersResponse")
+                  }
+                }
+              }
+            }
+            security {
+              new {
+                ["bearerAuth"] {}
+              }
+            }
+        }
+    }
+    ["/api/user/{id}"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "path"
+                required = true
+                description = "The id of the user"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get a user from Pritt"
+            description = "Get user information from Pritt about a particular user given the user's id"
+            operationId = "getUserById"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetUserResponse")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+        }
+        put {
+            summary = "Add a new user to Pritt"
+            operationId = "addUserById"
+            requestBody {
+                required = true
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("AddUserRequest")
+                    }
+                }
+            }
+            responses {
+              ["200"] {
+                description = "OK Response"
+                content {
+                  ["application/json"] {
+                    schema = schemaRef("AddUserResponse")
+                  }
+                }
+              }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+}
+
+components {
+    schemas = schemaMaps
+    securitySchemes {
+        // TODO(https://github.com/apple/pkl-pantry/pull/91): Incorrect configuration to be fixed
+        ["bearerAuth"] {
+            name = "Authorization"
+            `in` = "header"
+            type = "http"
+            scheme = "Bearer"
+            bearerFormat = "APIKey"
+            description = """
+            The request sent is authorized by a bearer issued to the user. 
+            The token is sent in a header in the following format: `Authorization: Bearer {token}`
+            """
+        }
+    }
+}

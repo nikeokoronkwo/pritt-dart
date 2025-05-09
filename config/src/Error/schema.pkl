@@ -1,0 +1,4 @@
+/// The generic error type returned from an invalid request
+///
+/// Most of the time, this module may be used as is, but for special cases it is extended to provide more information or context in such applications
+open module Error

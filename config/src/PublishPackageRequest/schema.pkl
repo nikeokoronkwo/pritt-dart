@@ -1,0 +1,18 @@
+/// A request object to publish a given package
+module PublishPackageRequest
+
+import "../../lib/schema.pkl" as ConfigSchema
+import "../../lib/package.pkl"
+
+/// The name of the package to publish
+name: String
+
+/// The version of the package to publish
+version: package.Version
+
+/// The configuration info about the package
+config: Mapping<String, Any>
+
+/// The configuration file for the given project
+configFile: Uri
+

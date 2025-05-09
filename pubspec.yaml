@@ -1,0 +1,7 @@
+name: pritt_workspace
+publish_to: none
+environment:
+  sdk: ^3.6.0
+workspace:
+  - cli
+  - common

@@ -1,0 +1,29 @@
+@go.Package { name = "github.com/pritt/cli/utils" }
+module SchemaUtils
+
+import "pkl:semver"
+
+import "@go/go.pkl"
+
+typealias Version = String(semver.isValid(this))
+
+/// The base definition of a package
+///
+/// Used to represent schemas such as the `latest` and the types for `versions`
+open class ImplPackage {
+
+}
+
+/// Extension of this class for `api/packages`
+class GetSchemaPackage extends ImplPackage {
+
+}
+
+/// The major extension of this class
+class Package extends ImplPackage {
+    name: String
+
+    latest: String
+
+    description: String
+}

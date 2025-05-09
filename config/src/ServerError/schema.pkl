@@ -1,0 +1,7 @@
+/// A server error, returned in the case of a 500 Server Error
+///
+/// Most of the time this is not what we want, but it is here for the sake of completeness
+module ServerError
+
+extends "../Error/schema.pkl"
+
