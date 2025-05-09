@@ -9,3 +9,5 @@ deno.lock
 private
 
 .DS_Store
+
+config/out

@@ -639,6 +639,90 @@ paths {
             }
         }
     }
+    ["/api/auth/new"] {
+        description = "Create a new token used for authenticating/creating a new user"
+        post {
+            summary = "Create token for a user"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthResponse")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/auth/validate"] {
+        description = "Validate or authenticate a user, creating a user if needed"
+        parameters {
+          new {
+            name = "token"
+            `in` = "query"
+            required = true
+            description = "The token created from the `/api/auth`"
+            schema {
+              type = "string"
+            }
+          }
+        }
+        post {
+            summary = "Validte Authentication Response"
+            description = "Validate or authenticate a user, creating a user if needed"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthPollResponse")
+                        }
+                    }
+                }
+                ["405"] {
+                    description = "Expired Token Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ExpiredError")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/auth/status"] {
+        description = "Get the status of authentication for a user, usually used by the command line to poll"
+        post {
+            summary = "Get Authentication Status"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthPollResponse")
+                        }
+                    }
+                }
+                ["405"] {
+                    description = "Expired Token Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ExpiredError")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Could not find the token specified"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 components {

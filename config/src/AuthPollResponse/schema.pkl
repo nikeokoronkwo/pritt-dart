@@ -1,0 +1,19 @@
+module AuthPollResponse
+
+typealias PollStatus = "pending" | "success" | "error"
+
+status: PollStatus
+
+response: PollResponse?((this != null).implies(status != "pending") && (this is PollSuccessResponse).implies(status == "success"))
+
+class PollResponse {
+
+}
+
+class PollSuccessResponse extends PollResponse {
+
+}
+
+class PollErrorResponse extends PollResponse {
+    
+}

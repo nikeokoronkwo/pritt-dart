@@ -1,0 +1,6 @@
+module ExpiredError
+
+extends "../Error/schema.pkl"
+
+/// The time that the resource expired
+expired_time: String
