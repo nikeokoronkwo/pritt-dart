@@ -1,5 +1,3 @@
-
-
 /// Gets the current package information given the directory
 getPackage(String directory) {}
 
@@ -14,7 +12,7 @@ configureWorkspace(String directory) {
 
   // check if user is logged in
 
-  // if not logged in, 
+  // if not logged in,
 
   // configure for project
 }

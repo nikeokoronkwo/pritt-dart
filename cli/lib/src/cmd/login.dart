@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import '../cli/base.dart';
 
 class LoginCommand extends PrittCommand {

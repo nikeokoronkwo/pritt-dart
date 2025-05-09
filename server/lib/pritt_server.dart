@@ -1,5 +1,3 @@
-
-
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -12,11 +10,9 @@ Handler createRouter() {
     if (req.url.path == '/') return Response.ok('Server Active');
     return Response.notFound('Not Found');
   };
-  
+
   // the m
-  final cascade = Cascade()
-  .add(adapterHandler)
-  .add(app.call);
+  final cascade = Cascade().add(adapterHandler).add(app.call);
 
   return cascade.handler;
 }

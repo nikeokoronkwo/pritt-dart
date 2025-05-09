@@ -6,6 +6,4 @@ class UnauthorizedError extends RequestError {
   int errorCode = 401;
 }
 
-class ServerError extends RequestError {
-  
-}
+class ServerError extends RequestError {}

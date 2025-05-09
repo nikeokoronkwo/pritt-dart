@@ -1,9 +1,7 @@
-
-
 import '../../cli/base.dart';
 
 class PackageListCommand extends PrittCommand {
-  @override 
+  @override
   String name = "list";
 
   @override
@@ -12,6 +10,9 @@ class PackageListCommand extends PrittCommand {
   PackageListCommand() {
     argParser
       ..addOption('language', abbr: 'l', help: 'Filter by language')
-      ..addOption('output', abbr: 'o', help: 'Write as a JSON output to a file', valueHelp: 'file');
+      ..addOption('output',
+          abbr: 'o',
+          help: 'Write as a JSON output to a file',
+          valueHelp: 'file');
   }
 }

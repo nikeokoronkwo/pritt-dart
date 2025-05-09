@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import '../cli/base.dart';
 
 class PublishCommand extends PrittCommand {
@@ -13,8 +12,8 @@ class PublishCommand extends PrittCommand {
   @override
   FutureOr? run() {
     // get information about current package information
-    
-    // get user information and 
+
+    // get user information and
 
     // if no user information, log user in
 

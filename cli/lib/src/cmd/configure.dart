@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import '../cli/base.dart';
 
 class ConfigureCommand extends PrittCommand {
@@ -12,7 +11,5 @@ class ConfigureCommand extends PrittCommand {
       "Configures your project to be able to use its own package manager for installing packages from Pritt";
 
   @override
-  FutureOr? run() {
-    
-  }
+  FutureOr? run() {}
 }

@@ -1,11 +1,6 @@
+class CoreRegistryService {}
 
-class CoreRegistryService {
-  
-}
-
-enum CRSRequestType {
-  Meta, Archive
-}
+enum CRSRequestType { Meta, Archive }
 
 class CRSRequest {
   CRSRequestType requestType = CRSRequestType.Meta;
@@ -13,6 +8,4 @@ class CRSRequest {
 
 class CRSResponse {}
 
-class CRSException implements Exception {
-
-}
+class CRSException implements Exception {}

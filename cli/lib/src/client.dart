@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:pritt_cli/src/client/base.dart';
@@ -9,7 +7,9 @@ class PrittClient extends ApiClient implements PrittInterface {
   PrittClient({super.url});
 
   @override
-  FutureOr<Result<AddUserResponse, ServerError>> addUserById(AddUserRequest body, {required String id}) {
+  FutureOr<Result<AddUserResponse, ServerError>> addUserById(
+      AddUserRequest body,
+      {required String id}) {
     // TODO: implement addUserById
     throw UnimplementedError();
   }
@@ -21,7 +21,8 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion({required String name, required String version}) {
+  FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion(
+      {required String name, required String version}) {
     // TODO: implement getPackageByNameAndVersion
     throw UnimplementedError();
   }
@@ -33,7 +34,8 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<Result<GetUserResponse, NotFoundError>> getUserById({required String id}) {
+  FutureOr<Result<GetUserResponse, NotFoundError>> getUserById(
+      {required String id}) {
     // TODO: implement getUserById
     throw UnimplementedError();
   }
@@ -45,21 +47,25 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<Result<PublishPackageResponse, UnauthorizedError>> publishPackage(PublishPackageRequest body, {required String name}) {
+  FutureOr<Result<PublishPackageResponse, UnauthorizedError>> publishPackage(
+      PublishPackageRequest body,
+      {required String name}) {
     // TODO: implement publishPackage
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<PublishPackageByVersionResponse, UnauthorizedError>> publishPackageWithVersion(PublishPackageByVersionRequest body, {required String name, required String version}) {
+  FutureOr<Result<PublishPackageByVersionResponse, UnauthorizedError>>
+      publishPackageWithVersion(PublishPackageByVersionRequest body,
+          {required String name, required String version}) {
     // TODO: implement publishPackageWithVersion
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<UploadPackageResponse, UnauthorizedError>> uploadPackageWithToken(GZipContent body, {required String id}) {
+  FutureOr<Result<UploadPackageResponse, UnauthorizedError>>
+      uploadPackageWithToken(GZipContent body, {required String id}) {
     // TODO: implement uploadPackageWithToken
     throw UnimplementedError();
   }
-  
 }

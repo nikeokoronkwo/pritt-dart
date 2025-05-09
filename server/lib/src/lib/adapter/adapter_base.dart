@@ -1,17 +1,7 @@
+class AdapterResolveObject {}
 
+class AdapterResolve {}
 
-class AdapterResolveObject {
+class AdapterResult {}
 
-}
-
-class AdapterResolve {
-
-}
-
-class AdapterResult {
-
-}
-
-class AdapterException implements Exception {
-
-}
+class AdapterException implements Exception {}

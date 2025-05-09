@@ -1,4 +1,3 @@
-
 abstract class Content {
   /// The mime type of the given content
   String mime;

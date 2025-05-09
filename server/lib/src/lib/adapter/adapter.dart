@@ -1,5 +1,3 @@
-
-
 import 'adapter_base.dart';
 
 import '../crs/crs.dart';
@@ -48,5 +46,8 @@ class Adapter {
     required AdapterRequestFn request,
     required AdapterRetrieveFn retrieve,
     required AdapterReturnFn returnFn,
-  }) : _resolve = resolve, onRequest = request, onRetrieve = retrieve, onReturn = returnFn;
+  })  : _resolve = resolve,
+        onRequest = request,
+        onRetrieve = retrieve,
+        onReturn = returnFn;
 }
