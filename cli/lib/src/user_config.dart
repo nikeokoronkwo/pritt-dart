@@ -7,3 +7,9 @@ import 'package:json_annotation/json_annotation.dart';
 class UserCredentials {
   /// The URL logged in
 }
+
+UserCredentials? getUserCredentials() {}
+
+UserCredentials loginUser() {
+  throw UnimplementedError('User not implemented');
+}
