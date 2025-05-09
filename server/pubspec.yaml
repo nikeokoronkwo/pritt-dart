@@ -1,5 +1,7 @@
 name: pritt_server
 
+resolution: workspace
+
 environment:
   sdk: ^3.6.0
 

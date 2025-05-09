@@ -8,10 +8,15 @@ Handler createRouter() {
   final app = Router();
 
   // create handler for adapters
-  Handler adapterHandler 
+  Handler adapterHandler = (Request req) {
+    if (req.url.path == '/') return Response.ok('Server Active');
+    return Response.notFound('Not Found');
+  };
   
   // the m
-  final cascade = Cascade();
+  final cascade = Cascade()
+  .add(adapterHandler)
+  .add(app.call);
 
   return cascade.handler;
 }
