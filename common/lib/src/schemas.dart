@@ -35,3 +35,15 @@ class GetAdaptersResponse {}
 class AddAdapterRequest {}
 
 class YankAdapterResponse {}
+
+class AuthRequest {}
+
+class AuthResponse {}
+
+class AuthValidateRequest {}
+
+class AuthValidateResponse {}
+
+class AuthPollRequest {}
+
+class AuthPollResponse {}

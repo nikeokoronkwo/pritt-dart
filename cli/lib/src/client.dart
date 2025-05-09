@@ -115,4 +115,22 @@ class PrittClient extends ApiClient implements PrittInterface {
     // TODO: implement yankPackageByNameAndVersion
     throw UnimplementedError();
   }
+  
+  @override
+  FutureOr<AuthResponse> createAuthToken(AuthRequest body) {
+    // TODO: implement createAuthToken
+    throw UnimplementedError();
+  }
+  
+  @override
+  FutureOr<Result<AuthPollResponse, RequestError>> pollAuth(AuthPollRequest body, {required String id}) {
+    // TODO: implement pollAuth
+    throw UnimplementedError();
+  }
+  
+  @override
+  FutureOr<Result<AuthValidateResponse, RequestError>> validateAuth(AuthValidateRequest body, {required String id}) {
+    // TODO: implement validateAuth
+    throw UnimplementedError();
+  }
 }
