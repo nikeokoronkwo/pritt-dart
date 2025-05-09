@@ -77,6 +77,15 @@ paths {
                     type = "string"
                 }
             }
+            new {
+                name = "lang"
+                `in` = "query"
+                required = false
+                description = "The language associated with the package"
+                schema {
+                    type = "string"
+                }
+            }
         }
         get {
             operationId = "getPackageByName"
@@ -94,9 +103,12 @@ paths {
                 ["404"] {
                     description = "Not Found Response"
                     content {
-
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
                     }
                 }
+
             }
         }
         post {
@@ -126,6 +138,50 @@ paths {
                         ["application/json"] {
                             schema = schemaRef("UnauthorizedError")
                             example = unauthorizeds["PublishPackageResponse"]
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+        `delete` {
+            summary = "Yank an empty package"
+            operationId = "yankPackageByName"
+            description = "This endpoint is for yanking packages from the pritt registry"
+            requestBody {
+                required = false
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("YankPackageRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("YankPackageResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
                         }
                     }
                 }
@@ -171,6 +227,14 @@ paths {
                         }
                     }
                 }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
             }
         }
         post {
@@ -200,6 +264,50 @@ paths {
                         ["application/json"] {
                             schema = schemaRef("UnauthorizedError")
                             example = unauthorizeds["PublishPackageByVersionResponse"]
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+        `delete` {
+            summary = "Yank a version of a package "
+            operationId = "yankPackageByNameAndVersion"
+            description = "This endpoint is for yanking a published version of a package from the pritt registry"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("YankPackageResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Could not yank package as it is in use"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                        }
+                    }
+                }
+                ["403"] {
+                    description = "Could not yank package as it is in use"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
                         }
                     }
                 }
@@ -270,7 +378,7 @@ paths {
                 description = "Not Found Response"
                 content {
                   ["application/json"] {
-                    schema = schemaRef("UnauthorizedError")
+                    schema = schemaRef("NotFoundError")
                     example = notFounds["UploadPackageResponse"]
                   }
                 }
@@ -367,18 +475,158 @@ paths {
             }
         }
     }
+    ["/api/adapters/{id}"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "path"
+                required = true
+                description = "The id of the adapter"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get an adapter with the given id"
+            description = "Get an adapter with the given id"
+            operationId = "getAdapterById"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetAdapterResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+        post {
+            summary = "Create or update an adapter with the given id"
+            description = "Create or update an adapter with the given id"
+            operationId = "addAdapterWithId"
+            requestBody {
+                required = true
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("AddAdapterRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AddAdapterResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+        `delete` {
+            summary = "Yank an adapter with the given id"
+            description = "Yank an adapter with the given id"
+            operationId = "yankAdapterWithId"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("YankAdapterResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/adapters/upload"] {
+        parameters {
+          new {
+            name = "id"
+            `in` = "query"
+            required = true
+            description = "The token id of the adapter used to identify the adapter"
+            schema {
+              type = "string"
+            }
+          }
+        }
+        post {
+            summary = "Upload an adapter to the Pritt Server"
+            description = "This API Endpoint is used to upload the tarball for the processed adapter"
+            operationId = "uploadAdapterWithToken"
+            requestBody {
+              required = true
+              content {
+                ["application/gzip"] {
+                    schema {
+                      type = "string"
+                      format = "binary"
+                    }
+                }
+              }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UploadAdapterResponse")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/adapters/{lang}"] {
+        get {
+            summary = "Get adapters by language"
+            operationId = "getAdaptersByLang"
+            description = "Get the adapters for a particular language"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetAdaptersByLangResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
 }
 
 components {
     schemas = schemaMaps
     securitySchemes {
-        // TODO(https://github.com/apple/pkl-pantry/pull/91): Incorrect configuration to be fixed
         ["bearerAuth"] {
             name = "Authorization"
             `in` = "header"
-            type = "http"
+            type = "apiKey"
             scheme = "Bearer"
-            bearerFormat = "APIKey"
             description = """
             The request sent is authorized by a bearer issued to the user. 
             The token is sent in a header in the following format: `Authorization: Bearer {token}`
