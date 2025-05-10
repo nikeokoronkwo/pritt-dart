@@ -31,7 +31,7 @@ class Package {
   User author;
 
   /// The configuration file used for the given package
-  String config;
+  String? config;
 
   /// SHA256 Hash data about the
   String hash;
@@ -51,6 +51,20 @@ class Package {
   ///
   /// This archive is usually for the Object File System and so is relative to that
   Uri archive;
+
+  Package({
+    required this.name,
+    required this.version,
+    required this.author,
+    this.config,
+    required this.hash,
+    DateTime? updated,
+    required this.created,
+    this.vcs = VCS.git,
+    required this.archive,
+  }) : updated = updated ?? created;
+
+
 }
 
 /// Maps packages to their versions, and info about those versions
@@ -69,7 +83,7 @@ class PackageVersions {
     DateTime created;
 
     /// The path to the readme of the given package relative to where the package is
-    Uri readme;
+    Uri? readme;
 
     /// The config file associated with the config
     Map<String, dynamic>? config;
@@ -89,6 +103,20 @@ class PackageVersions {
     ///
     /// This archive is usually for the Object File System and so is relative to that
     Uri archive;
+
+  PackageVersions({
+    required this.package,
+    required this.version,
+    required this.versionType,
+    DateTime? updated,
+    required this.created,
+    this.readme,
+    this.config,
+    required this.info,
+    required this.env,
+    required this.metadata,
+    required this.archive,
+  }) : updated = updated ?? created;
 }
 
 /// Join table for contributors for a package
@@ -103,6 +131,13 @@ class PackageContributors {
     /// 
     /// Users can have a combination of privileges.
     Iterable<Privileges> privileges;
+
+  PackageContributors({
+    required this.package,
+    required this.contributor,
+    required this.privileges,
+  });
+
 }
 
 /// User information
@@ -122,4 +157,11 @@ class User {
 
   /// The time the user joined
   DateTime joined;
+
+  User({
+    required this.id,
+    required this.accessToken,
+    required this.emailAddress,
+    required this.joined,
+  });
 }

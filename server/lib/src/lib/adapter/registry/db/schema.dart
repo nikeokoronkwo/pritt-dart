@@ -21,4 +21,16 @@ class CustomAdapterEntry {
 
   /// Any metadata concerning the adapter
   Map<String, dynamic>? metadata;
+
+  CustomAdapterEntry({
+    required this.id,
+    required this.language,
+    required this.path,
+    this.source,
+    required this.name,
+    this.metadata,
+  });
+
+  @override
+  String toString() => 'CustomAdapterEntry(id: $id, language: $language, path: $path, source: $source, name: $name, metadata: $metadata)';
 }
