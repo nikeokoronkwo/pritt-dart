@@ -2,7 +2,8 @@ import 'adapter.dart';
 
 /// An adapter registry implementation
 ///
-/// The adapter registry is responsible for retrieving and controlling adapters in Pritt
+/// The adapter registry is responsible for retrieving and controlling adapters in Pritt. 
+/// It also sources and fetches custom adapters based on its index of 
 class AdapterRegistry {
   AdapterRegistry._() {
     if (AdapterRegistry.db == null) {
@@ -12,6 +13,15 @@ class AdapterRegistry {
 
   /// We need only a single instance of this running (or do we?)
   static CustomAdapterDB? db;
+
+  /// The core adapters
+  final List<Adapter> _coreAdapters = [];
+
+  /// Get the total number of adapters available
+  List<Adapter> get adapters {
+    final _ = _coreAdapters;
+    throw UnimplementedError("TODO: Implement 'get adapters'");
+  }
 
   /// Connects the adapter registry to the given external database, containing information about the adapters
   ///

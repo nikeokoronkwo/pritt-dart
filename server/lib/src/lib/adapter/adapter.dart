@@ -14,7 +14,7 @@ typedef AdapterReturnFn = AdapterResult Function(CRSResponse);
 ///
 /// An adapter contains the logic used for making Pritt "adapt" to different registry requests to model such registries
 /// Adapters make such processes modular by being able to shape
-class Adapter {
+class Adapter implements AdapterInterface {
   /// The identifier, or name of the adapter
   String id;
 
@@ -50,4 +50,10 @@ class Adapter {
         onRequest = request,
         onRetrieve = retrieve,
         onReturn = returnFn;
+        
+          @override
+          Future run() {
+            // TODO: implement run
+            throw UnimplementedError();
+          }
 }
