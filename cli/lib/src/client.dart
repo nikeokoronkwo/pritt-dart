@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:pritt_cli/src/client/base.dart';
+import 'package:pritt_cli/src/constants.dart';
 import 'package:pritt_common/common.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
@@ -115,22 +116,29 @@ class PrittClient extends ApiClient implements PrittInterface {
     // TODO: implement yankPackageByNameAndVersion
     throw UnimplementedError();
   }
-  
+
   @override
   FutureOr<AuthResponse> createAuthToken(AuthRequest body) {
     // TODO: implement createAuthToken
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Result<AuthPollResponse, RequestError>> pollAuth(AuthPollRequest body, {required String id}) {
+  FutureOr<Result<AuthPollResponse, RequestError>> pollAuth(
+      AuthPollRequest body,
+      {required String id}) {
     // TODO: implement pollAuth
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Result<AuthValidateResponse, RequestError>> validateAuth(AuthValidateRequest body, {required String id}) {
+  FutureOr<Result<AuthValidateResponse, RequestError>> validateAuth(
+      AuthValidateRequest body,
+      {required String id}) {
     // TODO: implement validateAuth
     throw UnimplementedError();
   }
 }
+
+/// A single root client that connects to the main pritt url
+final rootClient = PrittClient(url: mainPrittInstance);
