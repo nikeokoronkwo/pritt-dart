@@ -99,7 +99,7 @@ class UserCredentials {
       this.accessTokenExpires = accessTokenExpires;
     }
 
-    update();
+    await update();
 
     return this;
   }
