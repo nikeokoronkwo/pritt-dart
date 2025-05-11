@@ -1,22 +1,18 @@
-
 import 'dart:io';
+
+import 'package:io/io.dart';
 
 import 'utils/extensions.dart';
 
-void launchUrl(Uri uri) {
-  switch (platform) {
-    case PlatformType.macos:
-      Process.runSync('open', [uri.toString()]);
-      break;
-    case PlatformType.windows:
-      Process.runSync('start', [uri.toString()]);
-      break;
-    case PlatformType.linux:
-      try {
+Future<Process> launchUrl(Uri uri, {ProcessManager? manager}) async {
+  manager ??= ProcessManager();
 
-      } catch (e) {
+  final v = await switch (platform) {
+    PlatformType.macos => manager.spawnDetached('open', [uri.toString()]),
+    PlatformType.windows => manager.spawnDetached('start', [uri.toString()]),
+    PlatformType.linux => manager.spawnDetached('xdg-open', [uri.toString()]),
+    _ => throw Exception('Unsupported Platform for running URL')
+  };
 
-      }
-    default:
-  }
+  return v;
 }

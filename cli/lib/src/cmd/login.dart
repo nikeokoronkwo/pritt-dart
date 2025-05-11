@@ -15,12 +15,16 @@ class LoginCommand extends PrittCommand {
   String description = "Login to the Pritt Server";
 
   LoginCommand() {
-    argParser..addOption('url',
-        abbr: 'u',
-        help:
-            "The URL of the pritt server. Defaults to the main pritt instance (you can also just pass 'main' to indicate the main server)",
-        valueHelp: 'url')
-    ..addFlag('headless', negatable: false, defaultsTo: false, help: 'Run login on the CLI. Defaults to false (launch browser)');
+    argParser
+      ..addOption('url',
+          abbr: 'u',
+          help:
+              "The URL of the pritt server. Defaults to the main pritt instance (you can also just pass 'main' to indicate the main server)",
+          valueHelp: 'url')
+      ..addFlag('headless',
+          negatable: false,
+          defaultsTo: false,
+          help: 'Run login on the CLI. Defaults to false (launch browser)');
   }
 
   @override

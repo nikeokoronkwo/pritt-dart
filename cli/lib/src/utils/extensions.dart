@@ -9,10 +9,7 @@ extension IsUrl on String {
   bool get isUrl => Uri.tryParse(this) != null;
 }
 
-enum PlatformType {
-  macos, ios, android, fuchsia, windows, linux
-}
-
+enum PlatformType { macos, ios, android, fuchsia, windows, linux }
 
 PlatformType get platform {
   if (Platform.isAndroid) return PlatformType.android;
