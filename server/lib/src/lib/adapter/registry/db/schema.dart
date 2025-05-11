@@ -1,6 +1,4 @@
-
-
-/// An object to represent a custom adapter 
+/// An object to represent a custom adapter
 class CustomAdapterEntry {
   /// The id of the adapter
   String id;
@@ -12,7 +10,7 @@ class CustomAdapterEntry {
   Uri path;
 
   /// The external location to where this adapter is authored
-  /// 
+  ///
   /// This is null if the adapter is authored locally
   Uri? source;
 
@@ -32,5 +30,6 @@ class CustomAdapterEntry {
   });
 
   @override
-  String toString() => 'CustomAdapterEntry(id: $id, language: $language, path: $path, source: $source, name: $name, metadata: $metadata)';
+  String toString() =>
+      'CustomAdapterEntry(id: $id, language: $language, path: $path, source: $source, name: $name, metadata: $metadata)';
 }

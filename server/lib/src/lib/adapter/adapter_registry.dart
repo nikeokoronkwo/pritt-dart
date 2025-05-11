@@ -2,8 +2,8 @@ import 'adapter.dart';
 
 /// An adapter registry implementation
 ///
-/// The adapter registry is responsible for retrieving and controlling adapters in Pritt. 
-/// It also sources and fetches custom adapters based on its index of 
+/// The adapter registry is responsible for retrieving and controlling adapters in Pritt.
+/// It also sources and fetches custom adapters based on its index of
 class AdapterRegistry {
   AdapterRegistry._() {
     if (AdapterRegistry.db == null) {

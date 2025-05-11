@@ -50,10 +50,10 @@ class Adapter implements AdapterInterface {
         onRequest = request,
         onRetrieve = retrieve,
         onReturn = returnFn;
-        
-          @override
-          Future run() {
-            // TODO: implement run
-            throw UnimplementedError();
-          }
+
+  @override
+  Future run() {
+    // TODO: implement run
+    throw UnimplementedError();
+  }
 }

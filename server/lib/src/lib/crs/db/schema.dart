@@ -7,14 +7,9 @@ enum VersionType {
   canary,
 }
 
-enum Privileges {
-  read, write, publish, ultimate
-}
+enum Privileges { read, write, publish, ultimate }
 
-enum VCS {
-  git, svn, fossil, mercurial, other
-}
-
+enum VCS { git, svn, fossil, mercurial, other }
 
 /// A package, as represented in the pritt database
 class Package {
@@ -43,7 +38,7 @@ class Package {
   DateTime created;
 
   /// The VCS that the package uses for development
-  /// 
+  ///
   /// This information is not used at the moment, and is reserved for future iterations
   VCS vcs;
 
@@ -63,46 +58,44 @@ class Package {
     this.vcs = VCS.git,
     required this.archive,
   }) : updated = updated ?? created;
-
-
 }
 
 /// Maps packages to their versions, and info about those versions
 class PackageVersions {
-    Package package;
+  Package package;
 
-    String version;
+  String version;
 
-    /// The type of version here
-    VersionType versionType;
+  /// The type of version here
+  VersionType versionType;
 
-    /// The last published time of the given package
-    DateTime updated;
+  /// The last published time of the given package
+  DateTime updated;
 
-    /// The first published time of the given package
-    DateTime created;
+  /// The first published time of the given package
+  DateTime created;
 
-    /// The path to the readme of the given package relative to where the package is
-    Uri? readme;
+  /// The path to the readme of the given package relative to where the package is
+  Uri? readme;
 
-    /// The config file associated with the config
-    Map<String, dynamic>? config;
+  /// The config file associated with the config
+  Map<String, dynamic>? config;
 
-    /// Some info about this package, like the size and more
-    Map<String, dynamic> info;
+  /// Some info about this package, like the size and more
+  Map<String, dynamic> info;
 
-    /// Environment information (runtime, package manager versions, etc)
-    Map<String, String> env;
+  /// Environment information (runtime, package manager versions, etc)
+  Map<String, String> env;
 
-    /// Metadata about the package
-    ///
-    /// This varies between programming languages based on schema
-    Map<String, dynamic> metadata;
+  /// Metadata about the package
+  ///
+  /// This varies between programming languages based on schema
+  Map<String, dynamic> metadata;
 
-    /// The archive path of the given package.
-    ///
-    /// This archive is usually for the Object File System and so is relative to that
-    Uri archive;
+  /// The archive path of the given package.
+  ///
+  /// This archive is usually for the Object File System and so is relative to that
+  Uri archive;
 
   PackageVersions({
     required this.package,
@@ -121,34 +114,33 @@ class PackageVersions {
 
 /// Join table for contributors for a package
 class PackageContributors {
-    Package package;
+  Package package;
 
-    User contributor;
+  User contributor;
 
-    /// The kind of privileges this contributor has, when contributing to this package. 
-    /// 
-    /// No contributor can have [Privileges.ultimate] except the author himself, unless he passes the package down to another person (not possible in pritt yet)
-    /// 
-    /// Users can have a combination of privileges.
-    Iterable<Privileges> privileges;
+  /// The kind of privileges this contributor has, when contributing to this package.
+  ///
+  /// No contributor can have [Privileges.ultimate] except the author himself, unless he passes the package down to another person (not possible in pritt yet)
+  ///
+  /// Users can have a combination of privileges.
+  Iterable<Privileges> privileges;
 
   PackageContributors({
     required this.package,
     required this.contributor,
     required this.privileges,
   });
-
 }
 
 /// User information
-/// 
+///
 /// TODO: Auth?
 class User {
   /// The id of the user
   String id;
 
   /// The current access token for the given user
-  /// 
+  ///
   /// This is used for authenticating workflows for the CLI, installing packages, etc
   String accessToken;
 

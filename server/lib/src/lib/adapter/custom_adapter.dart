@@ -1,5 +1,3 @@
-
-
 import 'adapter_base.dart';
 
 class CustomAdapter implements AdapterInterface {
@@ -8,5 +6,4 @@ class CustomAdapter implements AdapterInterface {
     // TODO: implement run
     throw UnimplementedError();
   }
-
 }

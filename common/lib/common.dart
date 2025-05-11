@@ -111,17 +111,21 @@ abstract interface class PrittInterface {
       {required String id});
 
   /// Create token for user
-  /// 
+  ///
   /// POST `/api/auth/new`
   FutureOr<AuthResponse> createAuthToken(AuthRequest body);
 
   /// Validate or authenticate a user with the given token
   ///
   /// POST `/api/auth/validate`
-  FutureOr<Result<AuthValidateResponse, RequestError>> validateAuth(AuthValidateRequest body, {required String id});
+  FutureOr<Result<AuthValidateResponse, RequestError>> validateAuth(
+      AuthValidateRequest body,
+      {required String id});
 
   /// Get the status of an auth session
-  /// 
+  ///
   /// POST `/api/auth/status`
-  FutureOr<Result<AuthPollResponse, RequestError>> pollAuth(AuthPollRequest body, {required String id});
+  FutureOr<Result<AuthPollResponse, RequestError>> pollAuth(
+      AuthPollRequest body,
+      {required String id});
 }

@@ -1,4 +1,3 @@
-
 class _Unused {
   const _Unused();
 }
