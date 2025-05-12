@@ -11,3 +11,7 @@ private
 .DS_Store
 
 config/out
+
+**/.env.**
+
+!**/.env.example
