@@ -6,7 +6,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 Handler createRouter() {
   // create router for openapi routes
-  final app = Router();
+  final app = Router()..get('/', (req) => Response.ok('Hello'));
 
   // the main handler
   final cascade = Cascade().add(adapterHandler()).add(app.call);
@@ -16,9 +16,9 @@ Handler createRouter() {
 
 Handler adapterHandler() {
   return (Request req) async {
-    final adapterResolve = getAdapterResolveObject(req);
-
     try {
+      final adapterResolve = getAdapterResolveObject(req);
+
       // connect to the adapter registry
       final adapterRegistry = await AdapterRegistry.connect();
 
@@ -38,6 +38,8 @@ Handler adapterHandler() {
     } on AdapterException catch (_) {
       // could not find adapter
       return Response.notFound('unsupported package manager');
+    } on Exception catch (e) {
+      return Response.notFound('error: $e');
     }
   };
 }
