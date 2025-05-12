@@ -54,9 +54,8 @@ class DartPackage {
     required this.archiveHash,
     required this.published,
   });
-  
+
   factory DartPackage.fromJson(Map<String, dynamic> json) =>
       _$DartPackageFromJson(json);
   Map<String, dynamic> toJson() => _$DartPackageToJson(this);
 }
-

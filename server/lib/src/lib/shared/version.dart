@@ -71,27 +71,34 @@ class Version implements Comparable<Version> {
     return major == 0;
   }
 
-  @override
-  String toString() {
-    final buffer = StringBuffer('$major.$minor.$patch');
-    if (preRelease != null) buffer.write('-$preRelease');
-    if (build != null) buffer.write('+$build');
-    return buffer.toString();
+  List<String> _splitPrerelease(String prerelease) => prerelease.split('.');
+
+  VersionType get versionType {
+    if (isPreRelease()) {
+      return VersionType.major;
+    } else {
+      if (preRelease!.startsWith('beta')) return VersionType.beta;
+      if (preRelease!.startsWith('rc')) return VersionType.rc;
+      if (preRelease!.startsWith('experimental'))
+        return VersionType.experimental;
+      if (preRelease!.startsWith('canary')) return VersionType.canary;
+      if (preRelease!.startsWith('next')) return VersionType.next;
+    }
+    return VersionType.other;
   }
 
-  List<String> _splitPrerelease(String prerelease) =>
-      prerelease.split('.');
-  
   @override
   int compareTo(Version other) {
-    // 1. Compare major, minor, patch
+    // Compare major, minor, patch
     if (major != other.major) return major.compareTo(other.major);
     if (minor != other.minor) return minor.compareTo(other.minor);
     if (patch != other.patch) return patch.compareTo(other.patch);
 
-    // 2. Compare prerelease (if both have it)
-    if (preRelease == null && other.preRelease != null) return 1; // this is release, other is pre
-    if (preRelease != null && other.preRelease == null) return -1; // this is pre, other is release
+    // Compare prerelease (if both have it)
+    if (preRelease == null && other.preRelease != null)
+      return 1; // this is release, other is pre
+    if (preRelease != null && other.preRelease == null)
+      return -1; // this is pre, other is release
     if (preRelease != null && other.preRelease != null) {
       final pre1 = _splitPrerelease(preRelease!);
       final pre2 = _splitPrerelease(other.preRelease!);
@@ -110,7 +117,7 @@ class Version implements Comparable<Version> {
           final cmp = a.compareTo(b);
           if (cmp != 0) return cmp;
         } else {
-          return aNum != null ? -1 : 1; 
+          return aNum != null ? -1 : 1;
         }
       }
 
@@ -126,8 +133,7 @@ class Version implements Comparable<Version> {
   bool operator >=(Version other) => compareTo(other) >= 0;
 
   @override
-  bool operator ==(Object other) =>
-      other is Version &&
+  bool operator ==(covariant Version other) =>
       major == other.major &&
       minor == other.minor &&
       patch == other.patch &&
@@ -135,6 +141,15 @@ class Version implements Comparable<Version> {
       build == other.build;
 
   @override
-  int get hashCode =>
-      Object.hash(major, minor, patch, preRelease, build);
+  int get hashCode => Object.hash(major, minor, patch, preRelease, build);
+
+  @override
+  String toString() {
+    final buffer = StringBuffer('$major.$minor.$patch');
+    if (preRelease != null) buffer.write('-$preRelease');
+    if (build != null) buffer.write('+$build');
+    return buffer.toString();
+  }
 }
+
+enum VersionType { major, experimental, beta, next, rc, canary, other }

@@ -8,9 +8,11 @@ import 'adapter_registry.dart';
 
 typedef AdapterResolveFn = AdapterResolve Function(AdapterResolveObject);
 
-typedef AdapterRequestFn = FutureOr<AdapterResult> Function(AdapterRequestObject, CRSDBController);
+typedef AdapterRequestFn = FutureOr<AdapterResult> Function(
+    AdapterRequestObject, CRSDBController);
 
-typedef AdapterRetrieveFn = FutureOr<AdapterResult> Function(AdapterRequestObject, CRSArchiveController);
+typedef AdapterRetrieveFn = FutureOr<AdapterResult> Function(
+    AdapterRequestObject, CRSArchiveController);
 
 class AdapterRequestObject {
   AdapterResolveObject resolveObject;

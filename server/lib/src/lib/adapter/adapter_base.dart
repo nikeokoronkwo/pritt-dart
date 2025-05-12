@@ -3,11 +3,6 @@
 import 'dart:typed_data';
 
 import 'package:mime/mime.dart';
-import 'package:pritt_server/src/lib/crs/crs.dart';
-import 'package:pritt_server/src/lib/crs/db.dart';
-import 'package:pritt_server/src/lib/crs/db/schema.dart';
-import 'package:pritt_server/src/lib/crs/fs.dart';
-import 'package:pritt_server/src/lib/shared/version.dart';
 
 import '../shared/user_agent.dart';
 
@@ -18,8 +13,11 @@ class AdapterResolveObject {
   /// the path of the request, as is
   String path;
 
+  /// the path segments
+  List<String> pathSegments;
+
   /// the url of the current pritt instance
-  /// 
+  ///
   /// Use this for modifying any urls that are needed to be made to the registry, rather than guessing the url or accidentally calling the wrong url
   String url;
 
@@ -50,7 +48,10 @@ class AdapterResolveObject {
       this.accept = 'application/json',
       this.query = const {},
       required this.userAgent})
-      : path = uri.path, url = '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
+      : path = uri.path,
+        pathSegments = uri.pathSegments,
+        url =
+            '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
 }
 
 enum AdapterResolve {
@@ -79,7 +80,9 @@ class AdapterArchiveResult<T> extends AdapterResult {
   final String name;
   final String contentType;
 
-  AdapterArchiveResult(this.archive, this.name, {String? contentType}) : contentType = contentType ?? lookupMimeType(name) ?? 'application/octet-stream';
+  AdapterArchiveResult(this.archive, this.name, {String? contentType})
+      : contentType =
+            contentType ?? lookupMimeType(name) ?? 'application/octet-stream';
 }
 
 class AdapterException implements Exception {}
@@ -89,4 +92,3 @@ abstract interface class AdapterInterface {
   /// Run an adapter
   Future run();
 }
-

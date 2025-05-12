@@ -1,11 +1,4 @@
-enum VersionType {
-  major,
-  experimental,
-  beta,
-  next,
-  rc,
-  canary,
-}
+import '../../shared/version.dart';
 
 enum Privileges { read, write, publish, ultimate }
 
@@ -47,17 +40,22 @@ class Package {
   /// This archive is usually for the Object File System and so is relative to that
   Uri archive;
 
-  Package({
-    required this.name,
-    required this.version,
-    required this.author,
-    this.config,
-    required this.hash,
-    DateTime? updated,
-    required this.created,
-    this.vcs = VCS.git,
-    required this.archive,
-  }) : updated = updated ?? created;
+  /// The contributors to the package
+  ///
+  Iterable<User> contributors;
+
+  Package(
+      {required this.name,
+      required this.version,
+      required this.author,
+      this.config,
+      required this.hash,
+      DateTime? updated,
+      required this.created,
+      this.vcs = VCS.git,
+      required this.archive,
+      required this.contributors})
+      : updated = updated ?? created;
 }
 
 /// Maps packages to their versions, and info about those versions
@@ -97,7 +95,7 @@ class PackageVersions {
   /// This archive is usually for the Object File System and so is relative to that
   Uri archive;
 
-  /// The archive SHA256 hash data 
+  /// The archive SHA256 hash data
   String hash;
 
   /// Signatures for the given package when published
@@ -122,9 +120,8 @@ class PackageVersions {
     required this.hash,
     required this.signatures,
     required this.integrity,
-  }) :
-  assert(config == null || configName != null,
-      "If config is set, then configName must be set as well");
+  }) : assert(config == null || configName != null,
+            "If config is set, then configName must be set as well");
 }
 
 /// Join table for contributors for a package
@@ -154,6 +151,9 @@ class User {
   /// The id of the user
   String id;
 
+  /// The name of the user
+  String name;
+
   /// The current access token for the given user
   ///
   /// This is used for authenticating workflows for the CLI, installing packages, etc
@@ -167,12 +167,12 @@ class User {
 
   User({
     required this.id,
+    required this.name,
     required this.accessToken,
     required this.emailAddress,
     required this.joined,
   });
 }
-
 
 class Signature {
   /// The public key id of the signature

@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'package_json.g.dart';
@@ -103,7 +102,6 @@ class PackageJson {
   @JsonKey(name: 'readmeFilename')
   final String? readmeFilename;
 
-
   const PackageJson({
     required this.name,
     required this.version,
@@ -136,20 +134,22 @@ class PackageJson {
     this.private = false,
     this.readme,
     this.readmeFilename,
-  })
-  : assert(author is PackageJsonAuthor? ||
-            author is String? ||
-            author is Map<String, String>?,
+  })  : assert(
+            author is PackageJsonAuthor? ||
+                author is String? ||
+                author is Map<String, String>?,
             'author must be a PackageJsonAuthor, String or Map<String, String>'),
-    assert(funding is PackageJsonFunding? ||
-            funding is String? ||
-            funding is Map<String, String>?,
+        assert(
+            funding is PackageJsonFunding? ||
+                funding is String? ||
+                funding is Map<String, String>?,
             'funding must be a PackageJsonFunding, String or Map<String, String>'),
-    assert(contributors == null || contributors is List<PackageJsonAuthor?>,
+        assert(contributors == null || contributors is List<PackageJsonAuthor?>,
             'contributors must be a List<PackageJsonAuthor>'),
-    assert(repository is PackageJsonRepository? ||
-            repository is String? ||
-            repository is Map<String, String>?,
+        assert(
+            repository is PackageJsonRepository? ||
+                repository is String? ||
+                repository is Map<String, String>?,
             'repository must be a PackageJsonRepository, String or Map<String, String>');
 
   factory PackageJson.fromJson(Map<String, dynamic> json) =>

@@ -26,7 +26,7 @@ class NpmMetaResult with MetaResult {
   final Map<String, NpmPackage> versions;
 
   /// The maintainers of the package
-  final List<dynamic> maintainers;
+  final Iterable<dynamic> maintainers;
 
   /// The time when each package version was published
   final Map<String, String> time;
@@ -71,9 +71,9 @@ class NpmMetaResult with MetaResult {
 
   factory NpmMetaResult.fromJson(Map<String, dynamic> json) =>
       _$NpmMetaResultFromJson(json);
-  
+
   @override
-      Map<String, dynamic> toJson() => _$NpmMetaResultToJson(this);
+  Map<String, dynamic> toJson() => _$NpmMetaResultToJson(this);
 }
 
 @JsonSerializable()
@@ -95,19 +95,19 @@ class NpmAuthor {
 
   factory NpmAuthor.fromJson(Map<String, dynamic> json) =>
       _$NpmAuthorFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$NpmAuthorToJson(this);
 }
 
 /// Example:
-  // "dist-tags": {
-  //   "beta": "19.0.0-beta-26f2496093-20240514",
-  //   "rc": "19.0.0-rc.1",
-  //   "latest": "19.1.0",
-  //   "experimental": "0.0.0-experimental-21fdf308-20250508",
-  //   "next": "19.2.0-canary-21fdf308-20250508",
-  //   "canary": "19.2.0-canary-21fdf308-20250508"
-  // },
+// "dist-tags": {
+//   "beta": "19.0.0-beta-26f2496093-20240514",
+//   "rc": "19.0.0-rc.1",
+//   "latest": "19.1.0",
+//   "experimental": "0.0.0-experimental-21fdf308-20250508",
+//   "next": "19.2.0-canary-21fdf308-20250508",
+//   "canary": "19.2.0-canary-21fdf308-20250508"
+// },
 @JsonSerializable()
 class NpmDistTags {
   /// The beta version
@@ -139,68 +139,68 @@ class NpmDistTags {
 
   factory NpmDistTags.fromJson(Map<String, dynamic> json) =>
       _$NpmDistTagsFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$NpmDistTagsToJson(this);
 }
 
 /// Example: {
-    //   "name": "rex",
-    //   "version": "0.1.0",
-    //   "description": "the king of browser dependencies",
-    //   "keywords": [
-    //     "browser",
-    //     "js",
-    //     "common.js"
-    //   ],
-    //   "dependencies": {
-    //     "common": "\u003E=0.1.0"
-    //   },
-    //   "author": {
-    //     "name": "Mathias Buus Madsen",
-    //     "email": "mathiasbuus@gmail.com"
-    //   },
-    //   "main": "./index.js",
-    //   "_npmJsonOpts": {
-    //     "file": "/Users/maf/.npm/rex/0.1.0/package/package.json",
-    //     "wscript": false,
-    //     "contributors": false,
-    //     "serverjs": false
-    //   },
-    //   "_id": "rex@0.1.0",
-    //   "devDependencies": {
+//   "name": "rex",
+//   "version": "0.1.0",
+//   "description": "the king of browser dependencies",
+//   "keywords": [
+//     "browser",
+//     "js",
+//     "common.js"
+//   ],
+//   "dependencies": {
+//     "common": "\u003E=0.1.0"
+//   },
+//   "author": {
+//     "name": "Mathias Buus Madsen",
+//     "email": "mathiasbuus@gmail.com"
+//   },
+//   "main": "./index.js",
+//   "_npmJsonOpts": {
+//     "file": "/Users/maf/.npm/rex/0.1.0/package/package.json",
+//     "wscript": false,
+//     "contributors": false,
+//     "serverjs": false
+//   },
+//   "_id": "rex@0.1.0",
+//   "devDependencies": {
 
-    //   },
-    //   "engines": {
-    //     "node": "*"
-    //   },
-    //   "_engineSupported": true,
-    //   "_npmVersion": "1.0.15",
-    //   "_nodeVersion": "v0.4.9",
-    //   "_defaultsLoaded": true,
-    //   "dist": {
-    //     "shasum": "a24e63715fe591a11aa2ae99bec621c5aab730fc",
-    //     "tarball": "https://registry.npmjs.org/rex/-/rex-0.1.0.tgz",
-    //     "integrity": "sha512-TXk+/Zhpu8G1+JFE+f6DbM/uem7jkes/0O3VnExq9GE/yPIuUaEmXUDtPY8WhWevu+43EnzBjb3LS+E0pauIPA==",
-    //     "signatures": [
-    //       {
-    //         "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
-    //         "sig": "MEUCIQDghiCvZ3nLqxq2uk6BziiLbJH43ULLgMg9YCWFqDSfdgIgWmH9Vu4KOQtShQzBo7FnSyqKBSqM0Gs/chdCRGKXuOE="
-    //       }
-    //     ]
-    //   },
-    //   "scripts": {
+//   },
+//   "engines": {
+//     "node": "*"
+//   },
+//   "_engineSupported": true,
+//   "_npmVersion": "1.0.15",
+//   "_nodeVersion": "v0.4.9",
+//   "_defaultsLoaded": true,
+//   "dist": {
+//     "shasum": "a24e63715fe591a11aa2ae99bec621c5aab730fc",
+//     "tarball": "https://registry.npmjs.org/rex/-/rex-0.1.0.tgz",
+//     "integrity": "sha512-TXk+/Zhpu8G1+JFE+f6DbM/uem7jkes/0O3VnExq9GE/yPIuUaEmXUDtPY8WhWevu+43EnzBjb3LS+E0pauIPA==",
+//     "signatures": [
+//       {
+//         "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+//         "sig": "MEUCIQDghiCvZ3nLqxq2uk6BziiLbJH43ULLgMg9YCWFqDSfdgIgWmH9Vu4KOQtShQzBo7FnSyqKBSqM0Gs/chdCRGKXuOE="
+//       }
+//     ]
+//   },
+//   "scripts": {
 
-    //   },
-    //   "maintainers": [
-    //     {
-    //       "name": "mafintosh",
-    //       "email": "m@ge.tt"
-    //     }
-    //   ],
-    //   "directories": {
+//   },
+//   "maintainers": [
+//     {
+//       "name": "mafintosh",
+//       "email": "m@ge.tt"
+//     }
+//   ],
+//   "directories": {
 
-    //   }
-    // }
+//   }
+// }
 @JsonSerializable()
 class NpmPackage extends PackageJson {
   /// The id of the package
@@ -224,15 +224,14 @@ class NpmPackage extends PackageJson {
 
   /// _npmUser
   @JsonKey(name: '_npmUser')
-  final NpmAuthor? npmUser;
+  final dynamic npmUser;
 
   /// maintainers
   final List<NpmAuthor>? maintainers;
 
-
   const NpmPackage({
     required this.id,
-    required this.rev,
+    this.rev,
     required this.dist,
     this.from,
     this.npmVersion,
@@ -268,18 +267,21 @@ class NpmPackage extends PackageJson {
     super.libc,
     super.readme,
     super.readmeFilename,
-  }) :
-  super(
-    private: false,
-  );
+  })  : assert(npmUser is NpmAuthor? ||
+            npmUser is String? ||
+            npmUser is Map<String, String>?),
+        super(
+          private: false,
+        );
 
-  factory NpmPackage.fromPackageJson(PackageJson package, {
+  factory NpmPackage.fromPackageJson(
+    PackageJson package, {
     required String id,
-    required String rev,
+    String? rev,
     required NpmDist dist,
     String? from,
     String? npmVersion,
-    NpmAuthor? npmUser,
+    dynamic npmUser,
     List<NpmAuthor>? maintainers,
   }) =>
       NpmPackage(
@@ -321,11 +323,10 @@ class NpmPackage extends PackageJson {
         readme: package.readme,
         readmeFilename: package.readmeFilename,
       );
-  
 
   factory NpmPackage.fromJson(Map<String, dynamic> json) =>
       _$NpmPackageFromJson(json);
-  
+
   @override
   Map<String, dynamic> toJson() => _$NpmPackageToJson(this);
 }
@@ -342,7 +343,7 @@ class NpmDist {
   final String integrity;
 
   /// The signatures of the package
-  final List<Map<String, String>> signatures;
+  final Iterable<Map<String, String>> signatures;
 
   const NpmDist({
     required this.shasum,
@@ -353,6 +354,6 @@ class NpmDist {
 
   factory NpmDist.fromJson(Map<String, dynamic> json) =>
       _$NpmDistFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$NpmDistToJson(this);
 }

@@ -10,7 +10,5 @@ final pyAdapter = Adapter(
       }
       return AdapterResolve.none;
     },
-    request: (obj, crs) {
-      
-    },
+    request: (obj, crs) {},
     retrieve: retrieve);

@@ -19,16 +19,16 @@ final dartAdapter = Adapter(
       }
       return AdapterResolve.none;
     },
+
     /// we need to retrieve the package details
-      /// 1. get the package name
-      /// 2. get the version
-      /// 
-      /// then we need to make a request to the registry
-      /// 1. get the package name
-      /// 2. get the latest package details
-      /// 3. get a map of the package details
+    /// 1. get the package name
+    /// 2. get the version
+    ///
+    /// then we need to make a request to the registry
+    /// 1. get the package name
+    /// 2. get the latest package details
+    /// 3. get a map of the package details
     request: (req, crs) async {
-      
       // get the package name
       final packageName = req.resolveObject.path.split('/').last;
 
@@ -45,30 +45,33 @@ final dartAdapter = Adapter(
       );
 
       return AdapterMetaResult(
-          DartMetaResult(
+        DartMetaResult(
             name: packageName,
             latest: DartPackage(
-              version: latestPackage.version, 
-              pubspec: jsonDecode(jsonEncode(loadYaml(latestPackage.config!))), 
-              // TODO: Shouldn't we make this easier on ourselves and just use a /dart/ path to reduce guess work?
-              archiveUrl: '${req.resolveObject.url}/api/archives/${latestPackage.configName}-${latestPackage.version}.tar.gz',
-              archiveHash: latestPackage.hash, 
-              published: latestPackage.created
-            ),
-            versions: packages.body.values.map((e) => DartPackage(
-              version: e.version, 
-              pubspec: jsonDecode(jsonEncode(loadYaml(e.config!))), 
-              archiveUrl: '${req.resolveObject.url}/api/archives/${e.configName}-${e.version}.tar.gz',
-              archiveHash: e.hash, 
-              published: e.created
-            )).toList()
-          ),
-        );
+                version: latestPackage.version,
+                pubspec:
+                    jsonDecode(jsonEncode(loadYaml(latestPackage.config!))),
+                // TODO: Shouldn't we make this easier on ourselves and just use a /dart/ path to reduce guess work?
+                archiveUrl:
+                    '${req.resolveObject.url}/api/archives/${latestPackage.configName}-${latestPackage.version}.tar.gz',
+                archiveHash: latestPackage.hash,
+                published: latestPackage.created),
+            versions: packages.body.values
+                .map((e) => DartPackage(
+                    version: e.version,
+                    pubspec: jsonDecode(jsonEncode(loadYaml(e.config!))),
+                    archiveUrl:
+                        '${req.resolveObject.url}/api/archives/${e.configName}-${e.version}.tar.gz',
+                    archiveHash: e.hash,
+                    published: e.created))
+                .toList()),
+      );
     },
     retrieve: (req, crs) async {
       // get the name of the package
       final packageNameWithExtension = req.resolveObject.path.split('/').last;
-      final [packageName, versionAndExtension] = packageNameWithExtension.split('-');
+      final [packageName, versionAndExtension] =
+          packageNameWithExtension.split('-');
       final version = basenameWithoutExtension(versionAndExtension);
       final packageExtension = versionAndExtension.replaceFirst(version, '');
 
@@ -77,7 +80,8 @@ final dartAdapter = Adapter(
 
       // stream the archive
       return AdapterArchiveResult(
-        archive.body.data, archive.body.name, contentType: archive.body.contentType ?? 'application/x-tar',
+        archive.body.data,
+        archive.body.name,
+        contentType: archive.body.contentType ?? 'application/x-tar',
       );
     });
-

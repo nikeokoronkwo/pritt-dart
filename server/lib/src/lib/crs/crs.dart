@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:typed_data';
 
 import 'db.dart';
@@ -34,21 +36,30 @@ abstract interface class CRSDBController {
   CRSDatabaseInterface get db;
 
   /// get the latest version of a package
-  Future<CRSResponse<PackageVersions>> getLatestPackage(
-      String packageName, {String? language, Map<String, dynamic>? env});
+  Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
+      {String? language, Map<String, dynamic>? env});
 
   /// get a specific version of a package
   Future<CRSResponse<PackageVersions>> getPackageWithVersion(
-      String packageName, String version, {String? language, Map<String, dynamic>? env});
+      String packageName, String version,
+      {String? language, Map<String, dynamic>? env});
 
   /// get the packages from the registry
   Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
-      String packageName, {String? language, Map<String, dynamic>? env});
+      String packageName,
+      {String? language,
+      Map<String, dynamic>? env});
+
   /// get the package details from the registry
-  Future<CRSResponse<Package>> getPackageDetails(
-      String packageName, {String? language, Map<String, dynamic>? env});
+  Future<CRSResponse<Package>> getPackageDetails(String packageName,
+      {String? language, Map<String, dynamic>? env});
 }
 
+/// The core registry service
+///
+/// This is a service that contains the package-manager agnostic (matter of fact, environment agnostic) info about packages in the Pritt Registry
+///
+/// It connects to the database and the object file storage via a pool of resources (i.e makes multiple concurrent requests capped at a maximum) and provides access to data in the
 class CoreRegistryService {}
 
 enum CRSRequestType { Meta, Archive }
@@ -63,4 +74,3 @@ class CRSResponse<T> {
 }
 
 class CRSException implements Exception {}
-
