@@ -78,8 +78,11 @@ class PackageVersions {
   /// The path to the readme of the given package relative to where the package is
   Uri? readme;
 
-  /// The config file associated with the config
-  Map<String, dynamic>? config;
+  /// The raw contents of the config file associated with the config
+  String? config;
+
+  /// The name of the configuration file used for the given package
+  String? configName;
 
   /// Some info about this package, like the size and more
   Map<String, dynamic> info;
@@ -97,6 +100,9 @@ class PackageVersions {
   /// This archive is usually for the Object File System and so is relative to that
   Uri archive;
 
+  /// The archive SHA256 hash data 
+  String hash;
+
   PackageVersions({
     required this.package,
     required this.version,
@@ -105,11 +111,15 @@ class PackageVersions {
     required this.created,
     this.readme,
     this.config,
+    this.configName,
     required this.info,
     required this.env,
     required this.metadata,
     required this.archive,
-  }) : updated = updated ?? created;
+    required this.hash,
+  }) : updated = updated ?? created,
+  assert(config == null || configName != null,
+      "If config is set, then configName must be set as well");
 }
 
 /// Join table for contributors for a package

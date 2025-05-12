@@ -13,7 +13,6 @@ final npmAdapter = Adapter(
       return AdapterResolve.none;
     },
     request: request,
-    retrieve: retrieve,
-    returnFn: returnFn);
+    retrieve: retrieve);
 
 class NpmUserAgentInfo {}

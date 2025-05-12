@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'adapter_base.dart';
 
 import '../crs/crs.dart';
@@ -6,11 +8,9 @@ import 'adapter_registry.dart';
 
 typedef AdapterResolveFn = AdapterResolve Function(AdapterResolveObject);
 
-typedef AdapterRequestFn = CRSRequest Function(AdapterRequestObject);
+typedef AdapterRequestFn = FutureOr<AdapterResult> Function(AdapterRequestObject, CRSDBController);
 
-typedef AdapterRetrieveFn = CRSRequest Function(AdapterRequestObject);
-
-typedef AdapterReturnFn = AdapterResult Function(AdapterReturnObject);
+typedef AdapterRetrieveFn = FutureOr<AdapterResult> Function(AdapterRequestObject, CRSArchiveController);
 
 class AdapterRequestObject {
   AdapterResolveObject resolveObject;
@@ -60,16 +60,12 @@ class Adapter implements AdapterInterface {
 
   /// The function called when a request is delegated to the given adapter.
   ///
-  /// The function return is sent to the Core Registry Service as a [CRSRequest] type
+  /// The function makes use of a [CRSController] to make requests to the Common Core Registry Service
+  /// and returns a [AdapterResult] object.
   final AdapterRequestFn onRequest;
 
   /// Similar to [Adapter.onRequest], but used for archive requests
   final AdapterRetrieveFn onRetrieve;
-
-  /// The function called upon return of package info from CRS to the requested service.
-  ///
-  /// This can be used to restructure the Common Core Registry Service Package Type to the desired return type for the project
-  final AdapterReturnFn onReturn;
 
   const Adapter({
     required this.id,
@@ -77,10 +73,8 @@ class Adapter implements AdapterInterface {
     required this.onResolve,
     required AdapterRequestFn request,
     required AdapterRetrieveFn retrieve,
-    required AdapterReturnFn returnFn,
   })  : onRequest = request,
-        onRetrieve = retrieve,
-        onReturn = returnFn;
+        onRetrieve = retrieve;
 
   @override
   Future run() {

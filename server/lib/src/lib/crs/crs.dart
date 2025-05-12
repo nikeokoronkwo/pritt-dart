@@ -1,3 +1,54 @@
+import 'dart:typed_data';
+
+import 'db.dart';
+import 'db/schema.dart';
+import 'fs.dart';
+import '../shared/version.dart';
+
+class CRSArchive {
+  String name;
+
+  String? contentType;
+
+  Uint8List data;
+}
+
+/// an interface for the core registry system, used by adapters to make requests to retrieve common data
+abstract interface class CRSArchiveController {
+  /// The object file system interface used by the controller
+  CRSRegistryOFSInterface get ofs;
+
+  /// get the archive of a package
+  Future<CRSResponse<CRSArchive>> getArchive(String packageName, String version,
+      {String? language, Map<String, dynamic>? env});
+
+  /// get the archive of a package
+  Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
+      String packageName, String version,
+      {String? language, Map<String, dynamic>? env});
+}
+
+/// An interface for the core registry system, used by adapters to make requests to retrieve common data
+abstract interface class CRSDBController {
+  /// The database interface used by the controller
+  CRSDatabaseInterface get db;
+
+  /// get the latest version of a package
+  Future<CRSResponse<PackageVersions>> getLatestVersion(
+      String packageName, {String? language, Map<String, dynamic>? env});
+
+  /// get a specific version of a package
+  Future<CRSResponse<PackageVersions>> getPackageWithVersion(
+      String packageName, String version, {String? language, Map<String, dynamic>? env});
+
+  /// get the packages from the registry
+  Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
+      String packageName, {String? language, Map<String, dynamic>? env});
+  /// get the package details from the registry
+  Future<CRSResponse<Package>> getPackageDetails(
+      String packageName, {String? language, Map<String, dynamic>? env});
+}
+
 class CoreRegistryService {}
 
 enum CRSRequestType { Meta, Archive }
@@ -6,6 +57,10 @@ class CRSRequest {
   CRSRequestType requestType = CRSRequestType.Meta;
 }
 
-class CRSResponse {}
+class CRSResponse<T> {
+  /// the response body
+  T body;
+}
 
 class CRSException implements Exception {}
+
