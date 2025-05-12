@@ -1,3 +1,10 @@
+import 'dart:async';
+
+import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
+import 'package:pritt_server/src/lib/adapter/core/dart.dart';
+import 'package:pritt_server/src/lib/adapter/core/npm.dart';
+import 'package:shelf/src/request.dart';
+
 import 'adapter.dart';
 
 /// An adapter registry implementation
@@ -15,12 +22,19 @@ class AdapterRegistry {
   static CustomAdapterDB? db;
 
   /// The core adapters
-  final List<Adapter> _coreAdapters = [];
+  final List<Adapter> _coreAdapters = [dartAdapter, npmAdapter];
+
+  /// The custom adapters
+  Stream<Adapter> get _customAdapters {
+    throw UnimplementedError("TODO: Implement 'get adapters'");
+  }
 
   /// Get the total number of adapters available
-  List<Adapter> get adapters {
-    final _ = _coreAdapters;
-    throw UnimplementedError("TODO: Implement 'get adapters'");
+  Stream<Adapter> get adapters async* {
+    for (final adapter in _coreAdapters) {
+      yield adapter;
+    }
+    yield* _customAdapters;
   }
 
   /// Connects the adapter registry to the given external database, containing information about the adapters
@@ -35,6 +49,29 @@ class AdapterRegistry {
   }
 
   Future disconnect() async {}
+
+  /// Find an adapter given a request
+  FutureOr<({Adapter adapter, AdapterResolve resolve})> find(
+      AdapterResolveObject obj,
+      {bool checkedCore = false}) async {
+    await for (final adapter in (checkedCore ? _customAdapters : adapters)) {
+      final adapterResolve = adapter.onResolve(obj);
+      if (adapterResolve.isResolved)
+        return (adapter: adapter, resolve: adapterResolve);
+    }
+    throw AdapterException("Could not find adapter");
+  }
+
+  /// Find an adapter given a request from the core adapters
+  ({Adapter adapter, AdapterResolve resolve})? findInCore(
+      AdapterResolveObject obj) {
+    for (final adapter in _coreAdapters) {
+      final adapterResolve = adapter.onResolve(obj);
+      if (adapterResolve.isResolved)
+        return (adapter: adapter, resolve: adapterResolve);
+    }
+    return null;
+  }
 }
 
 /// An object instance which abstracts access to the external adapter

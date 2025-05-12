@@ -85,7 +85,12 @@ class AdapterArchiveResult<T> extends AdapterResult {
             contentType ?? lookupMimeType(name) ?? 'application/octet-stream';
 }
 
-class AdapterException implements Exception {}
+class AdapterException implements Exception {
+  final String message;
+
+  final Object? source;
+  AdapterException(this.message, {this.source}) : super();
+}
 
 /// A base interface shared between adapters
 abstract interface class AdapterInterface {

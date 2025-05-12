@@ -8,11 +8,17 @@ import 'fs.dart';
 import '../shared/version.dart';
 
 class CRSArchive {
-  String name;
+  final String name;
 
-  String? contentType;
+  final String? contentType;
 
-  Uint8List data;
+  final Uint8List data;
+
+  const CRSArchive(this.name, this.contentType, this.data);
+  CRSArchive.empty()
+      : name = '',
+        contentType = null,
+        data = Uint8List(0);
 }
 
 /// an interface for the core registry system, used by adapters to make requests to retrieve common data
@@ -70,7 +76,11 @@ class CRSRequest {
 
 class CRSResponse<T> {
   /// the response body
-  T body;
+  final T body;
+
+  const CRSResponse(this.body);
+  CRSResponse.empty()
+      : body = null as T; // TODO: This is a hack, we need to fix this
 }
 
 class CRSException implements Exception {}

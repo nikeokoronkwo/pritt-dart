@@ -28,9 +28,7 @@ void main() {
         id: 'test-adapter',
         onResolve: (resolveObject) => AdapterResolve.meta,
         request: (requestObject, controller) async {
-          return AdapterMetaResult(
-            mockMetaResult
-          );
+          return AdapterMetaResult(mockMetaResult);
         },
         retrieve: (requestObject, controller) async {
           return AdapterResult();
@@ -38,7 +36,10 @@ void main() {
       );
 
       test('should handle onRequest', () {
-        final resolveObject = AdapterResolveObject(uri: Uri.http('example.org', '/api/packages/foo'), method: RequestMethod.GET, userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
+        final resolveObject = AdapterResolveObject(
+            uri: Uri.http('example.org', '/api/packages/foo'),
+            method: RequestMethod.GET,
+            userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
         final result = adapter.onResolve(resolveObject);
 
         expect(result.isResolved, isTrue);
@@ -46,14 +47,19 @@ void main() {
       });
 
       test('should resolve correctly using onResolve', () async {
-        final resolveObject = AdapterResolveObject(uri: Uri.http('example.org', '/api/packages/foo'), method: RequestMethod.GET, userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
-        final result = await adapter.onRequest(AdapterRequestObject(resolveObject: resolveObject, resolveType: AdapterResolve.meta), mockDBController);
+        final resolveObject = AdapterResolveObject(
+            uri: Uri.http('example.org', '/api/packages/foo'),
+            method: RequestMethod.GET,
+            userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
+        final result = await adapter.onRequest(
+            AdapterRequestObject(
+                resolveObject: resolveObject, resolveType: AdapterResolve.meta),
+            mockDBController);
 
         assert(result is AdapterMetaResult, "adapter should be meta");
-        expect((result as AdapterMetaResult).body.toJson(), equals({'name': 1, 'age': 2}));
+        expect((result as AdapterMetaResult).body.toJson(),
+            equals({'name': 1, 'age': 2}));
       });
-      
     });
-
   });
 }
