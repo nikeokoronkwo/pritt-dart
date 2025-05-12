@@ -39,7 +39,7 @@ Map<String, dynamic> _$NpmMetaResultToJson(NpmMetaResult instance) =>
       '_rev': instance.rev,
       'dist-tags': instance.distTags,
       'versions': instance.versions,
-      'maintainers': instance.maintainers,
+      'maintainers': instance.maintainers.toList(),
       'time': instance.time,
       'author': instance.author,
       'readme': instance.readme,
@@ -87,9 +87,7 @@ NpmPackage _$NpmPackageFromJson(Map<String, dynamic> json) => NpmPackage(
       dist: NpmDist.fromJson(json['dist'] as Map<String, dynamic>),
       from: json['_from'] as String?,
       npmVersion: json['_npmVersion'] as String?,
-      npmUser: json['_npmUser'] == null
-          ? null
-          : NpmAuthor.fromJson(json['_npmUser'] as Map<String, dynamic>),
+      npmUser: json['_npmUser'],
       maintainers: (json['maintainers'] as List<dynamic>?)
           ?.map((e) => NpmAuthor.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -110,9 +108,7 @@ NpmPackage _$NpmPackageFromJson(Map<String, dynamic> json) => NpmPackage(
       funding: (json['funding'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
-      contributors: (json['contributors'] as List<dynamic>?)
-          ?.map((e) => NpmAuthor.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      contributors: json['contributors'] as List<dynamic>?,
       repository: (json['repository'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
@@ -208,13 +204,12 @@ NpmDist _$NpmDistFromJson(Map<String, dynamic> json) => NpmDist(
       tarball: json['tarball'] as String,
       integrity: json['integrity'] as String,
       signatures: (json['signatures'] as List<dynamic>)
-          .map((e) => Map<String, String>.from(e as Map))
-          .toList(),
+          .map((e) => Map<String, String>.from(e as Map)),
     );
 
 Map<String, dynamic> _$NpmDistToJson(NpmDist instance) => <String, dynamic>{
       'shasum': instance.shasum,
       'tarball': instance.tarball,
       'integrity': instance.integrity,
-      'signatures': instance.signatures,
+      'signatures': instance.signatures.toList(),
     };
