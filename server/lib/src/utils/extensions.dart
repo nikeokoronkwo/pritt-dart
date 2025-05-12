@@ -3,3 +3,9 @@ extension ContainsAllOf on String {
     return patterns.every((e) => contains(e));
   }
 }
+
+extension Implies on bool {
+  bool implies(bool other) {
+    return !this || other;
+  }
+}

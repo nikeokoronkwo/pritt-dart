@@ -69,10 +69,7 @@ class PackageVersions {
   /// The type of version here
   VersionType versionType;
 
-  /// The last published time of the given package
-  DateTime updated;
-
-  /// The first published time of the given package
+  /// The published time of the given package
   DateTime created;
 
   /// The path to the readme of the given package relative to where the package is
@@ -103,6 +100,12 @@ class PackageVersions {
   /// The archive SHA256 hash data 
   String hash;
 
+  /// Signatures for the given package when published
+  List<Signature> signatures;
+
+  /// The integrity hash of the given package
+  String integrity;
+
   PackageVersions({
     required this.package,
     required this.version,
@@ -117,7 +120,9 @@ class PackageVersions {
     required this.metadata,
     required this.archive,
     required this.hash,
-  }) : updated = updated ?? created,
+    required this.signatures,
+    required this.integrity,
+  }) :
   assert(config == null || configName != null,
       "If config is set, then configName must be set as well");
 }
@@ -165,5 +170,23 @@ class User {
     required this.accessToken,
     required this.emailAddress,
     required this.joined,
+  });
+}
+
+
+class Signature {
+  /// The public key id of the signature
+  String publicKeyId;
+
+  /// The signature itself
+  String signature;
+
+  /// The time the signature was created
+  DateTime created;
+
+  Signature({
+    required this.publicKeyId,
+    required this.signature,
+    required this.created,
   });
 }

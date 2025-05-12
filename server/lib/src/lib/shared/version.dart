@@ -6,7 +6,7 @@ enum PreReleaseType {
   unknown,
 }
 
-class Version {
+class Version implements Comparable<Version> {
   final int major;
   final int minor;
   final int patch;
@@ -78,4 +78,63 @@ class Version {
     if (build != null) buffer.write('+$build');
     return buffer.toString();
   }
+
+  List<String> _splitPrerelease(String prerelease) =>
+      prerelease.split('.');
+  
+  @override
+  int compareTo(Version other) {
+    // 1. Compare major, minor, patch
+    if (major != other.major) return major.compareTo(other.major);
+    if (minor != other.minor) return minor.compareTo(other.minor);
+    if (patch != other.patch) return patch.compareTo(other.patch);
+
+    // 2. Compare prerelease (if both have it)
+    if (preRelease == null && other.preRelease != null) return 1; // this is release, other is pre
+    if (preRelease != null && other.preRelease == null) return -1; // this is pre, other is release
+    if (preRelease != null && other.preRelease != null) {
+      final pre1 = _splitPrerelease(preRelease!);
+      final pre2 = _splitPrerelease(other.preRelease!);
+      final len = pre1.length > pre2.length ? pre2.length : pre1.length;
+
+      for (int i = 0; i < len; i++) {
+        final a = pre1[i];
+        final b = pre2[i];
+        final aNum = int.tryParse(a);
+        final bNum = int.tryParse(b);
+
+        if (aNum != null && bNum != null) {
+          final cmp = aNum.compareTo(bNum);
+          if (cmp != 0) return cmp;
+        } else if (aNum == null && bNum == null) {
+          final cmp = a.compareTo(b);
+          if (cmp != 0) return cmp;
+        } else {
+          return aNum != null ? -1 : 1; 
+        }
+      }
+
+      return pre1.length.compareTo(pre2.length);
+    }
+
+    return 0;
+  }
+
+  bool operator <(Version other) => compareTo(other) < 0;
+  bool operator <=(Version other) => compareTo(other) <= 0;
+  bool operator >(Version other) => compareTo(other) > 0;
+  bool operator >=(Version other) => compareTo(other) >= 0;
+
+  @override
+  bool operator ==(Object other) =>
+      other is Version &&
+      major == other.major &&
+      minor == other.minor &&
+      patch == other.patch &&
+      preRelease == other.preRelease &&
+      build == other.build;
+
+  @override
+  int get hashCode =>
+      Object.hash(major, minor, patch, preRelease, build);
 }

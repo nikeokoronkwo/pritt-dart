@@ -34,7 +34,7 @@ abstract interface class CRSDBController {
   CRSDatabaseInterface get db;
 
   /// get the latest version of a package
-  Future<CRSResponse<PackageVersions>> getLatestVersion(
+  Future<CRSResponse<PackageVersions>> getLatestPackage(
       String packageName, {String? language, Map<String, dynamic>? env});
 
   /// get a specific version of a package
