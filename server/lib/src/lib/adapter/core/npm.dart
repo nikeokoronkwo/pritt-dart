@@ -16,7 +16,4 @@ final npmAdapter = Adapter(
     retrieve: retrieve,
     returnFn: returnFn);
 
-
-class NpmUserAgentInfo {
-  
-}
+class NpmUserAgentInfo {}

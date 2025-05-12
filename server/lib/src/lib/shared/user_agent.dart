@@ -33,7 +33,7 @@ class UserAgent {
       final [name, version] = parts[0].split('/');
       return UserAgent._(name: name, version: version, raw: raw);
     }
-    
+
     final version = parts.indexWhere((i) => Version.tryParse(i) != null);
     if (version == -1) {
       return UserAgent._(name: raw, version: '', raw: raw);

@@ -2,10 +2,7 @@
 
 import '../shared/user_agent.dart';
 
-
-enum RequestMethod {
-  GET, POST, PUT, DELETE
-}
+enum RequestMethod { GET, POST, PUT, DELETE }
 
 /// An object containing important information used for adapters to be able to distinguish and make requests for packages from the registry
 class AdapterResolveObject {
@@ -38,7 +35,8 @@ class AdapterResolveObject {
       required this.method,
       this.accept = 'application/json',
       this.query = const {},
-      required this.userAgent}) : path = uri.path;
+      required this.userAgent})
+      : path = uri.path;
 }
 
 enum AdapterResolve {

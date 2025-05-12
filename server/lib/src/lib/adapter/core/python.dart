@@ -10,6 +10,8 @@ final pyAdapter = Adapter(
       }
       return AdapterResolve.none;
     },
-    request: request,
+    request: (obj, resolve) {},
     retrieve: retrieve,
-    returnFn: returnFn);
+    returnFn: (response, resolve) {
+      /// for a meta pip response, what do we do?
+    });

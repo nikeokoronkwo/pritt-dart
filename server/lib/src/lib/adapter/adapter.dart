@@ -6,11 +6,38 @@ import 'adapter_registry.dart';
 
 typedef AdapterResolveFn = AdapterResolve Function(AdapterResolveObject);
 
-typedef AdapterRequestFn = CRSRequest Function(AdapterResolveObject);
+typedef AdapterRequestFn = CRSRequest Function(AdapterRequestObject);
 
-typedef AdapterRetrieveFn = CRSRequest Function(AdapterResolveObject);
+typedef AdapterRetrieveFn = CRSRequest Function(AdapterRequestObject);
 
-typedef AdapterReturnFn = AdapterResult Function(CRSResponse);
+typedef AdapterReturnFn = AdapterResult Function(AdapterReturnObject);
+
+class AdapterRequestObject {
+  AdapterResolveObject resolveObject;
+
+  Map<String, dynamic> env;
+
+  AdapterResolve resolveType;
+
+  AdapterRequestObject({
+    required this.resolveObject,
+    Map<String, dynamic>? env,
+    required this.resolveType,
+  }) : env = env ?? resolveObject.meta;
+}
+
+class AdapterReturnObject {
+  CRSResponse crsResponse;
+
+  AdapterResolve resolveType;
+
+  Map<String, dynamic> env;
+  AdapterReturnObject({
+    required this.crsResponse,
+    required this.resolveType,
+    this.env = const {},
+  });
+}
 
 /// An adapter implementation
 ///
