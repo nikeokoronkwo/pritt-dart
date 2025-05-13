@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:pritt_server/src/lib/crs/interfaces.dart';
+import 'package:pritt_server/src/lib/crs/response.dart';
+
 import 'adapter_base.dart';
 
 import '../crs/crs.dart';

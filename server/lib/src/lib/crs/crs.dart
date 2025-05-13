@@ -1,65 +1,72 @@
 // ignore_for_file: constant_identifier_names
 
+
+import 'dart:async';
+
 import 'dart:typed_data';
 
-import 'db.dart';
-import 'db/schema.dart';
-import 'fs.dart';
-import '../shared/version.dart';
+import 'package:pritt_server/src/lib/crs/db.dart';
+import 'package:pritt_server/src/lib/crs/fs.dart';
 
-class CRSArchive {
-  final String name;
+/// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/) 
+/// via the [postgres](https://pub.dev/packages/postgres) package
+/// 
+/// It uses a connection Pool to handle multiple requests
+/// 
+/// For more information on the APIs used in this class, see [CRSDatabaseInterface]
+class CRSDatabase implements CRSDatabaseInterface {
 
-  final String? contentType;
-
-  final Uint8List data;
-
-  const CRSArchive(this.name, this.contentType, this.data);
-  CRSArchive.empty()
-      : name = '',
-        contentType = null,
-        data = Uint8List(0);
 }
 
-/// an interface for the core registry system, used by adapters to make requests to retrieve common data
-abstract interface class CRSArchiveController {
-  /// The object file system interface used by the controller
-  CRSRegistryOFSInterface get ofs;
+/// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
+/// During development, or docker compose deployments, we use [OpenIO]().
+/// 
+/// During live production deployments (usually not on prem), we make use of &lt;insert cloud provider S3 compatible OFS here&gt;
+class CRSStorage implements CRSRegistryOFSInterface {
+  @override
+  FutureOr copy(String from, String to) {
+    // TODO: implement copy
+    throw UnimplementedError();
+  }
 
-  /// get the archive of a package
-  Future<CRSResponse<CRSArchive>> getArchive(String packageName, String version,
-      {String? language, Map<String, dynamic>? env});
+  @override
+  FutureOr create(String path, Uint8List data, String sha) {
+    // TODO: implement create
+    throw UnimplementedError();
+  }
 
-  /// get the archive of a package
-  Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
-      String packageName, String version,
-      {String? language, Map<String, dynamic>? env});
+  @override
+  FutureOr list(String path) {
+    // TODO: implement list
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr listAll() {
+    // TODO: implement listAll
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr listWhere(bool Function(String path) where) {
+    // TODO: implement listWhere
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr remove(String path) {
+    // TODO: implement remove
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr update(String path, Uint8List data) {
+    // TODO: implement update
+    throw UnimplementedError();
+  }
+
 }
 
-/// An interface for the core registry system, used by adapters to make requests to retrieve common data
-abstract interface class CRSDBController {
-  /// The database interface used by the controller
-  CRSDatabaseInterface get db;
-
-  /// get the latest version of a package
-  Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
-      {String? language, Map<String, dynamic>? env});
-
-  /// get a specific version of a package
-  Future<CRSResponse<PackageVersions>> getPackageWithVersion(
-      String packageName, String version,
-      {String? language, Map<String, dynamic>? env});
-
-  /// get the packages from the registry
-  Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
-      String packageName,
-      {String? language,
-      Map<String, dynamic>? env});
-
-  /// get the package details from the registry
-  Future<CRSResponse<Package>> getPackageDetails(String packageName,
-      {String? language, Map<String, dynamic>? env});
-}
 
 /// The core registry service
 ///
@@ -67,20 +74,3 @@ abstract interface class CRSDBController {
 ///
 /// It connects to the database and the object file storage via a pool of resources (i.e makes multiple concurrent requests capped at a maximum) and provides access to data in the
 class CoreRegistryService {}
-
-enum CRSRequestType { Meta, Archive }
-
-class CRSRequest {
-  CRSRequestType requestType = CRSRequestType.Meta;
-}
-
-class CRSResponse<T> {
-  /// the response body
-  final T body;
-
-  const CRSResponse(this.body);
-  CRSResponse.empty()
-      : body = null as T; // TODO: This is a hack, we need to fix this
-}
-
-class CRSException implements Exception {}

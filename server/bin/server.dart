@@ -7,6 +7,12 @@ import 'package:shelf/shelf_io.dart' as io;
 var app = createRouter();
 
 void main(List<String> args) async {
+  // PRE SETUP
+  
+
+
+  // SERVER SETUP
+
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 
