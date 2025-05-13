@@ -8,8 +8,6 @@ var app = createRouter();
 
 void main(List<String> args) async {
   // PRE SETUP
-  
-
 
   // SERVER SETUP
 

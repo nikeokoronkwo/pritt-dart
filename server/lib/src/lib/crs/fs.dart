@@ -10,7 +10,7 @@ import 'db.dart';
 /// This should only be used for accessing the raw packages. Data can be accessed via the [CRSDatabaseInterface] interface.
 abstract interface class CRSRegistryOFSInterface {
   /// Add a new file to the CRS OFS
-  /// 
+  ///
   /// [path] represents the path of the new file, to which [data] is stored as bytes.
   FutureOr create(String path, Uint8List data, String sha);
 

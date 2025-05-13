@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-
 import 'dart:async';
 
 import 'dart:typed_data';
@@ -8,19 +7,17 @@ import 'dart:typed_data';
 import 'package:pritt_server/src/lib/crs/db.dart';
 import 'package:pritt_server/src/lib/crs/fs.dart';
 
-/// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/) 
+/// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/)
 /// via the [postgres](https://pub.dev/packages/postgres) package
-/// 
+///
 /// It uses a connection Pool to handle multiple requests
-/// 
+///
 /// For more information on the APIs used in this class, see [CRSDatabaseInterface]
-class CRSDatabase implements CRSDatabaseInterface {
-
-}
+class CRSDatabase implements CRSDatabaseInterface {}
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
 /// During development, or docker compose deployments, we use [OpenIO]().
-/// 
+///
 /// During live production deployments (usually not on prem), we make use of &lt;insert cloud provider S3 compatible OFS here&gt;
 class CRSStorage implements CRSRegistryOFSInterface {
   @override
@@ -64,9 +61,7 @@ class CRSStorage implements CRSRegistryOFSInterface {
     // TODO: implement update
     throw UnimplementedError();
   }
-
 }
-
 
 /// The core registry service
 ///

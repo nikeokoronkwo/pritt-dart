@@ -1,7 +1,3 @@
-
-
 import 'package:shelf/shelf.dart';
 
-final handler = (Request req) {
-  
-};
+final handler = (Request req) {};

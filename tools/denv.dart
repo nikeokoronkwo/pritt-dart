@@ -23,8 +23,10 @@ void main(List<String> args) async {
   if (args.contains('--cwd')) {
     final int dirOption = args.indexOf('--cwd');
 
-    directory = Directory(args[dirOption+1]);
-  } else { directory = Directory.current; }
+    directory = Directory(args[dirOption + 1]);
+  } else {
+    directory = Directory.current;
+  }
 
   final int separatorIndex = args.indexOf('--');
   if (separatorIndex == -1 || separatorIndex == args.length - 1) {
@@ -32,20 +34,25 @@ void main(List<String> args) async {
     exit(1);
   }
 
-  final List<String> actualArgs = args.sublist(separatorIndex+1);
+  final List<String> actualArgs = args.sublist(separatorIndex + 1);
   final List<String> prevArgs = args.sublist(0, separatorIndex);
 
-  final dotEnvFile = File('${directory.path}$SEPARATOR${prevArgs.isEmpty ? '.env':prevArgs[0]}');
-  final String dotEnv = await dotEnvFile.exists() ? await dotEnvFile.readAsString() : "";
+  final dotEnvFile = File(
+      '${directory.path}$SEPARATOR${prevArgs.isEmpty ? '.env' : prevArgs[0]}');
+  final String dotEnv =
+      await dotEnvFile.exists() ? await dotEnvFile.readAsString() : "";
 
   final contents = Map.fromEntries(LineSplitter().convert(dotEnv).map((line) {
     final split = line.split("=");
     return MapEntry(split[0], split[1]);
   }));
 
-  final defineArg =
-      switch (actualArgs[0]) { "flutter" => "--dart-define", "dart" => "--define", _ => throw Exception("denv only works for dart and flutter") };
-  
+  final defineArg = switch (actualArgs[0]) {
+    "flutter" => "--dart-define",
+    "dart" => "--define",
+    _ => throw Exception("denv only works for dart and flutter")
+  };
+
   var executable = actualArgs[0];
   var arguments = [
     ...(actualArgs.skip(1)),
@@ -60,9 +67,15 @@ void main(List<String> args) async {
 
   bool exitBad = false;
   stdin.listen(process.stdin.add);
-  process.stdout.transform(utf8.decoder).listen(print, onDone: () => exit(exitBad ? 1 : 0),);
-  process.stderr.transform(utf8.decoder).listen((event) {
-    exitBad = true;
-    stderr.write(event);
-  }, onDone: () => exit(exitBad ? 1 : 0),);
+  process.stdout.transform(utf8.decoder).listen(
+        print,
+        onDone: () => exit(exitBad ? 1 : 0),
+      );
+  process.stderr.transform(utf8.decoder).listen(
+    (event) {
+      exitBad = true;
+      stderr.write(event);
+    },
+    onDone: () => exit(exitBad ? 1 : 0),
+  );
 }
