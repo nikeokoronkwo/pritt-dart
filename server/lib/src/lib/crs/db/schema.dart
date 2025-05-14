@@ -1,3 +1,7 @@
+import 'package:pritt_server/src/lib/crs/db/annotations.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/v6.dart';
+
 import '../../shared/version.dart';
 
 enum Privileges { read, write, publish, ultimate }
@@ -6,7 +10,12 @@ enum VCS { git, svn, fossil, mercurial, other }
 
 /// A package, as represented in the pritt database
 class Package {
+  /// The id of the package
+  @primary
+  Uuid id;
+
   /// The name of the package
+  @unique
   String name;
 
   /// The latest version of the given package
@@ -45,7 +54,9 @@ class Package {
   Iterable<User> contributors;
 
   Package(
-      {required this.name,
+      {
+      this.id = const Uuid(),
+      required this.name,
       required this.version,
       required this.author,
       this.config,
@@ -60,6 +71,9 @@ class Package {
 
 /// Maps packages to their versions, and info about those versions
 class PackageVersions {
+
+  @primary
+  @ForeignKey(Package, property: 'id')
   Package package;
 
   String version;
@@ -134,8 +148,10 @@ class PackageVersions {
 
 /// Join table for contributors for a package
 class PackageContributors {
+  @ForeignKey(Package, property: 'id')
   Package package;
 
+  @ForeignKey(User, property: 'id')
   User contributor;
 
   /// The kind of privileges this contributor has, when contributing to this package.
@@ -157,7 +173,8 @@ class PackageContributors {
 /// TODO: Auth?
 class User {
   /// The id of the user
-  String id;
+  @primary
+  Uuid id;
 
   /// The name of the user
   String name;
@@ -167,18 +184,26 @@ class User {
   /// This is used for authenticating workflows for the CLI, installing packages, etc
   String accessToken;
 
+  /// When the current access token expires
+  DateTime accessTokenExpiresAt;
+
   /// The email address of the user
-  String emailAddress;
+  String email;
 
   /// The time the user joined
-  DateTime joined;
+  DateTime createdAt;
+
+  /// The last time the user updated information
+  DateTime updatedAt;
 
   User({
-    required this.id,
+    this.id = const Uuid(),
     required this.name,
     required this.accessToken,
-    required this.emailAddress,
-    required this.joined,
+    required this.accessTokenExpiresAt,
+    required this.email,
+    required this.createdAt,
+    required this.updatedAt
   });
 }
 

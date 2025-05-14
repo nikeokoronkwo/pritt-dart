@@ -102,7 +102,7 @@ final npmAdapter = Adapter(
                     npmUser: v.env['npmUser']));
           }),
           maintainers: packageInfo.body.contributors
-              .map((c) => {'name': c.name, 'email': c.emailAddress}),
+              .map((c) => {'name': c.name, 'email': c.email}),
           time: allPackages.body.map(
               (k, v) => MapEntry(k.toString(), v.created.toIso8601String()))));
     },

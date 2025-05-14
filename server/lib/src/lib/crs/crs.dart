@@ -19,6 +19,8 @@ import 'package:pritt_server/src/lib/crs/fs.dart';
 class CRSDatabase implements CRSDatabaseInterface {
   final Pool _pool;
   final String url;
+  /// prepared statements
+  final Map<String, Statement> _statements = {};
 
   CRSDatabase._({required Pool pool, required this.url}) : _pool = pool;
 
@@ -66,53 +68,6 @@ class CRSDatabase implements CRSDatabaseInterface {
     
   }
 
-  @override
-  FutureOr<Package> addNewPackage() {
-    // TODO: implement addNewPackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<PackageVersions> addNewVersionOfPackage() {
-    // TODO: implement addNewVersionOfPackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<PackageVersions> deprecateVersionOfPackage() {
-    // TODO: implement deprecateVersionOfPackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<Package> getPackage() {
-    // TODO: implement getPackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<PackageVersions> getVersionOfPackage() {
-    // TODO: implement getVersionOfPackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<Package> updatePackage(Map<String, dynamic> updates) {
-    // TODO: implement updatePackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<Package> updateVersionOfPackage(Map<String, dynamic> updates) {
-    // TODO: implement updateVersionOfPackage
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<PackageVersions> yankVersionOfPackage() {
-    // TODO: implement yankVersionOfPackage
-    throw UnimplementedError();
-  }
 }
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
