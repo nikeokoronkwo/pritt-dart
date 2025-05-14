@@ -133,9 +133,10 @@ class CRSStorage implements CRSRegistryOFSInterface {
 
   static CRSStorage connect(
       {String? s3region, String? s3accessKey, String? s3secretKey}) {
-    if (s3 == null)
+    if (s3 == null) {
       initialiseS3(
           region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
+    }
 
     return CRSStorage._();
   }
