@@ -32,4 +32,6 @@ class ProgressBar {
     stdout.write(
         '${(current == total ? (completeMessage ?? message) : message).padRight(messageLength)} ${generateProgressBar(current, total, widthPadding: messageLength + 2)}\r');
   }
+
+  void end() {stdout.writeln();}
 }
