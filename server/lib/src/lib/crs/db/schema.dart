@@ -110,25 +110,25 @@ class PackageVersions {
   /// Whether a given package is yanked
   bool isYanked;
 
-  PackageVersions({
-    required this.package,
-    required this.version,
-    required this.versionType,
-    DateTime? updated,
-    required this.created,
-    this.readme,
-    this.config,
-    this.configName,
-    required this.info,
-    required this.env,
-    required this.metadata,
-    required this.archive,
-    required this.hash,
-    required this.signatures,
-    required this.integrity,
-    this.isDeprecated = false,
-    this.isYanked = false
-  }) : assert(config == null || configName != null,
+  PackageVersions(
+      {required this.package,
+      required this.version,
+      required this.versionType,
+      DateTime? updated,
+      required this.created,
+      this.readme,
+      this.config,
+      this.configName,
+      required this.info,
+      required this.env,
+      required this.metadata,
+      required this.archive,
+      required this.hash,
+      required this.signatures,
+      required this.integrity,
+      this.isDeprecated = false,
+      this.isYanked = false})
+      : assert(config == null || configName != null,
             "If config is set, then configName must be set as well");
 }
 

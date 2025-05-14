@@ -19,7 +19,7 @@ import 'package:pritt_server/src/lib/crs/fs.dart';
 class CRSDatabase implements CRSDatabaseInterface {
   final Pool _pool;
   final String url;
-  
+
   CRSDatabase._({required Pool pool, required this.url}) : _pool = pool;
 
   Future<void> disconnect() async {
@@ -38,11 +38,17 @@ class CRSDatabase implements CRSDatabaseInterface {
     password ??= String.fromEnvironment('DATABASE_PASSWORD');
     final port = int.fromEnvironment('DATABASE_PORT', defaultValue: 5432);
 
-    final pool = Pool.withEndpoints([Endpoint(host: host, database: database, username: username, password: password, port: port)], 
-      settings: PoolSettings(
-        maxConnectionCount: 20,
-      )
-    );
+    final pool = Pool.withEndpoints([
+      Endpoint(
+          host: host,
+          database: database,
+          username: username,
+          password: password,
+          port: port)
+    ],
+        settings: PoolSettings(
+          maxConnectionCount: 20,
+        ));
 
     final url = 'postgres://$username:$password@$host:$port/$database';
 
@@ -96,7 +102,6 @@ class CRSDatabase implements CRSDatabaseInterface {
     // TODO: implement yankVersionOfPackage
     throw UnimplementedError();
   }
-
 }
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
@@ -113,25 +118,24 @@ class CRSStorage implements CRSRegistryOFSInterface {
 
   static S3? s3;
 
-  static S3 initialiseS3({
-    String? region,
-    String? accessKey,
-    String? secretKey
-  }) {
+  static S3 initialiseS3(
+      {String? region, String? accessKey, String? secretKey}) {
     region ??= String.fromEnvironment('S3_REGION');
     secretKey ??= String.fromEnvironment('S3_SECRET_KEY');
     accessKey ??= String.fromEnvironment('S3_ACCESS_KEY');
-    s3 = S3(region: 'us-east-1', credentials: AwsClientCredentials(accessKey: accessKey, secretKey: secretKey));
+    s3 = S3(
+        region: 'us-east-1',
+        credentials:
+            AwsClientCredentials(accessKey: accessKey, secretKey: secretKey));
 
     return s3!;
   }
 
-  static CRSStorage connect({
-    String? s3region,
-    String? s3accessKey,
-    String? s3secretKey
-  }) {
-    if (s3 == null) initialiseS3(region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
+  static CRSStorage connect(
+      {String? s3region, String? s3accessKey, String? s3secretKey}) {
+    if (s3 == null)
+      initialiseS3(
+          region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
 
     return CRSStorage._();
   }

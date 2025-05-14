@@ -38,7 +38,9 @@ void main(List<String> args) async {
   final List<String> prevArgs = args.sublist(0, separatorIndex);
 
   final dotEnvFile = File(
-      prevArgs.where((arg) => arg.startsWith('.env')).isEmpty ? '.env' : prevArgs.where((arg) => arg.startsWith('.env')).first);
+      prevArgs.where((arg) => arg.startsWith('.env')).isEmpty
+          ? '.env'
+          : prevArgs.where((arg) => arg.startsWith('.env')).first);
   final String dotEnv =
       await dotEnvFile.exists() ? await dotEnvFile.readAsString() : "";
 
