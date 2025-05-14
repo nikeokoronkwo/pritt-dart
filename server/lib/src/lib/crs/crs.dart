@@ -26,6 +26,10 @@ class CRSDatabase implements CRSDatabaseInterface {
     _pool.close();
   }
 
+  static _preparePool(Pool pool) {
+    // prepare pool with statements
+  }
+
   static CRSDatabase connect({
     String? host,
     String? database,
@@ -50,9 +54,16 @@ class CRSDatabase implements CRSDatabaseInterface {
           maxConnectionCount: 20,
         ));
 
+    _preparePool(pool);
+
     final url = 'postgres://$username:$password@$host:$port/$database';
 
     return CRSDatabase._(pool: pool, url: url);
+  }
+
+  /// Execute basic SQL statements
+  Future sqlExec(String sql) async {
+    
   }
 
   @override
