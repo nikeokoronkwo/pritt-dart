@@ -17,7 +17,15 @@ services:
     image: openio/sds
     ports:
       - "6007:6007"
-    
+    environment:
+      REGION: ${S3_REGION}
+      SWIFT_CREDENTIALS: "${S3_SECRET_KEY}:${S3_ACCESS_KEY}:.admin"
+      WORKERS: ${S3_WORKERS}
+    env_file:
+      - .env
+    volumes:
+      - adapter-fs-data:/var/lib/oio/sds/OPENIO/rawx-0
+
   db:
     image: postgres:17
     restart: always
@@ -30,5 +38,6 @@ services:
     env_file:
       - .env
 
-  
-    
+volumes:
+  adapter-fs-data:
+    name: "adapter_fs_data"
