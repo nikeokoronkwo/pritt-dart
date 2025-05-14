@@ -104,6 +104,12 @@ class PackageVersions {
   /// The integrity hash of the given package
   String integrity;
 
+  /// Whether the given package is deprecated
+  bool isDeprecated;
+
+  /// Whether a given package is yanked
+  bool isYanked;
+
   PackageVersions({
     required this.package,
     required this.version,
@@ -120,6 +126,8 @@ class PackageVersions {
     required this.hash,
     required this.signatures,
     required this.integrity,
+    this.isDeprecated = false,
+    this.isYanked = false
   }) : assert(config == null || configName != null,
             "If config is set, then configName must be set as well");
 }

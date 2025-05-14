@@ -4,15 +4,23 @@ services:
   server:
     build:
       context: .
-      dockerfile: server/workspace.Dockerfile
+      dockerfile: server/Dockerfile
     ports:
       - "8080:8080"
     environment:
       - PORT=8080
-      
+    depends_on:
+      - db
+      - filestorage
+  
+  filestorage:
+    image: openio/sds
+    ports:
+      - "6007:6007"
     
   db:
     image: postgres:17
+    restart: always
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
