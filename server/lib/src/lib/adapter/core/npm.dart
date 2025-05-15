@@ -98,8 +98,8 @@ final npmAdapter = Adapter(
                         integrity: v.integrity,
                         signatures: v.signatures.map((s) =>
                             {'keyid': s.publicKeyId, 'sig': s.signature})),
-                    npmVersion: v.env['npmVersion'],
-                    npmUser: v.env['npmUser']));
+                    npmVersion: v.env['npm'],
+                    npmUser: v.metadata['npmUser']));
           }),
           maintainers: packageInfo.body.contributors
               .map((c) => {'name': c.name, 'email': c.email}),

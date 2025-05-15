@@ -1,18 +1,39 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:pritt_server/src/lib/crs/db/annotations.dart';
-import 'package:uuid/uuid.dart';
-import 'package:uuid/v6.dart';
 
 import '../../shared/version.dart';
 
-enum Privileges { read, write, publish, ultimate }
+part 'schema.g.dart';
 
-enum VCS { git, svn, fossil, mercurial, other }
+enum Privileges {
+  read,
+  write,
+  publish,
+  ultimate;
+
+  static Privileges fromString(String name) {
+    return Privileges.values
+        .singleWhere((v) => v.toString() == name.toLowerCase());
+  }
+}
+
+enum VCS {
+  git,
+  svn,
+  fossil,
+  mercurial,
+  other;
+
+  static VCS fromString(String name) {
+    return VCS.values.singleWhere((v) => v.toString() == name.toLowerCase());
+  }
+}
 
 /// A package, as represented in the pritt database
 class Package {
   /// The id of the package
   @primary
-  Uuid id;
+  String id;
 
   /// The name of the package
   @unique
@@ -27,11 +48,8 @@ class Package {
   /// This is a foreign reference to a user
   User author;
 
-  /// The configuration file used for the given package
-  String? config;
-
-  /// SHA256 Hash data about the
-  String hash;
+  /// The programming language
+  String language;
 
   /// The last published time of the given package
   DateTime updated;
@@ -44,36 +62,28 @@ class Package {
   /// This information is not used at the moment, and is reserved for future iterations
   VCS vcs;
 
-  /// The archive path of the given package.
+  /// The archive directory path of the given package.
   ///
   /// This archive is usually for the Object File System and so is relative to that
   Uri archive;
 
-  /// The contributors to the package
-  ///
-  Iterable<User> contributors;
-
-  Package(
-      {
-      this.id = const Uuid(),
-      required this.name,
-      required this.version,
-      required this.author,
-      this.config,
-      required this.hash,
-      DateTime? updated,
-      required this.created,
-      this.vcs = VCS.git,
-      required this.archive,
-      required this.contributors})
-      : updated = updated ?? created;
+  Package({
+    required this.id,
+    required this.name,
+    required this.version,
+    required this.author,
+    required this.language,
+    DateTime? updated,
+    required this.created,
+    this.vcs = VCS.git,
+    required this.archive,
+  }) : updated = updated ?? created;
 }
 
 /// Maps packages to their versions, and info about those versions
 class PackageVersions {
-
   @primary
-  @ForeignKey(Package, property: 'id')
+  @ForeignKey(Package, property: 'name')
   Package package;
 
   String version;
@@ -97,11 +107,13 @@ class PackageVersions {
   Map<String, dynamic> info;
 
   /// Environment information (runtime, package manager versions, etc)
+  /// e.g npm, node
   Map<String, String> env;
 
   /// Metadata about the package
   ///
   /// This varies between programming languages based on schema
+  /// e.g npmUser
   Map<String, dynamic> metadata;
 
   /// The archive path of the given package.
@@ -120,6 +132,9 @@ class PackageVersions {
 
   /// Whether the given package is deprecated
   bool isDeprecated;
+
+  /// A deprecation message for the given package
+  String? deprecationMessage;
 
   /// Whether a given package is yanked
   bool isYanked;
@@ -174,7 +189,7 @@ class PackageContributors {
 class User {
   /// The id of the user
   @primary
-  Uuid id;
+  String id;
 
   /// The name of the user
   String name;
@@ -196,17 +211,17 @@ class User {
   /// The last time the user updated information
   DateTime updatedAt;
 
-  User({
-    this.id = const Uuid(),
-    required this.name,
-    required this.accessToken,
-    required this.accessTokenExpiresAt,
-    required this.email,
-    required this.createdAt,
-    required this.updatedAt
-  });
+  User(
+      {required this.id,
+      required this.name,
+      required this.accessToken,
+      required this.accessTokenExpiresAt,
+      required this.email,
+      required this.createdAt,
+      required this.updatedAt});
 }
 
+@JsonSerializable()
 class Signature {
   /// The public key id of the signature
   String publicKeyId;
@@ -222,4 +237,8 @@ class Signature {
     required this.signature,
     required this.created,
   });
+
+  factory Signature.fromJson(Map<String, dynamic> json) =>
+      _$SignatureFromJson(json);
+  Map<String, dynamic> toJson() => _$SignatureToJson(this);
 }

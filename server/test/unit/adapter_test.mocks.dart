@@ -3,17 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart' as _i8;
-import 'package:pritt_server/src/lib/crs/crs.dart' as _i3;
+import 'package:pritt_server/src/lib/adapter/adapter_base.dart' as _i9;
 import 'package:pritt_server/src/lib/crs/db.dart' as _i2;
-import 'package:pritt_server/src/lib/crs/db/schema.dart' as _i6;
+import 'package:pritt_server/src/lib/crs/db/schema.dart' as _i7;
 import 'package:pritt_server/src/lib/crs/fs.dart' as _i4;
-import 'package:pritt_server/src/lib/crs/interfaces.dart' as _i3;
+import 'package:pritt_server/src/lib/crs/interfaces.dart' as _i5;
 import 'package:pritt_server/src/lib/crs/response.dart' as _i3;
-import 'package:pritt_server/src/lib/shared/version.dart' as _i7;
+import 'package:pritt_server/src/lib/shared/version.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -65,7 +64,7 @@ class _FakeCRSRegistryOFSInterface_2 extends _i1.SmartFake
 /// A class which mocks [CRSDBController].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
+class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
   MockCRSDBController() {
     _i1.throwOnMissingStub(this);
   }
@@ -80,7 +79,7 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
       ) as _i2.CRSDatabaseInterface);
 
   @override
-  _i5.Future<_i3.CRSResponse<_i6.PackageVersions>> getLatestPackage(
+  _i6.Future<_i3.CRSResponse<_i7.PackageVersions>> getLatestPackage(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
@@ -94,8 +93,8 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i5.Future<_i3.CRSResponse<_i6.PackageVersions>>.value(
-            _FakeCRSResponse_1<_i6.PackageVersions>(
+        returnValue: _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>.value(
+            _FakeCRSResponse_1<_i7.PackageVersions>(
           this,
           Invocation.method(
             #getLatestPackage,
@@ -106,10 +105,10 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             },
           ),
         )),
-      ) as _i5.Future<_i3.CRSResponse<_i6.PackageVersions>>);
+      ) as _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>);
 
   @override
-  _i5.Future<_i3.CRSResponse<_i6.PackageVersions>> getPackageWithVersion(
+  _i6.Future<_i3.CRSResponse<_i7.PackageVersions>> getPackageWithVersion(
     String? packageName,
     String? version, {
     String? language,
@@ -127,8 +126,8 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i5.Future<_i3.CRSResponse<_i6.PackageVersions>>.value(
-            _FakeCRSResponse_1<_i6.PackageVersions>(
+        returnValue: _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>.value(
+            _FakeCRSResponse_1<_i7.PackageVersions>(
           this,
           Invocation.method(
             #getPackageWithVersion,
@@ -142,11 +141,11 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             },
           ),
         )),
-      ) as _i5.Future<_i3.CRSResponse<_i6.PackageVersions>>);
+      ) as _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>);
 
   @override
-  _i5.Future<
-      _i3.CRSResponse<Map<_i7.Version, _i6.PackageVersions>>> getPackages(
+  _i6.Future<
+      _i3.CRSResponse<Map<_i8.Version, _i7.PackageVersions>>> getPackages(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
@@ -160,9 +159,9 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i5.Future<
-                _i3.CRSResponse<Map<_i7.Version, _i6.PackageVersions>>>.value(
-            _FakeCRSResponse_1<Map<_i7.Version, _i6.PackageVersions>>(
+        returnValue: _i6.Future<
+                _i3.CRSResponse<Map<_i8.Version, _i7.PackageVersions>>>.value(
+            _FakeCRSResponse_1<Map<_i8.Version, _i7.PackageVersions>>(
           this,
           Invocation.method(
             #getPackages,
@@ -173,10 +172,10 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             },
           ),
         )),
-      ) as _i5.Future<_i3.CRSResponse<Map<_i7.Version, _i6.PackageVersions>>>);
+      ) as _i6.Future<_i3.CRSResponse<Map<_i8.Version, _i7.PackageVersions>>>);
 
   @override
-  _i5.Future<_i3.CRSResponse<_i6.Package>> getPackageDetails(
+  _i6.Future<_i3.CRSResponse<_i7.Package>> getPackageDetails(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
@@ -190,8 +189,8 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i5.Future<_i3.CRSResponse<_i6.Package>>.value(
-            _FakeCRSResponse_1<_i6.Package>(
+        returnValue: _i6.Future<_i3.CRSResponse<_i7.Package>>.value(
+            _FakeCRSResponse_1<_i7.Package>(
           this,
           Invocation.method(
             #getPackageDetails,
@@ -202,14 +201,14 @@ class MockCRSDBController extends _i1.Mock implements _i3.CRSDBController {
             },
           ),
         )),
-      ) as _i5.Future<_i3.CRSResponse<_i6.Package>>);
+      ) as _i6.Future<_i3.CRSResponse<_i7.Package>>);
 }
 
 /// A class which mocks [CRSArchiveController].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCRSArchiveController extends _i1.Mock
-    implements _i3.CRSArchiveController {
+    implements _i5.CRSArchiveController {
   MockCRSArchiveController() {
     _i1.throwOnMissingStub(this);
   }
@@ -224,7 +223,7 @@ class MockCRSArchiveController extends _i1.Mock
       ) as _i4.CRSRegistryOFSInterface);
 
   @override
-  _i5.Future<_i3.CRSResponse<_i3.CRSArchive>> getArchive(
+  _i6.Future<_i3.CRSResponse<_i5.CRSArchive>> getArchive(
     String? packageName,
     String? version, {
     String? language,
@@ -242,8 +241,8 @@ class MockCRSArchiveController extends _i1.Mock
             #env: env,
           },
         ),
-        returnValue: _i5.Future<_i3.CRSResponse<_i3.CRSArchive>>.value(
-            _FakeCRSResponse_1<_i3.CRSArchive>(
+        returnValue: _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>.value(
+            _FakeCRSResponse_1<_i5.CRSArchive>(
           this,
           Invocation.method(
             #getArchive,
@@ -257,10 +256,10 @@ class MockCRSArchiveController extends _i1.Mock
             },
           ),
         )),
-      ) as _i5.Future<_i3.CRSResponse<_i3.CRSArchive>>);
+      ) as _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>);
 
   @override
-  _i5.Future<_i3.CRSResponse<_i3.CRSArchive>> getArchiveWithVersion(
+  _i6.Future<_i3.CRSResponse<_i5.CRSArchive>> getArchiveWithVersion(
     String? packageName,
     String? version, {
     String? language,
@@ -278,8 +277,8 @@ class MockCRSArchiveController extends _i1.Mock
             #env: env,
           },
         ),
-        returnValue: _i5.Future<_i3.CRSResponse<_i3.CRSArchive>>.value(
-            _FakeCRSResponse_1<_i3.CRSArchive>(
+        returnValue: _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>.value(
+            _FakeCRSResponse_1<_i5.CRSArchive>(
           this,
           Invocation.method(
             #getArchiveWithVersion,
@@ -293,13 +292,13 @@ class MockCRSArchiveController extends _i1.Mock
             },
           ),
         )),
-      ) as _i5.Future<_i3.CRSResponse<_i3.CRSArchive>>);
+      ) as _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>);
 }
 
 /// A class which mocks [MetaResult].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMetaResult extends _i1.Mock implements _i8.MetaResult {
+class MockMetaResult extends _i1.Mock implements _i9.MetaResult {
   MockMetaResult() {
     _i1.throwOnMissingStub(this);
   }

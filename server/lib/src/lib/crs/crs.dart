@@ -9,66 +9,7 @@ import 'package:postgres/postgres.dart';
 import 'package:pritt_server/src/lib/crs/db.dart';
 import 'package:pritt_server/src/lib/crs/db/schema.dart';
 import 'package:pritt_server/src/lib/crs/fs.dart';
-
-/// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/)
-/// via the [postgres](https://pub.dev/packages/postgres) package
-///
-/// It uses a connection Pool to handle multiple requests
-///
-/// For more information on the APIs used in this class, see [CRSDatabaseInterface]
-class CRSDatabase implements CRSDatabaseInterface {
-  final Pool _pool;
-  final String url;
-  /// prepared statements
-  final Map<String, Statement> _statements = {};
-
-  CRSDatabase._({required Pool pool, required this.url}) : _pool = pool;
-
-  Future<void> disconnect() async {
-    _pool.close();
-  }
-
-  static _preparePool(Pool pool) {
-    // prepare pool with statements
-  }
-
-  static CRSDatabase connect({
-    String? host,
-    String? database,
-    String? username,
-    String? password,
-  }) {
-    host ??= String.fromEnvironment('DATABASE_HOST');
-    database ??= String.fromEnvironment('DATABASE_NAME');
-    username ??= String.fromEnvironment('DATABASE_USERNAME');
-    password ??= String.fromEnvironment('DATABASE_PASSWORD');
-    final port = int.fromEnvironment('DATABASE_PORT', defaultValue: 5432);
-
-    final pool = Pool.withEndpoints([
-      Endpoint(
-          host: host,
-          database: database,
-          username: username,
-          password: password,
-          port: port)
-    ],
-        settings: PoolSettings(
-          maxConnectionCount: 20,
-        ));
-
-    _preparePool(pool);
-
-    final url = 'postgres://$username:$password@$host:$port/$database';
-
-    return CRSDatabase._(pool: pool, url: url);
-  }
-
-  /// Execute basic SQL statements
-  Future sqlExec(String sql) async {
-    
-  }
-
-}
+import 'package:pritt_server/src/lib/shared/version.dart';
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
 /// During development, or docker compose deployments, we use [OpenIO]().
