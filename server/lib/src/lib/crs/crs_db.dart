@@ -64,7 +64,9 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   /// Execute basic SQL statements
-  Future sqlExec(String sql) async {}
+  Future<Iterable<Map<String, dynamic>>> sqlExec(String sql) async {
+    return (await _pool.execute(sql)).map((future) => future.toColumnMap());
+  }
 
   @override
   FutureOr<Package> addNewPackage(
@@ -75,7 +77,6 @@ class CRSDatabase implements CRSDatabaseInterface {
       required VCS vcs,
       Uri? archive,
       Iterable<User>? contributors}) {
-    
     throw UnimplementedError();
   }
 
@@ -106,8 +107,16 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   @override
-  FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(String name) {
+  FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(
+      String name) async {
     // less cacheable
+    if (_statements['getAllVersionsOfPackage'] == null) {
+      _statements['getAllVersionsOfPackage'] = await _pool.prepare('''
+
+''');
+    }
+
+    final result = await _statements['getAllVersionsOfPackage']!.run([name]);
 
     // TODO: implement getAllVersionsOfPackage
     throw UnimplementedError();
@@ -134,25 +143,24 @@ WHERE p.name = @name
     final columnMap = row.toColumnMap();
 
     return Package(
-        id: columnMap['id'] as String,
-        name: columnMap['name'] as String,
-        version: columnMap['version'] as String,
-        author: User(
-          id: columnMap['author_id'] as String,
-          name: columnMap['author_name'] as String,
-          email: columnMap['author_email'] as String,
-          accessToken: columnMap['access_token'] as String,
-          accessTokenExpiresAt:
-              columnMap['access_token_expires_at'] as DateTime,
-          createdAt: columnMap['author_created_at'] as DateTime,
-          updatedAt: columnMap['author_updated_at'] as DateTime,
-        ),
-        language: columnMap['language'] as String,
-        updated: columnMap['updated_at'] as DateTime,
-        created: columnMap['created_at'] as DateTime,
-        vcs: VCS.fromString(columnMap['updated_at'] as String),
-        archive: Uri.directory(columnMap['archive'] as String),
-      );
+      id: columnMap['id'] as String,
+      name: columnMap['name'] as String,
+      version: columnMap['version'] as String,
+      author: User(
+        id: columnMap['author_id'] as String,
+        name: columnMap['author_name'] as String,
+        email: columnMap['author_email'] as String,
+        accessToken: columnMap['access_token'] as String,
+        accessTokenExpiresAt: columnMap['access_token_expires_at'] as DateTime,
+        createdAt: columnMap['author_created_at'] as DateTime,
+        updatedAt: columnMap['author_updated_at'] as DateTime,
+      ),
+      language: columnMap['language'] as String,
+      updated: columnMap['updated_at'] as DateTime,
+      created: columnMap['created_at'] as DateTime,
+      vcs: VCS.fromString(columnMap['updated_at'] as String),
+      archive: Uri.directory(columnMap['archive'] as String),
+    );
   }
 
   @override
@@ -240,8 +248,7 @@ FROM users
         name: columnMap['name'] as String,
         email: columnMap['email'] as String,
         accessToken: columnMap['access_token'] as String,
-        accessTokenExpiresAt:
-            columnMap['access_token_expires_at'] as DateTime,
+        accessTokenExpiresAt: columnMap['access_token_expires_at'] as DateTime,
         createdAt: columnMap['created_at'] as DateTime,
         updatedAt: columnMap['updated_at'] as DateTime,
       );
@@ -390,7 +397,7 @@ FROM users
               );
             })));
   }
-  
+
   @override
   Stream<User> getContributorsForPackageStream(String name) {
     // TODO: implement getContributorsForPackageStream
