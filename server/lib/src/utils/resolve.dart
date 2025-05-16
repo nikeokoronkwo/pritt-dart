@@ -1,6 +1,7 @@
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
-import 'package:pritt_server/src/lib/shared/user_agent.dart';
 import 'package:shelf/shelf.dart';
+
+import '../main/adapter/adapter_base.dart';
+import '../main/shared/user_agent.dart';
 
 AdapterResolveObject getAdapterResolveObject(Request request) {
   return AdapterResolveObject(

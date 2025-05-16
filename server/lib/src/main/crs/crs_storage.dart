@@ -3,7 +3,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
-import 'package:pritt_server/src/lib/crs/fs.dart';
+import 'exceptions.dart';
+import 'fs.dart';
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
 /// During development, or docker compose deployments, we use [OpenIO]().
@@ -121,7 +122,11 @@ class CRSStorage implements CRSRegistryOFSInterface {
       bucket: "pritt-packages",
     );
 
-    return list.contents?.map((e) => CRSFile(path: e.key!, lastModified: e.lastModified, size: e.size ?? 0)).toList() ?? [];
+    return list.contents
+            ?.map((e) => CRSFile(
+                path: e.key!, lastModified: e.lastModified, size: e.size ?? 0))
+            .toList() ??
+        [];
   }
 
   @override
@@ -130,7 +135,12 @@ class CRSStorage implements CRSRegistryOFSInterface {
       bucket: "pritt-packages",
     );
 
-    return list.contents?.where((e) => where(e.key ?? '')).map((e) => CRSFile(path: e.key!, lastModified: e.lastModified, size: e.size ?? 0)).toList() ?? [];
+    return list.contents
+            ?.where((e) => where(e.key ?? ''))
+            .map((e) => CRSFile(
+                path: e.key!, lastModified: e.lastModified, size: e.size ?? 0))
+            .toList() ??
+        [];
   }
 
   @override
@@ -171,12 +181,17 @@ class CRSStorage implements CRSRegistryOFSInterface {
       key: path,
     );
 
+    if (object.body == null) {
+      throw CRSException(
+          CRSExceptionType.OBJECT_NOT_FOUND, 'Could not find archive at $path');
+    }
+
     // return the object as a CRSFileOutputStream
     return CRSFileOutputStream(
       path: path,
       data: object.body!,
       metadata: object.metadata ?? {},
-      contentType: object.contentType ?? '',
+      contentType: object.contentType,
       size: object.contentLength ?? 0,
       hash: object.metadata?['sha256'] ?? '',
       signature: object.metadata?['signature'] ?? '',

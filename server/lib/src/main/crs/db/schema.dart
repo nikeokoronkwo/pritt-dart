@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_server/src/lib/crs/db/annotations.dart';
 
 import '../../shared/version.dart';
+import 'annotations.dart';
 
 part 'schema.g.dart';
 
@@ -94,8 +94,8 @@ class PackageVersions {
   /// The published time of the given package
   DateTime created;
 
-  /// The path to the readme of the given package relative to where the package is
-  Uri? readme;
+  /// The contents of the readme file associated with the package
+  String? readme;
 
   /// The raw contents of the config file associated with the config
   String? config;
@@ -156,7 +156,8 @@ class PackageVersions {
       required this.signatures,
       required this.integrity,
       this.isDeprecated = false,
-      this.isYanked = false})
+      this.isYanked = false,
+      this.deprecationMessage})
       : assert(config == null || configName != null,
             "If config is set, then configName must be set as well");
 }

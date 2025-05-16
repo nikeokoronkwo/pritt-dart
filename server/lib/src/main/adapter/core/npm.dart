@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
-import 'package:pritt_server/src/lib/adapter/adapter.dart';
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
-import 'package:pritt_server/src/lib/adapter/core/npm/package_json.dart';
-import 'package:pritt_server/src/lib/adapter/core/npm/result.dart';
-import 'package:pritt_server/src/lib/shared/version.dart';
-import 'package:pritt_server/src/utils/extensions.dart';
+
+import '../../../utils/extensions.dart';
+import '../../crs/db/schema.dart';
+import '../../crs/response.dart';
+import '../../shared/version.dart';
+import '../adapter.dart';
+import '../adapter_base.dart';
+import 'npm/error.dart';
+import 'npm/package_json.dart';
+import 'npm/result.dart';
 
 final npmAdapter = Adapter(
     id: 'npm',
@@ -41,18 +45,47 @@ final npmAdapter = Adapter(
       // get the package info from the crs
       final packageInfo = await crs.getPackageDetails(packageName);
 
+      // check if the package info is successful
+      // if not, return an error
+      if (!packageInfo.isSuccess) {
+        final errorResponse = packageInfo as CRSErrorResponse;
+        return AdapterErrorResult<NpmError>(
+          NpmError(
+            error: errorResponse.error,
+          ),
+          statusCode: errorResponse.statusCode ?? 500,
+        );
+      }
+
+      // get package contributors
+      final contributors = await crs.getPackageContributors(packageName);
+
       // get the latest package
       final latestPackage = await crs.getLatestPackage(packageName);
 
-      // get the latest package npm config
-      final latestPackageConfig = jsonDecode(latestPackage.body.config!);
-      final latestPackageNpmConfig = PackageJson.fromJson(latestPackageConfig);
+      if (!latestPackage.isSuccess || !contributors.isSuccess) {
+        final errorResponse = latestPackage as CRSErrorResponse;
+        return AdapterErrorResult<NpmError>(
+          NpmError(
+            error: errorResponse.error,
+          ),
+          statusCode: errorResponse.statusCode ?? 500,
+        );
+      }
+
+      // add author to contributors
+      final contrib = contributors.body!
+        ..addAll({
+          packageInfo.body!.author: [Privileges.ultimate]
+        });
+
+      final package = latestPackage.body!;
 
       // get all packages
       final allPackages = await crs.getPackages(packageName);
 
       // get package versions
-      final packageVersions = allPackages.body.keys;
+      final packageVersions = allPackages.body!.keys;
 
       final versionGroups = <VersionType, Version?>{
         for (var type in VersionType.values) type: null
@@ -77,15 +110,15 @@ final npmAdapter = Adapter(
               beta: versionGroups[VersionType.beta].toString(),
               canary: versionGroups[VersionType.canary].toString(),
               // this one is iterating because npm's definition of a "next" version is not completely related to its prerelease info
-              next: allPackages.body.entries
+              next: allPackages.body!.entries
                   .firstWhere((e) =>
                       e.value.versionType == VersionType.next &&
-                      e.key > Version.parse(latestPackage.body.version))
+                      e.key > Version.parse(package.version))
                   .key
                   .toString(),
               experimental: versionGroups[VersionType.experimental].toString(),
               rc: versionGroups[VersionType.rc].toString()),
-          versions: allPackages.body.map((k, v) {
+          versions: allPackages.body!.map((k, v) {
             return MapEntry(
                 k.toString(),
                 NpmPackage.fromPackageJson(
@@ -101,9 +134,9 @@ final npmAdapter = Adapter(
                     npmVersion: v.env['npm'],
                     npmUser: v.metadata['npmUser']));
           }),
-          maintainers: packageInfo.body.contributors
-              .map((c) => {'name': c.name, 'email': c.email}),
-          time: allPackages.body.map(
+          maintainers:
+              contrib.keys.map((c) => {'name': c.name, 'email': c.email}),
+          time: allPackages.body!.map(
               (k, v) => MapEntry(k.toString(), v.created.toIso8601String()))));
     },
     retrieve: (req, crs) async {
@@ -117,11 +150,21 @@ final npmAdapter = Adapter(
 
       final archive = await crs.getArchiveWithVersion(packageName, version);
 
+      if (!archive.isSuccess) {
+        final errorResponse = archive as CRSErrorResponse;
+        return AdapterErrorResult<NpmError>(
+          NpmError(
+            error: errorResponse.error,
+          ),
+          statusCode: errorResponse.statusCode ?? 500,
+        );
+      }
+
       // stream the archive
       return AdapterArchiveResult(
-        archive.body.data,
-        archive.body.name,
-        contentType: archive.body.contentType ?? 'application/x-tar',
+        archive.body!.data,
+        archive.body!.name,
+        contentType: archive.body?.contentType ?? 'application/x-tar',
       );
     });
 

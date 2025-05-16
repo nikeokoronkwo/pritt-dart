@@ -21,6 +21,7 @@ class Version implements Comparable<Version> {
     this.build,
   });
 
+  /// From the [semver.org](https://semver.org/) spec:
   static final _semVerRegExp = RegExp(r'^(0|[1-9]\d*)\.' // major
       r'(0|[1-9]\d*)\.' // minor
       r'(0|[1-9]\d*)' // patch
@@ -152,4 +153,19 @@ class Version implements Comparable<Version> {
   }
 }
 
-enum VersionType { major, experimental, beta, next, rc, canary, other }
+enum VersionType {
+  major,
+  experimental,
+  beta,
+  next,
+  rc,
+  canary,
+  other;
+
+  static VersionType fromString(String type) {
+    return VersionType.values.firstWhere(
+      (e) => e.toString().split('.').last == type,
+      orElse: () => VersionType.other,
+    );
+  }
+}

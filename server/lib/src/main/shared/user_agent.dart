@@ -1,4 +1,4 @@
-import 'package:pritt_server/src/lib/shared/version.dart';
+import 'version.dart';
 
 class UserAgent {
   /// The name of the user agent

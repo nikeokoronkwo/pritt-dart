@@ -1,11 +1,8 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/lib/crs/interfaces.dart';
-import 'package:pritt_server/src/lib/crs/response.dart';
+import '../crs/interfaces.dart';
 
 import 'adapter_base.dart';
-
-import '../crs/crs.dart';
 
 import 'adapter_registry.dart';
 
@@ -16,33 +13,6 @@ typedef AdapterRequestFn = FutureOr<AdapterResult> Function(
 
 typedef AdapterRetrieveFn = FutureOr<AdapterResult> Function(
     AdapterRequestObject, CRSArchiveController);
-
-class AdapterRequestObject {
-  AdapterResolveObject resolveObject;
-
-  Map<String, dynamic> env;
-
-  AdapterResolve resolveType;
-
-  AdapterRequestObject({
-    required this.resolveObject,
-    Map<String, dynamic>? env,
-    required this.resolveType,
-  }) : env = env ?? resolveObject.meta;
-}
-
-class AdapterReturnObject {
-  CRSResponse crsResponse;
-
-  AdapterResolve resolveType;
-
-  Map<String, dynamic> env;
-  AdapterReturnObject({
-    required this.crsResponse,
-    required this.resolveType,
-    this.env = const {},
-  });
-}
 
 /// An adapter implementation
 ///
@@ -82,8 +52,15 @@ class Adapter implements AdapterInterface {
         onRetrieve = retrieve;
 
   @override
-  Future run() {
-    // TODO: implement run
-    throw UnimplementedError();
+  Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {
+    // run the adapter
+    switch (options.resolveType) {
+      case AdapterResolve.meta:
+        return await onRequest(options.toRequestObject(), crs);
+      case AdapterResolve.archive:
+        return await onRetrieve(options.toRequestObject(), crs);
+      default:
+        throw AdapterException('Unsupported adapter resolve type');
+    }
   }
 }

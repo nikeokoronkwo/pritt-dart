@@ -1,25 +1,23 @@
 // ignore_for_file: constant_identifier_names
 
-import 'dart:typed_data';
-import 'package:pritt_server/src/lib/crs/crs.dart';
-import 'package:pritt_server/src/lib/crs/db.dart';
-import 'package:pritt_server/src/lib/crs/db/schema.dart';
-import 'package:pritt_server/src/lib/crs/fs.dart';
-import 'package:pritt_server/src/lib/crs/response.dart';
-import 'package:pritt_server/src/lib/shared/version.dart';
+import '../shared/version.dart';
+import 'db.dart';
+import 'db/schema.dart';
+import 'fs.dart';
+import 'response.dart';
 
 class CRSArchive {
   final String name;
 
   final String? contentType;
 
-  final Uint8List data;
+  final Stream<List<int>> data;
 
   const CRSArchive(this.name, this.contentType, this.data);
   CRSArchive.empty()
       : name = '',
         contentType = null,
-        data = Uint8List(0);
+        data = Stream.empty();
 }
 
 /// an interface for the core registry system, used by adapters to make requests to retrieve common data
@@ -27,11 +25,12 @@ abstract interface class CRSArchiveController {
   /// The object file system interface used by the controller
   CRSRegistryOFSInterface get ofs;
 
-  /// get the archive of a package
-  Future<CRSResponse<CRSArchive>> getArchive(String packageName, String version,
-      {String? language, Map<String, dynamic>? env});
-
-  /// get the archive of a package
+  /// get the archive of a package with the given version
+  ///
+  /// [packageName] is the name of the package
+  /// [version] is the version of the package
+  /// [language] is the language of the package
+  /// [env] is the environment of the package
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
       String packageName, String version,
       {String? language, Map<String, dynamic>? env});
@@ -51,13 +50,25 @@ abstract interface class CRSDBController {
       String packageName, String version,
       {String? language, Map<String, dynamic>? env});
 
-  /// get the packages from the registry
+  /// get all versions of a package from the registry
   Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
       String packageName,
       {String? language,
       Map<String, dynamic>? env});
 
+  /// get all versions of a package from the registry streamed
+  CRSResponse<Stream<PackageVersions>> getPackagesStream(String packageName,
+      {String? language, Map<String, dynamic>? env});
+
   /// get the package details from the registry
   Future<CRSResponse<Package>> getPackageDetails(String packageName,
       {String? language, Map<String, dynamic>? env});
+
+  /// get package contributors and authors
+  Future<CRSResponse<Map<User, Iterable<Privileges>>>> getPackageContributors(
+      String packageName,
+      {String? language,
+      Map<String, dynamic>? env});
 }
+
+abstract class CRSController implements CRSDBController, CRSArchiveController {}

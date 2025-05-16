@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
-import 'package:pritt_server/src/lib/adapter/adapter.dart';
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
-import 'package:pritt_server/src/lib/adapter/core/dart/result.dart';
 import 'package:yaml/yaml.dart';
+
+import '../../crs/db/schema.dart';
+import '../../crs/response.dart';
+import '../adapter.dart';
+import '../adapter_base.dart';
+import 'dart/result.dart';
 
 final dartAdapter = Adapter(
     id: 'dart',
@@ -35,11 +38,23 @@ final dartAdapter = Adapter(
       // retrieve the package details
       final packageDetails = await crs.getPackageDetails(packageName);
 
+      if (!packageDetails.isSuccess) {
+        return AdapterErrorResult(
+            DartErrorResult(
+              code: 'NoSuchKey',
+              message: 'The specified key does not exist.',
+            ),
+            statusCode: 404,
+            responseType: ResponseType.xml);
+      }
+
       // get the latest version
-      final latestVersion = packageDetails.body.version;
+      final latestVersion = packageDetails.body!.version;
 
       // get all packages
-      final packages = await crs.getPackages(packageName);
+      final packages = await crs.getPackages(packageName)
+          as CRSSuccessResponse<Map<String, PackageVersions>>;
+
       final latestPackage = packages.body.values.firstWhere(
         (element) => element.version == latestVersion,
       );
@@ -78,10 +93,33 @@ final dartAdapter = Adapter(
       // get the archive
       final archive = await crs.getArchiveWithVersion(packageName, version);
 
+      if (!archive.isSuccess) {
+        return AdapterErrorResult(
+            DartErrorResult(
+              code: 'NoSuchKey',
+              message: 'The specified key does not exist.',
+            ),
+            statusCode: 404,
+            responseType: ResponseType.xml);
+      }
+
       // stream the archive
       return AdapterArchiveResult(
-        archive.body.data,
-        archive.body.name,
-        contentType: archive.body.contentType ?? 'application/x-tar',
+        archive.body!.data,
+        archive.body!.name,
+        contentType: archive.body!.contentType ?? 'application/gzip',
       );
     });
+
+class DartErrorResult with MetaResult {
+  final String code;
+  final String message;
+
+  DartErrorResult({required this.code, required this.message});
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'Code': code,
+        'Message': message,
+      };
+}

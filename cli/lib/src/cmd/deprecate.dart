@@ -1,5 +1,3 @@
-
-
 import 'package:pritt_cli/src/cli/base.dart';
 
 class DeprecateCommand extends PrittCommand {
@@ -14,5 +12,4 @@ class DeprecateCommand extends PrittCommand {
     // TODO: implement run
     throw UnimplementedError();
   }
-
 }

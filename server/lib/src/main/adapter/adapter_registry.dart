@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
-import 'package:pritt_server/src/lib/adapter/core/dart.dart';
-import 'package:pritt_server/src/lib/adapter/core/npm.dart';
-import 'package:shelf/src/request.dart';
-
 import 'adapter.dart';
+import 'adapter_base.dart';
+import 'core/dart.dart';
+import 'core/npm.dart';
 
 /// An adapter registry implementation
 ///
@@ -56,8 +54,9 @@ class AdapterRegistry {
       {bool checkedCore = false}) async {
     await for (final adapter in (checkedCore ? _customAdapters : adapters)) {
       final adapterResolve = adapter.onResolve(obj);
-      if (adapterResolve.isResolved)
+      if (adapterResolve.isResolved) {
         return (adapter: adapter, resolve: adapterResolve);
+      }
     }
     throw AdapterException("Could not find adapter");
   }
@@ -67,8 +66,9 @@ class AdapterRegistry {
       AdapterResolveObject obj) {
     for (final adapter in _coreAdapters) {
       final adapterResolve = adapter.onResolve(obj);
-      if (adapterResolve.isResolved)
+      if (adapterResolve.isResolved) {
         return (adapter: adapter, resolve: adapterResolve);
+      }
     }
     return null;
   }

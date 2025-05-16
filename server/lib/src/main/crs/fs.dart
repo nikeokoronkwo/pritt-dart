@@ -61,7 +61,7 @@ class CRSFileOutputStream {
   final Map<String, String> metadata;
 
   /// The content type of the file
-  final String contentType;
+  final String? contentType;
 
   /// The size of the file
   final int size;
@@ -79,7 +79,7 @@ class CRSFileOutputStream {
     required this.path,
     required this.data,
     required this.metadata,
-    required this.contentType,
+    this.contentType,
     required this.size,
     required this.hash,
     this.signature,

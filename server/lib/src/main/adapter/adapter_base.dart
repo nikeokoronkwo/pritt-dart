@@ -1,9 +1,10 @@
 // ignore_for_file: constant_identifier_names
 
-import 'dart:typed_data';
+import 'dart:async';
 
 import 'package:mime/mime.dart';
 
+import '../crs/interfaces.dart';
 import '../shared/user_agent.dart';
 
 enum RequestMethod { GET, POST, PUT, DELETE }
@@ -63,26 +64,49 @@ enum AdapterResolve {
   bool get isResolved => this != none;
 }
 
-class AdapterResult {}
+sealed class AdapterResult {
+  final ResponseType responseType;
+
+  const AdapterResult({this.responseType = ResponseType.json});
+}
 
 mixin MetaResult {
   Map<String, dynamic> toJson();
 }
 
+// TODO: Custom conversion types for other formats (i.e custom adapter formats)
+enum ResponseType {
+  json(mimeType: 'application/json'),
+  archive(mimeType: 'application/octet-stream'),
+  xml(mimeType: 'application/xml');
+
+  final String mimeType;
+  const ResponseType({required this.mimeType});
+  String get contentType => mimeType;
+}
+
+class AdapterErrorResult<T extends MetaResult> extends AdapterResult {
+  final T error;
+  final int statusCode;
+
+  AdapterErrorResult(this.error, {this.statusCode = 500, super.responseType});
+}
+
 class AdapterMetaResult<T extends MetaResult> extends AdapterResult {
   final T body;
 
-  AdapterMetaResult(this.body);
+  AdapterMetaResult(this.body, {super.responseType});
 }
 
 class AdapterArchiveResult<T> extends AdapterResult {
-  final Uint8List archive;
+  final Stream<List<int>> archive;
   final String name;
   final String contentType;
 
   AdapterArchiveResult(this.archive, this.name, {String? contentType})
       : contentType =
-            contentType ?? lookupMimeType(name) ?? 'application/octet-stream';
+            contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
+        super(responseType: ResponseType.archive);
 }
 
 class AdapterException implements Exception {
@@ -95,5 +119,38 @@ class AdapterException implements Exception {
 /// A base interface shared between adapters
 abstract interface class AdapterInterface {
   /// Run an adapter
-  Future run();
+  FutureOr<AdapterResult> run(CRSController crs, AdapterOptions options);
+}
+
+class AdapterOptions {
+  final AdapterResolveObject resolveObject;
+  final AdapterResolve resolveType;
+
+  const AdapterOptions({
+    required this.resolveObject,
+    required this.resolveType,
+  });
+
+  /// generate an [AdapterRequestObject] from the current options
+  AdapterRequestObject toRequestObject() {
+    return AdapterRequestObject(
+      resolveObject: resolveObject,
+      env: resolveObject.meta,
+      resolveType: resolveType,
+    );
+  }
+}
+
+class AdapterRequestObject {
+  AdapterResolveObject resolveObject;
+
+  Map<String, dynamic> env;
+
+  AdapterResolve resolveType;
+
+  AdapterRequestObject({
+    required this.resolveObject,
+    Map<String, dynamic>? env,
+    required this.resolveType,
+  }) : env = env ?? resolveObject.meta;
 }

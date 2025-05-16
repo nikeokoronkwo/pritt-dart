@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
+import '../../adapter_base.dart';
 import 'pubspec.dart';
 
 part 'result.g.dart';

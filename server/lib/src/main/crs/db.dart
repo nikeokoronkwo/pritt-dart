@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/lib/crs/db/schema.dart';
-import 'package:pritt_server/src/lib/shared/version.dart';
+import '../shared/version.dart';
+import 'db/schema.dart';
 
 /// Base interface for the CRS Database Interface
 ///
@@ -57,13 +57,14 @@ abstract interface class CRSDatabaseInterface {
       String name, Version version);
 
   /// Get a package
-  FutureOr<Package> getPackage(String name);
+  FutureOr<Package> getPackage(String name, {String? language});
 
   /// Get a specific version of a package
-  FutureOr<PackageVersions> getVersionOfPackage(String name, Version version);
+  FutureOr<PackageVersions> getPackageWithVersion(String name, Version version);
 
   /// Get all versions of a package
-  FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(String name);
+  FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(String name,
+      {Package? package});
 
   /// Get all versions of a package via [Stream]
   Stream<PackageVersions> getAllVersionsOfPackageStream(String name);
@@ -81,7 +82,8 @@ abstract interface class CRSDatabaseInterface {
   Stream<Package> getPackagesForUserStream(String id);
 
   /// Get contributors for a specific package
-  FutureOr<Iterable<User>> getContributorsForPackage(String name);
+  FutureOr<Map<User, Iterable<Privileges>>> getContributorsForPackage(
+      String name);
 
   /// Get contributors for a specific package via [Stream]
   Stream<User> getContributorsForPackageStream(String name);

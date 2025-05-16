@@ -1,10 +1,13 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
+
 import 'package:postgres/postgres.dart';
-import 'package:pritt_server/src/lib/crs/db.dart';
-import 'package:pritt_server/src/lib/crs/db/schema.dart';
-import 'package:pritt_server/src/lib/shared/version.dart';
+
+import '../shared/version.dart';
+import 'db.dart';
+import 'db/schema.dart';
+import 'exceptions.dart';
 
 /// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/)
 /// via the [postgres](https://pub.dev/packages/postgres) package
@@ -14,12 +17,11 @@ import 'package:pritt_server/src/lib/shared/version.dart';
 /// For more information on the APIs used in this class, see [CRSDatabaseInterface]
 class CRSDatabase implements CRSDatabaseInterface {
   final Pool _pool;
-  final String url;
 
   /// prepared statements
   final Map<String, Statement> _statements = {};
 
-  CRSDatabase._({required Pool pool, required this.url}) : _pool = pool;
+  CRSDatabase._({required Pool pool}) : _pool = pool;
 
   Future<void> disconnect() async {
     await _pool.close();
@@ -33,17 +35,12 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   static CRSDatabase connect({
-    String? host,
-    String? database,
-    String? username,
-    String? password,
+    required String host,
+    required int port,
+    required String database,
+    required String username,
+    required String password,
   }) {
-    host ??= String.fromEnvironment('DATABASE_HOST');
-    database ??= String.fromEnvironment('DATABASE_NAME');
-    username ??= String.fromEnvironment('DATABASE_USERNAME');
-    password ??= String.fromEnvironment('DATABASE_PASSWORD');
-    final port = int.fromEnvironment('DATABASE_PORT', defaultValue: 5432);
-
     final pool = Pool.withEndpoints([
       Endpoint(
           host: host,
@@ -58,9 +55,7 @@ class CRSDatabase implements CRSDatabaseInterface {
 
     _preparePool(pool);
 
-    final url = 'postgres://$username:$password@$host:$port/$database';
-
-    return CRSDatabase._(pool: pool, url: url);
+    return CRSDatabase._(pool: pool);
   }
 
   /// Execute basic SQL statements
@@ -107,36 +102,73 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   @override
-  FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(
-      String name) async {
+  Future<Iterable<PackageVersions>> getAllVersionsOfPackage(String name,
+      {Package? package}) async {
     // less cacheable
     if (_statements['getAllVersionsOfPackage'] == null) {
       _statements['getAllVersionsOfPackage'] = await _pool.prepare('''
-
+SELECT version, version_type, created_at, info, env, metadata, archive, hash, signatures, integrity, readme, config, config_name,
+       deprecated, deprecated_message, yanked
+FROM package_versions
+WHERE package_id = (SELECT id FROM packages WHERE name = @name LIMIT 1)
 ''');
     }
 
     final result = await _statements['getAllVersionsOfPackage']!.run([name]);
 
-    // TODO: implement getAllVersionsOfPackage
-    throw UnimplementedError();
+    package ??= await getPackage(name);
+
+    return result.map((row) {
+      final columnMap = row.toColumnMap();
+      return PackageVersions(
+        package: package!,
+        version: columnMap['version'] as String,
+        versionType:
+            VersionType.fromString(columnMap['version_type'] as String),
+        created: columnMap['created_at'] as DateTime,
+        info: columnMap['info'] as Map<String, dynamic>,
+        env: columnMap['env'] as Map<String, String>,
+        metadata: columnMap['metadata'] as Map<String, dynamic>,
+        archive: Uri.file(columnMap['archive'] as String),
+        hash: columnMap['hash'] as String,
+        signatures: (columnMap['signatures'] as List<Map<String, dynamic>>)
+            .map((e) => Signature.fromJson(e))
+            .toList(),
+        integrity: columnMap['integrity'] as String,
+        readme: columnMap['readme'] as String?,
+        config: columnMap['config'] as String?,
+        configName: columnMap['config_name'] as String?,
+        isDeprecated: columnMap['deprecated'] as bool,
+        isYanked: columnMap['yanked'] as bool,
+        deprecationMessage: columnMap['deprecated_message'] as String,
+      );
+    });
   }
 
   @override
-  FutureOr<Package> getPackage(String name) async {
+  Future<Package> getPackage(String name, {String? language}) async {
     // cacheable
+    if (language != null) {
+      throw CRSException(CRSExceptionType.UNSUPPORTED_FEATURE,
+          'Language filtering is not supported in this implementation');
+    }
+
     if (_statements['getPackage'] == null) {
-      _statements['getPackage'] = await _pool.prepare('''
+      _statements['getPackage'] = await _pool.prepare(Sql.named('''
 SELECT p.id, p.name, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, 
        u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, u.access_token_expires_at, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 WHERE p.name = @name
-''');
+'''));
     }
-    final result = await _statements['getPackage']!.run([name]);
+    final result = await _statements['getPackage']!.run({
+      'name': name,
+    });
+
     if (result.isEmpty) {
-      throw Exception('Package not found');
+      throw CRSException(
+          CRSExceptionType.PACKAGE_NOT_FOUND, 'Could not find package $name');
     }
 
     final row = result.first;
@@ -164,7 +196,7 @@ WHERE p.name = @name
   }
 
   @override
-  FutureOr<Iterable<Package>> getPackages() async {
+  Future<Iterable<Package>> getPackages() async {
     // less cacheable
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
@@ -231,7 +263,7 @@ LEFT JOIN users u ON p.author_id = u.id
   }
 
   @override
-  FutureOr<Iterable<User>> getUsers() async {
+  Future<Iterable<User>> getUsers() async {
     // less cacheable
     if (_statements['getUsers'] == null) {
       _statements['getUsers'] = await _pool.prepare('''
@@ -256,11 +288,78 @@ FROM users
   }
 
   @override
-  FutureOr<PackageVersions> getVersionOfPackage(String name, Version version) {
+  FutureOr<PackageVersions> getPackageWithVersion(
+      String name, Version version) async {
     // cacheable
+    if (_statements['getPackageWithVersion'] == null) {
+      _statements['getPackageWithVersion'] = await _pool.prepare(Sql.named('''
+SELECT pv.version, pv.version_type, pv.created_at, pv.info, pv.env, pv.metadata, pv.archive, 
+       pv.hash, pv.signatures, pv.integrity, pv.readme, pv.config, pv.config_name, 
+       pv.deprecated, pv.deprecated_message, pv.yanked, 
+       p.id as package_id, p.name as package_name, p.language as package_language, p.created_at as package_created_at, 
+       p.updated_at as package_updated_at, p.version as package_latest_version, p.vcs as package_vcs, p.archive as package_archive,
+       u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, 
+       u.access_token_expires_at, u.created_at as author_created_at, 
+       u.updated_at as author_updated_at
+FROM package_versions pv
+INNER JOIN packages p ON pv.package_id = p.id
+LEFT JOIN users u ON p.author_id = u.id
+WHERE p.name = @name AND pv.version = @version
+LIMIT 1
+'''));
+    }
+    final result = await _statements['getPackageWithVersion']!.run({
+      'name': name,
+      'version': version.toString(),
+    });
 
-    // TODO: implement getVersionOfPackage
-    throw UnimplementedError();
+    if (result.isEmpty) {
+      throw CRSException(CRSExceptionType.VERSION_NOT_FOUND,
+          'Could not find package $name with version $version');
+    }
+
+    final row = result.first;
+    final columnMap = row.toColumnMap();
+    return PackageVersions(
+      package: Package(
+        id: columnMap['package_id'] as String,
+        version: columnMap['package_latest_version'] as String,
+        name: name,
+        author: User(
+          id: columnMap['author_id'] as String,
+          name: columnMap['author_name'] as String,
+          accessToken: columnMap['access_token'] as String,
+          accessTokenExpiresAt:
+              columnMap['access_token_expires_at'] as DateTime,
+          email: columnMap['author_email'] as String,
+          createdAt: columnMap['author_created_at'] as DateTime,
+          updatedAt: columnMap['author_updated_at'] as DateTime,
+        ),
+        language: columnMap['package_language'] as String,
+        created: columnMap['package_created_at'] as DateTime,
+        updated: columnMap['package_updated_at'] as DateTime,
+        vcs: VCS.fromString(columnMap['package_vcs'] as String),
+        archive: Uri.directory(columnMap['package_archive'] as String),
+      ),
+      version: version.toString(),
+      versionType: VersionType.fromString(columnMap['version_type'] as String),
+      created: columnMap['created_at'] as DateTime,
+      info: columnMap['info'] as Map<String, dynamic>,
+      env: columnMap['env'] as Map<String, String>,
+      metadata: columnMap['metadata'] as Map<String, dynamic>,
+      archive: Uri.file(columnMap['archive'] as String),
+      hash: columnMap['hash'] as String,
+      signatures: (columnMap['signatures'] as List<Map<String, dynamic>>)
+          .map((e) => Signature.fromJson(e))
+          .toList(),
+      integrity: columnMap['integrity'] as String,
+      readme: columnMap['readme'] as String?,
+      config: columnMap['config'] as String?,
+      configName: columnMap['config_name'] as String?,
+      isDeprecated: columnMap['deprecated'] as bool,
+      isYanked: columnMap['yanked'] as bool,
+      deprecationMessage: columnMap['deprecated_message'] as String,
+    );
   }
 
   @override
@@ -313,9 +412,36 @@ FROM users
   }
 
   @override
-  FutureOr<Iterable<User>> getContributorsForPackage(String name) {
-    // TODO: implement getContributorsForPackage
-    throw UnimplementedError();
+  FutureOr<Map<User, Iterable<Privileges>>> getContributorsForPackage(
+      String name) async {
+    // not cacheable
+
+    final result = await _pool.execute(Sql.named('''
+SELECT u.id, u.name, u.email, u.access_token, u.access_token_expires_at, u.created_at, u.updated_at,
+       pc.package_id as package_id, pc.privileges as privileges
+FROM package_contributors pc
+LEFT JOIN users u ON pc.contributor_id = u.id
+WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name LIMIT 1)
+'''), parameters: {
+      'name': name,
+    });
+
+    return result.asMap().map((k, row) {
+      final columnMap = row.toColumnMap();
+      return MapEntry(
+          User(
+            id: columnMap['id'] as String,
+            name: columnMap['name'] as String,
+            email: columnMap['email'] as String,
+            accessToken: columnMap['access_token'] as String,
+            accessTokenExpiresAt:
+                columnMap['access_token_expires_at'] as DateTime,
+            createdAt: columnMap['created_at'] as DateTime,
+            updatedAt: columnMap['updated_at'] as DateTime,
+          ),
+          (columnMap['privileges'] as Iterable<String>)
+              .map((p) => Privileges.fromString(p)));
+    });
   }
 
   // STREAMS
@@ -372,7 +498,7 @@ LEFT JOIN users u ON p.author_id = u.id
   }
 
   @override
-  Stream<User> getUsersStream() {
+  Stream<User> getUsersStream() async* {
     // less cacheable
     if (_statements['getUsers'] == null) {
       _statements['getUsers'] = await _pool.prepare('''
@@ -382,7 +508,7 @@ FROM users
     }
     final result = _statements['getUsers']!.run([]);
 
-    return Stream.fromFuture(result)
+    yield* Stream.fromFuture(result)
         .asyncExpand((e) => Stream.fromIterable(e.map((row) {
               final columnMap = row.toColumnMap();
               return User(

@@ -1,11 +1,10 @@
-import 'package:mockito/mockito.dart';
-import 'package:pritt_server/src/lib/adapter/adapter.dart';
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart';
-import 'package:pritt_server/src/lib/crs/crs.dart';
-import 'package:pritt_server/src/lib/crs/interfaces.dart';
-import 'package:pritt_server/src/lib/shared/user_agent.dart';
-import 'package:test/test.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:pritt_server/src/main/adapter/adapter.dart';
+import 'package:pritt_server/src/main/adapter/adapter_base.dart';
+import 'package:pritt_server/src/main/crs/interfaces.dart';
+import 'package:pritt_server/src/main/shared/user_agent.dart';
+import 'package:test/test.dart';
 
 @GenerateMocks([CRSDBController, CRSArchiveController, MetaResult])
 import 'adapter_test.mocks.dart';

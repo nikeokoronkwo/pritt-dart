@@ -6,13 +6,13 @@
 import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:pritt_server/src/lib/adapter/adapter_base.dart' as _i9;
-import 'package:pritt_server/src/lib/crs/db.dart' as _i2;
-import 'package:pritt_server/src/lib/crs/db/schema.dart' as _i7;
-import 'package:pritt_server/src/lib/crs/fs.dart' as _i4;
-import 'package:pritt_server/src/lib/crs/interfaces.dart' as _i5;
-import 'package:pritt_server/src/lib/crs/response.dart' as _i3;
-import 'package:pritt_server/src/lib/shared/version.dart' as _i8;
+import 'package:pritt_server/src/main/adapter/adapter_base.dart' as _i9;
+import 'package:pritt_server/src/main/crs/db.dart' as _i2;
+import 'package:pritt_server/src/main/crs/db/schema.dart' as _i7;
+import 'package:pritt_server/src/main/crs/fs.dart' as _i4;
+import 'package:pritt_server/src/main/crs/interfaces.dart' as _i5;
+import 'package:pritt_server/src/main/crs/response.dart' as _i3;
+import 'package:pritt_server/src/main/shared/version.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
