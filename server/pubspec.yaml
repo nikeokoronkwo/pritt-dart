@@ -17,12 +17,11 @@ dependencies:
   slugid: ^1.1.2
   sqlite3: ^2.7.5
   yaml: ^3.1.3
-  xml: any
+  xml: ^6.4.0
+
 dev_dependencies:
   test: ^1.25.15
   json_serializable: ^6.9.5
   build_runner: ^2.4.15
   mockito: ^5.4.6
-  migrant: ^0.3.0
-  migrant_db_postgresql: ^0.3.0
 

@@ -22,7 +22,7 @@ sealed class CRSResponse<T> {
     required String error,
     required int statusCode,
   }) =>
-      CRSErrorResponse(error: error, statusCode: statusCode, body: null as T);
+      CRSErrorResponse(error: error, statusCode: statusCode, body: null as T?);
 
   /// A factory constructor for creating an error response
   /// with an error message, a status code and a body
