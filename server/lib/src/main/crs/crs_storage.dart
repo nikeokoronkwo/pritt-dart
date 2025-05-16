@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
 import 'exceptions.dart';
@@ -21,10 +22,7 @@ class CRSStorage implements CRSRegistryOFSInterface {
   static S3? s3;
 
   static Future<S3> initialiseS3(String url,
-      {String? region, String? accessKey, String? secretKey}) async {
-    region ??= String.fromEnvironment('S3_REGION');
-    secretKey ??= String.fromEnvironment('S3_SECRET_KEY');
-    accessKey ??= String.fromEnvironment('S3_ACCESS_KEY');
+      {required String region, required String accessKey, required String secretKey}) async {
     s3 = S3(
       region: region,
       credentials:
@@ -47,6 +45,10 @@ class CRSStorage implements CRSRegistryOFSInterface {
 
   static Future<CRSStorage> connect(String url,
       {String? s3region, String? s3accessKey, String? s3secretKey}) async {
+    s3region ??= String.fromEnvironment('S3_REGION');
+    s3accessKey ??= String.fromEnvironment('S3_SECRET_KEY');
+    s3secretKey ??= String.fromEnvironment('S3_ACCESS_KEY');
+
     if (s3 == null) {
       await initialiseS3(url,
           region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);

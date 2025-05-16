@@ -57,9 +57,9 @@ void main(List<String> args) async {
 
   var executable = actualArgs[0];
   var arguments = [
-    ...(actualArgs.skip(1)),
     if (dotEnv.isNotEmpty)
-      ...(contents.entries.map((e) => "$defineArg=${e.key}=${e.value}"))
+      ...(contents.entries.map((e) => "$defineArg=${e.key}=${e.value}")),
+    ...(actualArgs.skip(1)),
   ];
 
   print("$executable ${arguments.join(' ')}");

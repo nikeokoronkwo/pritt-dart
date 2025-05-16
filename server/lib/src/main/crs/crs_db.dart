@@ -31,6 +31,7 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   static _preparePool(Pool pool) {
+
     // prepare pool with statements
   }
 
@@ -40,7 +41,9 @@ class CRSDatabase implements CRSDatabaseInterface {
     required String database,
     required String username,
     required String password,
+    bool devMode = false,
   }) {
+    print('Host: $host, Port: $port, Database: $database, Username: $username');
     final pool = Pool.withEndpoints([
       Endpoint(
           host: host,
@@ -49,7 +52,10 @@ class CRSDatabase implements CRSDatabaseInterface {
           password: password,
           port: port)
     ],
-        settings: PoolSettings(
+        settings: devMode ? PoolSettings(
+          maxConnectionCount: 20,
+          sslMode: SslMode.disable
+        ) : PoolSettings(
           maxConnectionCount: 20,
         ));
 

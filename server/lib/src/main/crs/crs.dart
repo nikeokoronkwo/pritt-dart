@@ -108,10 +108,16 @@ class CoreRegistryService implements CRSController {
           String.fromEnvironment('DATABASE_USERNAME'),
       password: dbUri?.userInfo.split(':').last ??
           String.fromEnvironment('DATABASE_PASSWORD'),
+      devMode: (dbUri?.host ?? String.fromEnvironment('DATABASE_HOST')) ==
+          'localhost',
     );
     final ofs = await CRSStorage.connect(ofsUrl);
 
     return CoreRegistryService._(db, ofs);
+  }
+
+  Future<void> disconnect() async {
+    await db.disconnect();
   }
 
   @override

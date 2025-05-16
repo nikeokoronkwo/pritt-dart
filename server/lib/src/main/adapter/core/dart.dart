@@ -13,10 +13,10 @@ final dartAdapter = Adapter(
     id: 'dart',
     language: 'dart',
     onResolve: (resolve) {
-      if (resolve.userAgent.name == 'Dart pub') {
-        if (resolve.path.startsWith('/api/packages')) {
+      if (resolve.userAgent.toString().contains('Dart pub')) {
+        if (resolve.path.startsWith('api/packages')) {
           return AdapterResolve.meta;
-        } else if (resolve.path.startsWith('/api/archives')) {
+        } else if (resolve.path.startsWith('api/archives')) {
           return AdapterResolve.archive;
         }
       }

@@ -11,7 +11,7 @@ void main(List<String> args) async {
   final crs = await CoreRegistryService.connect(
       ofsUrl: String.fromEnvironment('S3_URL',
           defaultValue:
-              'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '8080')}'));
+              'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '6007')}'));
 
   // SERVER SETUP
   var app = createRouter(crs);

@@ -11,7 +11,7 @@ enum RequestMethod { GET, POST, PUT, DELETE }
 
 /// An object containing important information used for adapters to be able to distinguish and make requests for packages from the registry
 class AdapterResolveObject {
-  /// the path of the request, as is
+  /// the path of the request, as is without the forward slash in front
   String path;
 
   /// the path segments
