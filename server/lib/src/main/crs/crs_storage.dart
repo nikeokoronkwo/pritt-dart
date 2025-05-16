@@ -22,7 +22,9 @@ class CRSStorage implements CRSRegistryOFSInterface {
   static S3? s3;
 
   static Future<S3> initialiseS3(String url,
-      {required String region, required String accessKey, required String secretKey}) async {
+      {required String region,
+      required String accessKey,
+      required String secretKey}) async {
     s3 = S3(
       region: region,
       credentials:

@@ -31,7 +31,6 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   static _preparePool(Pool pool) {
-
     // prepare pool with statements
   }
 
@@ -52,12 +51,11 @@ class CRSDatabase implements CRSDatabaseInterface {
           password: password,
           port: port)
     ],
-        settings: devMode ? PoolSettings(
-          maxConnectionCount: 20,
-          sslMode: SslMode.disable
-        ) : PoolSettings(
-          maxConnectionCount: 20,
-        ));
+        settings: devMode
+            ? PoolSettings(maxConnectionCount: 20, sslMode: SslMode.disable)
+            : PoolSettings(
+                maxConnectionCount: 20,
+              ));
 
     _preparePool(pool);
 

@@ -68,7 +68,8 @@ class AdapterRegistry {
       final adapterResolve = adapter.onResolve(obj);
       if (adapterResolve.isResolved) {
         return (adapter: adapter, resolve: adapterResolve);
-      } else print('Nope: not $adapter: ${adapter.language} - ${adapterResolve}');
+      } else
+        print('Nope: not $adapter: ${adapter.language} - ${adapterResolve}');
     }
     return null;
   }
