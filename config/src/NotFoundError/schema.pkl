@@ -1,3 +1,5 @@
 module NotFoundError
 
 extends "../Error/schema.pkl"
+
+message: String?

@@ -9,9 +9,18 @@ import 'src/main/crs/crs.dart';
 import 'src/utils/resolve.dart';
 import 'src/utils/xml.dart';
 
-Handler createRouter(CoreRegistryService crs) {
+import 'package:pritt_server/src/routes/api/packages.get.dart' as packagesGet;
+import 'package:pritt_server/src/routes/api/package/%5Bname%5D.get.dart' as packageNameGet;
+
+late CoreRegistryService crs;
+
+Handler createRouter() {
   // create router for openapi routes
-  final app = Router()..get('/', (req) => Response.ok('Hello'));
+  final app = Router()
+  ..get('/', (req) => Response.ok('Hello'))
+  ..get('/api/packages', packagesGet.handler)
+  ..get('/api/package/:name', packageNameGet.handler)
+  ;
 
   // the main handler
   final cascade = Cascade().add(adapterHandler(crs)).add(app.call);

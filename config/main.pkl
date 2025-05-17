@@ -49,6 +49,17 @@ security {
 
 paths {
     ["/api/packages"] {
+        parameters {
+            new {
+                name = "index"
+                `in` = "query"
+                required = false
+                description = "The index of the paginated result"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         get {
             summary = "Get all packages from the Pritt Server"
             operationId = "getPackages"
@@ -84,6 +95,15 @@ paths {
                 description = "The language associated with the package"
                 schema {
                     type = "string"
+                }
+            }
+            new {
+                name = "all"
+                `in` = "query"
+                required = false
+                description = "Whether to get all the versions of the package, including yanked and deprecated versions" 
+                schema {
+                    type = "boolean"
                 }
             }
         }

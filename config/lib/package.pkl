@@ -1,4 +1,4 @@
-@go.Package { name = "github.com/pritt/cli/utils" }
+
 module SchemaUtils
 
 import "pkl:semver"
@@ -20,10 +20,36 @@ class GetSchemaPackage extends ImplPackage {
 }
 
 /// The major extension of this class
-class Package extends ImplPackage {
+open class Package extends ImplPackage {
     name: String
 
-    latest: String
-
     description: String
+    
+    version: Version
+
+    author: Author
+
+    language: String?
+
+    created_at: String
+
+    updated_at: String?
+}
+
+class VerbosePackage extends Package {
+    /// The list of all the versions of the package
+    versions: Map<String, Package>
+
+    /// The list of all the authors of the package
+    authors: List<Author>
+}
+
+open class Author {
+    name: String
+    email: String
+}
+
+class Contributor extends Author {
+    /// The role of the contributor
+    role: Listing<String>?
 }

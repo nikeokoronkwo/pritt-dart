@@ -3,6 +3,12 @@ import 'dart:async';
 import '../shared/version.dart';
 import 'db/schema.dart';
 
+/// Base interface for a SQL database interface
+///
+mixin SQLDatabase {
+  FutureOr sql(String statement);
+}
+
 /// Base interface for the CRS Database Interface
 ///
 /// This is a database-agnostic interface that defines methods for retrieving different kinds of data from the CRS database
@@ -71,6 +77,14 @@ abstract interface class CRSDatabaseInterface {
 
   /// Get packages
   FutureOr<Iterable<Package>> getPackages();
+
+  /// Get the number of packages in the registry
+  ///
+  /// This is slow, and you should use [getPackagesCountEstimate] unless you need an exact value
+  FutureOr<int> getPackagesCount();
+
+  /// Get the estimate of the number of packages in the registry
+  FutureOr<int> getPackagesCountEstimate();
 
   /// Get packages via [Stream]
   Stream<Package> getPackagesStream();

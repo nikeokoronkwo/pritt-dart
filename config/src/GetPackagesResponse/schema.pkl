@@ -3,7 +3,7 @@ module GetPackagesResponse
 import "../../lib/package.pkl"
 
 /// The next url for the next list of the packages
-next_url: String
+next_url: String?
 
 /// The packages listed out
 packages: Listing<package.Package>

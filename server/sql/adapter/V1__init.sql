@@ -50,6 +50,7 @@ CREATE TABLE packages (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT UNIQUE NOT NULL,
     version TEXT UNIQUE NOT NULL,
+    description TEXT,
     author_id TEXT NOT NULL,
     language TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -99,5 +100,6 @@ CREATE TABLE package_contributors (
 );
 
 
-
-
+CREATE TABLE package_publishing_tasks (
+    
+);

@@ -39,6 +39,9 @@ class Package {
   @unique
   String name;
 
+  /// The description of the package
+  String? description;
+
   /// The latest version of the given package
   /// updated with every publish to the database
   String version;
@@ -73,6 +76,7 @@ class Package {
     required this.version,
     required this.author,
     required this.language,
+    this.description,
     DateTime? updated,
     required this.created,
     this.vcs = VCS.git,

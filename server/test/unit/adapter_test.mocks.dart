@@ -3,16 +3,17 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:pritt_server/src/main/adapter/adapter_base.dart' as _i9;
+import 'package:mockito/src/dummies.dart' as _i8;
+import 'package:pritt_server/src/main/adapter/adapter_base.dart' as _i10;
 import 'package:pritt_server/src/main/crs/db.dart' as _i2;
 import 'package:pritt_server/src/main/crs/db/schema.dart' as _i7;
-import 'package:pritt_server/src/main/crs/fs.dart' as _i4;
-import 'package:pritt_server/src/main/crs/interfaces.dart' as _i5;
-import 'package:pritt_server/src/main/crs/response.dart' as _i3;
-import 'package:pritt_server/src/main/shared/version.dart' as _i8;
+import 'package:pritt_server/src/main/crs/fs.dart' as _i3;
+import 'package:pritt_server/src/main/crs/interfaces.dart' as _i4;
+import 'package:pritt_server/src/main/crs/response.dart' as _i6;
+import 'package:pritt_server/src/main/shared/version.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -39,20 +40,9 @@ class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
         );
 }
 
-class _FakeCRSResponse_1<T> extends _i1.SmartFake
-    implements _i3.CRSResponse<T> {
-  _FakeCRSResponse_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeCRSRegistryOFSInterface_2 extends _i1.SmartFake
-    implements _i4.CRSRegistryOFSInterface {
-  _FakeCRSRegistryOFSInterface_2(
+class _FakeCRSRegistryOFSInterface_1 extends _i1.SmartFake
+    implements _i3.CRSRegistryOFSInterface {
+  _FakeCRSRegistryOFSInterface_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -64,7 +54,7 @@ class _FakeCRSRegistryOFSInterface_2 extends _i1.SmartFake
 /// A class which mocks [CRSDBController].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
+class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
   MockCRSDBController() {
     _i1.throwOnMissingStub(this);
   }
@@ -79,7 +69,7 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
       ) as _i2.CRSDatabaseInterface);
 
   @override
-  _i6.Future<_i3.CRSResponse<_i7.PackageVersions>> getLatestPackage(
+  _i5.Future<_i6.CRSResponse<_i7.PackageVersions>> getLatestPackage(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
@@ -93,8 +83,8 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>.value(
-            _FakeCRSResponse_1<_i7.PackageVersions>(
+        returnValue: _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>.value(
+            _i8.dummyValue<_i6.CRSResponse<_i7.PackageVersions>>(
           this,
           Invocation.method(
             #getLatestPackage,
@@ -105,10 +95,10 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             },
           ),
         )),
-      ) as _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>);
+      ) as _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>);
 
   @override
-  _i6.Future<_i3.CRSResponse<_i7.PackageVersions>> getPackageWithVersion(
+  _i5.Future<_i6.CRSResponse<_i7.PackageVersions>> getPackageWithVersion(
     String? packageName,
     String? version, {
     String? language,
@@ -126,8 +116,8 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>.value(
-            _FakeCRSResponse_1<_i7.PackageVersions>(
+        returnValue: _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>.value(
+            _i8.dummyValue<_i6.CRSResponse<_i7.PackageVersions>>(
           this,
           Invocation.method(
             #getPackageWithVersion,
@@ -141,11 +131,11 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             },
           ),
         )),
-      ) as _i6.Future<_i3.CRSResponse<_i7.PackageVersions>>);
+      ) as _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>);
 
   @override
-  _i6.Future<
-      _i3.CRSResponse<Map<_i8.Version, _i7.PackageVersions>>> getPackages(
+  _i5.Future<
+      _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>> getPackages(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
@@ -159,9 +149,10 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i6.Future<
-                _i3.CRSResponse<Map<_i8.Version, _i7.PackageVersions>>>.value(
-            _FakeCRSResponse_1<Map<_i8.Version, _i7.PackageVersions>>(
+        returnValue: _i5.Future<
+                _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>.value(
+            _i8.dummyValue<
+                _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>(
           this,
           Invocation.method(
             #getPackages,
@@ -172,10 +163,39 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             },
           ),
         )),
-      ) as _i6.Future<_i3.CRSResponse<Map<_i8.Version, _i7.PackageVersions>>>);
+      ) as _i5.Future<_i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>);
 
   @override
-  _i6.Future<_i3.CRSResponse<_i7.Package>> getPackageDetails(
+  _i6.CRSResponse<_i5.Stream<_i7.PackageVersions>> getPackagesStream(
+    String? packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPackagesStream,
+          [packageName],
+          {
+            #language: language,
+            #env: env,
+          },
+        ),
+        returnValue:
+            _i8.dummyValue<_i6.CRSResponse<_i5.Stream<_i7.PackageVersions>>>(
+          this,
+          Invocation.method(
+            #getPackagesStream,
+            [packageName],
+            {
+              #language: language,
+              #env: env,
+            },
+          ),
+        ),
+      ) as _i6.CRSResponse<_i5.Stream<_i7.PackageVersions>>);
+
+  @override
+  _i5.Future<_i6.CRSResponse<_i7.Package>> getPackageDetails(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
@@ -189,8 +209,8 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             #env: env,
           },
         ),
-        returnValue: _i6.Future<_i3.CRSResponse<_i7.Package>>.value(
-            _FakeCRSResponse_1<_i7.Package>(
+        returnValue: _i5.Future<_i6.CRSResponse<_i7.Package>>.value(
+            _i8.dummyValue<_i6.CRSResponse<_i7.Package>>(
           this,
           Invocation.method(
             #getPackageDetails,
@@ -201,65 +221,63 @@ class MockCRSDBController extends _i1.Mock implements _i5.CRSDBController {
             },
           ),
         )),
-      ) as _i6.Future<_i3.CRSResponse<_i7.Package>>);
+      ) as _i5.Future<_i6.CRSResponse<_i7.Package>>);
+
+  @override
+  _i5.Future<_i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>>
+      getPackageContributors(
+    String? packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #getPackageContributors,
+              [packageName],
+              {
+                #language: language,
+                #env: env,
+              },
+            ),
+            returnValue: _i5.Future<
+                    _i6.CRSResponse<
+                        Map<_i7.User, Iterable<_i7.Privileges>>>>.value(
+                _i8.dummyValue<
+                    _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>>(
+              this,
+              Invocation.method(
+                #getPackageContributors,
+                [packageName],
+                {
+                  #language: language,
+                  #env: env,
+                },
+              ),
+            )),
+          ) as _i5.Future<
+              _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>>);
 }
 
 /// A class which mocks [CRSArchiveController].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCRSArchiveController extends _i1.Mock
-    implements _i5.CRSArchiveController {
+    implements _i4.CRSArchiveController {
   MockCRSArchiveController() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.CRSRegistryOFSInterface get ofs => (super.noSuchMethod(
+  _i3.CRSRegistryOFSInterface get ofs => (super.noSuchMethod(
         Invocation.getter(#ofs),
-        returnValue: _FakeCRSRegistryOFSInterface_2(
+        returnValue: _FakeCRSRegistryOFSInterface_1(
           this,
           Invocation.getter(#ofs),
         ),
-      ) as _i4.CRSRegistryOFSInterface);
+      ) as _i3.CRSRegistryOFSInterface);
 
   @override
-  _i6.Future<_i3.CRSResponse<_i5.CRSArchive>> getArchive(
-    String? packageName,
-    String? version, {
-    String? language,
-    Map<String, dynamic>? env,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getArchive,
-          [
-            packageName,
-            version,
-          ],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>.value(
-            _FakeCRSResponse_1<_i5.CRSArchive>(
-          this,
-          Invocation.method(
-            #getArchive,
-            [
-              packageName,
-              version,
-            ],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>);
-
-  @override
-  _i6.Future<_i3.CRSResponse<_i5.CRSArchive>> getArchiveWithVersion(
+  _i5.Future<_i6.CRSResponse<_i4.CRSArchive>> getArchiveWithVersion(
     String? packageName,
     String? version, {
     String? language,
@@ -277,8 +295,8 @@ class MockCRSArchiveController extends _i1.Mock
             #env: env,
           },
         ),
-        returnValue: _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>.value(
-            _FakeCRSResponse_1<_i5.CRSArchive>(
+        returnValue: _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>.value(
+            _i8.dummyValue<_i6.CRSResponse<_i4.CRSArchive>>(
           this,
           Invocation.method(
             #getArchiveWithVersion,
@@ -292,13 +310,13 @@ class MockCRSArchiveController extends _i1.Mock
             },
           ),
         )),
-      ) as _i6.Future<_i3.CRSResponse<_i5.CRSArchive>>);
+      ) as _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>);
 }
 
 /// A class which mocks [MetaResult].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMetaResult extends _i1.Mock implements _i9.MetaResult {
+class MockMetaResult extends _i1.Mock implements _i10.MetaResult {
   MockMetaResult() {
     _i1.throwOnMissingStub(this);
   }

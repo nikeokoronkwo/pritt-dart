@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:postgres/postgres.dart';
+import 'package:pritt_server/src/main/crs/exceptions.dart';
 
 import '../shared/version.dart';
 import 'db.dart';
@@ -15,7 +16,7 @@ import 'exceptions.dart';
 /// It uses a connection Pool to handle multiple requests
 ///
 /// For more information on the APIs used in this class, see [CRSDatabaseInterface]
-class CRSDatabase implements CRSDatabaseInterface {
+class CRSDatabase with SQLDatabase implements CRSDatabaseInterface {
   final Pool _pool;
 
   /// prepared statements
@@ -63,7 +64,8 @@ class CRSDatabase implements CRSDatabaseInterface {
   }
 
   /// Execute basic SQL statements
-  Future<Iterable<Map<String, dynamic>>> sqlExec(String sql) async {
+  @override
+  Future<Iterable<Map<String, dynamic>>> sql(String sql) async {
     return (await _pool.execute(sql)).map((future) => future.toColumnMap());
   }
 
@@ -197,6 +199,24 @@ WHERE p.name = @name
       vcs: VCS.fromString(columnMap['updated_at'] as String),
       archive: Uri.directory(columnMap['archive'] as String),
     );
+  }
+
+  @override
+  FutureOr<int> getPackagesCount() {
+    // TODO: implement getPackagesCount
+    throw UnimplementedError('TODO: implement getPackagesCount');
+  }
+
+  @override
+  Future<int> getPackagesCountEstimate() async {
+    if (_statements['getPackageCount'] == null) {
+      _statements['getPackageCount'] = await _pool.prepare('''
+SELECT reltuples::bigint AS estimate FROM pg_class where relname = 'packages';
+''');
+    }
+
+    final result = await _statements['getPackageCount']!.run([]);
+    return result.first.toColumnMap()['estimate'];
   }
 
   @override
@@ -532,5 +552,44 @@ FROM users
   Stream<User> getContributorsForPackageStream(String name) {
     // TODO: implement getContributorsForPackageStream
     throw UnimplementedError();
+  }
+}
+
+extension Authorization on CRSDatabase {
+  /// Check for the authorization of a user
+  /// TODO: Implement a better way to check for authorization, maybe put this behind a cache
+  Future<User?> checkAuthorization(String accessToken) async {
+    final result = await _pool.execute(Sql.named('''
+SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
+FROM users
+WHERE access_token = @accessToken
+'''), parameters: {
+      'accessToken': accessToken,
+    });
+
+    if (result.isEmpty) {
+      throw UnauthorizedException('Invalid access token');
+    }
+
+    final row = result.first;
+    final columnMap = row.toColumnMap();
+
+    final expirationTime = columnMap['access_token_expires_at'] as DateTime;
+    if (expirationTime.isBefore(DateTime.now())) {
+      throw ExpiredTokenException('Access token has expired',
+          token: accessToken);
+    }
+
+    final user = User(
+      id: columnMap['id'] as String,
+      name: columnMap['name'] as String,
+      email: columnMap['email'] as String,
+      accessToken: columnMap['access_token'] as String,
+      accessTokenExpiresAt: columnMap['access_token_expires_at'] as DateTime,
+      createdAt: columnMap['created_at'] as DateTime,
+      updatedAt: columnMap['updated_at'] as DateTime,
+    );
+
+    return user;
   }
 }

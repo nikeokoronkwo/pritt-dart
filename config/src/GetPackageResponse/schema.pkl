@@ -1,7 +1,30 @@
 module GetPackageResponse
 
+import "../../lib/package.pkl"
+
 /// The name of the package retrieved
 name: String
 
 /// The latest version of the package retrieved
-latest: String
+latest_version: String
+
+/// The author of the package
+author: package.Author
+
+/// The description of the package
+description: String?
+
+/// Contributors to the package
+contributors: List<package.Contributor>
+
+/// The language of the package
+language: String?
+
+/// The date the package was created
+created_at: String
+
+/// The latest package 
+latest: package.VerbosePackage
+
+/// A map of all the versions of the package
+versions: Map<String, package.VerbosePackage>

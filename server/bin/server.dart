@@ -7,14 +7,13 @@ import 'package:shelf/shelf_io.dart' as io;
 
 void main(List<String> args) async {
   // PRE SETUP
-  // TODO: Can crs be a global variable, to reduce parameter passing down?
-  final crs = await CoreRegistryService.connect(
+  crs = await CoreRegistryService.connect(
       ofsUrl: String.fromEnvironment('S3_URL',
           defaultValue:
               'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '6007')}'));
 
   // SERVER SETUP
-  var app = createRouter(crs);
+  var app = createRouter();
 
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;

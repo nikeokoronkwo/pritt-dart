@@ -43,3 +43,15 @@ enum CRSExceptionType {
   /// Unsupported feature
   UNSUPPORTED_FEATURE,
 }
+
+class UnauthorizedException implements Exception {
+  final String message;
+  final String? token;
+  UnauthorizedException(this.message, {this.token});
+}
+
+class ExpiredTokenException implements Exception {
+  final String message;
+  final String? token;
+  ExpiredTokenException(this.message, {this.token});
+}
