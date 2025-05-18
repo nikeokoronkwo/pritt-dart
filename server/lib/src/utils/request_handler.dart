@@ -27,6 +27,21 @@ class ResponseBuilder {
   }
 }
 
+Stream<List<int>> getStreamedBody(Event e) {
+  return e.request.read();
+}
+
+Future<Uint8List> getBinaryBody(Event e) async {
+  return await e.request.read().fold<BytesBuilder>(
+    BytesBuilder(),
+    (builder, data) => builder..add(data),
+  ).then((b) => b.toBytes());
+}
+
+setResponseCode(Event e, int statusCode) {
+  e._responseBuilder.statusCode = statusCode;
+}
+
 Uri getUrl(Event e) {
   return e.request.url;
 }
@@ -44,9 +59,12 @@ String getHeader(Event e, String name) {
   }
 }
 
-String getParams(Event e, String name) {
+Object getParams(Event e, String name) {
   var paramValue = e.request.params[name];
   if (paramValue != null) {
+    if (paramValue.contains('/')) return paramValue.split('/');
+    if (int.tryParse(paramValue) != null) return int.parse(paramValue);
+    if (bool.tryParse(paramValue) != null) return bool.parse(paramValue);
     return paramValue;
   } else {
     throw Exception('Could not find a value for the parameter $name');

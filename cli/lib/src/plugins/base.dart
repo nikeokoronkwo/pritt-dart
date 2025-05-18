@@ -17,7 +17,7 @@ class Handler {
   final String language;
 
   /// The name of the package manager
-  final String packageManager;
+  final PackageManager packageManager;
 
   /// Package manager commands
 
@@ -44,6 +44,19 @@ class Handler {
   /// A function run to configure a given workspace
   /// This is run to set up a workspace when installing a given package
   final FutureOr Function() onConfigure;
+
+  Handler({
+    required this.id,
+    required this.name,
+    required this.language,
+    required this.packageManager,
+    required this.onGetConfig,
+    required this.onGetWorkspace,
+    required this.onCheckWorkspace,
+    required this.onConfigure
+  });
 }
 
-class PackageManager {}
+class PackageManager {
+  String name;
+}
