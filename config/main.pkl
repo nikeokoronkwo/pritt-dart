@@ -743,6 +743,50 @@ paths {
             }
         }
     }
+    ["/api/archive/package/{name}"] {
+        get {
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/gzip"] {
+                            schema {
+                            type = "string"
+                            format = "binary"
+                            }
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/archive/adapter/{id}"] {
+        get {
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/gzip"] {
+                            schema {
+                                type = "string"
+                                format = "binary"
+                            }
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
 }
 
 components {

@@ -76,8 +76,9 @@ class LoginCommand extends PrittCommand {
 }
 
 /// Log a user in to the Pritt server
-Future<UserCredentials> loginUser(PrittClient client, Runner cmdRunner, {UserCredentials? credentials}) async{
-  // request for an auth 
+Future<UserCredentials> loginUser(PrittClient client, Runner cmdRunner,
+    {UserCredentials? credentials}) async {
+  // request for an auth
 
   throw UnimplementedError('Login not implemented yet');
 }

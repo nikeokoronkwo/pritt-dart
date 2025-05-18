@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -11,7 +12,7 @@ class Event {
 
   Event.fromRequest(this.request);
 
-  Response Function(Object body) get responseFunc => _responseBuilder.build();
+  Response Function(Object? body) get responseFunc => _responseBuilder.build();
 }
 
 class ResponseBuilder {
@@ -21,8 +22,8 @@ class ResponseBuilder {
 
   ResponseBuilder();
 
-  Response Function(Object body) build() {
-    return (body) => Response(statusCode, body: body, headers: headers);
+  Response Function(Object? body) build() {
+    return (body) => Response(statusCode == 200 ? 204 : statusCode, body: body, headers: headers);
   }
 }
 
@@ -56,20 +57,34 @@ void setResponse(Event e, Response res) {
   e._response = res;
 }
 
-typedef EventHandler<T> = FutureOr<T> Function(Event);
+typedef EventHandler<T extends Object?> = FutureOr<T> Function(Event);
 
-Handler defineRequestHandler<T>(EventHandler handler) {
+Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
   return (Request req) async {
     var event = Event.fromRequest(req);
     final response = await handler(event);
 
     if (event._response != null) return event._response!;
 
-    return switch (response) {
-      String() => event.responseFunc(response),
-      Map() => event.responseFunc(jsonEncode(response)),
-      List<Map>() => event.responseFunc(response),
-      _ => event.responseFunc(response)
-    };
+    switch (response) {
+      case null:
+        return event.responseFunc(null);
+      case String():
+        return event.responseFunc(response);
+      case int():
+        return event.responseFunc(response);
+      case Map():
+        return event.responseFunc(jsonEncode(response));
+      case List<Map>():
+        return event.responseFunc(jsonEncode(response));
+      case Stream<List<int>>():
+        event._responseBuilder.headers.putIfAbsent('Content-Type', () => 'application/octet-stream');
+        return event.responseFunc(response);
+      case Uint8List():
+        event._responseBuilder.headers.putIfAbsent('Content-Type', () => 'application/octet-stream');
+        return event.responseFunc(response);
+      default:
+        return event.responseFunc(response);
+    }
   };
 }
