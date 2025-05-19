@@ -31,6 +31,7 @@ extension SchemaGen on OpenAPIGenResult {
       ..methods.addAll(generateMethods(schemas, methods)));
 
     final lib = Library((l) => l
+    ..ignoreForFile.addAll(['non_constant_identifier_names', 'directives_ordering'])
       ..body.addAll([
         ...generateBaseClasses(schemas),
         ...(schemaClasses).values,
@@ -62,8 +63,6 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   if (componentSpecs.containsKey(name))
     return refer(componentSpecs[name]!.name);
-
-  print('fada ------> $name - $required');
 
   if (schema.hasProperty('enum'.toJS).toDart) {
     return refer(required ? 'String' : 'String?');
@@ -168,8 +167,6 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
     ..fields.addAll(fields));
 
   componentSpecs.putIfAbsent(name, () => classForSchema);
-
-  print('Complete $name\n');
 
   return TypeReference((t) => t
     ..symbol = classForSchema.name + ((required ?? true) ? '' : '?')

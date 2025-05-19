@@ -1,7 +1,9 @@
+// ignore_for_file: directives_ordering, non_constant_identifier_names
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
-import 'dart:convert' as _i2;
 import 'dart:typed_data' as _i1;
+import 'dart:convert' as _i2;
+import 'dart:async' as _i3;
 
 class Content {
   const Content(this.raw);
@@ -449,8 +451,8 @@ abstract interface class PrittInterface {
   /// POST /api/adapter/{id}
   ///
   /// Create or update an adapter with the given id
-  _i3.FutureOr<dynamic> addAdapterWithId(
-    dynamic body, {
+  _i3.FutureOr<AddAdapterResponse> addAdapterWithId(
+    AddAdapterRequest body, {
     required String id,
   });
 
