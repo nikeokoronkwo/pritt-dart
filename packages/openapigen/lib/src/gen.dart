@@ -31,7 +31,11 @@ extension SchemaGen on OpenAPIGenResult {
       ..methods.addAll(generateMethods(schemas, methods)));
 
     final lib = Library((l) => l
-    ..ignoreForFile.addAll(['non_constant_identifier_names', 'directives_ordering'])
+      ..ignoreForFile
+          .addAll(['non_constant_identifier_names', 'directives_ordering'])
+      ..directives.add(
+        Directive.part('interface.g.dart')
+      )
       ..body.addAll([
         ...generateBaseClasses(schemas),
         ...(schemaClasses).values,
@@ -59,7 +63,8 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   if (schema.hasProperty('nullable'.toJS).toDart) {
     required = !(schema.getProperty('nullable'.toJS) as JSBoolean).toDart;
-  } else required ??= true;
+  } else
+    required ??= true;
 
   if (componentSpecs.containsKey(name))
     return refer(componentSpecs[name]!.name);
@@ -93,14 +98,15 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
       case 'integer':
       case 'boolean':
         return TypeReference((t) => t
-        ..symbol = switch (schema.getProperty('type'.toJS).dartify() as String) {
-          'string' => 'String',
-          'number' => 'num',
-          'integer' => 'int',
-          'boolean' => 'bool',
-          _ => 'Object'
-        } + ((required ?? true) ? '' : '?')
-        );
+          ..symbol =
+              switch (schema.getProperty('type'.toJS).dartify() as String) {
+                    'string' => 'String',
+                    'number' => 'num',
+                    'integer' => 'int',
+                    'boolean' => 'bool',
+                    _ => 'Object'
+                  } +
+                  ((required ?? true) ? '' : '?'));
       case 'array':
         if (!schema.hasProperty('items'.toJS).toDart) {
           print("Not supported any of arrays");
@@ -108,7 +114,7 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
         } else {
           final itemSchema = schema.getProperty('items'.toJS) as JSObject;
           return TypeReference((t) => t
-            ..symbol = 'List' 
+            ..symbol = 'List'
             ..types.add(_generateSpecFromSchema(
                 itemSchema,
                 itemSchema.getProperty('title'.toJS).dartify() as String? ??
@@ -127,9 +133,9 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   final properties =
       schema.getProperty('properties'.toJS) as JSRecord<JSString, JSObject>;
-  final requiredProperties =
-      schema.hasProperty('required'.toJS).toDart ? schema.getProperty('required'.toJS) as JSArray<JSString> :
-      <String>[].jsify() as JSArray<JSString>;
+  final requiredProperties = schema.hasProperty('required'.toJS).toDart
+      ? schema.getProperty('required'.toJS) as JSArray<JSString>
+      : <String>[].jsify() as JSArray<JSString>;
 
   final fields = <Field>[];
   final constructorParams = <Parameter>[];
@@ -140,35 +146,61 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
       .forEach((v) {
     final name = v.$1;
     final obj = v.$2;
-    final propIsRequired =
-        requiredProperties.toDart.map((v) => v.toDart.toLowerCase()).contains(name.toLowerCase());
+    final propIsRequired = requiredProperties.toDart
+        .map((v) => v.toDart.toLowerCase())
+        .contains(name.toLowerCase());
     var type = _generateSpecFromSchema(
-          obj, obj.getProperty('title'.toJS).dartify() as String? ?? name,
-          componentSpecs: componentSpecs, required: propIsRequired);
+        obj, obj.getProperty('title'.toJS).dartify() as String? ?? name,
+        componentSpecs: componentSpecs, required: propIsRequired);
     fields.add(Field((f) => f
       ..name = name
       ..modifier = FieldModifier.final$
-      ..type = type
-    ));
+      ..type = type));
 
     constructorParams.add(Parameter((p) => p
       ..name = name
       ..named = true
       ..toThis = true
       ..required = propIsRequired
-      ..defaultTo = !propIsRequired && type.symbol.toString().startsWith('List') ? Code('const []') : null
-    ));
+      ..defaultTo = !propIsRequired && type.symbol.toString().startsWith('List')
+          ? Code('const []')
+          : null));
   });
 
   final classForSchema = Class((c) => c
+    // JSON serializable
+    ..annotations.add(refer(
+        'JsonSerializable', 'package:json_annotation/json_annotation.dart').call([]))
     ..name = name
+
+    // main constructor
     ..constructors.add(Constructor(
         (ctor) => ctor..optionalParameters.addAll(constructorParams)))
-    ..fields.addAll(fields));
+    ..constructors.add(Constructor((c) => c
+      ..factory = true
+      ..name = "fromJson"
+      ..requiredParameters.add(Parameter((p) => p
+        ..name = 'json'
+        ..type = TypeReference((t) => t
+          ..symbol = 'Map'
+          ..types.addAll([refer('String'), refer('dynamic')]))))
+      ..lambda = true
+      ..body = refer('_\$${name}FromJson').call([literal(refer('json'))]).code))
+    ..fields.addAll(fields)
+    ..methods.addAll([
+      // toJson
+      Method((m) => m
+      ..name = "toJson"
+      ..returns = TypeReference((t) => t
+          ..symbol = 'Map'
+          ..types.addAll([refer('String'), refer('dynamic')]))
+      ..lambda = true
+      ..body = refer('_\$${name}ToJson').call([literal(refer('this'))]).code
+      )
+    ]));
 
   componentSpecs.putIfAbsent(name, () => classForSchema);
 
-  return TypeReference((t) => t
-    ..symbol = classForSchema.name + ((required ?? true) ? '' : '?')
-  );
+  return TypeReference(
+      (t) => t..symbol = classForSchema.name + ((required ?? true) ? '' : '?'));
 }

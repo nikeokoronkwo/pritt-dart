@@ -6,9 +6,22 @@ import os.path as path
 import shutil
 import sys
 
+import argparse
+
+def generate_arg_parser():
+    parser = argparse.ArgumentParser(description='OpenAPI Client Generator')
+    parser.add_argument('openapi_file', help="OpenAPI file to pass")
+    parser.add_argument('--out-package-dir', '-o', default='common',
+                        help='The package to write this to')
+    return parser
+
 
 if __name__ == "__main__":
-    # 
+    # Get args
+    parser = generate_arg_parser()
+    args = parser.parse_args()
+
+    # Begin
     print("Searching for OpenAPIGen dir...")
     openapigen_dir = path.join(os.getcwd(), 'packages', 'openapigen')
     openapigen_dest_dir = path.join(openapigen_dir, 'dist')
@@ -36,8 +49,7 @@ if __name__ == "__main__":
 
     # run command
     print('\n')
-    cmd_args = ['node', path.join(openapigen_dest_dir, 'openapigen.js')]
-    cmd_args.extend(sys.argv[1:])
+    cmd_args = ['node', path.join(openapigen_dest_dir, 'openapigen.js'), args.openapi_file, '-o', path.join(args.out_package_dir, 'lib')]
 
     print(f"Running \"{cmd_args}\" \n")
     process = subprocess.run(cmd_args)
@@ -45,6 +57,10 @@ if __name__ == "__main__":
     if not process.returncode == 0:
         exit(process.returncode)
     
+    # Generate JSON types
+    print("Generating JSON types...")
+    subprocess.run(['dart', 'run', 'build_runner', 'build'], cwd=args.out_package_dir)
+
     subprocess.run(['dart', 'format', 'common'])
     subprocess.run(['dart', 'fix', 'common', '--apply'])
 
