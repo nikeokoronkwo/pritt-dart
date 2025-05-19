@@ -23,7 +23,7 @@ class GetSchemaPackage extends ImplPackage {
 open class Package extends ImplPackage {
     name: String
 
-    description: String
+    description: String?
     
     version: Version
 

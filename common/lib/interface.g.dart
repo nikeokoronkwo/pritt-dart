@@ -138,7 +138,7 @@ Map<String, dynamic> _$ContributorToJson(Contributor instance) =>
 
 Package _$PackageFromJson(Map<String, dynamic> json) => Package(
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String?,
       version: json['version'] as String,
       author: Author.fromJson(json['author'] as Map<String, dynamic>),
       language: json['language'] as String?,
@@ -159,7 +159,7 @@ Map<String, dynamic> _$PackageToJson(Package instance) => <String, dynamic>{
 VerbosePackage _$VerbosePackageFromJson(Map<String, dynamic> json) =>
     VerbosePackage(
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String?,
       version: json['version'] as String,
       author: Author.fromJson(json['author'] as Map<String, dynamic>),
       language: json['language'] as String?,

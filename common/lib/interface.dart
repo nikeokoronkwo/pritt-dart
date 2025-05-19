@@ -20,9 +20,17 @@ class TextContent extends Content {
 }
 
 class BinaryContent extends Content {
-  BinaryContent(this.data) : super(data);
+  BinaryContent(
+    this.name,
+    this.data, {
+    this.contentType = 'application/octet-stream',
+  }) : super(data);
 
   _i1.Uint8List data;
+
+  String name;
+
+  String contentType;
 }
 
 class JSONContent extends Content {
@@ -32,9 +40,17 @@ class JSONContent extends Content {
 }
 
 class StreamedContent extends Content {
-  StreamedContent(this.data) : super([]);
+  StreamedContent(
+    this.name,
+    this.data, {
+    this.contentType = 'application/octet-stream',
+  }) : super([]);
 
   Stream<List<int>> data;
+
+  String name;
+
+  String contentType;
 
   @override
   List<int> get raw => throw Exception(
@@ -236,7 +252,7 @@ class Contributor {
 class Package {
   Package({
     required this.name,
-    required this.description,
+    this.description,
     required this.version,
     required this.author,
     this.language,
@@ -249,7 +265,7 @@ class Package {
 
   final String name;
 
-  final String description;
+  final String? description;
 
   final String version;
 
@@ -268,7 +284,7 @@ class Package {
 class VerbosePackage {
   VerbosePackage({
     required this.name,
-    required this.description,
+    this.description,
     required this.version,
     required this.author,
     this.language,
@@ -283,7 +299,7 @@ class VerbosePackage {
 
   final String name;
 
-  final String description;
+  final String? description;
 
   final String version;
 

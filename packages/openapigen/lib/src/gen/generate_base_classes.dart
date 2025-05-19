@@ -40,13 +40,35 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
       ..name = "BinaryContent"
       ..extend = refer('Content')
       ..constructors.add(Constructor((c) => c
-        ..requiredParameters.add(Parameter((p) => p
+        ..requiredParameters.addAll([
+          Parameter((p) => p
+          ..name = 'name'
+          ..toThis = true),
+          Parameter((p) => p
           ..name = 'data'
-          ..toThis = true))
+          ..toThis = true),
+        ])
+        ..optionalParameters.add(
+          Parameter((p) => p
+          ..name = 'contentType'
+          ..toThis = true
+          ..named = true
+          ..defaultTo = literalString('application/octet-stream').code
+          )
+        )
         ..initializers.add(literal(refer('super')).call([refer('data')]).code)))
-      ..fields.add(Field((f) => f
+      ..fields.addAll([
+        Field((f) => f
         ..name = 'data'
-        ..type = refer('Uint8List', 'dart:typed_data')))),
+        ..type = refer('Uint8List', 'dart:typed_data')),
+        Field((f) => f
+        ..name = 'name'
+        ..type = refer('String')),
+        Field((f) => f
+        ..name = 'contentType'
+        ..type = refer('String')),
+      ])
+      ),
 
     // json content
     Class((c) => c
@@ -69,13 +91,32 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
       ..name = "StreamedContent"
       ..extend = refer('Content')
       ..constructors.add(Constructor((c) => c
-        ..requiredParameters.add(Parameter((p) => p
+        ..requiredParameters.addAll([
+          Parameter((p) => p
+          ..name = 'name'
+          ..toThis = true),
+          Parameter((p) => p
           ..name = 'data'
-          ..toThis = true))
+          ..toThis = true),
+        ])
+        ..optionalParameters.add(Parameter((p) => p
+          ..name = 'contentType'
+          ..toThis = true
+          ..named = true
+          ..defaultTo = literalString('application/octet-stream').code
+          ))
         ..initializers.add(literal(refer('super')).call([literal([])]).code)))
-      ..fields.add(Field((f) => f
+      ..fields.addAll([
+        Field((f) => f
         ..name = 'data'
-        ..type = refer('Stream<List<int>>')))
+        ..type = refer('Stream<List<int>>')),
+        Field((f) => f
+        ..name = 'name'
+        ..type = refer('String')),
+        Field((f) => f
+        ..name = 'contentType'
+        ..type = refer('String')),
+      ])
       ..methods.addAll([
         Method((m) => m
           ..annotations.add(refer('override'))
