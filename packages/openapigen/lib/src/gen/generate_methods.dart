@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
+
 import 'package:code_builder/code_builder.dart';
-import '../gen.dart';
+
 import '../js.dart';
 import '../js_helpers.dart';
 

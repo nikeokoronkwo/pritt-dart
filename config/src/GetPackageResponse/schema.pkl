@@ -15,7 +15,7 @@ author: package.Author
 description: String?
 
 /// Contributors to the package
-contributors: List<package.Contributor>
+contributors: Listing<package.Contributor>
 
 /// The language of the package
 language: String?

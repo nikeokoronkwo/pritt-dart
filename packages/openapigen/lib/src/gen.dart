@@ -33,6 +33,8 @@ extension SchemaGen on OpenAPIGenResult {
     final lib = Library((l) => l
       ..ignoreForFile
           .addAll(['non_constant_identifier_names', 'directives_ordering'])
+      ..directives
+          .add(Directive.import('package:json_annotation/json_annotation.dart'))
       ..directives.add(Directive.part('interface.g.dart'))
       ..body.addAll([
         ...generateBaseClasses(schemas),
@@ -40,12 +42,15 @@ extension SchemaGen on OpenAPIGenResult {
         clientClass
       ]));
 
-    return {'interface.dart': '${lib.accept(DartEmitter.scoped())}'};
+    return {
+      'interface.dart':
+          '${lib.accept(DartEmitter.scoped(useNullSafetySyntax: true))}'
+    };
   }
 }
 
-Map<String, Class> _generateClasses(JSRecord<JSString, Schema> schemas) {
-  Map<String, Class> specs = {};
+Map<String, Spec> _generateClasses(JSRecord<JSString, Schema> schemas) {
+  Map<String, Spec> specs = {};
   entriesFromRecord(schemas).toDart.forEach((schemaTuple) {
     _generateSpecFromSchema(
         schemaTuple[1] as JSObject, schemaTuple[0].dartify() as String,
@@ -56,19 +61,47 @@ Map<String, Class> _generateClasses(JSRecord<JSString, Schema> schemas) {
 }
 
 Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
-    {Map<String, Class>? componentSpecs, bool? required}) {
+    {Map<String, Spec>? componentSpecs, bool? required}) {
   componentSpecs ??= {};
 
   if (schema.hasProperty('nullable'.toJS).toDart) {
     required = !(schema.getProperty('nullable'.toJS) as JSBoolean).toDart;
-  } else
+  } else {
     required ??= true;
+  }
 
-  if (componentSpecs.containsKey(name))
-    return refer(componentSpecs[name]!.name);
+  if (componentSpecs.containsKey(name)) {
+    return refer(switch (componentSpecs[name]!) {
+      Enum e => e.name,
+      Class c => c.name,
+      _ => throw Exception('Unknown')
+    });
+  }
 
   if (schema.hasProperty('enum'.toJS).toDart) {
-    return refer(required ? 'String' : 'String?');
+    final enumValues = schema.getProperty('enum'.toJS) as JSArray<JSString>;
+    final dartifiedEnumValues = enumValues.toDart.map((v) => v.toDart);
+    // let's try enum
+    final enumeration = Enum((e) => e
+      ..annotations.add(
+          refer('JsonEnum').call([], {'valueField': literalString('value')}))
+      ..constructors.add(Constructor((c) => c
+        ..requiredParameters.add(Parameter((p) => p
+          ..name = 'value'
+          ..toThis = true))))
+      ..fields.add(Field((f) => f
+        ..name = 'value'
+        ..type = refer('String')))
+      ..name = schema.getProperty('title'.toJS).dartify() as String? ?? name
+      ..values.addAll(dartifiedEnumValues.map((ev) {
+        return EnumValue((val) => val
+          ..name = ev
+          ..arguments.add(literalString(ev)));
+      })));
+
+    componentSpecs.putIfAbsent(name, () => enumeration);
+
+    return refer(enumeration.name + (required ? '' : '?'));
   }
 
   if (schema.hasProperty('additionalProperties'.toJS).toDart &&
@@ -113,12 +146,12 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
           final itemSchema = schema.getProperty('items'.toJS) as JSObject;
           return TypeReference((t) => t
             ..symbol = 'List'
+            ..isNullable = true
             ..types.add(_generateSpecFromSchema(
                 itemSchema,
                 itemSchema.getProperty('title'.toJS).dartify() as String? ??
                     "${name}Item",
-                componentSpecs: componentSpecs))
-            ..isNullable = !(required ?? true));
+                componentSpecs: componentSpecs)));
         }
       case 'object':
         break;
@@ -126,8 +159,9 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
         // nothing
         break;
     }
-  } else
+  } else {
     return refer('dynamic');
+  }
 
   final properties =
       schema.getProperty('properties'.toJS) as JSRecord<JSString, JSObject>;
@@ -167,9 +201,7 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   final classForSchema = Class((c) => c
     // JSON serializable
-    ..annotations.add(refer(
-            'JsonSerializable', 'package:json_annotation/json_annotation.dart')
-        .call([]))
+    ..annotations.add(refer('JsonSerializable').call([]))
     ..name = name
 
     // main constructor
@@ -199,6 +231,7 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   componentSpecs.putIfAbsent(name, () => classForSchema);
 
-  return TypeReference(
-      (t) => t..symbol = classForSchema.name + ((required ?? true) ? '' : '?'));
+  return TypeReference((t) => t
+    ..symbol = classForSchema.name
+    ..isNullable = !(required ?? true));
 }

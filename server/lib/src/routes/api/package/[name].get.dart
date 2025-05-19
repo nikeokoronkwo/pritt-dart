@@ -1,14 +1,17 @@
+import 'package:pritt_common/interface.dart' as common;
 import 'package:pritt_server/pritt_server.dart';
+import 'package:pritt_server/src/main/crs/db/schema.dart';
 import 'package:pritt_server/src/main/crs/exceptions.dart';
 import 'package:pritt_server/src/main/shared/version.dart';
 import 'package:pritt_server/src/server_utils/authorization.dart';
-import 'package:pritt_server/src/server_utils/response_pkgver.dart';
 import 'package:pritt_server/src/utils/request_handler.dart';
-import 'package:shelf/shelf.dart';
 
 final handler = defineRequestHandler((event) async {
   // get pkg name
-  final pkgName = getParams(event, 'name');
+  final pkgName = getParams(event, 'name') as String;
+
+  // check query params
+  final isAll = getQueryParams(event)['all'];
 
   // check authorization
   var authHeader = getHeader(event, 'Authorization');
@@ -29,48 +32,103 @@ final handler = defineRequestHandler((event) async {
     // get contributors
     final contributors = await crs.db.getContributorsForPackage(pkgName);
 
-    return Response.ok({
-      'name': pkg.name,
-      'version': pkg.version,
-      'author': {
-        'name': pkg.author.name,
-        'email': pkg.author.email,
-      },
-      'contributors': contributors.entries.map((e) => {
-            'name': e.key.name,
-            'email': e.key.email,
-            'privileges':
-                isAuthorized ? e.value.map((priv) => priv.toString()) : null
-          }),
-      'language': pkg.language,
-      'created_at': pkg.created.toIso8601String(),
-      'description': pkg.description,
-      'latest_version': pkg.version,
-      'latest': ResponsePkgVer.fromPackageVersion(
-          pkgVersions.firstWhere((p) => p.version == pkg.version)).toJson(),
-      'versions': pkgVersions.asMap().map((index, pkgVer) {
-        return MapEntry(
-            pkgVer.version, ResponsePkgVer.fromPackageVersion(pkgVer).toJson());
-      }),
-    });
+    var author = common.Author(name: pkg.author.name, email: pkg.author.email);
+
+    // return
+    final resp = common.GetPackageResponse(
+        name: pkg.name,
+        latest_version: pkg.version,
+        latest: (() {
+          final latestPkg =
+              pkgVersions.firstWhere((pv) => pv.version == pkg.version);
+          return common.VerbosePackage(
+              name: pkg.name,
+              version: latestPkg.version,
+              author: author,
+              created_at: latestPkg.created.toIso8601String(),
+              info: latestPkg.info,
+              env: latestPkg.env,
+              metadata: latestPkg.metadata,
+              signatures: latestPkg.signatures
+                  .map((sig) => common.Signature(
+                      public_key_id: sig.publicKeyId,
+                      signature: sig.signature,
+                      created: sig.created.toIso8601String()))
+                  .toList(),
+              deprecated: (isAll == 'true' && isAuthorized)
+                  ? latestPkg.isDeprecated
+                  : null,
+              yanked: (isAll == 'true' && isAuthorized)
+                  ? latestPkg.isYanked
+                  : null);
+        })(),
+        versions: pkgVersions.asMap().map((index, pkgVer) {
+          return MapEntry(
+              pkgVer.version,
+              common.VerbosePackage(
+                  name: pkg.name,
+                  version: pkgVer.version,
+                  author: author,
+                  created_at: pkgVer.created.toIso8601String(),
+                  info: pkgVer.info,
+                  env: pkgVer.env,
+                  metadata: pkgVer.metadata,
+                  signatures: pkgVer.signatures
+                      .map((sig) => common.Signature(
+                          public_key_id: sig.publicKeyId,
+                          signature: sig.signature,
+                          created: sig.created.toIso8601String()))
+                      .toList(),
+                  deprecated: (isAll == 'true' && isAuthorized)
+                      ? pkgVer.isDeprecated
+                      : null,
+                  yanked: (isAll == 'true' && isAuthorized)
+                      ? pkgVer.isYanked
+                      : null));
+        }),
+        language: pkg.language,
+        created_at: pkg.created.toIso8601String(),
+        description: pkg.description,
+        author: author,
+        contributors: contributors.entries.map((e) {
+          return common.Contributor(
+              name: e.key.name,
+              email: e.key.email,
+              role: isAuthorized
+                  ? e.value.map((p) {
+                      return switch (p) {
+                        Privileges.read => common.Role.read,
+                        Privileges.write => common.Role.write,
+                        Privileges.publish => common.Role.publish,
+                        Privileges.ultimate => common.Role.ultimate,
+                      };
+                    }).toList()
+                  : null);
+        }).toList());
+
+    return resp.toJson();
 
     // if package not found, return 404
   } on CRSException catch (e) {
     switch (e.type) {
       case CRSExceptionType.PACKAGE_NOT_FOUND:
-        return Response.notFound({
-          'error': 'Package not found',
-          'message': 'Package with name $pkgName not found'
-        });
+        setResponseCode(event, 404);
+        return common.NotFoundError(
+          error: 'Package not found',
+          message: 'Package with name $pkgName not found'
+        ).toJson();
       case CRSExceptionType.VERSION_NOT_FOUND:
-        return Response.notFound({
-          'error': 'Version not found',
-          'message': 'Some versions of the package $pkgName were not found'
-        });
+        setResponseCode(event, 404);
+        return common.NotFoundError(
+          error: 'Version not found',
+          message: 'Some versions of the package $pkgName were not found'
+        ).toJson();
       default:
-        return Response.internalServerError(body: 'Internal server error');
+        setResponseCode(event, 500);
+        return 'Internal server error';
     }
   } catch (e) {
-    return Response.internalServerError(body: 'Internal server error');
+    setResponseCode(event, 500);
+    return 'Internal server error';
   }
 });
