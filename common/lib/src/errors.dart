@@ -3,6 +3,7 @@ class RequestError {
 }
 
 class UnauthorizedError extends RequestError {
+  @override
   int errorCode = 401;
 }
 

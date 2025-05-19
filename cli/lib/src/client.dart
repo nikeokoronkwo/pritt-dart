@@ -2,30 +2,37 @@ import 'dart:async';
 
 import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
-import 'package:pritt_common/common.dart';
+import 'package:pritt_common/interface.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
   PrittClient({super.url});
 
   @override
-  FutureOr<Result<GetAdaptersResponse, RequestError>> addAdapterWithId(
-      AddAdapterRequest body,
-      {required String id}) {
+  FutureOr addAdapterWithId(body) {
     // TODO: implement addAdapterWithId
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<AddUserResponse, ServerError>> addUserById(
-      AddUserRequest body,
-      {required String id}) {
+  FutureOr<AddUserResponse> addUserById(AddUserRequest body) {
     // TODO: implement addUserById
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<GetAdaptersResponse, RequestError>> getAdapterById(
-      {required String id}) {
+  FutureOr<AuthResponse> createNewAuthStatus() {
+    // TODO: implement createNewAuthStatus
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr getAdapterArchiveWithName() {
+    // TODO: implement getAdapterArchiveWithName
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr getAdapterById() {
     // TODO: implement getAdapterById
     throw UnimplementedError();
   }
@@ -37,16 +44,31 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<Result<GetPackageResponse, NotFoundError>> getPackageByName(
-      {required String name}) {
+  FutureOr getAdaptersByLang() {
+    // TODO: implement getAdaptersByLang
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<AuthPollResponse> getAuthStatus() {
+    // TODO: implement getAuthStatus
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr getPackageArchiveWithName() {
+    // TODO: implement getPackageArchiveWithName
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetPackageResponse> getPackageByName() {
     // TODO: implement getPackageByName
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<GetPackageByVersionResponse, NotFoundError>>
-      getPackageByNameAndVersion(
-          {required String name, required String version}) {
+  FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion() {
     // TODO: implement getPackageByNameAndVersion
     throw UnimplementedError();
   }
@@ -58,8 +80,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<Result<GetUserResponse, NotFoundError>> getUserById(
-      {required String id}) {
+  FutureOr<GetUserResponse> getUserById() {
     // TODO: implement getUserById
     throw UnimplementedError();
   }
@@ -71,71 +92,51 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<Result<PublishPackageResponse, UnauthorizedError>> publishPackage(
-      PublishPackageRequest body,
-      {required String name}) {
+  FutureOr<PublishPackageResponse> publishPackage(PublishPackageRequest body) {
     // TODO: implement publishPackage
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<PublishPackageByVersionResponse, UnauthorizedError>>
-      publishPackageWithVersion(PublishPackageByVersionRequest body,
-          {required String name, required String version}) {
+  FutureOr<PublishPackageByVersionResponse> publishPackageWithVersion(
+      PublishPackageByVersionRequest body) {
     // TODO: implement publishPackageWithVersion
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<UploadPackageResponse, RequestError>> uploadPackageWithToken(
-      GZipContent body,
-      {required String id}) {
+  FutureOr uploadAdapterWithToken(body) {
+    // TODO: implement uploadAdapterWithToken
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<UploadPackageResponse> uploadPackageWithToken(body) {
     // TODO: implement uploadPackageWithToken
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<YankAdapterResponse, RequestError>> yankAdapterWithId(
-      {required String id}) {
+  FutureOr<AuthPollResponse> validateAuthStatus() {
+    // TODO: implement validateAuthStatus
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr yankAdapterWithId() {
     // TODO: implement yankAdapterWithId
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<YankPackageResponse, RequestError>> yankPackageByName(
-      YankPackageRequest? body,
-      {required String name}) {
+  FutureOr<YankPackageResponse> yankPackageByName(YankPackageRequest body) {
     // TODO: implement yankPackageByName
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<Result<YankPackageByVersionResponse, UnauthorizedError>>
-      yankPackageByNameAndVersion(PublishPackageByVersionRequest body,
-          {required String name, required String version}) {
+  FutureOr<YankPackageResponse> yankPackageByNameAndVersion() {
     // TODO: implement yankPackageByNameAndVersion
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<AuthResponse> createAuthToken(AuthRequest body) {
-    // TODO: implement createAuthToken
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<Result<AuthPollResponse, RequestError>> pollAuth(
-      AuthPollRequest body,
-      {required String id}) {
-    // TODO: implement pollAuth
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<Result<AuthValidateResponse, RequestError>> validateAuth(
-      AuthValidateRequest body,
-      {required String id}) {
-    // TODO: implement validateAuth
     throw UnimplementedError();
   }
 }

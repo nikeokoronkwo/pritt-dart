@@ -10,3 +10,4 @@ dependencies:
 dev_dependencies:
   json_serializable: ^6.9.5
 
+  test: any

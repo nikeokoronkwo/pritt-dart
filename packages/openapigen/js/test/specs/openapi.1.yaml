@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: Sample Blog API
+  version: 1.0.0
+  description: A simple blogging API with authors and posts.
+
+paths:
+  /posts:
+    get:
+      operationId: listPosts
+      summary: List all posts
+      description: Returns a paginated list of blog posts.
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+
+    post:
+      operationId: createPost
+      summary: Create a new post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPost'
+      responses:
+        '201':
+          description: The created post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+  /posts/{postId}:
+    get:
+      operationId: getPost
+      summary: Get a specific post
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+
+    delete:
+      operationId: deletePost
+      summary: Delete a post
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Post deleted
+
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+      required: [id, title, content, author]
+
+    NewPost:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        authorId:
+          type: string
+      required: [title, content, authorId]
+
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required: [id, name]

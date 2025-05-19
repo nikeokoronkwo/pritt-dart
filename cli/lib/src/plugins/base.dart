@@ -45,18 +45,19 @@ class Handler {
   /// This is run to set up a workspace when installing a given package
   final FutureOr Function() onConfigure;
 
-  Handler({
-    required this.id,
-    required this.name,
-    required this.language,
-    required this.packageManager,
-    required this.onGetConfig,
-    required this.onGetWorkspace,
-    required this.onCheckWorkspace,
-    required this.onConfigure
-  });
+  Handler(
+      {required this.id,
+      required this.name,
+      required this.language,
+      required this.packageManager,
+      required this.onGetConfig,
+      required this.onGetWorkspace,
+      required this.onCheckWorkspace,
+      required this.onConfigure});
 }
 
 class PackageManager {
   String name;
+
+  PackageManager({required this.name});
 }
