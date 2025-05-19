@@ -114,15 +114,15 @@ final handler = defineRequestHandler((event) async {
       case CRSExceptionType.PACKAGE_NOT_FOUND:
         setResponseCode(event, 404);
         return common.NotFoundError(
-          error: 'Package not found',
-          message: 'Package with name $pkgName not found'
-        ).toJson();
+                error: 'Package not found',
+                message: 'Package with name $pkgName not found')
+            .toJson();
       case CRSExceptionType.VERSION_NOT_FOUND:
         setResponseCode(event, 404);
         return common.NotFoundError(
-          error: 'Version not found',
-          message: 'Some versions of the package $pkgName were not found'
-        ).toJson();
+                error: 'Version not found',
+                message: 'Some versions of the package $pkgName were not found')
+            .toJson();
       default:
         setResponseCode(event, 500);
         return 'Internal server error';

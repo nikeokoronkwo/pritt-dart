@@ -52,9 +52,7 @@ Iterable<Method> generateMethods(
                     'application/gzip' => refer('StreamedContent'),
                     _ => refer('dynamic')
                   })
-                : TypeReference((t) => t
-                  ..symbol = method.body!.name
-                ))
+                : TypeReference((t) => t..symbol = method.body!.name))
       ])
       // other parameters
       ..optionalParameters.addAll(method.parameters.toDart.map((param) {
