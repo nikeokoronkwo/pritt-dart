@@ -632,7 +632,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   _i3.FutureOr<PublishPackageResponse> publishPackage(
-    PublishPackageRequest? body, {
+    PublishPackageRequest body, {
     required String name,
     String lang,
     bool all,
@@ -669,7 +669,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   _i3.FutureOr<PublishPackageByVersionResponse> publishPackageWithVersion(
-    PublishPackageByVersionRequest? body, {
+    PublishPackageByVersionRequest body, {
     required String name,
     required String version,
   });
@@ -717,7 +717,7 @@ abstract interface class PrittInterface {
   /// PUT /api/user/{id}
   ///
   _i3.FutureOr<AddUserResponse> addUserById(
-    AddUserRequest? body, {
+    AddUserRequest body, {
     required String id,
   });
 
@@ -738,7 +738,7 @@ abstract interface class PrittInterface {
   ///
   /// Create or update an adapter with the given id
   _i3.FutureOr<AddAdapterResponse> addAdapterWithId(
-    AddAdapterRequest? body, {
+    AddAdapterRequest body, {
     required String id,
   });
 

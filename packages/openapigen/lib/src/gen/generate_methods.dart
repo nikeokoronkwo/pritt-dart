@@ -54,7 +54,7 @@ Iterable<Method> generateMethods(
                   })
                 : TypeReference((t) => t
                   ..symbol = method.body!.name
-                  ..isNullable = method.body!.required))
+                ))
       ])
       // other parameters
       ..optionalParameters.addAll(method.parameters.toDart.map((param) {
