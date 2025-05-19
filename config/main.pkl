@@ -756,8 +756,8 @@ paths {
                     content {
                         ["application/gzip"] {
                             schema {
-                            type = "string"
-                            format = "binary"
+                                type = "string"
+                                format = "binary"
                             }
                         }
                     }

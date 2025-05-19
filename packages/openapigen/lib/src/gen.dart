@@ -33,9 +33,7 @@ extension SchemaGen on OpenAPIGenResult {
     final lib = Library((l) => l
       ..ignoreForFile
           .addAll(['non_constant_identifier_names', 'directives_ordering'])
-      ..directives.add(
-        Directive.part('interface.g.dart')
-      )
+      ..directives.add(Directive.part('interface.g.dart'))
       ..body.addAll([
         ...generateBaseClasses(schemas),
         ...(schemaClasses).values,
@@ -170,7 +168,8 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
   final classForSchema = Class((c) => c
     // JSON serializable
     ..annotations.add(refer(
-        'JsonSerializable', 'package:json_annotation/json_annotation.dart').call([]))
+            'JsonSerializable', 'package:json_annotation/json_annotation.dart')
+        .call([]))
     ..name = name
 
     // main constructor
@@ -190,13 +189,12 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
     ..methods.addAll([
       // toJson
       Method((m) => m
-      ..name = "toJson"
-      ..returns = TypeReference((t) => t
+        ..name = "toJson"
+        ..returns = TypeReference((t) => t
           ..symbol = 'Map'
           ..types.addAll([refer('String'), refer('dynamic')]))
-      ..lambda = true
-      ..body = refer('_\$${name}ToJson').call([literal(refer('this'))]).code
-      )
+        ..lambda = true
+        ..body = refer('_\$${name}ToJson').call([literal(refer('this'))]).code)
     ]));
 
   componentSpecs.putIfAbsent(name, () => classForSchema);

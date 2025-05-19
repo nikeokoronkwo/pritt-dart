@@ -31,6 +31,16 @@ class JSONContent extends Content {
   Map<String, dynamic> data;
 }
 
+class StreamedContent extends Content {
+  StreamedContent(this.data) : super([]);
+
+  Stream<List<int>> data;
+
+  @override
+  List<int> get raw => throw Exception(
+      'Do not call raw on streamed content: Use `data` instead');
+}
+
 @_i3.JsonSerializable()
 class AddAdapterRequest {
   AddAdapterRequest();
@@ -615,7 +625,7 @@ abstract interface class PrittInterface {
   ///   - [UnauthorizedError] on status code 402
   ///   - [NotFoundError] on status code 404
   _i4.FutureOr<UploadPackageResponse> uploadPackageWithToken(
-    BinaryContent body, {
+    StreamedContent body, {
     String id,
   });
 
@@ -665,14 +675,14 @@ abstract interface class PrittInterface {
   /// DELETE /api/adapter/{id}
   ///
   /// Yank an adapter with the given id
-  _i4.FutureOr<dynamic> yankAdapterWithId({required String id});
+  _i4.FutureOr<YankAdapterResponse> yankAdapterWithId({required String id});
 
   /// **Upload an adapter to the Pritt Server**
   /// POST /api/adapter/upload
   ///
   /// This API Endpoint is used to upload the tarball for the processed adapter
   _i4.FutureOr<UploadAdapterResponse> uploadAdapterWithToken(
-    BinaryContent body, {
+    StreamedContent body, {
     String id,
   });
 
@@ -706,9 +716,9 @@ abstract interface class PrittInterface {
 
   /// GET /api/archive/package/{name}
   ///
-  _i4.FutureOr<dynamic> getPackageArchiveWithName();
+  _i4.FutureOr<StreamedContent> getPackageArchiveWithName();
 
   /// GET /api/archive/adapter/{id}
   ///
-  _i4.FutureOr<dynamic> getAdapterArchiveWithName();
+  _i4.FutureOr<StreamedContent> getAdapterArchiveWithName();
 }

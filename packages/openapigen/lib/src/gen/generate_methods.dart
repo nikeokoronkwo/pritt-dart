@@ -32,7 +32,13 @@ Iterable<Method> generateMethods(
         ..url = 'dart:async'
         ..types.add(method.returns == null
             ? refer('void')
-            : refer(method.returns!['200'.toJS].name ?? 'dynamic')))
+            : refer(method.returns!['200'.toJS].name ??
+                switch (method.returns!['200'.toJS].type) {
+                  'application/octet-stream' => 'StreamedContent',
+                  'application/x-tar' => 'StreamedContent',
+                  'application/gzip' => 'StreamedContent',
+                  _ => 'dynamic'
+                })))
       // body parameter
       ..requiredParameters.addAll([
         if (method.body != null)
@@ -40,9 +46,9 @@ Iterable<Method> generateMethods(
             ..name = 'body'
             ..type = method.body!.name == null
                 ? (switch (method.body!.type) {
-                    'application/octet-stream' => refer('BinaryContent'),
-                    'application/x-tar' => refer('BinaryContent'),
-                    'application/gzip' => refer('BinaryContent'),
+                    'application/octet-stream' => refer('StreamedContent'),
+                    'application/x-tar' => refer('StreamedContent'),
+                    'application/gzip' => refer('StreamedContent'),
                     _ => refer('dynamic')
                   })
                 : TypeReference((t) => t
