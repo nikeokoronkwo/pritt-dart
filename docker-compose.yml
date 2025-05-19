@@ -6,20 +6,20 @@ services:
       context: .
       dockerfile: server/Dockerfile
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - PORT=8080
     depends_on:
       - db
       - filestorage
-  
+
   filestorage:
     image: openio/sds
     ports:
-      - "6007:6007"
+      - '6007:6007'
     environment:
       REGION: ${S3_REGION}
-      SWIFT_CREDENTIALS: "${S3_SECRET_KEY}:${S3_ACCESS_KEY}:.admin"
+      SWIFT_CREDENTIALS: '${S3_SECRET_KEY}:${S3_ACCESS_KEY}:.admin'
       WORKERS: ${S3_WORKERS}
     env_file:
       - .env
@@ -34,10 +34,10 @@ services:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - "5432:5432"
+      - '5432:5432'
     env_file:
       - .env
 
 volumes:
   adapter-fs-data:
-    name: "adapter_fs_data"
+    name: 'adapter_fs_data'
