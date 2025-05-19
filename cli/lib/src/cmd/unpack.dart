@@ -28,6 +28,5 @@ class UnpackCommand extends PrittCommand {
     // check if user is logged in
 
     // get archive of package
-    
   }
 }

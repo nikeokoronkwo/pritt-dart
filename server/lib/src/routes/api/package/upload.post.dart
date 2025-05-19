@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:pritt_server/src/server_utils/authorization.dart';

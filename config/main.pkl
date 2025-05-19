@@ -416,7 +416,7 @@ paths {
             summary = "List users from the Pritt Server"
             operationId = "getUsers"
             responses {
-              ["default"] {
+              ["200"] {
                 description = "Normal response"
                 content {
                   ["application/json"] {
@@ -499,7 +499,7 @@ paths {
         get {
             summary = "Get all custom adapters"
             description = "Get an adapter with the given id"
-            operationId = "getAdapterById"
+            operationId = "getAdapters"
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -663,6 +663,8 @@ paths {
         description = "Create a new token used for authenticating/creating a new user"
         post {
             summary = "Create token for a user"
+            description = "Create a new token used for authenticating/creating a new user"
+            operationId = "createNewAuthStatus"
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -690,6 +692,7 @@ paths {
         }
         post {
             summary = "Validte Authentication Response"
+            operationId = "validateAuthStatus"
             description = "Validate or authenticate a user, creating a user if needed"
             responses {
                 ["200"] {
@@ -715,6 +718,7 @@ paths {
         description = "Get the status of authentication for a user, usually used by the command line to poll"
         post {
             summary = "Get Authentication Status"
+            operationId = "getAuthStatus"
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -745,14 +749,15 @@ paths {
     }
     ["/api/archive/package/{name}"] {
         get {
+            operationId = "getPackageArchiveWithName"
             responses {
                 ["200"] {
                     description = "OK Response"
                     content {
                         ["application/gzip"] {
                             schema {
-                            type = "string"
-                            format = "binary"
+                                type = "string"
+                                format = "binary"
                             }
                         }
                     }
@@ -767,6 +772,7 @@ paths {
     }
     ["/api/archive/adapter/{id}"] {
         get {
+            operationId = "getAdapterArchiveWithName"
             responses {
                 ["200"] {
                     description = "OK Response"

@@ -23,7 +23,8 @@ class ResponseBuilder {
   ResponseBuilder();
 
   Response Function(Object? body) build() {
-    return (body) => Response(statusCode == 200 ? 204 : statusCode, body: body, headers: headers);
+    return (body) => Response(statusCode == 200 ? 204 : statusCode,
+        body: body, headers: headers);
   }
 }
 
@@ -32,10 +33,13 @@ Stream<List<int>> getStreamedBody(Event e) {
 }
 
 Future<Uint8List> getBinaryBody(Event e) async {
-  return await e.request.read().fold<BytesBuilder>(
-    BytesBuilder(),
-    (builder, data) => builder..add(data),
-  ).then((b) => b.toBytes());
+  return await e.request
+      .read()
+      .fold<BytesBuilder>(
+        BytesBuilder(),
+        (builder, data) => builder..add(data),
+      )
+      .then((b) => b.toBytes());
 }
 
 setResponseCode(Event e, int statusCode) {
@@ -96,10 +100,12 @@ Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
       case List<Map>():
         return event.responseFunc(jsonEncode(response));
       case Stream<List<int>>():
-        event._responseBuilder.headers.putIfAbsent('Content-Type', () => 'application/octet-stream');
+        event._responseBuilder.headers
+            .putIfAbsent('Content-Type', () => 'application/octet-stream');
         return event.responseFunc(response);
       case Uint8List():
-        event._responseBuilder.headers.putIfAbsent('Content-Type', () => 'application/octet-stream');
+        event._responseBuilder.headers
+            .putIfAbsent('Content-Type', () => 'application/octet-stream');
         return event.responseFunc(response);
       default:
         return event.responseFunc(response);

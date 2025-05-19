@@ -1,5 +1,3 @@
-
-
 import 'package:pritt_server/pritt_server.dart';
 import 'package:pritt_server/src/main/crs/exceptions.dart';
 import 'package:pritt_server/src/main/shared/version.dart';
@@ -29,7 +27,9 @@ final handler = defineRequestHandler((event) async {
 
   // check version is valid
   if (version != null && Version.tryParse(version) == null) {
-    String errorMsg = version.startsWith('v') || version.startsWith('@') ? 'Versions must start with their plain number, no "v<version>" or "@<version>"' : 'Versions must follow semver';
+    String errorMsg = version.startsWith('v') || version.startsWith('@')
+        ? 'Versions must start with their plain number, no "v<version>" or "@<version>"'
+        : 'Versions must follow semver';
 
     setResponseCode(event, 403);
     return {
@@ -40,7 +40,9 @@ final handler = defineRequestHandler((event) async {
 
   try {
     // find the package exists in the registry
-    final package = await (version == null ? crs.getLatestPackage(pkgName) : crs.getPackageWithVersion(pkgName, version));
+    final package = await (version == null
+        ? crs.getLatestPackage(pkgName)
+        : crs.getPackageWithVersion(pkgName, version));
 
     if (!package.isSuccess) {
       setResponseCode(event, 404);
@@ -60,5 +62,4 @@ final handler = defineRequestHandler((event) async {
     setResponseCode(event, 500);
     return 'An Unknown Error Occured';
   }
-
 });

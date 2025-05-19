@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import subprocess
+import os
+import os.path as path
+import shutil
+import sys
+
+import argparse
+
+def generate_arg_parser():
+    parser = argparse.ArgumentParser(description='OpenAPI Client Generator')
+    parser.add_argument('openapi_file', help="OpenAPI file to pass")
+    parser.add_argument('--out-package-dir', '-o', default='common',
+                        help='The package to write this to')
+    return parser
+
+
+if __name__ == "__main__":
+    # Get args
+    parser = generate_arg_parser()
+    args = parser.parse_args()
+
+    # Begin
+    print("Searching for OpenAPIGen dir...")
+    openapigen_dir = path.join(os.getcwd(), 'packages', 'openapigen')
+    openapigen_dest_dir = path.join(openapigen_dir, 'dist')
+
+    oaig_js_dir = path.join(openapigen_dir, 'js')
+
+    # check if deps installed
+    if not path.exists(path.join(oaig_js_dir, 'node_modules')):
+        print("Installing dependencies...")
+        subprocess.run(['pnpm', 'install'], cwd=oaig_js_dir)
+
+    # build
+    print("Building JS parser library...")
+    subprocess.run(['pnpm', 'build'], cwd=oaig_js_dir)
+
+    # copy file to dist dir of tool
+    shutil.copy(path.join(oaig_js_dir, 'out', 'main.js'), path.join(openapigen_dest_dir, 'main.js'))
+
+    # build dart tool
+    print("Building Dart tool...")
+    subprocess.run(['dart', 'compile', 'js', '--server-mode', '--enable-asserts', path.join('bin', 'openapigen.dart'), '-o', path.join('dist', 'openapigen_dart.js')], cwd=openapigen_dir)
+
+    # copy entrypoint
+    shutil.copy(path.join(openapigen_dir, 'bin', 'openapigen.js'), path.join(openapigen_dest_dir, 'openapigen.js'))
+
+    # run command
+    print('\n')
+    cmd_args = ['node', path.join(openapigen_dest_dir, 'openapigen.js'), args.openapi_file, '-o', path.join(args.out_package_dir, 'lib')]
+
+    print(f"Running \"{cmd_args}\" \n")
+    process = subprocess.run(cmd_args)
+
+    if not process.returncode == 0:
+        exit(process.returncode)
+    
+    # Generate JSON types
+    print("Generating JSON types...")
+    subprocess.run(['dart', 'run', 'build_runner', 'build'], cwd=args.out_package_dir)
+
+    subprocess.run(['dart', 'format', 'common'])
+    subprocess.run(['dart', 'fix', 'common', '--apply'])
+
+    
+
+

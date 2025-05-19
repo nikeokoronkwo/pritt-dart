@@ -1,0 +1,26 @@
+{
+  "name": "@pritt/openapigen_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "build": "esbuild src/main.ts --bundle --minify --format=esm --platform=browser --outfile=out/main.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "dependencies": {
+    "@scalar/openapi-parser": "^0.10.17",
+    "@scalar/openapi-types": "^0.2.3",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^22.15.18",
+    "esbuild": "0.25.4",
+    "rollup": "^4.41.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
+  }
+}
