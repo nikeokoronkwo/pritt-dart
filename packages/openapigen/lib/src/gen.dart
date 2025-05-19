@@ -52,45 +52,56 @@ Map<String, Class> _generateClasses(JSRecord<JSString, Schema> schemas) {
   return specs;
 }
 
-
-
 Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
-    {Map<String, Class>? componentSpecs, bool required = true}) {
+    {Map<String, Class>? componentSpecs, bool? required}) {
   componentSpecs ??= {};
 
-  if (componentSpecs.containsKey(name)) return refer(componentSpecs[name]!.name);
+  if (schema.hasProperty('nullable'.toJS).toDart) {
+    required = !(schema.getProperty('nullable'.toJS) as JSBoolean).toDart;
+  } else required ??= true;
 
-  print('fada ------> $name');
+  if (componentSpecs.containsKey(name))
+    return refer(componentSpecs[name]!.name);
+
+  print('fada ------> $name - $required');
 
   if (schema.hasProperty('enum'.toJS).toDart) {
-    return refer('String');
+    return refer(required ? 'String' : 'String?');
   }
 
-  if (
-    schema.hasProperty('additionalProperties'.toJS).toDart && schema.getProperty('additionalProperties'.toJS) != false.toJS
-  ) {
+  if (schema.hasProperty('additionalProperties'.toJS).toDart &&
+      schema.getProperty('additionalProperties'.toJS) != false.toJS) {
     // map
-    final valueSchema = schema.getProperty('additionalProperties'.toJS) as JSObject;
+    final valueSchema =
+        schema.getProperty('additionalProperties'.toJS) as JSObject;
 
     return TypeReference((t) => t
-    ..symbol = 'Map'
-    ..types.addAll([
-      refer('String'),
-      _generateSpecFromSchema(valueSchema, valueSchema.getProperty('title'.toJS).dartify() as String? ?? "${name}Val", componentSpecs: componentSpecs)
-    ])
-    );
+      ..symbol = 'Map'
+      ..types.addAll([
+        refer('String'),
+        _generateSpecFromSchema(
+            valueSchema,
+            valueSchema.getProperty('title'.toJS).dartify() as String? ??
+                "${name}Val",
+            componentSpecs: componentSpecs)
+      ]));
   }
 
   if (schema.hasProperty('type'.toJS).toDart) {
     switch (schema.getProperty('type'.toJS).dartify() as String) {
       case 'string':
-        return refer('String');
       case 'number':
-        return refer('num');
       case 'integer':
-        return refer('int');
       case 'boolean':
-        return refer('bool');
+        return TypeReference((t) => t
+        ..symbol = switch (schema.getProperty('type'.toJS).dartify() as String) {
+          'string' => 'String',
+          'number' => 'num',
+          'integer' => 'int',
+          'boolean' => 'bool',
+          _ => 'Object'
+        } + ((required ?? true) ? '' : '?')
+        );
       case 'array':
         if (!schema.hasProperty('items'.toJS).toDart) {
           print("Not supported any of arrays");
@@ -98,11 +109,13 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
         } else {
           final itemSchema = schema.getProperty('items'.toJS) as JSObject;
           return TypeReference((t) => t
-          ..symbol = 'List'
-          ..types.add(
-            _generateSpecFromSchema(itemSchema, itemSchema.getProperty('title'.toJS).dartify() as String? ?? "${name}Item", componentSpecs: componentSpecs)
-          )
-          );
+            ..symbol = 'List' 
+            ..types.add(_generateSpecFromSchema(
+                itemSchema,
+                itemSchema.getProperty('title'.toJS).dartify() as String? ??
+                    "${name}Item",
+                componentSpecs: componentSpecs))
+            ..isNullable = !(required ?? true));
         }
       case 'object':
         break;
@@ -110,50 +123,55 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
         // nothing
         break;
     }
-  } else return refer('dynamic');
+  } else
+    return refer('dynamic');
 
-  final properties = schema.getProperty('properties'.toJS) as JSRecord<JSString, JSObject>;
-  final requiredProperties = 
-    // schema.hasProperty('required'.toJS).toDart ? schema.getProperty('required'.toJS) as JSArray<JSString> : 
-    <String>[].jsify() as JSArray<JSString>
-  ;
+  final properties =
+      schema.getProperty('properties'.toJS) as JSRecord<JSString, JSObject>;
+  final requiredProperties =
+      schema.hasProperty('required'.toJS).toDart ? schema.getProperty('required'.toJS) as JSArray<JSString> :
+      <String>[].jsify() as JSArray<JSString>;
 
   final fields = <Field>[];
   final constructorParams = <Parameter>[];
 
-  entriesFromRecord(properties).toDart.map((k) => (k[0].dartify() as String, k[1] as JSObject)).forEach((v) {
+  entriesFromRecord(properties)
+      .toDart
+      .map((k) => (k[0].dartify() as String, k[1] as JSObject))
+      .forEach((v) {
     final name = v.$1;
     final obj = v.$2;
-    var propIsRequired = requiredProperties.toDart.map((v) => v.toDart).contains(name);
-
+    final propIsRequired =
+        requiredProperties.toDart.map((v) => v.toDart.toLowerCase()).contains(name.toLowerCase());
+    var type = _generateSpecFromSchema(
+          obj, obj.getProperty('title'.toJS).dartify() as String? ?? name,
+          componentSpecs: componentSpecs, required: propIsRequired);
     fields.add(Field((f) => f
       ..name = name
       ..modifier = FieldModifier.final$
-      ..type = _generateSpecFromSchema(obj, obj.getProperty('title'.toJS).dartify() as String? ?? name, componentSpecs: componentSpecs, required: propIsRequired)));
+      ..type = type
+    ));
 
-    constructorParams.add(
-      Parameter((p) => p
-        ..name = name
-        ..named = true
-        ..toThis = true
-        ..required = propIsRequired
-      )
-    );
+    constructorParams.add(Parameter((p) => p
+      ..name = name
+      ..named = true
+      ..toThis = true
+      ..required = propIsRequired
+      ..defaultTo = !propIsRequired && type.symbol.toString().startsWith('List') ? Code('const []') : null
+    ));
   });
 
   final classForSchema = Class((c) => c
     ..name = name
-    ..constructors.add(Constructor((ctor) => ctor
-      ..optionalParameters.addAll(constructorParams)))
-    ..fields.addAll(fields)
-  );
+    ..constructors.add(Constructor(
+        (ctor) => ctor..optionalParameters.addAll(constructorParams)))
+    ..fields.addAll(fields));
 
   componentSpecs.putIfAbsent(name, () => classForSchema);
 
   print('Complete $name\n');
 
   return TypeReference((t) => t
-    ..symbol = classForSchema.name
-    ..isNullable = !required
+    ..symbol = classForSchema.name + ((required ?? true) ? '' : '?')
   );
 }

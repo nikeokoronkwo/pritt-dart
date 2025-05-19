@@ -49,20 +49,20 @@ class PollResponse {
 
 class AuthPollResponse {
   AuthPollResponse({
-    this.status,
+    required this.status,
     this.response,
   });
 
   final String status;
 
-  final PollResponse response;
+  final PollResponse? response;
 }
 
 class AuthResponse {
   AuthResponse({
-    this.token,
-    this.token_expires,
-    this.id,
+    required this.token,
+    required this.token_expires,
+    required this.id,
   });
 
   final String token;
@@ -75,16 +75,16 @@ class AuthResponse {
 class Error {
   Error({this.error});
 
-  final String error;
+  final String? error;
 }
 
 class ExpiredError {
   ExpiredError({
     this.error,
-    this.expired_time,
+    required this.expired_time,
   });
 
-  final String error;
+  final String? error;
 
   final String expired_time;
 }
@@ -107,8 +107,8 @@ class GetPackageByVersionResponse {
 
 class Author {
   Author({
-    this.name,
-    this.email,
+    required this.name,
+    required this.email,
   });
 
   final String name;
@@ -118,9 +118,9 @@ class Author {
 
 class Contributor {
   Contributor({
-    this.name,
-    this.email,
-    this.role,
+    required this.name,
+    required this.email,
+    this.role = const [],
   });
 
   final String name;
@@ -132,12 +132,12 @@ class Contributor {
 
 class Package {
   Package({
-    this.name,
-    this.description,
-    this.version,
-    this.author,
+    required this.name,
+    required this.description,
+    required this.version,
+    required this.author,
     this.language,
-    this.created_at,
+    required this.created_at,
     this.updated_at,
   });
 
@@ -149,24 +149,24 @@ class Package {
 
   final Author author;
 
-  final String language;
+  final String? language;
 
   final String created_at;
 
-  final String updated_at;
+  final String? updated_at;
 }
 
 class VerbosePackage {
   VerbosePackage({
-    this.name,
-    this.description,
-    this.version,
-    this.author,
+    required this.name,
+    required this.description,
+    required this.version,
+    required this.author,
     this.language,
-    this.created_at,
+    required this.created_at,
     this.updated_at,
-    this.versions,
-    this.authors,
+    required this.versions,
+    required this.authors,
   });
 
   final String name;
@@ -177,11 +177,11 @@ class VerbosePackage {
 
   final Author author;
 
-  final String language;
+  final String? language;
 
   final String created_at;
 
-  final String updated_at;
+  final String? updated_at;
 
   final Map<String, Package> versions;
 
@@ -190,15 +190,15 @@ class VerbosePackage {
 
 class GetPackageResponse {
   GetPackageResponse({
-    this.name,
-    this.latest_version,
-    this.author,
+    required this.name,
+    required this.latest_version,
+    required this.author,
     this.description,
-    this.contributors,
+    required this.contributors,
     this.language,
-    this.created_at,
-    this.latest,
-    this.versions,
+    required this.created_at,
+    required this.latest,
+    required this.versions,
   });
 
   final String name;
@@ -207,11 +207,11 @@ class GetPackageResponse {
 
   final Author author;
 
-  final String description;
+  final String? description;
 
   final List<Contributor> contributors;
 
-  final String language;
+  final String? language;
 
   final String created_at;
 
@@ -223,10 +223,10 @@ class GetPackageResponse {
 class GetPackagesResponse {
   GetPackagesResponse({
     this.next_url,
-    this.packages,
+    required this.packages,
   });
 
-  final String next_url;
+  final String? next_url;
 
   final List<Package> packages;
 }
@@ -245,9 +245,9 @@ class NotFoundError {
     this.message,
   });
 
-  final String error;
+  final String? error;
 
-  final String message;
+  final String? message;
 }
 
 class PublishPackageByVersionRequest {
@@ -260,10 +260,10 @@ class PublishPackageByVersionResponse {
 
 class PublishPackageRequest {
   PublishPackageRequest({
-    this.name,
-    this.version,
-    this.config,
-    this.configFile,
+    required this.name,
+    required this.version,
+    required this.config,
+    required this.configFile,
   });
 
   final String name;
@@ -282,13 +282,13 @@ class PublishPackageResponse {
 class ServerError {
   ServerError({this.error});
 
-  final String error;
+  final String? error;
 }
 
 class UnauthorizedError {
   UnauthorizedError({this.error});
 
-  final String error;
+  final String? error;
 }
 
 class UploadAdapterResponse {
@@ -308,7 +308,7 @@ class YankPackageByVersionResponse {
 }
 
 class YankPackageRequest {
-  YankPackageRequest({this.version});
+  YankPackageRequest({required this.version});
 
   final String version;
 }
