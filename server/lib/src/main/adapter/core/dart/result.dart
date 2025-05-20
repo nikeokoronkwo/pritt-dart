@@ -4,7 +4,7 @@ import 'pubspec.dart';
 
 part 'result.g.dart';
 
-/// The result of a dart meta (i.e [AdapterResolve.meta]) request
+/// The result of a dart meta (i.e [AdapterResolveType.meta]) request
 @JsonSerializable()
 class DartMetaResult with MetaResult {
   /// the name of the package

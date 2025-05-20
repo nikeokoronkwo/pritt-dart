@@ -26,7 +26,7 @@ void main() {
 
       final adapter = Adapter(
         id: 'test-adapter',
-        onResolve: (resolveObject) => AdapterResolve.meta,
+        resolve: (resolveObject) => AdapterResolveType.meta,
         request: (requestObject, controller) async {
           return AdapterMetaResult(mockMetaResult);
         },
@@ -40,10 +40,10 @@ void main() {
             uri: Uri.http('example.org', '/api/packages/foo'),
             method: RequestMethod.GET,
             userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
-        final result = adapter.onResolve(resolveObject);
+        final result = adapter.resolve(resolveObject);
 
         expect(result.isResolved, isTrue);
-        expect(result, equals(AdapterResolve.meta));
+        expect(result, equals(AdapterResolveType.meta));
       });
 
       test('should resolve correctly using onResolve', () async {
@@ -51,9 +51,9 @@ void main() {
             uri: Uri.http('example.org', '/api/packages/foo'),
             method: RequestMethod.GET,
             userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
-        final result = await adapter.onRequest(
+        final result = await adapter.metaRequest(
             AdapterRequestObject(
-                resolveObject: resolveObject, resolveType: AdapterResolve.meta),
+                resolveObject: resolveObject, resolveType: AdapterResolveType.meta),
             mockDBController);
 
         assert(result is AdapterMetaResult, "adapter should be meta");

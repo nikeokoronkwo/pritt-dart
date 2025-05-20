@@ -15,14 +15,14 @@ import 'npm/result.dart';
 final npmAdapter = Adapter(
     id: 'npm',
     language: 'javascript',
-    onResolve: (resolve) {
+    resolve: (resolve) {
       if (resolve.userAgent.toString().containsAllOf(['npm', 'node'])) {
         if (resolve.path.endsWith('.tgz') || resolve.path.endsWith('.tar.gz')) {
-          return AdapterResolve.archive;
+          return AdapterResolveType.archive;
         }
-        return AdapterResolve.meta;
+        return AdapterResolveType.meta;
       }
-      return AdapterResolve.none;
+      return AdapterResolveType.none;
     },
     request: (req, crs) async {
       /// data needed from request

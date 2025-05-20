@@ -4,7 +4,7 @@ import 'package_json.dart';
 
 part 'result.g.dart';
 
-/// The result of a dart meta (i.e [AdapterResolve.meta]) request
+/// The result of a dart meta (i.e [AdapterResolveType.meta]) request
 @JsonSerializable()
 class NpmMetaResult with MetaResult {
   /// The id

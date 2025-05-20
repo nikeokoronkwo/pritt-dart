@@ -49,11 +49,11 @@ class AdapterRegistry {
   Future disconnect() async {}
 
   /// Find an adapter given a request
-  FutureOr<({Adapter adapter, AdapterResolve resolve})> find(
+  FutureOr<({Adapter adapter, AdapterResolveType resolve})> find(
       AdapterResolveObject obj,
       {bool checkedCore = false}) async {
     await for (final adapter in (checkedCore ? _customAdapters : adapters)) {
-      final adapterResolve = adapter.onResolve(obj);
+      final adapterResolve = adapter.resolve(obj);
       if (adapterResolve.isResolved) {
         return (adapter: adapter, resolve: adapterResolve);
       }
@@ -62,10 +62,10 @@ class AdapterRegistry {
   }
 
   /// Find an adapter given a request from the core adapters
-  ({Adapter adapter, AdapterResolve resolve})? findInCore(
+  ({Adapter adapter, AdapterResolveType resolve})? findInCore(
       AdapterResolveObject obj) {
     for (final adapter in _coreAdapters) {
-      final adapterResolve = adapter.onResolve(obj);
+      final adapterResolve = adapter.resolve(obj);
       if (adapterResolve.isResolved) {
         return (adapter: adapter, resolve: adapterResolve);
       } else

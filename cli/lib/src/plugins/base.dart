@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:pritt_cli/src/plugins/base/config.dart';
+import 'package:pritt_cli/src/plugins/base/workspace.dart';
+
 typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
 
 /// A pritt "handler" (we should probably rename this to something else) is an object used for adding support for various package types
@@ -32,11 +35,14 @@ class Handler {
   /// - The license of the package
   ///
   /// Other data can be added, but is not required
-  final FutureOr<Map<String, dynamic>?> Function() onGetConfig;
+  final FutureOr<Config?> Function() onGetConfig;
 
   /// A function to run to get workspace data about the package
   /// This function is usually run when the package is being published, set up, etc
-  final FutureOr<Map<String, dynamic>?> Function() onGetWorkspace;
+  /// 
+  /// - The configuration file for the workspace
+  /// - The directory of the workspace
+  final FutureOr<Workspace?> Function() onGetWorkspace;
 
   /// A function run to check whether a given workspace is for a given handler
   final FutureOr<bool> Function(String workspace) onCheckWorkspace;
@@ -56,8 +62,3 @@ class Handler {
       required this.onConfigure});
 }
 
-class PackageManager {
-  String name;
-
-  PackageManager({required this.name});
-}

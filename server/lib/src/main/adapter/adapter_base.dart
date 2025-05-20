@@ -55,7 +55,7 @@ class AdapterResolveObject {
             '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
 }
 
-enum AdapterResolve {
+enum AdapterResolveType {
   meta,
   archive,
   other,
@@ -124,7 +124,7 @@ abstract interface class AdapterInterface {
 
 class AdapterOptions {
   final AdapterResolveObject resolveObject;
-  final AdapterResolve resolveType;
+  final AdapterResolveType resolveType;
 
   const AdapterOptions({
     required this.resolveObject,
@@ -146,7 +146,7 @@ class AdapterRequestObject {
 
   Map<String, dynamic> env;
 
-  AdapterResolve resolveType;
+  AdapterResolveType resolveType;
 
   AdapterRequestObject({
     required this.resolveObject,

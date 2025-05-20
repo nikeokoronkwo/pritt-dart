@@ -6,7 +6,7 @@ import 'adapter_base.dart';
 
 import 'adapter_registry.dart';
 
-typedef AdapterResolveFn = AdapterResolve Function(AdapterResolveObject);
+typedef AdapterResolveFn = AdapterResolveType Function(AdapterResolveObject);
 
 typedef AdapterRequestFn = FutureOr<AdapterResult> Function(
     AdapterRequestObject, CRSDBController);
@@ -31,34 +31,34 @@ class Adapter implements AdapterInterface {
   ///
   /// This is used to sort out which adapter is suited for the given request.
   /// This method is usually used by the [AdapterRegistry] via an [AdapterResolveObject]
-  final AdapterResolveFn onResolve;
+  final AdapterResolveFn resolve;
 
   /// The function called when a request is delegated to the given adapter.
   ///
   /// The function makes use of a [CRSController] to make requests to the Common Core Registry Service
   /// and returns a [AdapterResult] object.
-  final AdapterRequestFn onRequest;
+  final AdapterRequestFn metaRequest;
 
-  /// Similar to [Adapter.onRequest], but used for archive requests
-  final AdapterRetrieveFn onRetrieve;
+  /// Similar to [Adapter.metaRequest], but used for archive requests
+  final AdapterRetrieveFn metaRetrieve;
 
   const Adapter({
     required this.id,
     this.language,
-    required this.onResolve,
+    required this.resolve,
     required AdapterRequestFn request,
     required AdapterRetrieveFn retrieve,
-  })  : onRequest = request,
-        onRetrieve = retrieve;
+  })  : metaRequest = request,
+        metaRetrieve = retrieve;
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {
     // run the adapter
     switch (options.resolveType) {
-      case AdapterResolve.meta:
-        return await onRequest(options.toRequestObject(), crs);
-      case AdapterResolve.archive:
-        return await onRetrieve(options.toRequestObject(), crs);
+      case AdapterResolveType.meta:
+        return await metaRequest(options.toRequestObject(), crs);
+      case AdapterResolveType.archive:
+        return await metaRetrieve(options.toRequestObject(), crs);
       default:
         throw AdapterException('Unsupported adapter resolve type');
     }

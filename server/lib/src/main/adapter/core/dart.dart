@@ -12,15 +12,15 @@ import 'dart/result.dart';
 final dartAdapter = Adapter(
     id: 'dart',
     language: 'dart',
-    onResolve: (resolve) {
+    resolve: (resolve) {
       if (resolve.userAgent.toString().contains('Dart pub')) {
         if (resolve.path.startsWith('api/packages')) {
-          return AdapterResolve.meta;
+          return AdapterResolveType.meta;
         } else if (resolve.path.startsWith('api/archives')) {
-          return AdapterResolve.archive;
+          return AdapterResolveType.archive;
         }
       }
-      return AdapterResolve.none;
+      return AdapterResolveType.none;
     },
 
     /// we need to retrieve the package details
