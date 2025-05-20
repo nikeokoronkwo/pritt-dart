@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:pritt_cli/src/plugins/base/config.dart';
 import 'package:pritt_cli/src/plugins/base/workspace.dart';
+import 'package:pritt_cli/src/plugins/context.dart';
+import 'package:pritt_cli/src/plugins/controller.dart';
 
 typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
 
@@ -20,7 +22,7 @@ class Handler {
   final String language;
 
   /// The name of the package manager
-  final PackageManager packageManager;
+  final PackageManager? packageManager;
 
   /// Package manager commands
 
@@ -35,21 +37,21 @@ class Handler {
   /// - The license of the package
   ///
   /// Other data can be added, but is not required
-  final FutureOr<Config?> Function() onGetConfig;
+  final FutureOr<Config?> Function(String directory, PrittLocalConfigUnawareController controller) onGetConfig;
 
   /// A function to run to get workspace data about the package
   /// This function is usually run when the package is being published, set up, etc
   /// 
   /// - The configuration file for the workspace
   /// - The directory of the workspace
-  final FutureOr<Workspace?> Function() onGetWorkspace;
+  final FutureOr<Workspace?> Function(String directory, PrittLocalController controller) onGetWorkspace;
 
   /// A function run to check whether a given workspace is for a given handler
-  final FutureOr<bool> Function(String workspace) onCheckWorkspace;
+  final FutureOr<bool> Function(String workspace, PrittLocalController controller) onCheckWorkspace;
 
   /// A function run to configure a given workspace
   /// This is run to set up a workspace when installing a given package
-  final FutureOr Function() onConfigure;
+  final FutureOr Function(PrittContext context, PrittLocalController controller) onConfigure;
 
   Handler(
       {required this.id,
