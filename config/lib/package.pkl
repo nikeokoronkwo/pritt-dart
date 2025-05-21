@@ -1,11 +1,8 @@
 
-module SchemaUtils
-
 import "pkl:semver"
 
-import "@go/go.pkl"
-
 typealias Version = String(semver.isValid(this))
+typealias Privilege = "read"|"write"|"publish"|"ultimate"
 
 /// The base definition of a package
 ///
@@ -74,7 +71,5 @@ open class Author {
 
 class Contributor extends Author {
     /// The role of the contributor
-    role: Listing<Role>?
+    privileges: Listing<Privilege>?
 }
-
-typealias Role = "read"|"write"|"publish"|"ultimate"

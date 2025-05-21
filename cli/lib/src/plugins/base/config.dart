@@ -1,31 +1,20 @@
-
-
 import 'package:pritt_common/interface.dart';
 
 /// A configuration object for a plugin
 class Config {
-  String name;
-  Map<String, dynamic> rawConfig;
+  final String name;
+  final String version;
+  final String? description;
+  final Author author;
+  final String? license;
+  final bool? private;
 
-  String version;
-  String? description;
-  Author author;
-  String license;
-
-  Config({
+  const Config({
     required this.name,
-    required this.rawConfig,
     required this.version,
     this.description,
     required this.author,
-    required this.license,
+    this.license,
+    this.private = false
   });
-
-  Config.fromJson(Map<String, dynamic> json)
-      : name = json['name'] as String,
-        rawConfig = json['config'] as Map<String, dynamic>,
-        version = json['version'] as String,
-        description = json['description'] as String?,
-        author = Author.fromJson(json['author'] as Map<String, dynamic>),
-        license = json['license'] as String;
 }

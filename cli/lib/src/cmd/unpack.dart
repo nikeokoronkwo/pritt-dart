@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:io/io.dart';
+import 'package:pritt_cli/src/cmd/unpack/adapter.dart';
+import 'package:pritt_cli/src/cmd/unpack/package.dart';
 
 import '../cli/base.dart';
 
@@ -13,6 +13,11 @@ class UnpackCommand extends PrittCommand {
   @override
   String description =
       "Get a package locally and make modifications to the package";
+
+  UnpackCommand() {
+    addSubcommand(UnpackPackageCommand());
+    addSubcommand(UnpackAdapterCommand());
+  }
 
   @override
   FutureOr? run() {

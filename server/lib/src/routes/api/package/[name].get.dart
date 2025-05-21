@@ -94,13 +94,13 @@ final handler = defineRequestHandler((event) async {
           return common.Contributor(
               name: e.key.name,
               email: e.key.email,
-              role: isAuthorized
+              privileges: isAuthorized
                   ? e.value.map((p) {
                       return switch (p) {
-                        Privileges.read => common.Role.read,
-                        Privileges.write => common.Role.write,
-                        Privileges.publish => common.Role.publish,
-                        Privileges.ultimate => common.Role.ultimate,
+                        Privileges.read => common.Privilege.read,
+                        Privileges.write => common.Privilege.write,
+                        Privileges.publish => common.Privilege.publish,
+                        Privileges.ultimate => common.Privilege.ultimate,
                       };
                     }).toList()
                   : null);

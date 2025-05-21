@@ -130,8 +130,8 @@ Map<String, dynamic> _$AuthorToJson(Author instance) => <String, dynamic>{
 Contributor _$ContributorFromJson(Map<String, dynamic> json) => Contributor(
       name: json['name'] as String,
       email: json['email'] as String,
-      role: (json['role'] as List<dynamic>?)
-              ?.map((e) => $enumDecode(_$RoleEnumMap, e))
+      privileges: (json['privileges'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$PrivilegeEnumMap, e))
               .toList() ??
           const [],
     );
@@ -140,14 +140,15 @@ Map<String, dynamic> _$ContributorToJson(Contributor instance) =>
     <String, dynamic>{
       'name': instance.name,
       'email': instance.email,
-      'role': instance.role?.map((e) => _$RoleEnumMap[e]!).toList(),
+      'privileges':
+          instance.privileges?.map((e) => _$PrivilegeEnumMap[e]!).toList(),
     };
 
-const _$RoleEnumMap = {
-  Role.read: 'read',
-  Role.write: 'write',
-  Role.publish: 'publish',
-  Role.ultimate: 'ultimate',
+const _$PrivilegeEnumMap = {
+  Privilege.read: 'read',
+  Privilege.write: 'write',
+  Privilege.publish: 'publish',
+  Privilege.ultimate: 'ultimate',
 };
 
 Signature _$SignatureFromJson(Map<String, dynamic> json) => Signature(
@@ -264,11 +265,47 @@ Map<String, dynamic> _$GetPackagesResponseToJson(
       'packages': instance.packages,
     };
 
+PackageMap _$PackageMapFromJson(Map<String, dynamic> json) => PackageMap(
+      name: json['name'] as String,
+      type: $enumDecode(_$UserPackageRelationshipEnumMap, json['type']),
+      privileges: (json['privileges'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$PrivilegeEnumMap, e))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$PackageMapToJson(PackageMap instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': _$UserPackageRelationshipEnumMap[instance.type]!,
+      'privileges':
+          instance.privileges?.map((e) => _$PrivilegeEnumMap[e]!).toList(),
+    };
+
+const _$UserPackageRelationshipEnumMap = {
+  UserPackageRelationship.author: 'author',
+  UserPackageRelationship.contributor: 'contributor',
+};
+
 GetUserResponse _$GetUserResponseFromJson(Map<String, dynamic> json) =>
-    GetUserResponse();
+    GetUserResponse(
+      name: json['name'] as String,
+      email: json['email'] as String,
+      created_at: json['created_at'] as String,
+      updated_at: json['updated_at'] as String,
+      packages: (json['packages'] as List<dynamic>?)
+          ?.map((e) => PackageMap.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$GetUserResponseToJson(GetUserResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'name': instance.name,
+      'email': instance.email,
+      'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
+      'packages': instance.packages,
+    };
 
 GetUsersResponse _$GetUsersResponseFromJson(Map<String, dynamic> json) =>
     GetUsersResponse();

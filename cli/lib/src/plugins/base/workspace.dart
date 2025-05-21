@@ -1,10 +1,9 @@
-
 import 'package:pritt_cli/src/plugins/base/config.dart';
 
-class Workspace {
-  Config config;
-  String directory;
-  String name;
+class Workspace<T extends Config> {
+  final T config;
+  final String directory;
+  final String name;
   String? language;
   PackageManager? packageManager;
 
@@ -18,12 +17,14 @@ class Workspace {
 }
 
 class PackageWorkspace extends Workspace {
-
+  PackageWorkspace(
+      {required super.config, required super.directory, required super.name});
 }
 
 /// TODO: This is a stub for a future feature, not used at the moment
 class MonorepoWorkspace extends Workspace {
-
+  MonorepoWorkspace(
+      {required super.config, required super.directory, required super.name});
 }
 
 /// TODO: Add better support for adding, removing packages
@@ -31,28 +32,58 @@ class MonorepoWorkspace extends Workspace {
 class PackageManager {
   String name;
   List<String> args;
-  
-  List<String> Function(PackageInformation info) onAdd;
-  List<String> Function(PackageInformation info) onRemove;
 
-  PackageManager({
-    required this.name, 
-    List<String>? args,
-    required this.onAdd,
-    required this.onRemove
-  }) : args = args ?? [name];
+  /// TODO: For now, packages are added one-by-one unless packages are only passed with name and version
+  /// Fix this to add multiple packages at once
+  PackageCmdArgs Function(PackageInformation info) onAdd;
+  List<String> Function(PackageInformation info) onRemove;
+  List<String> Function() onGet;
+
+  PackageManager(
+      {required this.name,
+      List<String>? args,
+      required this.onAdd,
+      required this.onRemove,
+      required this.onGet})
+      : args = args ?? [name];
+}
+
+/// Process:
+/// pkgName -> resolveVersion -> resolveType -> resolveUrl
+class PackageCmdArgs {
+  /// major args to run the command
+  final List<String> args;
+
+  /// used to resolve args when given a package name and type
+  final List<String> Function(String name, PackageType type) resolveType;
+
+  /// used to resolve args when given a package name and version
+  final String Function(String name, String? version) resolveVersion;
+
+  /// used to resolve args when given a package name and url
+  final (List<String>, {bool singleUse}) Function(String name, String? url)?
+      resolveUrl;
+
+  PackageCmdArgs({
+    required this.args,
+    required this.resolveType,
+    required this.resolveVersion,
+    this.resolveUrl,
+  });
 }
 
 class PackageInformation {
   String name;
-  String version;
+  String? version;
   PackageType type;
+  String? url;
+
+  PackageInformation({
+    required this.name,
+    this.version,
+    required this.type,
+    this.url,
+  });
 }
 
-enum PackageType {
-  normal, 
-  dev,
-  peer, 
-  optional, 
-  other
-}
+enum PackageType { normal, dev, peer, optional, other }

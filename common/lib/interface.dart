@@ -240,13 +240,13 @@ class Author {
 }
 
 @JsonEnum(valueField: 'value')
-enum Role {
+enum Privilege {
   read('read'),
   write('write'),
   publish('publish'),
   ultimate('ultimate');
 
-  const Role(this.value);
+  const Privilege(this.value);
 
   final String value;
 }
@@ -256,7 +256,7 @@ class Contributor {
   Contributor({
     required this.name,
     required this.email,
-    this.role = const [],
+    this.privileges = const [],
   });
 
   factory Contributor.fromJson(Map<String, dynamic> json) =>
@@ -266,7 +266,7 @@ class Contributor {
 
   final String email;
 
-  final List<Role>? role;
+  final List<Privilege>? privileges;
 
   Map<String, dynamic> toJson() => _$ContributorToJson(this);
 }
@@ -428,12 +428,58 @@ class GetPackagesResponse {
   Map<String, dynamic> toJson() => _$GetPackagesResponseToJson(this);
 }
 
+@JsonEnum(valueField: 'value')
+enum UserPackageRelationship {
+  author('author'),
+  contributor('contributor');
+
+  const UserPackageRelationship(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class PackageMap {
+  PackageMap({
+    required this.name,
+    required this.type,
+    this.privileges = const [],
+  });
+
+  factory PackageMap.fromJson(Map<String, dynamic> json) =>
+      _$PackageMapFromJson(json);
+
+  final String name;
+
+  final UserPackageRelationship type;
+
+  final List<Privilege>? privileges;
+
+  Map<String, dynamic> toJson() => _$PackageMapToJson(this);
+}
+
 @JsonSerializable()
 class GetUserResponse {
-  GetUserResponse();
+  GetUserResponse({
+    required this.name,
+    required this.email,
+    required this.created_at,
+    required this.updated_at,
+    required this.packages,
+  });
 
   factory GetUserResponse.fromJson(Map<String, dynamic> json) =>
       _$GetUserResponseFromJson(json);
+
+  final String name;
+
+  final String email;
+
+  final String created_at;
+
+  final String updated_at;
+
+  final List<PackageMap>? packages;
 
   Map<String, dynamic> toJson() => _$GetUserResponseToJson(this);
 }
