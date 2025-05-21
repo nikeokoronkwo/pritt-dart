@@ -70,6 +70,9 @@ class Package {
   /// This archive is usually for the Object File System and so is relative to that
   Uri archive;
 
+  /// The license of the given package
+  String? license;
+
   Package({
     required this.id,
     required this.name,
@@ -81,6 +84,7 @@ class Package {
     required this.created,
     this.vcs = VCS.git,
     required this.archive,
+    this.license,
   }) : updated = updated ?? created;
 }
 
@@ -246,4 +250,25 @@ class Signature {
   factory Signature.fromJson(Map<String, dynamic> json) =>
       _$SignatureFromJson(json);
   Map<String, dynamic> toJson() => _$SignatureToJson(this);
+}
+
+class Plugin {
+  @primary
+  String id;
+
+  String name;
+
+  String language;
+
+  String? description;
+
+  Uri archive;
+
+  Plugin({
+    required this.id,
+    required this.name,
+    required this.language,
+    this.description,
+    required this.archive,
+  });
 }

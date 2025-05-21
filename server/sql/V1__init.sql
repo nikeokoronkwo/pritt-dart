@@ -57,6 +57,7 @@ CREATE TABLE packages (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     vcs version_control_system NOT NULL DEFAULT 'git',
     archive TEXT NOT NULL,
+    license TEXT,
     FOREIGN KEY (author_id) REFERENCES users (id)
 );
 
@@ -97,6 +98,14 @@ CREATE TABLE package_contributors (
     privileges privilege ARRAY NOT NULL,
     FOREIGN KEY (package_id) REFERENCES packages (id),
     FOREIGN KEY (contributor_id) REFERENCES users (id)
+);
+
+CREATE TABLE plugins (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT UNIQUE NOT NULL,
+    language TEXT UNIQUE NOT NULL,
+    description TEXT UNIQUE NOT NULL,
+    archive TEXT NOT NULL,
 );
 
 

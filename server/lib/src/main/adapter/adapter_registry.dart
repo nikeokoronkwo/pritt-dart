@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:pritt_server/src/main/adapter_service/adapter_service.dart';
+
 import 'adapter.dart';
 import 'adapter_base.dart';
 import 'core/dart.dart';
@@ -10,29 +12,21 @@ import 'core/npm.dart';
 /// The adapter registry is responsible for retrieving and controlling adapters in Pritt.
 /// It also sources and fetches custom adapters based on its index of
 class AdapterRegistry {
-  AdapterRegistry._() {
-    if (AdapterRegistry.db == null) {
-      // initialise db
-    }
-  }
+  CustomAdapterService get cas => AdapterRegistry.service!;
+
+  AdapterRegistry._();
 
   /// We need only a single instance of this running (or do we?)
-  static CustomAdapterDB? db;
+  static CustomAdapterService? service;
 
   /// The core adapters
   final List<Adapter> _coreAdapters = [dartAdapter, npmAdapter];
-
-  /// The custom adapters
-  Stream<Adapter> get _customAdapters {
-    throw UnimplementedError("TODO: Implement 'get adapters'");
-  }
 
   /// Get the total number of adapters available
   Stream<Adapter> get adapters async* {
     for (final adapter in _coreAdapters) {
       yield adapter;
     }
-    yield* _customAdapters;
   }
 
   /// Connects the adapter registry to the given external database, containing information about the adapters
@@ -46,18 +40,26 @@ class AdapterRegistry {
     return AdapterRegistry._();
   }
 
-  Future disconnect() async {}
+  Future<void> disconnect() async {}
 
   /// Find an adapter given a request
-  FutureOr<({Adapter adapter, AdapterResolveType resolve})> find(
+  Future<({AdapterInterface adapter, AdapterResolveType resolve})> find(
       AdapterResolveObject obj,
       {bool checkedCore = false}) async {
-    await for (final adapter in (checkedCore ? _customAdapters : adapters)) {
-      final adapterResolve = adapter.resolve(obj);
-      if (adapterResolve.isResolved) {
-        return (adapter: adapter, resolve: adapterResolve);
+    if (!checkedCore) {
+      await for (final adapter in adapters) {
+        final adapterResolve = adapter.resolve(obj);
+        if (adapterResolve.isResolved) {
+          return (adapter: adapter, resolve: adapterResolve);
+        }
       }
     }
+
+    // check custom adapters
+    final adapter = await cas.findAdapter(obj);
+    if (adapter.adapter != null)
+      return (adapter: adapter.adapter!, resolve: adapter.type);
+
     throw AdapterException("Could not find adapter");
   }
 
@@ -68,8 +70,7 @@ class AdapterRegistry {
       final adapterResolve = adapter.resolve(obj);
       if (adapterResolve.isResolved) {
         return (adapter: adapter, resolve: adapterResolve);
-      } else
-        print('Nope: not $adapter: ${adapter.language} - ${adapterResolve}');
+      }
     }
     return null;
   }

@@ -25,6 +25,7 @@ class Adapter implements AdapterInterface {
   /// The language used for the adapter if any
   ///
   /// Not all adapters may have associated languages. This is here to make creating [CRSRequest] types much easier
+  @override
   final String? language;
 
   /// The function called upon resolving of the adapter request.

@@ -9,12 +9,11 @@ class Config {
   final String? license;
   final bool? private;
 
-  const Config({
-    required this.name,
-    required this.version,
-    this.description,
-    required this.author,
-    this.license,
-    this.private = false
-  });
+  const Config(
+      {required this.name,
+      required this.version,
+      this.description,
+      required this.author,
+      this.license,
+      this.private = false});
 }

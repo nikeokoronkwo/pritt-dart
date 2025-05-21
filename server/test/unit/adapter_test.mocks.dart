@@ -8,9 +8,9 @@ import 'dart:async' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
 import 'package:pritt_server/src/main/adapter/adapter_base.dart' as _i10;
-import 'package:pritt_server/src/main/crs/db.dart' as _i2;
+import 'package:pritt_server/src/main/crs/db/interface.dart' as _i2;
 import 'package:pritt_server/src/main/crs/db/schema.dart' as _i7;
-import 'package:pritt_server/src/main/crs/fs.dart' as _i3;
+import 'package:pritt_server/src/main/crs/storage/interface.dart' as _i3;
 import 'package:pritt_server/src/main/crs/interfaces.dart' as _i4;
 import 'package:pritt_server/src/main/crs/response.dart' as _i6;
 import 'package:pritt_server/src/main/shared/version.dart' as _i9;
@@ -30,7 +30,7 @@ import 'package:pritt_server/src/main/shared/version.dart' as _i9;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
-    implements _i2.CRSDatabaseInterface {
+    implements _i2.PrittDatabaseInterface {
   _FakeCRSDatabaseInterface_0(
     Object parent,
     Invocation parentInvocation,
@@ -41,7 +41,7 @@ class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
 }
 
 class _FakeCRSRegistryOFSInterface_1 extends _i1.SmartFake
-    implements _i3.CRSRegistryOFSInterface {
+    implements _i3.PrittStorageInterface {
   _FakeCRSRegistryOFSInterface_1(
     Object parent,
     Invocation parentInvocation,
@@ -60,13 +60,13 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
   }
 
   @override
-  _i2.CRSDatabaseInterface get db => (super.noSuchMethod(
+  _i2.PrittDatabaseInterface get db => (super.noSuchMethod(
         Invocation.getter(#db),
         returnValue: _FakeCRSDatabaseInterface_0(
           this,
           Invocation.getter(#db),
         ),
-      ) as _i2.CRSDatabaseInterface);
+      ) as _i2.PrittDatabaseInterface);
 
   @override
   _i5.Future<_i6.CRSResponse<_i7.PackageVersions>> getLatestPackage(
@@ -268,13 +268,13 @@ class MockCRSArchiveController extends _i1.Mock
   }
 
   @override
-  _i3.CRSRegistryOFSInterface get ofs => (super.noSuchMethod(
+  _i3.PrittStorageInterface get ofs => (super.noSuchMethod(
         Invocation.getter(#ofs),
         returnValue: _FakeCRSRegistryOFSInterface_1(
           this,
           Invocation.getter(#ofs),
         ),
-      ) as _i3.CRSRegistryOFSInterface);
+      ) as _i3.PrittStorageInterface);
 
   @override
   _i5.Future<_i6.CRSResponse<_i4.CRSArchive>> getArchiveWithVersion(

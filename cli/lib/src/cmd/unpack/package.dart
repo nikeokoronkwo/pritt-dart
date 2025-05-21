@@ -1,5 +1,3 @@
-
-
 import 'package:args/command_runner.dart';
 
 class UnpackPackageCommand extends Command {

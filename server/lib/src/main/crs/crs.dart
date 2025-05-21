@@ -3,12 +3,12 @@
 import 'dart:async';
 
 import '../shared/version.dart';
-import 'crs_db.dart';
-import 'crs_storage.dart';
 import 'db.dart';
+import 'storage.dart';
+import 'db/interface.dart';
 import 'db/schema.dart';
 import 'exceptions.dart';
-import 'fs.dart';
+import 'storage/interface.dart';
 import 'interfaces.dart';
 import 'response.dart';
 
@@ -20,7 +20,7 @@ class CoreRegistryServiceController implements CRSController {
   CoreRegistryServiceController(this.delegate, this.language);
 
   @override
-  CRSDatabaseInterface get db => delegate.db;
+  PrittDatabaseInterface get db => delegate.db;
 
   @override
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
@@ -61,7 +61,7 @@ class CoreRegistryServiceController implements CRSController {
           language: this.language, env: env);
 
   @override
-  CRSRegistryOFSInterface get ofs => delegate.ofs;
+  PrittStorageInterface get ofs => delegate.ofs;
 
   @override
   Future<CRSResponse<Map<User, Iterable<Privileges>>>> getPackageContributors(
@@ -82,10 +82,10 @@ class CoreRegistryServiceController implements CRSController {
 /// It directly inherits from the [CRSDBController] and [CRSArchiveController] interfaces
 class CoreRegistryService implements CRSController {
   @override
-  CRSDatabase db;
+  PrittDatabase db;
 
   @override
-  CRSStorage ofs;
+  PrittStorage ofs;
 
   CoreRegistryService._(this.db, this.ofs);
 
@@ -98,7 +98,7 @@ class CoreRegistryService implements CRSController {
       {String? dbUrl, required String ofsUrl}) async {
     final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
 
-    final db = CRSDatabase.connect(
+    final db = PrittDatabase.connect(
       host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
       port: dbUri?.port ??
           int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
@@ -111,7 +111,7 @@ class CoreRegistryService implements CRSController {
       devMode: (dbUri?.host ?? String.fromEnvironment('DATABASE_HOST')) ==
           'localhost',
     );
-    final ofs = await CRSStorage.connect(ofsUrl);
+    final ofs = await PrittStorage.connect(ofsUrl);
 
     return CoreRegistryService._(db, ofs);
   }

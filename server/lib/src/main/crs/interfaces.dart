@@ -1,9 +1,9 @@
 // ignore_for_file: constant_identifier_names
 
 import '../shared/version.dart';
-import 'db.dart';
+import 'db/interface.dart';
 import 'db/schema.dart';
-import 'fs.dart';
+import 'storage/interface.dart';
 import 'response.dart';
 
 class CRSArchive {
@@ -23,7 +23,7 @@ class CRSArchive {
 /// an interface for the core registry system, used by adapters to make requests to retrieve common data
 abstract interface class CRSArchiveController {
   /// The object file system interface used by the controller
-  CRSRegistryOFSInterface get ofs;
+  PrittStorageInterface get ofs;
 
   /// get the archive of a package with the given version
   ///
@@ -39,7 +39,7 @@ abstract interface class CRSArchiveController {
 /// An interface for the core registry system, used by adapters to make requests to retrieve common data
 abstract interface class CRSDBController {
   /// The database interface used by the controller
-  CRSDatabaseInterface get db;
+  PrittDatabaseInterface get db;
 
   /// get the latest version of a package
   Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,

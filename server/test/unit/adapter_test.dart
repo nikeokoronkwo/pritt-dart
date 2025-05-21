@@ -53,7 +53,8 @@ void main() {
             userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
         final result = await adapter.metaRequest(
             AdapterRequestObject(
-                resolveObject: resolveObject, resolveType: AdapterResolveType.meta),
+                resolveObject: resolveObject,
+                resolveType: AdapterResolveType.meta),
             mockDBController);
 
         assert(result is AdapterMetaResult, "adapter should be meta");

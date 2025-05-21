@@ -15,7 +15,10 @@ Handler adapterHandler(CoreRegistryService crs) {
       final adapterRegistry = await AdapterRegistry.connect();
 
       // check through the core adapters first
-      var adapterSearchResult = adapterRegistry.findInCore(adapterResolve);
+      ({
+        AdapterInterface adapter,
+        AdapterResolveType resolve
+      })? adapterSearchResult = adapterRegistry.findInCore(adapterResolve);
       adapterSearchResult ??=
           await adapterRegistry.find(adapterResolve, checkedCore: true);
 

@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:args/command_runner.dart';
@@ -12,7 +10,5 @@ class PublishAdapterCommand extends Command {
   String get description => "Publish an adapter to Pritt";
 
   @override
-  FutureOr? run() {
-    
-  }
+  FutureOr? run() {}
 }

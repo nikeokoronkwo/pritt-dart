@@ -12,13 +12,16 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
     name: 'npm',
     language: 'javascript',
     configFile: 'package.json',
-    packageManagers: { for (final pm in NpmPackageManager.values) pm.toString() : pm.pmObject },
+    packageManagers: {
+      for (final pm in NpmPackageManager.values) pm.toString(): pm.pmObject
+    },
     onGetConfig: (directory, controller) async {
       final configFile = await controller.readConfigFile(directory);
 
       final config = jsonDecode(configFile);
 
-      return PackageJsonConfig.fromJson(config, await controller.getCurrentAuthor());
+      return PackageJsonConfig.fromJson(
+          config, await controller.getCurrentAuthor());
     },
     onGetWorkspace: (directory, controller) async {
       // check the config files present
@@ -46,9 +49,10 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
 
       // create .npmrc if not exists
       if (await controller.fileExists('.npmrc')) {
-        npmRc = const LineSplitter().convert(await controller.readFileAt('.npmrc'))
-        .asMap()
-        .map((_, v) {
+        npmRc = const LineSplitter()
+            .convert(await controller.readFileAt('.npmrc'))
+            .asMap()
+            .map((_, v) {
           final [key, value] = v.split('=');
           return MapEntry(key, value);
         });
@@ -56,22 +60,21 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
 
       npmRc['@pritt:registry'] = controller.instanceUri;
 
-      await controller.writeFileAt('.npmrc', npmRc.entries.map((e) => '${e.key}=${e.value}').join('\n'));
+      await controller.writeFileAt(
+          '.npmrc', npmRc.entries.map((e) => '${e.key}=${e.value}').join('\n'));
 
-      controller.log("${styleBold.wrap("NOTE:")} When using the local package manager, install 'pkg' as: ${
-        styleUnderlined.wrap('${pm?.name ?? 'npm'} add @pritt/pkg')
-      }");
+      controller.log(
+          "${styleBold.wrap("NOTE:")} When using the local package manager, install 'pkg' as: ${styleUnderlined.wrap('${pm?.name ?? 'npm'} add @pritt/pkg')}");
     });
 
 class PackageJsonConfig extends Config {
-  PackageJsonConfig._({
-    required super.name,
-    required super.version,
-    required super.description,
-    required super.author,
-    super.license,
-    super.private
-  });
+  PackageJsonConfig._(
+      {required super.name,
+      required super.version,
+      required super.description,
+      required super.author,
+      super.license,
+      super.private});
 
   factory PackageJsonConfig.fromJson(Map<String, dynamic> json, Author author) {
     return PackageJsonConfig._(
@@ -80,7 +83,6 @@ class PackageJsonConfig extends Config {
         description: json['description'],
         author: author,
         license: json['license'],
-        private: json['private']
-      );
+        private: json['private']);
   }
 }

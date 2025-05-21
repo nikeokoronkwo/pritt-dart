@@ -1,21 +1,20 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
 import 'exceptions.dart';
-import 'fs.dart';
+import 'storage/interface.dart';
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
 /// During development, or docker compose deployments, we use [OpenIO]().
 ///
 /// During live production deployments (usually not on prem), we make use of &lt;insert cloud provider S3 compatible OFS here&gt;
-class CRSStorage implements CRSRegistryOFSInterface {
-  CRSStorage._();
+class PrittStorage implements PrittStorageInterface {
+  PrittStorage._();
 
   S3 get s3Instance {
-    if (CRSStorage.s3 != null) return CRSStorage.s3!;
+    if (PrittStorage.s3 != null) return PrittStorage.s3!;
     throw Exception('S3 not initialised');
   }
 
@@ -45,7 +44,7 @@ class CRSStorage implements CRSRegistryOFSInterface {
     return s3!;
   }
 
-  static Future<CRSStorage> connect(String url,
+  static Future<PrittStorage> connect(String url,
       {String? s3region, String? s3accessKey, String? s3secretKey}) async {
     s3region ??= String.fromEnvironment('S3_REGION');
     s3accessKey ??= String.fromEnvironment('S3_SECRET_KEY');
@@ -56,7 +55,7 @@ class CRSStorage implements CRSRegistryOFSInterface {
           region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
     }
 
-    return CRSStorage._();
+    return PrittStorage._();
   }
 
   @override

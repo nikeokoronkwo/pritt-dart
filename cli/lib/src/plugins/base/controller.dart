@@ -17,12 +17,12 @@ abstract interface class PrittLocalConfigUnawareController {
   String readConfigFileSync(String directory);
 
   /// Get the current user, and return the user object
-  /// 
+  ///
   /// TODO: Cache consistent calls
   FutureOr<User> getCurrentUser();
 
   /// Get the current user as an [common.Author] object
-  /// 
+  ///
   /// TODO: Cache consistent calls
   FutureOr<common.Author> getCurrentAuthor();
 

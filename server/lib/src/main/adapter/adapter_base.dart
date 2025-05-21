@@ -118,6 +118,8 @@ class AdapterException implements Exception {
 
 /// A base interface shared between adapters
 abstract interface class AdapterInterface {
+  String? get language;
+
   /// Run an adapter
   FutureOr<AdapterResult> run(CRSController crs, AdapterOptions options);
 }

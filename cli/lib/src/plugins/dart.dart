@@ -43,8 +43,7 @@ final dartHandler = Handler<PubspecConfig>(
     final currentAuthor = await controller.getCurrentAuthor();
 
     // return configuration
-    return PubspecConfig.fromJson(
-        configData, currentAuthor);
+    return PubspecConfig.fromJson(configData, currentAuthor);
   },
   onGetWorkspace: (directory, controller) async {
     return Workspace(
@@ -59,22 +58,20 @@ final dartHandler = Handler<PubspecConfig>(
 );
 
 class PubspecConfig extends Config {
-  const PubspecConfig._({
-    required super.name,
-    required super.version,
-    required super.description,
-    required super.author,
-    super.license,
-    super.private
-  });
+  const PubspecConfig._(
+      {required super.name,
+      required super.version,
+      required super.description,
+      required super.author,
+      super.license,
+      super.private});
 
   factory PubspecConfig.fromJson(Map<String, dynamic> json, Author author) {
     return PubspecConfig._(
-      name: json['name'] as String,
-      version: json['version'] as String,
-      description: json['description'] as String,
-      author: author,
-      private: json['publish_to'] == 'none'
-    );
+        name: json['name'] as String,
+        version: json['version'] as String,
+        description: json['description'] as String,
+        author: author,
+        private: json['publish_to'] == 'none');
   }
 }

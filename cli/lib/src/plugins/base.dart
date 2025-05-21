@@ -9,7 +9,7 @@ typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
 
 /// A pritt "handler" (we should probably rename this to something else) is an object used for adding support for various package types
 /// They are usually coupled with an adapter
-/// 
+///
 /// NOTE: A Workspace might have various handlers (multi-language projects)
 ///
 /// TODO(https://github.com/nikeokoronkwo/pritt-dart/issues/6): Migrate
@@ -57,7 +57,7 @@ class Handler<T extends Config> {
       String directory, PrittLocalController controller) onGetWorkspace;
 
   /// A function run to check whether a given workspace is for a given handler
-  /// 
+  ///
   /// Defaults to `return await controller.fileExists(controller.configFileName());`
   final FutureOr<bool> Function(
           String workspace, PrittLocalConfigUnawareController controller)?
@@ -82,7 +82,7 @@ class Handler<T extends Config> {
 
 class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
   Map<String, PackageManager> packageManagers;
-  
+
   MultiPackageManagerHandler(
       {required super.id,
       required super.name,

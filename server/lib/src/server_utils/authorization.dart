@@ -1,5 +1,5 @@
 import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/crs/crs_db.dart';
+import 'package:pritt_server/src/main/crs/db.dart';
 import 'package:pritt_server/src/main/crs/db/schema.dart';
 
 Future<User?> checkAuthorization(String authHeader,
