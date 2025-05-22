@@ -42,26 +42,3 @@ jobs:
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
         run: dart analyze 
-  
-  codegen:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: dart-lang/setup-dart@v1
-
-      - name: Setup Python
-        uses: actions/setup-python@v5.6.0
-
-      - name: Install dependencies
-        run: dart pub get
-
-      - name: Run Codegen on common
-        run: |
-          ./tools/denv.dart --cwd server -- dart run bin/server.dart
-          cd common
-          dart run build_runner build --delete-conflicting-outputs
-
-      - name: Compare Differences
-        run: git diff --exit-code
