@@ -9,7 +9,7 @@ on:
   pull_request:
     branches: [ "main", "stable" ]
     paths:
-      - '.github/workflows/*_cli.yml'
+      - '.github/workflows/*cli.yml'
       - 'cli/**'
       - 'common/**'
 

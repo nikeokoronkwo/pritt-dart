@@ -3,6 +3,11 @@
 name: Configuration Testing
 
 on:
+  pull_request:
+    branches: [ "main", "stable" ]
+    paths:
+      - '.github/workflows/*config.yml'
+      - 'config/**'
   workflow_dispatch:
 
 jobs:
