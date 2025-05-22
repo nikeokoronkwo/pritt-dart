@@ -1,0 +1,27 @@
+
+
+name: Configuration Testing
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test Types
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: config
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Pkl
+      uses: pkl-community/setup-pkl@v0.0.8
+      with:
+        # The Pkl version to install.
+        pkl-version: 0.28.2
+
+    - name: Test Pkl Code
+      run: find test -iname '*.pkl' -o | xargs pkl test
+    
