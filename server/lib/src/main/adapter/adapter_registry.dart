@@ -57,8 +57,9 @@ class AdapterRegistry {
 
     // check custom adapters
     final adapter = await cas.findAdapter(obj);
-    if (adapter.adapter != null)
+    if (adapter.adapter != null) {
       return (adapter: adapter.adapter!, resolve: adapter.type);
+    }
 
     throw AdapterException("Could not find adapter");
   }
