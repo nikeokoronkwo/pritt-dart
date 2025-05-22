@@ -1,9 +1,9 @@
 // ignore_for_file: constant_identifier_names
 
-import '../shared/version.dart';
-import 'db/interface.dart';
-import 'db/schema.dart';
-import 'storage/interface.dart';
+import '../utils/version.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
+import '../base/storage/interface.dart';
 import 'response.dart';
 
 class CRSArchive {

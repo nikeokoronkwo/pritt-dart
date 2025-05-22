@@ -1,8 +1,8 @@
 import 'package:pritt_common/interface.dart' as common;
 import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/crs/db/schema.dart';
+import 'package:pritt_server/src/main/base/db/schema.dart';
 import 'package:pritt_server/src/main/crs/exceptions.dart';
-import 'package:pritt_server/src/main/shared/version.dart';
+import 'package:pritt_server/src/main/utils/version.dart';
 import 'package:pritt_server/src/server_utils/authorization.dart';
 import 'package:pritt_server/src/utils/request_handler.dart';
 

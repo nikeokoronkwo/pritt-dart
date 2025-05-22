@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
-import 'exceptions.dart';
+import '../crs/exceptions.dart';
 import 'storage/interface.dart';
 
 /// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().

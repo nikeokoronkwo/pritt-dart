@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:mime/mime.dart';
 
 import '../crs/interfaces.dart';
-import '../shared/user_agent.dart';
+import '../utils/user_agent.dart';
 
 enum RequestMethod { GET, POST, PUT, DELETE }
 

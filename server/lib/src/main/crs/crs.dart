@@ -2,13 +2,13 @@
 
 import 'dart:async';
 
-import '../shared/version.dart';
-import 'db.dart';
-import 'storage.dart';
-import 'db/interface.dart';
-import 'db/schema.dart';
+import '../utils/version.dart';
+import '../base/db.dart';
+import '../base/storage.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
 import 'exceptions.dart';
-import 'storage/interface.dart';
+import '../base/storage/interface.dart';
 import 'interfaces.dart';
 import 'response.dart';
 
@@ -95,25 +95,19 @@ class CoreRegistryService implements CRSController {
 
   /// Creates a new instance of the core registry service
   static Future<CoreRegistryService> connect(
-      {String? dbUrl, required String ofsUrl}) async {
-    final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
-
-    final db = PrittDatabase.connect(
-      host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
-      port: dbUri?.port ??
-          int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
-      database:
-          dbUri?.pathSegments.first ?? String.fromEnvironment('DATABASE_NAME'),
-      username: dbUri?.userInfo.split(':').first ??
-          String.fromEnvironment('DATABASE_USERNAME'),
-      password: dbUri?.userInfo.split(':').last ??
-          String.fromEnvironment('DATABASE_PASSWORD'),
-      devMode: (dbUri?.host ?? String.fromEnvironment('DATABASE_HOST')) ==
-          'localhost',
+      {PrittDatabase? db, PrittStorage? storage}) async {
+    db ??= PrittDatabase.connect(
+      host: String.fromEnvironment('DATABASE_HOST'), 
+      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432), 
+      database: String.fromEnvironment('DATABASE_NAME'), 
+      username: String.fromEnvironment('DATABASE_USERNAME'), 
+      password: String.fromEnvironment('DATABASE_PASSWORD'),
+      devMode: String.fromEnvironment('DATABASE_HOST') == 'localhost',
     );
-    final ofs = await PrittStorage.connect(ofsUrl);
 
-    return CoreRegistryService._(db, ofs);
+    storage ??= await PrittStorage.connect(String.fromEnvironment('S3_URL'));
+
+    return CoreRegistryService._(db, storage);
   }
 
   Future<void> disconnect() async {

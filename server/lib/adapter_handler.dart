@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:pritt_server/pritt_server.dart';
 import 'package:pritt_server/src/main/adapter/adapter_base.dart';
-import 'package:pritt_server/src/main/adapter/adapter_registry.dart';
 import 'package:pritt_server/src/main/crs/crs.dart';
 import 'package:pritt_server/src/utils/resolve.dart';
 import 'package:pritt_server/src/utils/xml.dart';
@@ -11,16 +11,13 @@ Handler adapterHandler(CoreRegistryService crs) {
     try {
       final adapterResolve = getAdapterResolveObject(req);
 
-      // connect to the adapter registry
-      final adapterRegistry = await AdapterRegistry.connect();
-
       // check through the core adapters first
       ({
         AdapterInterface adapter,
         AdapterResolveType resolve
-      })? adapterSearchResult = adapterRegistry.findInCore(adapterResolve);
+      })? adapterSearchResult = registry.findInCore(adapterResolve);
       adapterSearchResult ??=
-          await adapterRegistry.find(adapterResolve, checkedCore: true);
+          await registry.find(adapterResolve, checkedCore: true);
 
       final adapter = adapterSearchResult.adapter;
 

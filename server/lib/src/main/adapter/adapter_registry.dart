@@ -1,6 +1,9 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/main/adapter_service/adapter_service.dart';
+import 'package:path/path.dart';
+import 'package:pritt_server/src/main/cas/cas.dart';
+import 'package:pritt_server/src/main/base/db.dart';
+import 'package:pritt_server/src/main/base/db/interface.dart';
 
 import 'adapter.dart';
 import 'adapter_base.dart';
@@ -31,12 +34,44 @@ class AdapterRegistry {
 
   /// Connects the adapter registry to the given external database, containing information about the adapters
   ///
-  /// The registry can connect to a URL, file path, or work on local memory
-  ///
+  /// The registry can connect to:
+  /// - local memory
+  /// - a URL: [Uri], 
+  /// - file path: [Uri.file] or [String], 
+  /// - a production DB instance conforming to [PrittAdapterDatabaseInterface], usually being [PrittDatabase], 
+  /// 
   /// If "local" is passed, then the registry uses local memory to handle the registry (this can be used for testing or dev work)
   ///
   /// This function must be called before any other function on this, else an error will be thrown to connect the database first.
-  static Future<AdapterRegistry> connect() async {
+  static Future<AdapterRegistry> connect({
+    Object? db, 
+  }) async {
+    final PrittAdapterDatabaseInterface databaseInterface;
+
+    // check type
+    if (db is String) {
+      // sqlite database at path
+      if (db == 'local') {
+        // in memory sqlite db
+      } else {
+        if (extension(db) != '.db') {
+          throw Exception("Cannot connect to non-sqlite3 Registry DB");
+        }
+      }
+
+    } else if (db is PrittAdapterDatabaseInterface) {
+      databaseInterface = db;
+    } else if (db is Uri) {
+      // sqlite database at path
+      if (extension(db.toFilePath()) != '.db') {
+        throw Exception("Cannot connect to non-sqlite3 Registry DB");
+      }
+    }
+
+    // before starting...
+    // get all adapters and their code
+
+    // load
     return AdapterRegistry._();
   }
 
@@ -57,6 +92,7 @@ class AdapterRegistry {
 
     // check custom adapters
     final adapter = await cas.findAdapter(obj);
+
     if (adapter.adapter != null) {
       return (adapter: adapter.adapter!, resolve: adapter.type);
     }

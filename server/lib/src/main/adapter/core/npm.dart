@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:path/path.dart';
 
 import '../../../utils/extensions.dart';
-import '../../crs/db/schema.dart';
+import '../../base/db/schema.dart';
 import '../../crs/response.dart';
-import '../../shared/version.dart';
+import '../../utils/version.dart';
 import '../adapter.dart';
 import '../adapter_base.dart';
 import 'npm/error.dart';

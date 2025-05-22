@@ -1,2 +1,4 @@
 /// A Client to the Custom Adapter Service
-abstract interface class CASClient {}
+abstract class CASClient {
+  
+}

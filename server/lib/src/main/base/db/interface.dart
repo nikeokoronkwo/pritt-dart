@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../shared/version.dart';
+import '../../utils/version.dart';
 import 'schema.dart';
 
 /// Base interface for a SQL database interface
@@ -9,10 +9,36 @@ mixin SQLDatabase {
   FutureOr sql(String statement);
 }
 
+/// An interface for working with adapters via the DB
+/// 
+/// This is usually implemented by a local SQLITE instance in development (or where needed)
+/// 
+/// For now, this usually acts as the source of truth for custom adapter services, but depending on how adapter development and usage scales, adapters might be loaded on service side.
+abstract interface class PrittAdapterDatabaseInterface {
+  /// Get an adapter by id
+  FutureOr<Plugin> getPlugin(String id);
+
+  /// Get all adapters for a given language
+  FutureOr<Iterable<Plugin>> getPluginsByLanguage(String language);
+
+  /// Get all adapters for a given set of languages
+  FutureOr<Iterable<Plugin>> getPluginsForLanguages(Set<String> languages);
+
+  /// Get all adapters
+  FutureOr<Iterable<Plugin>> getPlugins();
+}
+
+/// An extension of [PrittAdapterDatabaseInterface] for databases that support storing blobs and can store enough to contain adapter code
+/// 
+/// This is usually very unlikely, but we can see
+abstract interface class PrittAdapterWithBlobDatabaseInterface extends PrittAdapterDatabaseInterface {
+  
+}
+
 /// Base interface for the CRS Database Interface
 ///
 /// This is a database-agnostic interface that defines methods for retrieving different kinds of data from the CRS database
-abstract interface class PrittDatabaseInterface {
+abstract interface class PrittDatabaseInterface extends PrittAdapterDatabaseInterface {
   /// add a new package to the database
   FutureOr<Package> addNewPackage({
     required String name,
@@ -136,13 +162,4 @@ abstract interface class PrittDatabaseInterface {
 
   /// Get a user by access token
   FutureOr<User> getUserByAccessToken(String accessToken);
-
-  /// Get an adapter by id
-  FutureOr<Plugin> getPlugin(String id);
-
-  /// Get all adapters for a given language
-  FutureOr<Iterable<Plugin>> getPluginsByLanguage(String language);
-
-  /// Get all adapters for a given set of languages
-  FutureOr<Iterable<Plugin>> getPluginsForLanguages(Set<String> languages);
 }

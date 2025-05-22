@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-import '../../crs/db/schema.dart';
+import '../../base/db/schema.dart';
 import '../../crs/response.dart';
 import '../adapter.dart';
 import '../adapter_base.dart';

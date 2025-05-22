@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:postgres/postgres.dart';
 import 'package:pritt_server/src/main/crs/exceptions.dart';
 
-import '../shared/version.dart';
+import '../utils/version.dart';
 import 'db/interface.dart';
 import 'db/schema.dart';
 
@@ -23,6 +23,7 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
 
   PrittDatabase._({required Pool pool}) : _pool = pool;
 
+  // TODO: Find a better singleton way of doing these db calls
   static PrittDatabase? db;
   static int dbConnections = 0;
 
@@ -582,6 +583,12 @@ FROM users
   @override
   FutureOr<Iterable<Plugin>> getPluginsForLanguages(Set<String> languages) {
     // TODO: implement getPluginsForLanguages
+    throw UnimplementedError();
+  }
+  
+  @override
+  FutureOr<Iterable<Plugin>> getPlugins() {
+    // TODO: implement getPlugins
     throw UnimplementedError();
   }
 }
