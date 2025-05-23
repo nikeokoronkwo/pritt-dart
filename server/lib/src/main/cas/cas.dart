@@ -13,6 +13,9 @@ import '../adapter/adapter_registry.dart';
 ///
 /// BEFORE SERVER INIT: Adapters should be loaded into the service, when initialised by the [AdapterRegistry]
 class CustomAdapterService implements CASClient {
+  Future _loadAdapters() async {
+    
+  }
   // final String url;
 
   /// Runs the sorter and finds an adapter
