@@ -32,13 +32,15 @@ class CustomAdapterService implements CASClient {
 class CustomAdapter implements AdapterInterface {
   WebSocketChannel channel;
 
-  CustomAdapter._(this.channel);
+  CustomAdapter._(this.channel) {
+    channel.stream.listen((message) {
+      
+    });
+  }
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) {
-    // TODO: implement run
-    throw UnimplementedError();
-
+    
   }
 
   @override

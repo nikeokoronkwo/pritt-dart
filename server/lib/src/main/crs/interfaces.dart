@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:async';
+
 import '../utils/version.dart';
 import '../base/db/interface.dart';
 import '../base/db/schema.dart';
@@ -34,6 +36,12 @@ abstract interface class CRSArchiveController {
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
       String packageName, String version,
       {String? language, Map<String, dynamic>? env});
+
+  /// Turn the server into a file server for a package 
+  /// 
+  /// **WARN**: Experimental and Unimplemented API - **DO NOT USE THIS**
+  FutureOr setFileServer(
+    String packageName, {String? version, String? language, bool cache = false});
 }
 
 /// An interface for the core registry system, used by adapters to make requests to retrieve common data

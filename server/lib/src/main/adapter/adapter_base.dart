@@ -7,7 +7,7 @@ import 'package:mime/mime.dart';
 import '../crs/interfaces.dart';
 import '../utils/user_agent.dart';
 
-enum RequestMethod { GET, POST, PUT, DELETE }
+enum RequestMethod { GET, POST, PUT, DELETE, PATCH, OPTIONS }
 
 /// An object containing important information used for adapters to be able to distinguish and make requests for packages from the registry
 class AdapterResolveObject {
@@ -98,7 +98,7 @@ class AdapterMetaResult<T extends MetaResult> extends AdapterResult {
   AdapterMetaResult(this.body, {super.responseType});
 }
 
-class AdapterArchiveResult<T> extends AdapterResult {
+class AdapterArchiveResult extends AdapterResult {
   final Stream<List<int>> archive;
   final String name;
   final String contentType;
