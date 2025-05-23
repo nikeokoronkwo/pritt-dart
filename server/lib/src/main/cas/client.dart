@@ -18,7 +18,7 @@ class CASRequest {
 class CASResponse<T> {
   final String id;
   final T? data;
-  final String error;
+  final String? error;
 
   const CASResponse({
     required this.id,

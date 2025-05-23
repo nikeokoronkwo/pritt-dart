@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:pritt_server/src/main/adapter/adapter_base.dart';
 import 'package:pritt_server/src/main/cas/client.dart';
 import 'package:pritt_server/src/main/crs/interfaces.dart';
@@ -31,6 +33,9 @@ class CustomAdapterService implements CASClient {
 
 class CustomAdapter implements AdapterInterface {
   WebSocketChannel channel;
+  late CRSController crs;
+
+  final completer = Completer();
 
   CustomAdapter._(this.channel) {
     channel.stream.listen((message) {
@@ -39,8 +44,25 @@ class CustomAdapter implements AdapterInterface {
   }
 
   @override
-  Future<AdapterResult> run(CRSController crs, AdapterOptions options) {
-    
+  Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {
+    crs = crs;
+
+    // using [Completer]
+    final _completer = Completer();
+
+    switch (options.resolveType) {
+      case AdapterResolveType.meta:
+        return await metaRequest(options.toRequestObject(), crs);
+      case AdapterResolveType.archive:
+        return await metaRetrieve(options.toRequestObject(), crs);
+      default:
+        throw AdapterException('Unsupported adapter resolve type');
+    }
+
+  }
+
+  Future sendRequest() async {
+    return;
   }
 
   @override
