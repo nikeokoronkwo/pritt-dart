@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
       - filestorage
-  
+
   filestorage:
     image: openio/sds
     ports:

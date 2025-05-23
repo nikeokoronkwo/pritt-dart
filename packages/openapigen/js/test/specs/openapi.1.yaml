@@ -24,14 +24,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: A list of posts
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Post'
+                  $ref: "#/components/schemas/Post"
 
     post:
       operationId: createPost
@@ -41,14 +41,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewPost'
+              $ref: "#/components/schemas/NewPost"
       responses:
-        '201':
+        "201":
           description: The created post
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                $ref: "#/components/schemas/Post"
 
   /posts/{postId}:
     get:
@@ -61,12 +61,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: A single post
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
+                $ref: "#/components/schemas/Post"
 
     delete:
       operationId: deletePost
@@ -78,7 +78,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Post deleted
 
 components:
@@ -93,7 +93,7 @@ components:
         content:
           type: string
         author:
-          $ref: '#/components/schemas/Author'
+          $ref: "#/components/schemas/Author"
       required: [id, title, content, author]
 
     NewPost:

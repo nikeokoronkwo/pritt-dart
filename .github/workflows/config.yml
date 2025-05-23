@@ -1,13 +1,11 @@
-
-
 name: Configuration Testing
 
 on:
   pull_request:
-    branches: [ "main", "stable" ]
+    branches: ["main", "stable"]
     paths:
-      - '.github/workflows/*config.yml'
-      - 'config/**'
+      - ".github/workflows/*config.yml"
+      - "config/**"
   workflow_dispatch:
 
 jobs:
@@ -19,17 +17,17 @@ jobs:
         working-directory: config
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup Pkl
-      uses: pkl-community/setup-pkl@v0.0.8
-      with:
-        # The Pkl version to install.
-        pkl-version: 0.28.2
+      - name: Setup Pkl
+        uses: pkl-community/setup-pkl@v0.0.8
+        with:
+          # The Pkl version to install.
+          pkl-version: 0.28.2
 
-    - name: Test Pkl Code
-      run: find test -iname '*.pkl' -o | xargs pkl test
-  
+      - name: Test Pkl Code
+        run: find test -iname '*.pkl' -o | xargs pkl test
+
   validate:
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +38,7 @@ jobs:
         with:
           # The Pkl version to install.
           pkl-version: 0.28.2
-      
+
       - name: Generate Configurations
         run: pkl eval config/main.pkl --project-dir config -f yaml -o config/out/openapi.yaml
 
