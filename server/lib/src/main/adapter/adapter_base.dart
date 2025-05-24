@@ -8,9 +8,23 @@ import 'package:mime/mime.dart';
 import '../crs/interfaces.dart';
 import '../utils/user_agent.dart';
 
-enum RequestMethod { GET, POST, PUT, DELETE, PATCH, OPTIONS }
+part 'adapter_base.g.dart';
+
+@JsonEnum(valueField: 'value')
+enum RequestMethod { 
+  GET('GET'), 
+  POST('POST'), 
+  PUT('PUT'), 
+  DELETE('DELETE'), 
+  PATCH('PATCH'), 
+  OPTIONS('OPTIONS');
+
+  const RequestMethod(this.value);
+  final String value;
+}
 
 /// An object containing important information used for adapters to be able to distinguish and make requests for packages from the registry
+@JsonSerializable()
 class AdapterResolveObject {
   /// the path of the request, as is without the forward slash in front
   String path;
@@ -54,6 +68,10 @@ class AdapterResolveObject {
         pathSegments = uri.pathSegments,
         url =
             '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
+
+  factory AdapterResolveObject.fromJson(Map<String, dynamic> json) => _$AdapterResolveObjectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AdapterResolveObjectToJson(this);
 }
 
 @JsonEnum(valueField: 'value')

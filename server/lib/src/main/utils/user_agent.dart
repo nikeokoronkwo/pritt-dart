@@ -42,4 +42,8 @@ class UserAgent {
 
     return UserAgent._(name: name, version: parts[version], raw: raw);
   }
+
+  factory UserAgent.fromJson(String json) = UserAgent.fromRaw;
+
+  String toJson() => toString();
 }

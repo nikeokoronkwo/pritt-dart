@@ -27,7 +27,10 @@ class PrittStorage implements PrittStorageInterface {
     s3 = S3(
       region: region,
       credentials:
-          AwsClientCredentials(accessKey: accessKey, secretKey: secretKey),
+          AwsClientCredentials(
+            accessKey: accessKey, 
+            secretKey: secretKey
+          ),
       endpointUrl: url,
     );
 
@@ -47,8 +50,8 @@ class PrittStorage implements PrittStorageInterface {
   static Future<PrittStorage> connect(String url,
       {String? s3region, String? s3accessKey, String? s3secretKey}) async {
     s3region ??= String.fromEnvironment('S3_REGION');
-    s3accessKey ??= String.fromEnvironment('S3_SECRET_KEY');
-    s3secretKey ??= String.fromEnvironment('S3_ACCESS_KEY');
+    s3secretKey ??= String.fromEnvironment('S3_SECRET_KEY');
+    s3accessKey ??= String.fromEnvironment('S3_ACCESS_KEY');
 
     if (s3 == null) {
       await initialiseS3(url,

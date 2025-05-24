@@ -276,4 +276,4 @@ class Plugin {
   });
 }
 
-enum PluginArchiveType { single, multiple }
+enum PluginArchiveType { single, multi }

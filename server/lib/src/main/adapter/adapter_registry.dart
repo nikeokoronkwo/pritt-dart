@@ -8,6 +8,7 @@ import 'package:pritt_server/src/main/base/storage/interface.dart';
 import 'package:pritt_server/src/main/cas/cas.dart';
 import 'package:pritt_server/src/main/base/db.dart';
 import 'package:pritt_server/src/main/base/db/interface.dart';
+import 'package:pritt_server/src/main/cas/db.dart';
 import 'package:tar/tar.dart';
 
 import 'adapter.dart';
@@ -71,10 +72,12 @@ class AdapterRegistry {
       // sqlite database at path
       if (db == 'local') {
         // in memory sqlite db
+        databaseInterface = await CASLocalDatabase.connect(local: true);
       } else {
         if (p.extension(db) != '.db') {
           throw Exception("Cannot connect to non-sqlite3 Registry DB");
         }
+        databaseInterface = await CASLocalDatabase.connect(url: db);
       }
     } else if (db is PrittAdapterDatabaseInterface) {
       databaseInterface = db;
@@ -83,6 +86,10 @@ class AdapterRegistry {
       if (p.extension(db.toFilePath()) != '.db') {
         throw Exception("Cannot connect to non-sqlite3 Registry DB");
       }
+
+      databaseInterface = await CASLocalDatabase.connect(url: db.toString());
+    } else {
+      throw AssertionError('Unsupported type: db must be String, Uri or an implementation of PrittAdapterDatabaseInterface');
     }
 
     // before starting...
@@ -110,7 +117,7 @@ class AdapterRegistry {
           //  plugin_adapter_on.[min].js,
           //  plugin_adapter_meta_req.[min].js, plugin_adapter_archive_req.[min].js,
           //  plugin_handler_on.[min].js
-          PluginArchiveType.multiple => [
+          PluginArchiveType.multi => [
               'plugin_meta.js',
               'plugin_adapter_on.js',
               'plugin_adapter_meta_req.js',

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:pritt_server/src/main/adapter/adapter_base.dart';
@@ -71,7 +72,9 @@ class CustomAdapterService implements CASClient {
     }
 
     final response = await _client
-        .post(url.replace(path: 'start'), body: {'adapters': pluginBodyMap});
+        .post(url.replace(path: 'start'), body: json.encode({'adapters': pluginBodyMap}), headers: {
+          HttpHeaders.contentTypeHeader: 'application/json'
+        });
 
     if (response.statusCode != 200) {
       throw Exception('Failed to load adapters: ${response.body}');
@@ -84,6 +87,8 @@ class CustomAdapterService implements CASClient {
     // send request to sorter to find adapter
     final response = await _client.post(
       url.replace(path: 'find'),
+      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+      body: json.encode({ 'resolveObject': obj })
     );
 
     // receive adapter info back
