@@ -5,6 +5,7 @@ CREATE TYPE privilege AS ENUM ('read', 'write', 'publish', 'ultimate');
 CREATE TYPE version_control_system AS ENUM ('git', 'svn', 'fossil', 'mercurial', 'other');
 
 CREATE TYPE version_kind AS ENUM ('major', 'experimental', 'beta', 'next', 'rc', 'canary', 'other');
+CREATE TYPE plugin_archive_type AS ENUM ('default', 'multi');
 
 -- Validates Signatures passed to the `signature` field in the `package_versions` table
 CREATE OR REPLACE FUNCTION validate_signatures()
@@ -106,6 +107,8 @@ CREATE TABLE plugins (
     language TEXT UNIQUE NOT NULL,
     description TEXT UNIQUE NOT NULL,
     archive TEXT NOT NULL,
+    archive_type plugin_archive_type NOT NULL DEFAULT 'default',
+    -- TODO: More properties (author, ...)
 );
 
 

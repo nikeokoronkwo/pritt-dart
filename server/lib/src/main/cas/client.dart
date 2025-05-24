@@ -1,18 +1,13 @@
 /// A Client to the Custom Adapter Service
-abstract class CASClient {
-  
-}
+abstract class CASClient {}
 
 class CASRequest {
   final String id;
   final String method;
   final Map<String, dynamic> params;
 
-  const CASRequest({
-    required this.id,
-    required this.method,
-    required this.params
-  });
+  const CASRequest(
+      {required this.id, required this.method, required this.params});
 }
 
 class CASResponse<T> {
@@ -20,9 +15,6 @@ class CASResponse<T> {
   final T? data;
   final String? error;
 
-  const CASResponse({
-    required this.id,
-    required this.data,
-    required this.error
-  });
+  const CASResponse(
+      {required this.id, required this.data, required this.error});
 }

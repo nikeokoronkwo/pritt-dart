@@ -264,11 +264,16 @@ class Plugin {
 
   Uri archive;
 
+  PluginArchiveType archiveType;
+
   Plugin({
     required this.id,
     required this.name,
     required this.language,
     this.description,
     required this.archive,
+    this.archiveType = PluginArchiveType.single,
   });
 }
+
+enum PluginArchiveType { single, multiple }

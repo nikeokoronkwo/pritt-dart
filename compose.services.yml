@@ -34,7 +34,7 @@ services:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      - ./server/sql/adapter:/flyway/sql
+      - ./server/sql:/flyway/sql
     depends_on:
       - db
 

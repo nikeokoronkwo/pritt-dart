@@ -70,9 +70,12 @@ class CoreRegistryServiceController implements CRSController {
           Map<String, dynamic>? env}) =>
       delegate.getPackageContributors(packageName,
           language: this.language, env: env);
-          
+
   @override
-  FutureOr setFileServer(String packageName, {String? version, String? language, bool cache = false}) => delegate.setFileServer(packageName, version: version, language: this.language, cache: cache);
+  FutureOr setFileServer(String packageName,
+          {String? version, String? language, bool cache = false}) =>
+      delegate.setFileServer(packageName,
+          version: version, language: this.language, cache: cache);
 }
 
 /// The core registry service
@@ -100,10 +103,10 @@ class CoreRegistryService implements CRSController {
   static Future<CoreRegistryService> connect(
       {PrittDatabase? db, PrittStorage? storage}) async {
     db ??= PrittDatabase.connect(
-      host: String.fromEnvironment('DATABASE_HOST'), 
-      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432), 
-      database: String.fromEnvironment('DATABASE_NAME'), 
-      username: String.fromEnvironment('DATABASE_USERNAME'), 
+      host: String.fromEnvironment('DATABASE_HOST'),
+      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
+      database: String.fromEnvironment('DATABASE_NAME'),
+      username: String.fromEnvironment('DATABASE_USERNAME'),
       password: String.fromEnvironment('DATABASE_PASSWORD'),
       devMode: String.fromEnvironment('DATABASE_HOST') == 'localhost',
     );
@@ -372,14 +375,13 @@ class CoreRegistryService implements CRSController {
       );
     }
   }
-  
+
   @override
-  FutureOr setFileServer(String packageName, {String? version, String? language, bool cache = false}) {
+  FutureOr setFileServer(String packageName,
+      {String? version, String? language, bool cache = false}) {
     // TODO: implement setFileServer
     throw UnimplementedError();
   }
-
-  
 }
 
 class CRSDBOptions {}

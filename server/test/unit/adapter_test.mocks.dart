@@ -29,9 +29,9 @@ import 'package:pritt_server/src/main/utils/version.dart' as _i9;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
+class _FakePrittDatabaseInterface_0 extends _i1.SmartFake
     implements _i2.PrittDatabaseInterface {
-  _FakeCRSDatabaseInterface_0(
+  _FakePrittDatabaseInterface_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -40,9 +40,9 @@ class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
         );
 }
 
-class _FakeCRSRegistryOFSInterface_1 extends _i1.SmartFake
+class _FakePrittStorageInterface_1 extends _i1.SmartFake
     implements _i3.PrittStorageInterface {
-  _FakeCRSRegistryOFSInterface_1(
+  _FakePrittStorageInterface_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -62,7 +62,7 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
   @override
   _i2.PrittDatabaseInterface get db => (super.noSuchMethod(
         Invocation.getter(#db),
-        returnValue: _FakeCRSDatabaseInterface_0(
+        returnValue: _FakePrittDatabaseInterface_0(
           this,
           Invocation.getter(#db),
         ),
@@ -270,7 +270,7 @@ class MockCRSArchiveController extends _i1.Mock
   @override
   _i3.PrittStorageInterface get ofs => (super.noSuchMethod(
         Invocation.getter(#ofs),
-        returnValue: _FakeCRSRegistryOFSInterface_1(
+        returnValue: _FakePrittStorageInterface_1(
           this,
           Invocation.getter(#ofs),
         ),
@@ -311,6 +311,23 @@ class MockCRSArchiveController extends _i1.Mock
           ),
         )),
       ) as _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>);
+
+  @override
+  _i5.FutureOr<dynamic> setFileServer(
+    String? packageName, {
+    String? version,
+    String? language,
+    bool? cache = false,
+  }) =>
+      (super.noSuchMethod(Invocation.method(
+        #setFileServer,
+        [packageName],
+        {
+          #version: version,
+          #language: language,
+          #cache: cache,
+        },
+      )) as _i5.FutureOr<dynamic>);
 }
 
 /// A class which mocks [MetaResult].

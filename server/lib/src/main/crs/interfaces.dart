@@ -37,11 +37,11 @@ abstract interface class CRSArchiveController {
       String packageName, String version,
       {String? language, Map<String, dynamic>? env});
 
-  /// Turn the server into a file server for a package 
-  /// 
+  /// Turn the server into a file server for a package
+  ///
   /// **WARN**: Experimental and Unimplemented API - **DO NOT USE THIS**
-  FutureOr setFileServer(
-    String packageName, {String? version, String? language, bool cache = false});
+  FutureOr setFileServer(String packageName,
+      {String? version, String? language, bool cache = false});
 }
 
 /// An interface for the core registry system, used by adapters to make requests to retrieve common data

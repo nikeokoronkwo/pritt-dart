@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:pritt_server/src/main/adapter/adapter_base.dart';
+import 'package:pritt_server/src/main/base/db/schema.dart';
 import 'package:pritt_server/src/main/cas/client.dart';
+import 'package:pritt_server/src/main/cas/services/sorter.dart';
 import 'package:pritt_server/src/main/crs/interfaces.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -13,24 +17,89 @@ import '../adapter/adapter_registry.dart';
 ///
 /// BEFORE SERVER INIT: Adapters should be loaded into the service, when initialised by the [AdapterRegistry]
 class CustomAdapterService implements CASClient {
-  Future _loadAdapters() async {
-    
+  Client _client;
+  Uri url;
+  Map<String, Plugin> adapters;
+
+  CustomAdapterService(
+      {required this.url, Client? client, required this.adapters})
+      : _client = client ?? Client();
+
+  static Future<CustomAdapterService> connect(Uri uri,
+      {List<Plugin> plugins = const [],
+      Map<String, Map<String, String>> pluginCodeMap = const {}}) async {
+    final client = Client();
+
+    final cas = CustomAdapterService(
+        url: uri,
+        client: client,
+        adapters: plugins.asMap().map((k, v) => MapEntry(v.id, v)));
+
+    // load adapters
+    await cas._loadAdapters(plugins: plugins, pluginCodeMap: pluginCodeMap);
+
+    return cas;
   }
-  // final String url;
+
+  // TODO: Can we make the plugin code map typed?
+  Future _loadAdapters(
+      {required List<Plugin> plugins,
+      required Map<String, Map<String, String>> pluginCodeMap}) async {
+    // process the code
+    final pluginBodyMap = [];
+
+    for (final plugin in plugins) {
+      final map = pluginCodeMap[plugin.id];
+      if (map != null) {
+        if (map.length == 1) {
+          // default
+          pluginBodyMap.add(
+              {'type': 'default', 'code': map.values.first, 'id': plugin.id});
+        } else {
+          // multiple
+          pluginBodyMap.add({
+            'type': 'multi',
+            'id': plugin.id,
+            'code': {
+              'resolve': map['plugin_adapter_on'],
+              'metaRequest': map['plugin_adapter_meta_req'],
+              'archiveRequest': map['plugin_adapter_archive_req']
+            }
+          });
+        }
+      }
+    }
+
+    final response = await _client
+        .post(url.replace(path: 'start'), body: {'adapters': pluginBodyMap});
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load adapters: ${response.body}');
+    }
+  }
 
   /// Runs the sorter and finds an adapter
   Future<({CustomAdapter? adapter, AdapterResolveType type})> findAdapter(
-      AdapterResolveObject obj) {
+      AdapterResolveObject obj) async {
     // send request to sorter to find adapter
+    final response = await _client.post(
+      url.replace(path: 'find'),
+    );
 
     // receive adapter info back
+    final body = SorterResponse.fromJson(json.decode(response.body));
+
+    if (!body.success) {
+      return (adapter: null, type: AdapterResolveType.none);
+    }
 
     // send request to start worker for adapter
+    final wsConn = WebSocketChannel.connect(url.replace(path: '/load/${body.workerId}'));
 
-    // return WS 
+    await wsConn.ready;
 
-    // TODO: Implement findAdapter
-    throw UnimplementedError();
+    // return WS
+    return (adapter: CustomAdapter._(wsConn), type: body.type);
   }
 }
 
@@ -41,9 +110,7 @@ class CustomAdapter implements AdapterInterface {
   final completer = Completer();
 
   CustomAdapter._(this.channel) {
-    channel.stream.listen((message) {
-      
-    });
+    channel.stream.listen((message) {});
   }
 
   @override
@@ -53,15 +120,15 @@ class CustomAdapter implements AdapterInterface {
     // using [Completer]
     final _completer = Completer();
 
-    switch (options.resolveType) {
-      case AdapterResolveType.meta:
-        return await metaRequest(options.toRequestObject(), crs);
-      case AdapterResolveType.archive:
-        return await metaRetrieve(options.toRequestObject(), crs);
-      default:
-        throw AdapterException('Unsupported adapter resolve type');
-    }
-
+    // switch (options.resolveType) {
+    //   case AdapterResolveType.meta:
+    //     return await metaRequest(options.toRequestObject(), crs);
+    //   case AdapterResolveType.archive:
+    //     return await metaRetrieve(options.toRequestObject(), crs);
+    //   default:
+    //     throw AdapterException('Unsupported adapter resolve type');
+    // }
+    throw UnimplementedError();
   }
 
   Future sendRequest() async {

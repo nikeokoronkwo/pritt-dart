@@ -10,9 +10,9 @@ mixin SQLDatabase {
 }
 
 /// An interface for working with adapters via the DB
-/// 
+///
 /// This is usually implemented by a local SQLITE instance in development (or where needed)
-/// 
+///
 /// For now, this usually acts as the source of truth for custom adapter services, but depending on how adapter development and usage scales, adapters might be loaded on service side.
 abstract interface class PrittAdapterDatabaseInterface {
   /// Get an adapter by id
@@ -29,16 +29,22 @@ abstract interface class PrittAdapterDatabaseInterface {
 }
 
 /// An extension of [PrittAdapterDatabaseInterface] for databases that support storing blobs and can store enough to contain adapter code
-/// 
+///
 /// This is usually very unlikely, but we can see
-abstract interface class PrittAdapterWithBlobDatabaseInterface extends PrittAdapterDatabaseInterface {
-  
+abstract interface class PrittAdapterWithBlobDatabaseInterface
+    extends PrittAdapterDatabaseInterface {
+  /// Get the code for an adapter by id
+  FutureOr<Map<String, String>> getPluginCode(String id);
+
+  /// Stream the code for an adapter by id
+  FutureOr<Map<String, Stream<List<int>>>> streamPluginCode(String id);
 }
 
 /// Base interface for the CRS Database Interface
 ///
 /// This is a database-agnostic interface that defines methods for retrieving different kinds of data from the CRS database
-abstract interface class PrittDatabaseInterface extends PrittAdapterDatabaseInterface {
+abstract interface class PrittDatabaseInterface
+    extends PrittAdapterDatabaseInterface {
   /// add a new package to the database
   FutureOr<Package> addNewPackage({
     required String name,

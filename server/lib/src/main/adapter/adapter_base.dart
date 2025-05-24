@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:mime/mime.dart';
 
 import '../crs/interfaces.dart';
@@ -55,11 +56,14 @@ class AdapterResolveObject {
             '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
 }
 
+@JsonEnum(valueField: 'value')
 enum AdapterResolveType {
-  meta,
-  archive,
-  other,
-  none;
+  meta('meta'),
+  archive('archive'),
+  none('none');
+
+  const AdapterResolveType(this.value);
+  final String value;
 
   bool get isResolved => this != none;
 }

@@ -585,9 +585,18 @@ FROM users
     // TODO: implement getPluginsForLanguages
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Iterable<Plugin>> getPlugins() {
+  FutureOr<Iterable<Plugin>> getPlugins() async {
+    // cacheable
+    if (_statements['getPlugins'] == null) {
+      _statements['getPlugins'] = await _pool.prepare('''
+SELECT p.id, p.name, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description,
+       u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, u.access_token_expires_at, u.created_at as author_created_at, u.updated_at as author_updated_at
+FROM packages p
+LEFT JOIN users u ON p.author_id = u.id
+''');
+    }
     // TODO: implement getPlugins
     throw UnimplementedError();
   }

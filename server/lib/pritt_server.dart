@@ -11,19 +11,15 @@ late CoreRegistryService crs;
 
 late AdapterRegistry registry;
 
-Future<void> startPrittServices({
-  String? ofsUrl,
-  String? dbUrl
-}) async {
-
+Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
   ofsUrl ??= String.fromEnvironment('S3_URL',
-          defaultValue:
-              'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '6007')}');
+      defaultValue:
+          'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '6007')}');
 
   final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
 
   final db = PrittDatabase.connect(
-    host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
+      host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
       port: dbUri?.port ??
           int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
       database:
@@ -33,14 +29,11 @@ Future<void> startPrittServices({
       password: dbUri?.userInfo.split(':').last ??
           String.fromEnvironment('DATABASE_PASSWORD'),
       devMode: (dbUri?.host ?? String.fromEnvironment('DATABASE_HOST')) ==
-          'localhost'
-  );
-  final storage = await PrittStorage.connect(
-    ofsUrl
-  );
+          'localhost');
+  final storage = await PrittStorage.connect(ofsUrl);
 
   registry = await AdapterRegistry.connect(
-    db: db
+    db: db,
   );
 
   crs = await CoreRegistryService.connect(db: db, storage: storage);
