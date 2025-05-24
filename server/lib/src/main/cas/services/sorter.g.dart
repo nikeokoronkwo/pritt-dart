@@ -8,7 +8,7 @@ part of 'sorter.dart';
 
 SorterResponse _$SorterResponseFromJson(Map<String, dynamic> json) =>
     SorterResponse(
-      type: $enumDecode(_$AdapterResolveTypeEnumMap, json['type']),
+      type: $enumDecode(_$AdapterResolveTypeEnumMap, json['result']),
       adapterId: json['adapterId'] as String?,
       success: json['success'] as bool,
       workerId: json['workerId'] as String,
@@ -16,7 +16,7 @@ SorterResponse _$SorterResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SorterResponseToJson(SorterResponse instance) =>
     <String, dynamic>{
-      'type': _$AdapterResolveTypeEnumMap[instance.type]!,
+      'result': _$AdapterResolveTypeEnumMap[instance.type]!,
       'adapterId': instance.adapterId,
       'success': instance.success,
       'workerId': instance.workerId,

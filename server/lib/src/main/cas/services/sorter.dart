@@ -5,6 +5,7 @@ part 'sorter.g.dart';
 
 @JsonSerializable()
 class SorterResponse {
+  @JsonKey(name: 'result')
   final AdapterResolveType type;
   final String? adapterId;
   final bool success;

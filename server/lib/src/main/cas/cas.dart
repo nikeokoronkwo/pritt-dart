@@ -18,7 +18,7 @@ import '../adapter/adapter_registry.dart';
 ///
 /// BEFORE SERVER INIT: Adapters should be loaded into the service, when initialised by the [AdapterRegistry]
 class CustomAdapterService implements CASClient {
-  Client _client;
+  final Client _client;
   Uri url;
   Map<String, Plugin> adapters;
 
@@ -77,7 +77,7 @@ class CustomAdapterService implements CASClient {
         });
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load adapters: ${response.body}');
+      throw ClientException('Failed to load adapters: ${response.body}');
     }
   }
 
@@ -88,9 +88,13 @@ class CustomAdapterService implements CASClient {
     final response = await _client.post(
       url.replace(path: 'find'),
       headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-      body: json.encode({ 'resolveObject': obj })
+      body: json.encode({ 'resolveObject': obj.toJson() })
     );
 
+    if (response.statusCode != 200) throw ClientException('Failed to find adapter: ${response.body}',);
+
+    print(response.body);
+    
     // receive adapter info back
     final body = SorterResponse.fromJson(json.decode(response.body));
 

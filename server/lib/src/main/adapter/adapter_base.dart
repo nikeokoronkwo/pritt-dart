@@ -24,7 +24,7 @@ enum RequestMethod {
 }
 
 /// An object containing important information used for adapters to be able to distinguish and make requests for packages from the registry
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class AdapterResolveObject {
   /// the path of the request, as is without the forward slash in front
   String path;
@@ -69,7 +69,6 @@ class AdapterResolveObject {
         url =
             '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
 
-  factory AdapterResolveObject.fromJson(Map<String, dynamic> json) => _$AdapterResolveObjectFromJson(json);
 
   Map<String, dynamic> toJson() => _$AdapterResolveObjectToJson(this);
 }
