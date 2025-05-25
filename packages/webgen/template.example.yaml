@@ -1,0 +1,48 @@
+
+# Company name
+name:
+
+# Styling: You can choose a particular style or customize using colours and font
+# style: default
+style:
+  # Colour scheme
+  colours:
+    primary:
+    accent:
+    secondary:
+
+  # Font Scheme: Choose from the defaults or
+  # font: default
+  # font: serif
+  font:
+
+# Icon to use for the website
+icon:
+
+# The logo to use for the website
+logo:
+
+# Any other assets you may want accessible to the site
+assets:
+  - img.jpg
+  - img/ref.jpg
+
+# Supports MD and AsciiDoc
+terms-of-use: 
+
+# Meta defs you may want. Defaults to the setup from the other values
+meta:
+
+# Set out auth providers you may want to use
+# TODO: Some may need some extra details
+auth:
+  - email_and_password
+  - passkey
+  - github
+  - google
+  - microsoft
+  - sso
+  - oidc
+
+# Set up the mailing service
+mail:
