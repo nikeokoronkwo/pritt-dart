@@ -1,11 +1,8 @@
 
-module SchemaUtils
-
 import "pkl:semver"
 
-import "@go/go.pkl"
-
 typealias Version = String(semver.isValid(this))
+typealias Privilege = "read"|"write"|"publish"|"ultimate"
 
 /// The base definition of a package
 ///
@@ -37,11 +34,34 @@ open class Package extends ImplPackage {
 }
 
 class VerbosePackage extends Package {
-    /// The list of all the versions of the package
-    versions: Map<String, Package>
+    /// info 
+    info: Mapping<String, Any>
+    
+    /// env
+    env: Mapping<String, Any>
 
-    /// The list of all the authors of the package
-    authors: List<Author>
+    /// metadata
+    metadata: Mapping<String, Any>
+
+    /// signatures
+    signatures: Listing<Signature>
+
+    /// whether the package is deprecated
+    deprecated: Boolean?
+
+    /// whether the package is yanked
+    yanked: Boolean?
+}
+
+class Signature {
+    /// public key id
+    public_key_id: String
+
+    /// The signature itself
+    signature: String
+
+    /// The time the date was created
+    created: String
 }
 
 open class Author {
@@ -51,5 +71,5 @@ open class Author {
 
 class Contributor extends Author {
     /// The role of the contributor
-    role: Listing<String>?
+    privileges: Listing<Privilege>?
 }

@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../../adapter_base.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
 import 'pubspec.dart';
 
 part 'result.g.dart';
 
-/// The result of a dart meta (i.e [AdapterResolve.meta]) request
+/// The result of a dart meta (i.e [AdapterResolveType.meta]) request
 @JsonSerializable()
-class DartMetaResult with MetaResult {
+class DartMetaResult with JsonConvertible {
   /// the name of the package
   final String name;
 

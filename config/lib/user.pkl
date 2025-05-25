@@ -1,0 +1,25 @@
+open module User
+
+import "./package.pkl"
+
+typealias UserPackageRelationship = "author" | "contributor"
+
+class PackageMap {
+    name: String
+    type: UserPackageRelationship
+    privileges: Listing<package.Privilege>?
+}
+
+name: String
+
+email: String
+
+/// The time the user was created
+created_at: String
+
+/// The last time the user was updated
+updated_at: String
+
+/// Packages the user has worked on
+packages: Listing<PackageMap>
+

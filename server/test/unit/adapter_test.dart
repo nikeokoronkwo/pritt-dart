@@ -1,24 +1,27 @@
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pritt_server/src/main/adapter/adapter.dart';
-import 'package:pritt_server/src/main/adapter/adapter_base.dart';
+import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 import 'package:pritt_server/src/main/crs/interfaces.dart';
-import 'package:pritt_server/src/main/shared/user_agent.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
+import 'package:pritt_server/src/main/utils/user_agent.dart';
 import 'package:test/test.dart';
 
-@GenerateMocks([CRSDBController, CRSArchiveController, MetaResult])
+@GenerateMocks([CRSDBController, CRSArchiveController, JsonConvertible])
 import 'adapter_test.mocks.dart';
 
 void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
     late MockCRSArchiveController mockArchiveController;
-    late MockMetaResult mockMetaResult;
+    late MockJsonable mockMetaResult;
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-      mockMetaResult = MockMetaResult();
+      mockMetaResult = MockJsonable();
     });
 
     group('Meta Adapter Result', () {
@@ -26,7 +29,7 @@ void main() {
 
       final adapter = Adapter(
         id: 'test-adapter',
-        onResolve: (resolveObject) => AdapterResolve.meta,
+        resolve: (resolveObject) => AdapterResolveType.meta,
         request: (requestObject, controller) async {
           return AdapterMetaResult(mockMetaResult);
         },
@@ -40,10 +43,10 @@ void main() {
             uri: Uri.http('example.org', '/api/packages/foo'),
             method: RequestMethod.GET,
             userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
-        final result = adapter.onResolve(resolveObject);
+        final result = adapter.resolve(resolveObject);
 
         expect(result.isResolved, isTrue);
-        expect(result, equals(AdapterResolve.meta));
+        expect(result, equals(AdapterResolveType.meta));
       });
 
       test('should resolve correctly using onResolve', () async {
@@ -51,9 +54,10 @@ void main() {
             uri: Uri.http('example.org', '/api/packages/foo'),
             method: RequestMethod.GET,
             userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
-        final result = await adapter.onRequest(
+        final result = await adapter.metaRequest(
             AdapterRequestObject(
-                resolveObject: resolveObject, resolveType: AdapterResolve.meta),
+                resolveObject: resolveObject,
+                resolveType: AdapterResolveType.meta),
             mockDBController);
 
         assert(result is AdapterMetaResult, "adapter should be meta");
