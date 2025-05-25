@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
+import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
 import 'package:pritt_server/src/main/base/db/schema.dart';
 import 'package:pritt_server/src/main/base/storage/interface.dart';
 import 'package:pritt_server/src/main/cas/cas.dart';
@@ -12,7 +15,6 @@ import 'package:pritt_server/src/main/cas/db.dart';
 import 'package:tar/tar.dart';
 
 import 'adapter.dart';
-import 'adapter_base.dart';
 import 'core/dart.dart';
 import 'core/npm.dart';
 

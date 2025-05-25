@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_server/src/main/adapter/adapter_base.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
 
 part 'sorter.g.dart';
 

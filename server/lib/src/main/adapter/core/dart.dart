@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../base/db/schema.dart';
 import '../../crs/response.dart';
 import '../adapter.dart';
-import '../adapter_base.dart';
 import 'dart/result.dart';
 
 final dartAdapter = Adapter(
@@ -111,7 +113,7 @@ final dartAdapter = Adapter(
       );
     });
 
-class DartErrorResult with MetaResult {
+class DartErrorResult with JsonConvertible {
   final String code;
   final String message;
 

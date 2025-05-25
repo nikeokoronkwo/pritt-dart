@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'adapter_base.dart';
+part of 'resolve.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

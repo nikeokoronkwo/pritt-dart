@@ -7,12 +7,12 @@ import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
-import 'package:pritt_server/src/main/adapter/adapter_base.dart' as _i10;
 import 'package:pritt_server/src/main/base/db/interface.dart' as _i2;
 import 'package:pritt_server/src/main/base/db/schema.dart' as _i7;
 import 'package:pritt_server/src/main/base/storage/interface.dart' as _i3;
 import 'package:pritt_server/src/main/crs/interfaces.dart' as _i4;
 import 'package:pritt_server/src/main/crs/response.dart' as _i6;
+import 'package:pritt_server/src/main/utils/mixins.dart' as _i10;
 import 'package:pritt_server/src/main/utils/version.dart' as _i9;
 
 // ignore_for_file: type=lint
@@ -330,11 +330,11 @@ class MockCRSArchiveController extends _i1.Mock
       )) as _i5.FutureOr<dynamic>);
 }
 
-/// A class which mocks [MetaResult].
+/// A class which mocks [JsonConvertible].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMetaResult extends _i1.Mock implements _i10.MetaResult {
-  MockMetaResult() {
+class MockJsonConvertible extends _i1.Mock implements _i10.JsonConvertible {
+  MockJsonConvertible() {
     _i1.throwOnMissingStub(this);
   }
 

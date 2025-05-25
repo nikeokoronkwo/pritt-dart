@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:pritt_server/src/main/adapter/adapter_base.dart';
+import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
+import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 import 'package:pritt_server/src/main/base/db/schema.dart';
 import 'package:pritt_server/src/main/cas/client.dart';
 import 'package:pritt_server/src/main/cas/services/sorter.dart';
@@ -17,7 +20,7 @@ import '../adapter/adapter_registry.dart';
 /// This is an external service that is used for running custom adapters defined in the service
 ///
 /// BEFORE SERVER INIT: Adapters should be loaded into the service, when initialised by the [AdapterRegistry]
-class CustomAdapterService implements CASClient {
+class CustomAdapterService {
   final Client _client;
   Uri url;
   Map<String, Plugin> adapters;
@@ -94,7 +97,7 @@ class CustomAdapterService implements CASClient {
     if (response.statusCode != 200) throw ClientException('Failed to find adapter: ${response.body}',);
 
     print(response.body);
-    
+
     // receive adapter info back
     final body = SorterResponse.fromJson(json.decode(response.body));
 
@@ -116,18 +119,35 @@ class CustomAdapter implements AdapterInterface {
   WebSocketChannel channel;
   late CRSController crs;
 
-  final completer = Completer();
+  late Completer completer;
 
   CustomAdapter._(this.channel) {
-    channel.stream.listen((message) {});
+    channel.stream.listen((event) {
+      final msg = json.decode(event) as Map<String, dynamic>;
+
+      if (msg.containsKey('message_type')) {
+        // actual message to process
+        final message = CASMessage.fromJson(msg);
+        if (message is CASRequest) {
+          // prcess cas request
+        } else if (message == null) {
+          // complete completer
+        } 
+      }
+    });
+  }
+
+  sendRequest() {
+
   }
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {
     crs = crs;
+    completer = Completer();
 
     // using [Completer]
-    final _completer = Completer();
+    // final _completer = Completer();
 
     // switch (options.resolveType) {
     //   case AdapterResolveType.meta:
@@ -138,10 +158,6 @@ class CustomAdapter implements AdapterInterface {
     //     throw AdapterException('Unsupported adapter resolve type');
     // }
     throw UnimplementedError();
-  }
-
-  Future sendRequest() async {
-    return;
   }
 
   @override

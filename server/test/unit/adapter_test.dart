@@ -1,24 +1,27 @@
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pritt_server/src/main/adapter/adapter.dart';
-import 'package:pritt_server/src/main/adapter/adapter_base.dart';
+import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 import 'package:pritt_server/src/main/crs/interfaces.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
 import 'package:pritt_server/src/main/utils/user_agent.dart';
 import 'package:test/test.dart';
 
-@GenerateMocks([CRSDBController, CRSArchiveController, MetaResult])
+@GenerateMocks([CRSDBController, CRSArchiveController, JsonConvertible])
 import 'adapter_test.mocks.dart';
 
 void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
     late MockCRSArchiveController mockArchiveController;
-    late MockMetaResult mockMetaResult;
+    late MockJsonable mockMetaResult;
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-      mockMetaResult = MockMetaResult();
+      mockMetaResult = MockJsonable();
     });
 
     group('Meta Adapter Result', () {

@@ -1,8 +1,12 @@
 import 'dart:async';
 
-import '../crs/interfaces.dart';
+import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
+import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
+import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 
-import 'adapter_base.dart';
+import '../crs/interfaces.dart';
 
 import 'adapter_registry.dart';
 
