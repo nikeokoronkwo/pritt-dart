@@ -1,26 +1,28 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
 import 'package:yaml/yaml.dart';
 
-import '../../crs/db/schema.dart';
+import '../../base/db/schema.dart';
 import '../../crs/response.dart';
 import '../adapter.dart';
-import '../adapter_base.dart';
 import 'dart/result.dart';
 
 final dartAdapter = Adapter(
     id: 'dart',
     language: 'dart',
-    onResolve: (resolve) {
+    resolve: (resolve) {
       if (resolve.userAgent.toString().contains('Dart pub')) {
         if (resolve.path.startsWith('api/packages')) {
-          return AdapterResolve.meta;
+          return AdapterResolveType.meta;
         } else if (resolve.path.startsWith('api/archives')) {
-          return AdapterResolve.archive;
+          return AdapterResolveType.archive;
         }
       }
-      return AdapterResolve.none;
+      return AdapterResolveType.none;
     },
 
     /// we need to retrieve the package details
@@ -111,7 +113,7 @@ final dartAdapter = Adapter(
       );
     });
 
-class DartErrorResult with MetaResult {
+class DartErrorResult with JsonConvertible {
   final String code;
   final String message;
 

@@ -3,8 +3,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:typed_data' as _i1;
 import 'dart:convert' as _i2;
-import 'package:json_annotation/json_annotation.dart' as _i3;
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
+import 'package:json_annotation/json_annotation.dart';
 part 'interface.g.dart';
 
 class Content {
@@ -57,7 +57,7 @@ class StreamedContent extends Content {
       'Do not call raw on streamed content: Use `data` instead');
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class AddAdapterRequest {
   AddAdapterRequest();
 
@@ -67,7 +67,7 @@ class AddAdapterRequest {
   Map<String, dynamic> toJson() => _$AddAdapterRequestToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class AddAdapterResponse {
   AddAdapterResponse();
 
@@ -77,7 +77,7 @@ class AddAdapterResponse {
   Map<String, dynamic> toJson() => _$AddAdapterResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class AddUserRequest {
   AddUserRequest();
 
@@ -87,7 +87,7 @@ class AddUserRequest {
   Map<String, dynamic> toJson() => _$AddUserRequestToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class AddUserResponse {
   AddUserResponse();
 
@@ -97,7 +97,18 @@ class AddUserResponse {
   Map<String, dynamic> toJson() => _$AddUserResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonEnum(valueField: 'value')
+enum PollStatus {
+  pending('pending'),
+  success('success'),
+  error('error');
+
+  const PollStatus(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
 class PollResponse {
   PollResponse();
 
@@ -107,7 +118,7 @@ class PollResponse {
   Map<String, dynamic> toJson() => _$PollResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class AuthPollResponse {
   AuthPollResponse({
     required this.status,
@@ -117,14 +128,14 @@ class AuthPollResponse {
   factory AuthPollResponse.fromJson(Map<String, dynamic> json) =>
       _$AuthPollResponseFromJson(json);
 
-  final String status;
+  final PollStatus status;
 
   final PollResponse? response;
 
   Map<String, dynamic> toJson() => _$AuthPollResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class AuthResponse {
   AuthResponse({
     required this.token,
@@ -144,7 +155,7 @@ class AuthResponse {
   Map<String, dynamic> toJson() => _$AuthResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class Error {
   Error({this.error});
 
@@ -155,7 +166,7 @@ class Error {
   Map<String, dynamic> toJson() => _$ErrorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class ExpiredError {
   ExpiredError({
     this.error,
@@ -172,7 +183,7 @@ class ExpiredError {
   Map<String, dynamic> toJson() => _$ExpiredErrorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class GetAdapterResponse {
   GetAdapterResponse();
 
@@ -182,7 +193,7 @@ class GetAdapterResponse {
   Map<String, dynamic> toJson() => _$GetAdapterResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class GetAdaptersByLangResponse {
   GetAdaptersByLangResponse();
 
@@ -192,7 +203,7 @@ class GetAdaptersByLangResponse {
   Map<String, dynamic> toJson() => _$GetAdaptersByLangResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class GetAdaptersResponse {
   GetAdaptersResponse();
 
@@ -202,7 +213,7 @@ class GetAdaptersResponse {
   Map<String, dynamic> toJson() => _$GetAdaptersResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class GetPackageByVersionResponse {
   GetPackageByVersionResponse();
 
@@ -212,7 +223,7 @@ class GetPackageByVersionResponse {
   Map<String, dynamic> toJson() => _$GetPackageByVersionResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class Author {
   Author({
     required this.name,
@@ -228,12 +239,24 @@ class Author {
   Map<String, dynamic> toJson() => _$AuthorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonEnum(valueField: 'value')
+enum Privilege {
+  read('read'),
+  write('write'),
+  publish('publish'),
+  ultimate('ultimate');
+
+  const Privilege(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
 class Contributor {
   Contributor({
     required this.name,
     required this.email,
-    this.role = const [],
+    this.privileges = const [],
   });
 
   factory Contributor.fromJson(Map<String, dynamic> json) =>
@@ -243,12 +266,120 @@ class Contributor {
 
   final String email;
 
-  final List<String> role;
+  final List<Privilege>? privileges;
 
   Map<String, dynamic> toJson() => _$ContributorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
+class Signature {
+  Signature({
+    required this.public_key_id,
+    required this.signature,
+    required this.created,
+  });
+
+  factory Signature.fromJson(Map<String, dynamic> json) =>
+      _$SignatureFromJson(json);
+
+  final String public_key_id;
+
+  final String signature;
+
+  final String created;
+
+  Map<String, dynamic> toJson() => _$SignatureToJson(this);
+}
+
+@JsonSerializable()
+class VerbosePackage {
+  VerbosePackage({
+    required this.name,
+    this.description,
+    required this.version,
+    required this.author,
+    this.language,
+    required this.created_at,
+    this.updated_at,
+    required this.info,
+    required this.env,
+    required this.metadata,
+    required this.signatures,
+    this.deprecated,
+    this.yanked,
+  });
+
+  factory VerbosePackage.fromJson(Map<String, dynamic> json) =>
+      _$VerbosePackageFromJson(json);
+
+  final String name;
+
+  final String? description;
+
+  final String version;
+
+  final Author author;
+
+  final String? language;
+
+  final String created_at;
+
+  final String? updated_at;
+
+  final Map<String, dynamic> info;
+
+  final Map<String, dynamic> env;
+
+  final Map<String, dynamic> metadata;
+
+  final List<Signature>? signatures;
+
+  final bool? deprecated;
+
+  final bool? yanked;
+
+  Map<String, dynamic> toJson() => _$VerbosePackageToJson(this);
+}
+
+@JsonSerializable()
+class GetPackageResponse {
+  GetPackageResponse({
+    required this.name,
+    required this.latest_version,
+    required this.author,
+    this.description,
+    required this.contributors,
+    this.language,
+    required this.created_at,
+    required this.latest,
+    required this.versions,
+  });
+
+  factory GetPackageResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetPackageResponseFromJson(json);
+
+  final String name;
+
+  final String latest_version;
+
+  final Author author;
+
+  final String? description;
+
+  final List<Contributor>? contributors;
+
+  final String? language;
+
+  final String created_at;
+
+  final VerbosePackage latest;
+
+  final Map<String, VerbosePackage> versions;
+
+  Map<String, dynamic> toJson() => _$GetPackageResponseToJson(this);
+}
+
+@JsonSerializable()
 class Package {
   Package({
     required this.name,
@@ -280,83 +411,7 @@ class Package {
   Map<String, dynamic> toJson() => _$PackageToJson(this);
 }
 
-@_i3.JsonSerializable()
-class VerbosePackage {
-  VerbosePackage({
-    required this.name,
-    this.description,
-    required this.version,
-    required this.author,
-    this.language,
-    required this.created_at,
-    this.updated_at,
-    required this.versions,
-    required this.authors,
-  });
-
-  factory VerbosePackage.fromJson(Map<String, dynamic> json) =>
-      _$VerbosePackageFromJson(json);
-
-  final String name;
-
-  final String? description;
-
-  final String version;
-
-  final Author author;
-
-  final String? language;
-
-  final String created_at;
-
-  final String? updated_at;
-
-  final Map<String, Package> versions;
-
-  final List<Author> authors;
-
-  Map<String, dynamic> toJson() => _$VerbosePackageToJson(this);
-}
-
-@_i3.JsonSerializable()
-class GetPackageResponse {
-  GetPackageResponse({
-    required this.name,
-    required this.latest_version,
-    required this.author,
-    this.description,
-    required this.contributors,
-    this.language,
-    required this.created_at,
-    required this.latest,
-    required this.versions,
-  });
-
-  factory GetPackageResponse.fromJson(Map<String, dynamic> json) =>
-      _$GetPackageResponseFromJson(json);
-
-  final String name;
-
-  final String latest_version;
-
-  final Author author;
-
-  final String? description;
-
-  final List<Contributor> contributors;
-
-  final String? language;
-
-  final String created_at;
-
-  final VerbosePackage latest;
-
-  final Map<String, VerbosePackage> versions;
-
-  Map<String, dynamic> toJson() => _$GetPackageResponseToJson(this);
-}
-
-@_i3.JsonSerializable()
+@JsonSerializable()
 class GetPackagesResponse {
   GetPackagesResponse({
     this.next_url,
@@ -368,22 +423,68 @@ class GetPackagesResponse {
 
   final String? next_url;
 
-  final List<Package> packages;
+  final List<Package>? packages;
 
   Map<String, dynamic> toJson() => _$GetPackagesResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonEnum(valueField: 'value')
+enum UserPackageRelationship {
+  author('author'),
+  contributor('contributor');
+
+  const UserPackageRelationship(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class PackageMap {
+  PackageMap({
+    required this.name,
+    required this.type,
+    this.privileges = const [],
+  });
+
+  factory PackageMap.fromJson(Map<String, dynamic> json) =>
+      _$PackageMapFromJson(json);
+
+  final String name;
+
+  final UserPackageRelationship type;
+
+  final List<Privilege>? privileges;
+
+  Map<String, dynamic> toJson() => _$PackageMapToJson(this);
+}
+
+@JsonSerializable()
 class GetUserResponse {
-  GetUserResponse();
+  GetUserResponse({
+    required this.name,
+    required this.email,
+    required this.created_at,
+    required this.updated_at,
+    required this.packages,
+  });
 
   factory GetUserResponse.fromJson(Map<String, dynamic> json) =>
       _$GetUserResponseFromJson(json);
 
+  final String name;
+
+  final String email;
+
+  final String created_at;
+
+  final String updated_at;
+
+  final List<PackageMap>? packages;
+
   Map<String, dynamic> toJson() => _$GetUserResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class GetUsersResponse {
   GetUsersResponse();
 
@@ -393,7 +494,7 @@ class GetUsersResponse {
   Map<String, dynamic> toJson() => _$GetUsersResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class NotFoundError {
   NotFoundError({
     this.error,
@@ -410,7 +511,7 @@ class NotFoundError {
   Map<String, dynamic> toJson() => _$NotFoundErrorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class PublishPackageByVersionRequest {
   PublishPackageByVersionRequest();
 
@@ -420,7 +521,7 @@ class PublishPackageByVersionRequest {
   Map<String, dynamic> toJson() => _$PublishPackageByVersionRequestToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class PublishPackageByVersionResponse {
   PublishPackageByVersionResponse();
 
@@ -431,7 +532,7 @@ class PublishPackageByVersionResponse {
       _$PublishPackageByVersionResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class PublishPackageRequest {
   PublishPackageRequest({
     required this.name,
@@ -454,7 +555,7 @@ class PublishPackageRequest {
   Map<String, dynamic> toJson() => _$PublishPackageRequestToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class PublishPackageResponse {
   PublishPackageResponse();
 
@@ -464,7 +565,7 @@ class PublishPackageResponse {
   Map<String, dynamic> toJson() => _$PublishPackageResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class ServerError {
   ServerError({this.error});
 
@@ -476,7 +577,7 @@ class ServerError {
   Map<String, dynamic> toJson() => _$ServerErrorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class UnauthorizedError {
   UnauthorizedError({this.error});
 
@@ -488,7 +589,7 @@ class UnauthorizedError {
   Map<String, dynamic> toJson() => _$UnauthorizedErrorToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class UploadAdapterResponse {
   UploadAdapterResponse();
 
@@ -498,7 +599,7 @@ class UploadAdapterResponse {
   Map<String, dynamic> toJson() => _$UploadAdapterResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class UploadPackageResponse {
   UploadPackageResponse();
 
@@ -508,7 +609,7 @@ class UploadPackageResponse {
   Map<String, dynamic> toJson() => _$UploadPackageResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class YankAdapterResponse {
   YankAdapterResponse();
 
@@ -518,7 +619,7 @@ class YankAdapterResponse {
   Map<String, dynamic> toJson() => _$YankAdapterResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class YankPackageByVersionResponse {
   YankPackageByVersionResponse();
 
@@ -528,7 +629,7 @@ class YankPackageByVersionResponse {
   Map<String, dynamic> toJson() => _$YankPackageByVersionResponseToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class YankPackageRequest {
   YankPackageRequest({required this.version});
 
@@ -540,7 +641,7 @@ class YankPackageRequest {
   Map<String, dynamic> toJson() => _$YankPackageRequestToJson(this);
 }
 
-@_i3.JsonSerializable()
+@JsonSerializable()
 class YankPackageResponse {
   YankPackageResponse();
 
@@ -557,14 +658,14 @@ abstract interface class PrittInterface {
   /// GET /api/packages
   ///
   /// This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
-  _i4.FutureOr<GetPackagesResponse> getPackages({String index});
+  _i3.FutureOr<GetPackagesResponse> getPackages({String index});
 
   /// **Get a package from the Pritt Server with the given name**
   /// GET /api/package/{name}
   ///
   /// Throws:
   ///   - [NotFoundError] on status code 404
-  _i4.FutureOr<GetPackageResponse> getPackageByName({
+  _i3.FutureOr<GetPackageResponse> getPackageByName({
     required String name,
     String lang,
     bool all,
@@ -576,7 +677,7 @@ abstract interface class PrittInterface {
   /// This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
-  _i4.FutureOr<PublishPackageResponse> publishPackage(
+  _i3.FutureOr<PublishPackageResponse> publishPackage(
     PublishPackageRequest body, {
     required String name,
     String lang,
@@ -590,7 +691,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [NotFoundError] on status code 404
-  _i4.FutureOr<YankPackageResponse> yankPackageByName(
+  _i3.FutureOr<YankPackageResponse> yankPackageByName(
     YankPackageRequest body, {
     required String name,
     String lang,
@@ -602,7 +703,7 @@ abstract interface class PrittInterface {
   ///
   /// Throws:
   ///   - [NotFoundError] on status code 404
-  _i4.FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion({
+  _i3.FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion({
     required String name,
     required String version,
   });
@@ -613,7 +714,7 @@ abstract interface class PrittInterface {
   /// This endpoint is used for publishing new versions of existing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed. To publish a new package, use the `/api/package/{name}` POST
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
-  _i4.FutureOr<PublishPackageByVersionResponse> publishPackageWithVersion(
+  _i3.FutureOr<PublishPackageByVersionResponse> publishPackageWithVersion(
     PublishPackageByVersionRequest body, {
     required String name,
     required String version,
@@ -627,7 +728,7 @@ abstract interface class PrittInterface {
   ///   - [UnauthorizedError] on status code 401
   ///   - [UnauthorizedError] on status code 403
   ///   - [NotFoundError] on status code 404
-  _i4.FutureOr<YankPackageResponse> yankPackageByNameAndVersion({
+  _i3.FutureOr<YankPackageResponse> yankPackageByNameAndVersion({
     required String name,
     required String version,
   });
@@ -640,7 +741,7 @@ abstract interface class PrittInterface {
   ///   - [UnauthorizedError] on status code 401
   ///   - [UnauthorizedError] on status code 402
   ///   - [NotFoundError] on status code 404
-  _i4.FutureOr<UploadPackageResponse> uploadPackageWithToken(
+  _i3.FutureOr<UploadPackageResponse> uploadPackageWithToken(
     StreamedContent body, {
     String id,
   });
@@ -648,7 +749,7 @@ abstract interface class PrittInterface {
   /// **List users from the Pritt Server**
   /// GET /api/users
   ///
-  _i4.FutureOr<GetUsersResponse> getUsers();
+  _i3.FutureOr<GetUsersResponse> getUsers();
 
   /// **Get a user from Pritt**
   /// GET /api/user/{id}
@@ -656,12 +757,12 @@ abstract interface class PrittInterface {
   /// Get user information from Pritt about a particular user given the user's id
   /// Throws:
   ///   - [NotFoundError] on status code 404
-  _i4.FutureOr<GetUserResponse> getUserById({required String id});
+  _i3.FutureOr<GetUserResponse> getUserById({required String id});
 
   /// **Add a new user to Pritt**
   /// PUT /api/user/{id}
   ///
-  _i4.FutureOr<AddUserResponse> addUserById(
+  _i3.FutureOr<AddUserResponse> addUserById(
     AddUserRequest body, {
     required String id,
   });
@@ -670,19 +771,19 @@ abstract interface class PrittInterface {
   /// GET /api/adapters
   ///
   /// Get an adapter with the given id
-  _i4.FutureOr<GetAdaptersResponse> getAdapters();
+  _i3.FutureOr<GetAdaptersResponse> getAdapters();
 
   /// **Get an adapter with the given id**
   /// GET /api/adapter/{id}
   ///
   /// Get an adapter with the given id
-  _i4.FutureOr<GetAdapterResponse> getAdapterById({required String id});
+  _i3.FutureOr<GetAdapterResponse> getAdapterById({required String id});
 
   /// **Create or update an adapter with the given id**
   /// POST /api/adapter/{id}
   ///
   /// Create or update an adapter with the given id
-  _i4.FutureOr<AddAdapterResponse> addAdapterWithId(
+  _i3.FutureOr<AddAdapterResponse> addAdapterWithId(
     AddAdapterRequest body, {
     required String id,
   });
@@ -691,13 +792,13 @@ abstract interface class PrittInterface {
   /// DELETE /api/adapter/{id}
   ///
   /// Yank an adapter with the given id
-  _i4.FutureOr<YankAdapterResponse> yankAdapterWithId({required String id});
+  _i3.FutureOr<YankAdapterResponse> yankAdapterWithId({required String id});
 
   /// **Upload an adapter to the Pritt Server**
   /// POST /api/adapter/upload
   ///
   /// This API Endpoint is used to upload the tarball for the processed adapter
-  _i4.FutureOr<UploadAdapterResponse> uploadAdapterWithToken(
+  _i3.FutureOr<UploadAdapterResponse> uploadAdapterWithToken(
     StreamedContent body, {
     String id,
   });
@@ -706,13 +807,13 @@ abstract interface class PrittInterface {
   /// GET /api/adapter/{lang}
   ///
   /// Get the adapters for a particular language
-  _i4.FutureOr<GetAdaptersByLangResponse> getAdaptersByLang();
+  _i3.FutureOr<GetAdaptersByLangResponse> getAdaptersByLang();
 
   /// **Create token for a user**
   /// POST /api/auth/new
   ///
   /// Create a new token used for authenticating/creating a new user
-  _i4.FutureOr<AuthResponse> createNewAuthStatus();
+  _i3.FutureOr<AuthResponse> createNewAuthStatus();
 
   /// **Validte Authentication Response**
   /// POST /api/auth/validate
@@ -720,7 +821,7 @@ abstract interface class PrittInterface {
   /// Validate or authenticate a user, creating a user if needed
   /// Throws:
   ///   - [ExpiredError] on status code 405
-  _i4.FutureOr<AuthPollResponse> validateAuthStatus({String token});
+  _i3.FutureOr<AuthPollResponse> validateAuthStatus({String token});
 
   /// **Get Authentication Status**
   /// POST /api/auth/status
@@ -728,13 +829,13 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   ///   - [ExpiredError] on status code 405
-  _i4.FutureOr<AuthPollResponse> getAuthStatus();
+  _i3.FutureOr<AuthPollResponse> getAuthStatus();
 
   /// GET /api/archive/package/{name}
   ///
-  _i4.FutureOr<StreamedContent> getPackageArchiveWithName();
+  _i3.FutureOr<StreamedContent> getPackageArchiveWithName();
 
   /// GET /api/archive/adapter/{id}
   ///
-  _i4.FutureOr<StreamedContent> getAdapterArchiveWithName();
+  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName();
 }

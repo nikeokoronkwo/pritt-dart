@@ -1,1 +1,3 @@
 module GetUserResponse
+
+amends "../../lib/user.pkl"

@@ -2,13 +2,13 @@
 
 import 'dart:async';
 
-import '../shared/version.dart';
-import 'crs_db.dart';
-import 'crs_storage.dart';
-import 'db.dart';
-import 'db/schema.dart';
+import '../utils/version.dart';
+import '../base/db.dart';
+import '../base/storage.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
 import 'exceptions.dart';
-import 'fs.dart';
+import '../base/storage/interface.dart';
 import 'interfaces.dart';
 import 'response.dart';
 
@@ -20,7 +20,7 @@ class CoreRegistryServiceController implements CRSController {
   CoreRegistryServiceController(this.delegate, this.language);
 
   @override
-  CRSDatabaseInterface get db => delegate.db;
+  PrittDatabaseInterface get db => delegate.db;
 
   @override
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
@@ -61,7 +61,7 @@ class CoreRegistryServiceController implements CRSController {
           language: this.language, env: env);
 
   @override
-  CRSRegistryOFSInterface get ofs => delegate.ofs;
+  PrittStorageInterface get ofs => delegate.ofs;
 
   @override
   Future<CRSResponse<Map<User, Iterable<Privileges>>>> getPackageContributors(
@@ -70,6 +70,12 @@ class CoreRegistryServiceController implements CRSController {
           Map<String, dynamic>? env}) =>
       delegate.getPackageContributors(packageName,
           language: this.language, env: env);
+
+  @override
+  FutureOr setFileServer(String packageName,
+          {String? version, String? language, bool cache = false}) =>
+      delegate.setFileServer(packageName,
+          version: version, language: this.language, cache: cache);
 }
 
 /// The core registry service
@@ -82,10 +88,10 @@ class CoreRegistryServiceController implements CRSController {
 /// It directly inherits from the [CRSDBController] and [CRSArchiveController] interfaces
 class CoreRegistryService implements CRSController {
   @override
-  CRSDatabase db;
+  PrittDatabase db;
 
   @override
-  CRSStorage ofs;
+  PrittStorage ofs;
 
   CoreRegistryService._(this.db, this.ofs);
 
@@ -95,25 +101,19 @@ class CoreRegistryService implements CRSController {
 
   /// Creates a new instance of the core registry service
   static Future<CoreRegistryService> connect(
-      {String? dbUrl, required String ofsUrl}) async {
-    final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
-
-    final db = CRSDatabase.connect(
-      host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
-      port: dbUri?.port ??
-          int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
-      database:
-          dbUri?.pathSegments.first ?? String.fromEnvironment('DATABASE_NAME'),
-      username: dbUri?.userInfo.split(':').first ??
-          String.fromEnvironment('DATABASE_USERNAME'),
-      password: dbUri?.userInfo.split(':').last ??
-          String.fromEnvironment('DATABASE_PASSWORD'),
-      devMode: (dbUri?.host ?? String.fromEnvironment('DATABASE_HOST')) ==
-          'localhost',
+      {PrittDatabase? db, PrittStorage? storage}) async {
+    db ??= PrittDatabase.connect(
+      host: String.fromEnvironment('DATABASE_HOST'),
+      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
+      database: String.fromEnvironment('DATABASE_NAME'),
+      username: String.fromEnvironment('DATABASE_USERNAME'),
+      password: String.fromEnvironment('DATABASE_PASSWORD'),
+      devMode: String.fromEnvironment('DATABASE_HOST') == 'localhost',
     );
-    final ofs = await CRSStorage.connect(ofsUrl);
 
-    return CoreRegistryService._(db, ofs);
+    storage ??= await PrittStorage.connect(String.fromEnvironment('S3_URL'));
+
+    return CoreRegistryService._(db, storage);
   }
 
   Future<void> disconnect() async {
@@ -374,6 +374,13 @@ class CoreRegistryService implements CRSController {
         statusCode: 500,
       );
     }
+  }
+
+  @override
+  FutureOr setFileServer(String packageName,
+      {String? version, String? language, bool cache = false}) {
+    // TODO: implement setFileServer
+    throw UnimplementedError();
   }
 }
 

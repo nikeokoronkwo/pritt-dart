@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
+
 import 'package:code_builder/code_builder.dart';
-import '../gen.dart';
+
 import '../js.dart';
 import '../js_helpers.dart';
 
@@ -51,9 +52,7 @@ Iterable<Method> generateMethods(
                     'application/gzip' => refer('StreamedContent'),
                     _ => refer('dynamic')
                   })
-                : TypeReference((t) => t
-                  ..symbol = method.body!.name
-                  ..isNullable = method.body!.required))
+                : TypeReference((t) => t..symbol = method.body!.name))
       ])
       // other parameters
       ..optionalParameters.addAll(method.parameters.toDart.map((param) {

@@ -1,4 +1,4 @@
-import 'package:pritt_server/src/main/shared/user_agent.dart';
+import 'package:pritt_server/src/main/utils/user_agent.dart';
 import 'package:test/test.dart';
 
 final userAgentMaps = {

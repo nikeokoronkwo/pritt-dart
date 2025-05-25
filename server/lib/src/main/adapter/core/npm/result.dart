@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../../adapter_base.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
 import 'package_json.dart';
 
 part 'result.g.dart';
 
-/// The result of a dart meta (i.e [AdapterResolve.meta]) request
+/// The result of a dart meta (i.e [AdapterResolveType.meta]) request
 @JsonSerializable()
-class NpmMetaResult with MetaResult {
+class NpmMetaResult with JsonConvertible {
   /// The id
   @JsonKey(name: '_id')
   final String id;

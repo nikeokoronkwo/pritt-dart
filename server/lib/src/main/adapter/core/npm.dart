@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 
 import '../../../utils/extensions.dart';
-import '../../crs/db/schema.dart';
+import '../../base/db/schema.dart';
 import '../../crs/response.dart';
-import '../../shared/version.dart';
+import '../../utils/version.dart';
 import '../adapter.dart';
-import '../adapter_base.dart';
 import 'npm/error.dart';
 import 'npm/package_json.dart';
 import 'npm/result.dart';
@@ -15,14 +16,14 @@ import 'npm/result.dart';
 final npmAdapter = Adapter(
     id: 'npm',
     language: 'javascript',
-    onResolve: (resolve) {
+    resolve: (resolve) {
       if (resolve.userAgent.toString().containsAllOf(['npm', 'node'])) {
         if (resolve.path.endsWith('.tgz') || resolve.path.endsWith('.tar.gz')) {
-          return AdapterResolve.archive;
+          return AdapterResolveType.archive;
         }
-        return AdapterResolve.meta;
+        return AdapterResolveType.meta;
       }
-      return AdapterResolve.none;
+      return AdapterResolveType.none;
     },
     request: (req, crs) async {
       /// data needed from request

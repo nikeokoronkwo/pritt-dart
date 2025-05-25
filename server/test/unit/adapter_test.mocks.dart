@@ -7,13 +7,13 @@ import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
-import 'package:pritt_server/src/main/adapter/adapter_base.dart' as _i10;
-import 'package:pritt_server/src/main/crs/db.dart' as _i2;
-import 'package:pritt_server/src/main/crs/db/schema.dart' as _i7;
-import 'package:pritt_server/src/main/crs/fs.dart' as _i3;
+import 'package:pritt_server/src/main/base/db/interface.dart' as _i2;
+import 'package:pritt_server/src/main/base/db/schema.dart' as _i7;
+import 'package:pritt_server/src/main/base/storage/interface.dart' as _i3;
 import 'package:pritt_server/src/main/crs/interfaces.dart' as _i4;
 import 'package:pritt_server/src/main/crs/response.dart' as _i6;
-import 'package:pritt_server/src/main/shared/version.dart' as _i9;
+import 'package:pritt_server/src/main/utils/mixins.dart' as _i10;
+import 'package:pritt_server/src/main/utils/version.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -29,9 +29,9 @@ import 'package:pritt_server/src/main/shared/version.dart' as _i9;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
-    implements _i2.CRSDatabaseInterface {
-  _FakeCRSDatabaseInterface_0(
+class _FakePrittDatabaseInterface_0 extends _i1.SmartFake
+    implements _i2.PrittDatabaseInterface {
+  _FakePrittDatabaseInterface_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -40,9 +40,9 @@ class _FakeCRSDatabaseInterface_0 extends _i1.SmartFake
         );
 }
 
-class _FakeCRSRegistryOFSInterface_1 extends _i1.SmartFake
-    implements _i3.CRSRegistryOFSInterface {
-  _FakeCRSRegistryOFSInterface_1(
+class _FakePrittStorageInterface_1 extends _i1.SmartFake
+    implements _i3.PrittStorageInterface {
+  _FakePrittStorageInterface_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -60,13 +60,13 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
   }
 
   @override
-  _i2.CRSDatabaseInterface get db => (super.noSuchMethod(
+  _i2.PrittDatabaseInterface get db => (super.noSuchMethod(
         Invocation.getter(#db),
-        returnValue: _FakeCRSDatabaseInterface_0(
+        returnValue: _FakePrittDatabaseInterface_0(
           this,
           Invocation.getter(#db),
         ),
-      ) as _i2.CRSDatabaseInterface);
+      ) as _i2.PrittDatabaseInterface);
 
   @override
   _i5.Future<_i6.CRSResponse<_i7.PackageVersions>> getLatestPackage(
@@ -268,13 +268,13 @@ class MockCRSArchiveController extends _i1.Mock
   }
 
   @override
-  _i3.CRSRegistryOFSInterface get ofs => (super.noSuchMethod(
+  _i3.PrittStorageInterface get ofs => (super.noSuchMethod(
         Invocation.getter(#ofs),
-        returnValue: _FakeCRSRegistryOFSInterface_1(
+        returnValue: _FakePrittStorageInterface_1(
           this,
           Invocation.getter(#ofs),
         ),
-      ) as _i3.CRSRegistryOFSInterface);
+      ) as _i3.PrittStorageInterface);
 
   @override
   _i5.Future<_i6.CRSResponse<_i4.CRSArchive>> getArchiveWithVersion(
@@ -311,13 +311,30 @@ class MockCRSArchiveController extends _i1.Mock
           ),
         )),
       ) as _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>);
+
+  @override
+  _i5.FutureOr<dynamic> setFileServer(
+    String? packageName, {
+    String? version,
+    String? language,
+    bool? cache = false,
+  }) =>
+      (super.noSuchMethod(Invocation.method(
+        #setFileServer,
+        [packageName],
+        {
+          #version: version,
+          #language: language,
+          #cache: cache,
+        },
+      )) as _i5.FutureOr<dynamic>);
 }
 
-/// A class which mocks [MetaResult].
+/// A class which mocks [JsonConvertible].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMetaResult extends _i1.Mock implements _i10.MetaResult {
-  MockMetaResult() {
+class MockJsonConvertible extends _i1.Mock implements _i10.JsonConvertible {
+  MockJsonConvertible() {
     _i1.throwOnMissingStub(this);
   }
 

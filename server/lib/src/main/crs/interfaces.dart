@@ -1,9 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
-import '../shared/version.dart';
-import 'db.dart';
-import 'db/schema.dart';
-import 'fs.dart';
+import 'dart:async';
+
+import '../utils/version.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
+import '../base/storage/interface.dart';
 import 'response.dart';
 
 class CRSArchive {
@@ -23,7 +25,7 @@ class CRSArchive {
 /// an interface for the core registry system, used by adapters to make requests to retrieve common data
 abstract interface class CRSArchiveController {
   /// The object file system interface used by the controller
-  CRSRegistryOFSInterface get ofs;
+  PrittStorageInterface get ofs;
 
   /// get the archive of a package with the given version
   ///
@@ -34,12 +36,18 @@ abstract interface class CRSArchiveController {
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
       String packageName, String version,
       {String? language, Map<String, dynamic>? env});
+
+  /// Turn the server into a file server for a package
+  ///
+  /// **WARN**: Experimental and Unimplemented API - **DO NOT USE THIS**
+  FutureOr setFileServer(String packageName,
+      {String? version, String? language, bool cache = false});
 }
 
 /// An interface for the core registry system, used by adapters to make requests to retrieve common data
 abstract interface class CRSDBController {
   /// The database interface used by the controller
-  CRSDatabaseInterface get db;
+  PrittDatabaseInterface get db;
 
   /// get the latest version of a package
   Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,

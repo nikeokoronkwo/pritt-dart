@@ -1,6 +1,6 @@
-import '../../adapter_base.dart';
+import 'package:pritt_server/src/main/utils/mixins.dart';
 
-class NpmError with MetaResult {
+class NpmError with JsonConvertible {
   final String? error;
 
   NpmError({this.error});
