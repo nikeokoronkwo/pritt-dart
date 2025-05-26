@@ -9,7 +9,7 @@ import 'js.dart';
 external HandlebarsTemplateDelegate<T> compile<T extends JSAny>(JSAny input, [CompileOptions options]);
 
 @JS('compile')
-external HandlebarsTemplateDelegate compileString(String input, [CompileOptions options]);
+external JSFunction compileString(String input, [CompileOptions options]);
 
 typedef HandlebarsTemplateDelegate<T extends JSAny> = TemplateDelegate<T>;
 

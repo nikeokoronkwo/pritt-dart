@@ -1,0 +1,18 @@
+{
+    "name": "@pritt/webgen",
+    "description": "Generate the web application for Pritt based on presets (might not do this in dart again...)",
+    "module": "index.js",
+    "type": "module",
+    "scripts": {
+        "compile": "dart compile js bin/webgen.dart --server-mode --enable-asserts -o dist/webgen_dart.js",
+        "bundle": "esbuild js/webgen.js --bundle --minify --format=esm --platform=node --outfile=dist/webgen.js",
+        "build": "pnpm compile && pnpm bundle"
+    },
+    "devDependencies": {
+        "esbuild": "0.25.4",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "handlebars": "^4.7.8"
+    }
+}

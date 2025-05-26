@@ -8,7 +8,7 @@ importers:
 
   .: {}
 
-  packages/webgen/js:
+  packages/webgen:
     dependencies:
       handlebars:
         specifier: ^4.7.8

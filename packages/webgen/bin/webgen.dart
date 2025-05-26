@@ -22,6 +22,8 @@ void main(List<String> args) async {
   final argResults = argParser.parse(args);
   if (argResults.wasParsed('help')) print(argParser.usage);
 
+  // await importModule(argResults['js-file']).toDart;
+
   final dir = Directory(argResults['input']);
   final templateDir = Directory(argResults['template']);
 
@@ -46,9 +48,15 @@ void main(List<String> args) async {
   }
 
   // perform transformation
-  await importModule(argResults['js-file']).toDart;
+  
 
-  print(handlebars.compileString('Hello {{n}}')({'n':'f'}.jsify() as JSObject));
+  final foo = handlebars.compileString('Hello {{ nono }}');
+
+  print(foo.callAsFunction('fee'.toJS));
+  print(foo.callAsFunction('nono'.toJS));
+  print(foo.callAsFunction({'nono': 'nene'}.jsify()));
+  print(foo.callAsFunction({'nono': 'nae nae'}.jsify()));
+  print(foo.callAsFunction({'nono': 'michael'}.jsify()));
 
 
   // if template dir is in new dir, remove
