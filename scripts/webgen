@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd packages/webgen
+pnpm i
+pnpm bundle
+pnpm compile
+cd -
+node packages/webgen/dist/webgen.js $@
