@@ -15,9 +15,6 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/openapigen/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/packages/openapigen/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/packages/openapigen/build" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/webgen/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/webgen/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/webgen/build" />
       <excludeFolder url="file://$MODULE_DIR$/private/backend/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/private/backend/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/private/backend/build" />

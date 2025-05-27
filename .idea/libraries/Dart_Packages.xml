@@ -208,7 +208,6 @@
         <entry key="dart_style">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-3.1.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-3.0.1/lib" />
             </list>
           </value>
@@ -634,7 +633,6 @@
           <value>
             <list>
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.5/lib" />
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.6/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.4/lib" />
             </list>
           </value>
@@ -771,7 +769,6 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.6/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_jsonwebtoken-3.2.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-3.0.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-3.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/ed25519_edwards-0.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/ffi-2.1.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/file-6.1.4/lib" />
@@ -837,7 +834,6 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test-1.26.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.5/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.6/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_core-0.6.8/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_core-0.6.9/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_process-2.1.1/lib" />
