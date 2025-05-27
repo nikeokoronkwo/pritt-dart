@@ -1,8 +1,6 @@
-mixin Jsonable on JsonConvertible, JsonDerivable {
-  
-}
+mixin Jsonable on JsonConvertible, JsonDerivable {}
 
-abstract mixin class JsonDerivable  {
+abstract mixin class JsonDerivable {
   factory JsonDerivable.fromJson(Map<String, dynamic> json) {
     throw UnsupportedError('Use a derived class');
   }

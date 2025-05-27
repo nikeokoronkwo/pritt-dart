@@ -4,12 +4,12 @@ import '../../utils/user_agent.dart';
 part 'resolve.g.dart';
 
 @JsonEnum()
-enum RequestMethod { 
-  GET, 
-  POST, 
-  PUT, 
-  DELETE, 
-  PATCH, 
+enum RequestMethod {
+  GET,
+  POST,
+  PUT,
+  DELETE,
+  PATCH,
   OPTIONS;
 }
 
@@ -58,7 +58,6 @@ class AdapterResolveObject {
         pathSegments = uri.pathSegments,
         url =
             '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
-
 
   Map<String, dynamic> toJson() => _$AdapterResolveObjectToJson(this);
 }

@@ -109,14 +109,6 @@ Map<String, dynamic> _$GetAdaptersResponseToJson(
         GetAdaptersResponse instance) =>
     <String, dynamic>{};
 
-GetPackageByVersionResponse _$GetPackageByVersionResponseFromJson(
-        Map<String, dynamic> json) =>
-    GetPackageByVersionResponse();
-
-Map<String, dynamic> _$GetPackageByVersionResponseToJson(
-        GetPackageByVersionResponse instance) =>
-    <String, dynamic>{};
-
 Author _$AuthorFromJson(Map<String, dynamic> json) => Author(
       name: json['name'] as String,
       email: json['email'] as String,
@@ -161,6 +153,71 @@ Map<String, dynamic> _$SignatureToJson(Signature instance) => <String, dynamic>{
       'public_key_id': instance.public_key_id,
       'signature': instance.signature,
       'created': instance.created,
+    };
+
+ConfigFile _$ConfigFileFromJson(Map<String, dynamic> json) => ConfigFile(
+      name: json['name'] as String,
+      data: json['data'] as String,
+    );
+
+Map<String, dynamic> _$ConfigFileToJson(ConfigFile instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'data': instance.data,
+    };
+
+GetPackageByVersionResponse _$GetPackageByVersionResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetPackageByVersionResponse(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      description: json['description'] as String?,
+      version: json['version'] as String,
+      author: Author.fromJson(json['author'] as Map<String, dynamic>),
+      contributors: (json['contributors'] as List<dynamic>?)
+          ?.map((e) => Contributor.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      language: json['language'] as String?,
+      created_at: json['created_at'] as String,
+      info: json['info'] as Map<String, dynamic>,
+      env: json['env'] as Map<String, dynamic>,
+      metadata: json['metadata'] as Map<String, dynamic>,
+      signatures: (json['signatures'] as List<dynamic>?)
+          ?.map((e) => Signature.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      deprecated: json['deprecated'] as bool?,
+      deprecationMessage: json['deprecationMessage'] as String?,
+      yanked: json['yanked'] as bool?,
+      readme: json['readme'] as String?,
+      config: json['config'] == null
+          ? null
+          : ConfigFile.fromJson(json['config'] as Map<String, dynamic>),
+      hash: json['hash'] as String?,
+      integrity: json['integrity'] as String?,
+    );
+
+Map<String, dynamic> _$GetPackageByVersionResponseToJson(
+        GetPackageByVersionResponse instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'description': instance.description,
+      'version': instance.version,
+      'author': instance.author,
+      'contributors': instance.contributors,
+      'language': instance.language,
+      'created_at': instance.created_at,
+      'info': instance.info,
+      'env': instance.env,
+      'metadata': instance.metadata,
+      'signatures': instance.signatures,
+      'deprecated': instance.deprecated,
+      'deprecationMessage': instance.deprecationMessage,
+      'yanked': instance.yanked,
+      'readme': instance.readme,
+      'config': instance.config,
+      'hash': instance.hash,
+      'integrity': instance.integrity,
     };
 
 VerbosePackage _$VerbosePackageFromJson(Map<String, dynamic> json) =>
@@ -407,6 +464,14 @@ YankAdapterResponse _$YankAdapterResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$YankAdapterResponseToJson(
         YankAdapterResponse instance) =>
+    <String, dynamic>{};
+
+YankPackageByVersionRequest _$YankPackageByVersionRequestFromJson(
+        Map<String, dynamic> json) =>
+    YankPackageByVersionRequest();
+
+Map<String, dynamic> _$YankPackageByVersionRequestToJson(
+        YankPackageByVersionRequest instance) =>
     <String, dynamic>{};
 
 YankPackageByVersionResponse _$YankPackageByVersionResponseFromJson(

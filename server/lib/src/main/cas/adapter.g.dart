@@ -6,9 +6,13 @@ part of 'adapter.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CustomAdapterResult _$CustomAdapterResultFromJson(Map<String, dynamic> json) =>
-    CustomAdapterResult();
-
 Map<String, dynamic> _$CustomAdapterResultToJson(
         CustomAdapterResult instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'result_type': _$CustomAdapterResultTypeEnumMap[instance.resultType]!,
+    };
+
+const _$CustomAdapterResultTypeEnumMap = {
+  CustomAdapterResultType.meta: 'meta',
+  CustomAdapterResultType.archive: 'archive',
+};

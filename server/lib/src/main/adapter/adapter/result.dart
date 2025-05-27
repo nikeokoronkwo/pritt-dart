@@ -15,8 +15,6 @@ sealed class AdapterResult extends AdapterBaseResult {
   const AdapterResult({this.responseType = ResponseType.json}) : super();
 }
 
-
-
 // TODO: Custom conversion types for other formats (i.e custom adapter formats)
 enum ResponseType {
   json(mimeType: 'application/json'),

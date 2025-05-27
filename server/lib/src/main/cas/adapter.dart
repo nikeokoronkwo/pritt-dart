@@ -6,9 +6,11 @@ part 'adapter.g.dart';
 
 @JsonEnum()
 enum CustomAdapterResultType {
-  meta, archive;
+  meta,
+  archive;
 
-  static CustomAdapterResultType fromString(String s) => CustomAdapterResultType.values.firstWhere((f) => f.name == s);
+  static CustomAdapterResultType fromString(String s) =>
+      CustomAdapterResultType.values.firstWhere((f) => f.name == s);
 }
 
 @JsonSerializable(createFactory: false)
@@ -20,7 +22,6 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
 
   factory CustomAdapterResult.fromJson(Map<String, dynamic> json) {
     return switch (CustomAdapterResultType.fromString(json['result_type'])) {
-      
       // TODO: Handle this case.
       CustomAdapterResultType.meta => throw UnimplementedError(),
       // TODO: Handle this case.
@@ -30,17 +31,16 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
 }
 
 // TODO: Implement
-class CustomAdapterMetaResult extends CustomAdapterResult implements AdapterMetaResult {
-
+class CustomAdapterMetaResult extends CustomAdapterResult
+    implements AdapterMetaResult {
   @override
   // TODO: implement responseType
   ResponseType get responseType => throw UnimplementedError();
 }
 
-
 // TODO: Implement
-class CustomAdapterArchiveResult extends CustomAdapterResult implements AdapterMetaResult {
-
+class CustomAdapterArchiveResult extends CustomAdapterResult
+    implements AdapterMetaResult {
   @override
   // TODO: implement responseType
   ResponseType get responseType => throw UnimplementedError();

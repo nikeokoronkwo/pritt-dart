@@ -40,27 +40,69 @@ CREATE TABLE users (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
-    -- TODO: Should we use a hash instead?
     access_token TEXT NOT NULL,
     access_token_expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE packages (
+CREATE TABLE organizations (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Join table for users and organizations
+CREATE TABLE organization_members (
+    organization_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    privileges privilege ARRAY NOT NULL,
+    joined_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    FOREIGN KEY (organization_id) REFERENCES organizations (id),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    PRIMARY KEY (organization_id, user_id)
+);
+
+CREATE TABLE packages (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
     version TEXT UNIQUE NOT NULL,
+    scoped BOOLEAN NOT NULL DEFAULT FALSE,
     description TEXT,
     author_id TEXT NOT NULL,
+    scope TEXT,
     language TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     vcs version_control_system NOT NULL DEFAULT 'git',
+    vcs_url TEXT, -- TODO(web): Distinguish between various VCS URLs
     archive TEXT NOT NULL,
     license TEXT,
-    FOREIGN KEY (author_id) REFERENCES users (id)
+    CONSTRAINT valid_name CHECK (name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
+    CONSTRAINT valid_scope CHECK (scope ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
+    CONSTRAINT scoped_means_scope CHECK (scoped = TRUE AND scope IS NOT NULL OR scoped = FALSE AND scope IS NULL),
+    FOREIGN KEY (author_id) REFERENCES users (id),
+    FOREIGN KEY (scope) REFERENCES organizations (name),
 );
+
+-- Ensure that the combination of name and scope is unique
+-- This allows for scoped packages (e.g., @scope/package) and non-scoped packages (e.g., package)
+ALTER TABLE packages
+ADD CONSTRAINT unique_name_scope
+UNIQUE (name, scope);
+
+CREATE TABLE package_contributors (
+    package_id TEXT NOT NULL,
+    contributor_id TEXT NOT NULL,
+    privileges privilege ARRAY NOT NULL,
+    joined_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (package_id, contributor_id),
+    FOREIGN KEY (package_id) REFERENCES packages (id),
+    FOREIGN KEY (contributor_id) REFERENCES users (id)
+);
+
 
 CREATE TABLE package_versions (
     package_id TEXT NOT NULL,
@@ -91,15 +133,6 @@ AFTER INSERT OR UPDATE OF signatures
 ON package_versions
 FOR EACH ROW
 EXECUTE FUNCTION validate_signatures();
-
-
-CREATE TABLE package_contributors (
-    package_id TEXT NOT NULL,
-    contributor_id TEXT NOT NULL,
-    privileges privilege ARRAY NOT NULL,
-    FOREIGN KEY (package_id) REFERENCES packages (id),
-    FOREIGN KEY (contributor_id) REFERENCES users (id)
-);
 
 CREATE TABLE plugins (
     id TEXT PRIMARY KEY NOT NULL,

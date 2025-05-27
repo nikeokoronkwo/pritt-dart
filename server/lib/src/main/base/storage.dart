@@ -27,10 +27,7 @@ class PrittStorage implements PrittStorageInterface {
     s3 = S3(
       region: region,
       credentials:
-          AwsClientCredentials(
-            accessKey: accessKey, 
-            secretKey: secretKey
-          ),
+          AwsClientCredentials(accessKey: accessKey, secretKey: secretKey),
       endpointUrl: url,
     );
 

@@ -22,3 +22,9 @@ class Key {
   final String? name;
   const Key({this.name});
 }
+
+class Table {
+  final String name;
+
+  const Table(this.name);
+}
