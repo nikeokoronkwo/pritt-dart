@@ -5,14 +5,16 @@
     "type": "module",
     "scripts": {
         "compile": "dart compile js bin/webgen.dart --server-mode --enable-asserts -o dist/webgen_dart.js",
-        "bundle": "esbuild js/webgen.js --bundle --minify --format=esm --platform=node --outfile=dist/webgen.js",
+        "bundle": "esbuild bin/webgen.ts --bundle --minify --format=esm --platform=node --outfile=dist/webgen.js",
         "build": "pnpm compile && pnpm bundle"
     },
     "devDependencies": {
+        "@types/node": "^22.15.21",
         "esbuild": "0.25.4",
         "typescript": "^5.8.3"
     },
     "dependencies": {
-        "handlebars": "^4.7.8"
+        "handlebars": "^4.7.8",
+        "zod": "^3.25.30"
     }
 }

@@ -2,6 +2,9 @@
 # Company name
 name:
 
+version:
+description:
+
 # Styling: You can choose a particular style or customize using colours and font
 # style: default
 style:
@@ -27,8 +30,10 @@ assets:
   - img.jpg
   - img/ref.jpg
 
-# Supports MD and AsciiDoc
+# Supports MD and AsciiDoc (all optional)
 terms-of-use: 
+privacy-policy:
+cookie-policy:
 
 # Meta defs you may want. Defaults to the setup from the other values
 meta:

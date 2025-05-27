@@ -13,10 +13,12 @@ extension type FSCPOptions._(JSObject _) implements JSObject {
 }
 
 @JS('readdir')
-external JSPromise<JSArray<Dirent>> readdir(String path, [FSReadDirOptions? options]);
+external JSPromise<JSArray<Dirent>> readdir(String path,
+    [FSReadDirOptions? options]);
 
 extension type FSReadDirOptions._(JSObject _) implements JSObject {
-  external FSReadDirOptions({String encoding, bool withFileTypes = true, bool recursive});
+  external FSReadDirOptions(
+      {String encoding, bool withFileTypes = true, bool recursive});
   external String? get encoding;
   external bool? get withFileTypes;
   external bool? get recursive;
