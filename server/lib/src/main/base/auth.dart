@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -46,7 +44,6 @@ class PrittAuth implements PrittAuthInterface {
 
   PrittAuth(this.keySet);
 
-
   @override
   String createAccessTokenForUser({
     required String name,
@@ -85,16 +82,15 @@ class PrittAuth implements PrittAuthInterface {
       if (payload is Map<String, dynamic>) {
         return PrittAuthMetadata.fromJson(payload);
       } else if (payload is String) {
-        return PrittAuthMetadata.fromJson(jsonDecode(payload) as Map<String, dynamic>);
+        return PrittAuthMetadata.fromJson(
+            jsonDecode(payload) as Map<String, dynamic>);
       } else {
         throw Exception('The token payload is not a valid object.');
       }
-
     } on JWTExpiredException catch (e) {
       throw ExpiredTokenException(
-        'The access token has expired. Please log in again.',
-        token: token
-      );
+          'The access token has expired. Please log in again.',
+          token: token);
     } on JWTNotActiveException catch (e) {
       throw JWTNotActiveException();
     } on JWTInvalidException catch (e) {

@@ -25,7 +25,9 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   /// prepared statements
   final Map<String, Statement> _statements = {};
 
-  PrittDatabase._({required Pool pool, required KeySet keySet}) : _pool = pool, auth = PrittAuth(keySet);
+  PrittDatabase._({required Pool pool, required KeySet keySet})
+      : _pool = pool,
+        auth = PrittAuth(keySet);
 
   // TODO: Find a better singleton way of doing these db calls
   static PrittDatabase? db;
@@ -79,8 +81,7 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
 
   /// Update the authentication credentials for a user
   Future updateUserCredentials(
-      String id, String name, String email, String accessToken) async {
-  }
+      String id, String name, String email, String accessToken) async {}
 
   /// Execute basic SQL statements
   @override
@@ -89,7 +90,8 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   }
 
   @override
-  FutureOr<User> createUser({required String name, required String email}) async {
+  FutureOr<User> createUser(
+      {required String name, required String email}) async {
     final id = Slugid.nice();
     final createdAt = DateTime.now();
     final accessTokenExpiresAt = createdAt.add(Duration(days: 10));
@@ -104,26 +106,27 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
       final result = await _pool.execute(r'''
 INSERT INTO users (id, name, email, access_token, access_token_expires_at, created_at) 
 VALUES ($1, $2, $3, $4, $5, $6) 
-RETURNING *;''',
-      parameters: [
-        id, name, email, accessToken, accessTokenExpiresAt, createdAt
+RETURNING *;''', parameters: [
+        id,
+        name,
+        email,
+        accessToken,
+        accessTokenExpiresAt,
+        createdAt
       ]);
 
       final row = result.first;
       final columnMap = row.toColumnMap();
 
       return User(
-        id: columnMap['id'] as String, 
-        name: name, 
-        accessToken: accessToken, 
-        accessTokenExpiresAt: accessTokenExpiresAt, 
-        email: email, 
-        createdAt: createdAt, 
-        updatedAt: columnMap['updated_at'] as DateTime
-      );
-    } catch (e) {
-      
-    }
+          id: columnMap['id'] as String,
+          name: name,
+          accessToken: accessToken,
+          accessTokenExpiresAt: accessTokenExpiresAt,
+          email: email,
+          createdAt: createdAt,
+          updatedAt: columnMap['updated_at'] as DateTime);
+    } catch (e) {}
     throw UnimplementedError();
   }
 
@@ -175,7 +178,8 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
   }
 
   @override
-  Future<Package> getPackage(String name, {String? language, String? scope}) async {
+  Future<Package> getPackage(String name,
+      {String? language, String? scope}) async {
     // cacheable
     if (language != null) {
       throw CRSException(CRSExceptionType.UNSUPPORTED_FEATURE,
@@ -347,8 +351,8 @@ FROM users
   }
 
   @override
-  FutureOr<PackageVersions> getPackageWithVersion(
-      String name, Version version, {String? scope}) async {
+  FutureOr<PackageVersions> getPackageWithVersion(String name, Version version,
+      {String? scope}) async {
     // cacheable
     if (_statements['getPackageWithVersion'] == null) {
       _statements['getPackageWithVersion'] = await _pool.prepare(Sql.named('''
@@ -459,7 +463,8 @@ LIMIT 1
 
   @override
   FutureOr<Map<User, Iterable<Privileges>>> getContributorsForPackage(
-      String name, {String? scope}) async {
+      String name,
+      {String? scope}) async {
     // not cacheable
 
     final result = await _pool.execute(Sql.named('''
@@ -605,148 +610,195 @@ FROM plugins p
     return result.map((r) {
       final columnMap = r.toColumnMap();
       return Plugin(
-        id: columnMap['id'] as String, 
-        name: columnMap['name'] as String,
-        description: columnMap['description'] as String?,
-        language: columnMap['language'] as String, 
-        archive: Uri.file(columnMap['archive'] as String),
-        archiveType: switch (columnMap['archive_type'] as String) {
-          'single' => PluginArchiveType.single,
-          'multi' => PluginArchiveType.multi,
-          _ => throw Exception("Unknown Plugin Archive Type ${columnMap['archive_type']}")
-        }
-      );
+          id: columnMap['id'] as String,
+          name: columnMap['name'] as String,
+          description: columnMap['description'] as String?,
+          language: columnMap['language'] as String,
+          archive: Uri.file(columnMap['archive'] as String),
+          archiveType: switch (columnMap['archive_type'] as String) {
+            'single' => PluginArchiveType.single,
+            'multi' => PluginArchiveType.multi,
+            _ => throw Exception(
+                "Unknown Plugin Archive Type ${columnMap['archive_type']}")
+          });
     });
   }
-  
+
   @override
-  FutureOr<Package> addContributorToPackage(String name, User user, Privileges privileges, {String? scope}) {
+  FutureOr<Package> addContributorToPackage(
+      String name, User user, Privileges privileges,
+      {String? scope}) {
     // TODO: implement addContributorToPackage
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<ScopeUsers> addUserToOrganization({required String organizationName, required User user, Iterable<Privileges> privileges = const []}) {
+  FutureOr<ScopeUsers> addUserToOrganization(
+      {required String organizationName,
+      required User user,
+      Iterable<Privileges> privileges = const []}) {
     // TODO: implement addUserToOrganization
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Scope> createOrganization({required String name, String? description, required User owner}) {
+  FutureOr<Scope> createOrganization(
+      {required String name, String? description, required User owner}) {
     // TODO: implement createOrganization
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Map<User, Iterable<Privileges>>> getMembersForOrganization(String name) {
+  FutureOr<Map<User, Iterable<Privileges>>> getMembersForOrganization(
+      String name) {
     // TODO: implement getMembersForOrganization
     throw UnimplementedError();
   }
-  
+
   @override
   Stream<User> getMembersForOrganizationStream(String name) {
     // TODO: implement getMembersForOrganizationStream
     throw UnimplementedError();
   }
-  
+
   @override
   FutureOr<Scope> getOrganizationByName(String name) {
     // TODO: implement getOrganizationByName
     throw UnimplementedError();
   }
-  
+
   @override
   FutureOr<Iterable<Scope>> getOrganizations() {
     // TODO: implement getOrganizations
     throw UnimplementedError();
   }
-  
+
   @override
   FutureOr<Iterable<Scope>> getOrganizationsForUser(String id) {
     // TODO: implement getOrganizationsForUser
     throw UnimplementedError();
   }
-  
+
   @override
   Stream<Scope> getOrganizationsForUserStream(String id) {
     // TODO: implement getOrganizationsForUserStream
     throw UnimplementedError();
   }
-  
+
   @override
   Stream<Scope> getOrganizationsStream() {
     // TODO: implement getOrganizationsStream
     throw UnimplementedError();
   }
-  
+
   @override
   FutureOr<Iterable<Package>> getPackagesForOrganization(String name) {
     // TODO: implement getPackagesForOrganization
     throw UnimplementedError();
   }
-  
+
   @override
   Stream<Package> getPackagesForOrganizationStream(String name) {
     // TODO: implement getPackagesForOrganizationStream
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<ScopeUsers> removeUserFromOrganization({required String organizationName, required User user}) {
+  FutureOr<ScopeUsers> removeUserFromOrganization(
+      {required String organizationName, required User user}) {
     // TODO: implement removeUserFromOrganization
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Scope> updateOrganization({required String name, Scope Function(Scope p1)? updates}) {
+  FutureOr<Scope> updateOrganization(
+      {required String name, Scope Function(Scope p1)? updates}) {
     // TODO: implement updateOrganization
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<ScopeUsers> updateUserPrivilegesInOrganization({required String organizationName, required User user, Iterable<Privileges> privileges = const []}) {
+  FutureOr<ScopeUsers> updateUserPrivilegesInOrganization(
+      {required String organizationName,
+      required User user,
+      Iterable<Privileges> privileges = const []}) {
     // TODO: implement updateUserPrivilegesInOrganization
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Package> addNewPackage({required String name, String? scope, String? description, required String version, required User author, required String language, required VCS vcs, Uri? archive, Iterable<User>? contributors}) {
+  FutureOr<Package> addNewPackage(
+      {required String name,
+      String? scope,
+      String? description,
+      required String version,
+      required User author,
+      required String language,
+      required VCS vcs,
+      Uri? archive,
+      Iterable<User>? contributors}) {
     // TODO: implement addNewPackage
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<PackageVersions> addNewVersionOfPackage({required String name, String? scope, required String version, String? description, required String hash, required String signature, required String integrity, String? readme, String? config, String? configName, Map<String, dynamic> info = const {}, Map<String, String> env = const {}, Map<String, dynamic> metadata = const {}, required User author, required String language, required VCS vcs, Uri? archive, Iterable<User>? contributors}) {
+  FutureOr<PackageVersions> addNewVersionOfPackage(
+      {required String name,
+      String? scope,
+      required String version,
+      String? description,
+      required String hash,
+      required String signature,
+      required String integrity,
+      String? readme,
+      String? config,
+      String? configName,
+      Map<String, dynamic> info = const {},
+      Map<String, String> env = const {},
+      Map<String, dynamic> metadata = const {},
+      required User author,
+      required String language,
+      required VCS vcs,
+      Uri? archive,
+      Iterable<User>? contributors}) {
     // TODO: implement addNewVersionOfPackage
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<PackageVersions> deprecateVersionOfPackage(String name, Version version, {String? scope}) {
+  FutureOr<PackageVersions> deprecateVersionOfPackage(
+      String name, Version version,
+      {String? scope}) {
     // TODO: implement deprecateVersionOfPackage
     throw UnimplementedError();
   }
-  
+
   @override
-  Stream<PackageVersions> getAllVersionsOfPackageStream(String name, {String? scope}) {
+  Stream<PackageVersions> getAllVersionsOfPackageStream(String name,
+      {String? scope}) {
     // TODO: implement getAllVersionsOfPackageStream
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Package> updatePackage(String name, Package Function(Package p1) updates, {String? scope}) {
+  FutureOr<Package> updatePackage(
+      String name, Package Function(Package p1) updates,
+      {String? scope}) {
     // TODO: implement updatePackage
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<Package> updateVersionOfPackage(String name, Version version, PackageVersions Function(PackageVersions p1) updates, {String? scope}) {
+  FutureOr<Package> updateVersionOfPackage(String name, Version version,
+      PackageVersions Function(PackageVersions p1) updates,
+      {String? scope}) {
     // TODO: implement updateVersionOfPackage
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<PackageVersions> yankVersionOfPackage(String name, Version version, {String? scope}) {
+  FutureOr<PackageVersions> yankVersionOfPackage(String name, Version version,
+      {String? scope}) {
     // TODO: implement yankVersionOfPackage
     throw UnimplementedError();
   }
@@ -780,7 +832,8 @@ WHERE access_token = @accessToken
     try {
       meta = auth.validateAccessToken(accessToken);
     } catch (e) {
-      throw UnauthorizedException('Invalid access token format', token: accessToken, source: e);
+      throw UnauthorizedException('Invalid access token format',
+          token: accessToken, source: e);
     }
 
     // double check the access token expiration

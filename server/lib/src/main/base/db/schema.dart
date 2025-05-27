@@ -82,21 +82,21 @@ class Package {
   /// The scope of the package, if it is scoped
   String? scope;
 
-  Package({
-    required this.id,
-    required this.name,
-    required this.version,
-    required this.author,
-    required this.language,
-    this.description,
-    DateTime? updated,
-    required this.created,
-    this.vcs = VCS.git,
-    required this.archive,
-    this.license,
-    this.scope,
-    this.vcsUrl
-  }) : updated = updated ?? created;
+  Package(
+      {required this.id,
+      required this.name,
+      required this.version,
+      required this.author,
+      required this.language,
+      this.description,
+      DateTime? updated,
+      required this.created,
+      this.vcs = VCS.git,
+      required this.archive,
+      this.license,
+      this.scope,
+      this.vcsUrl})
+      : updated = updated ?? created;
 }
 
 /// Maps packages to their versions, and info about those versions
@@ -204,7 +204,8 @@ class PackageContributors {
     required this.contributor,
     required this.privileges,
     required this.addedAt,
-  }) : assert(privileges.contains(Privileges.ultimate) && privileges.length == 1,
+  }) : assert(
+            privileges.contains(Privileges.ultimate) && privileges.length == 1,
             "Ultimate privilege cannot be combined with read privilege");
 }
 

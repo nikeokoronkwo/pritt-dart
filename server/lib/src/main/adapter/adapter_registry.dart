@@ -91,7 +91,8 @@ class AdapterRegistry {
 
       databaseInterface = await CASLocalDatabase.connect(url: db.toString());
     } else {
-      throw AssertionError('Unsupported type: db must be String, Uri or an implementation of PrittAdapterDatabaseInterface');
+      throw AssertionError(
+          'Unsupported type: db must be String, Uri or an implementation of PrittAdapterDatabaseInterface');
     }
 
     // before starting...

@@ -11,12 +11,11 @@ class SorterResponse {
   final bool success;
   final String workerId;
 
-  const SorterResponse({
-    required this.type,
-    this.adapterId,
-    required this.success,
-    required this.workerId
-  });
+  const SorterResponse(
+      {required this.type,
+      this.adapterId,
+      required this.success,
+      required this.workerId});
 
   factory SorterResponse.fromJson(Map<String, dynamic> json) =>
       _$SorterResponseFromJson(json);

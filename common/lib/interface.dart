@@ -214,16 +214,6 @@ class GetAdaptersResponse {
 }
 
 @JsonSerializable()
-class GetPackageByVersionResponse {
-  GetPackageByVersionResponse();
-
-  factory GetPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
-      _$GetPackageByVersionResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$GetPackageByVersionResponseToJson(this);
-}
-
-@JsonSerializable()
 class Author {
   Author({
     required this.name,
@@ -289,6 +279,91 @@ class Signature {
   final String created;
 
   Map<String, dynamic> toJson() => _$SignatureToJson(this);
+}
+
+@JsonSerializable()
+class ConfigFile {
+  ConfigFile({
+    required this.name,
+    required this.data,
+  });
+
+  factory ConfigFile.fromJson(Map<String, dynamic> json) =>
+      _$ConfigFileFromJson(json);
+
+  final String name;
+
+  final String data;
+
+  Map<String, dynamic> toJson() => _$ConfigFileToJson(this);
+}
+
+@JsonSerializable()
+class GetPackageByVersionResponse {
+  GetPackageByVersionResponse({
+    required this.name,
+    this.scope,
+    this.description,
+    required this.version,
+    required this.author,
+    required this.contributors,
+    this.language,
+    required this.created_at,
+    required this.info,
+    required this.env,
+    required this.metadata,
+    required this.signatures,
+    this.deprecated,
+    this.deprecationMessage,
+    this.yanked,
+    this.readme,
+    this.config,
+    this.hash,
+    this.integrity,
+  });
+
+  factory GetPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetPackageByVersionResponseFromJson(json);
+
+  final String name;
+
+  final String? scope;
+
+  final String? description;
+
+  final String version;
+
+  final Author author;
+
+  final List<Contributor>? contributors;
+
+  final String? language;
+
+  final String created_at;
+
+  final Map<String, dynamic> info;
+
+  final Map<String, dynamic> env;
+
+  final Map<String, dynamic> metadata;
+
+  final List<Signature>? signatures;
+
+  final bool? deprecated;
+
+  final String? deprecationMessage;
+
+  final bool? yanked;
+
+  final String? readme;
+
+  final ConfigFile? config;
+
+  final String? hash;
+
+  final String? integrity;
+
+  Map<String, dynamic> toJson() => _$GetPackageByVersionResponseToJson(this);
 }
 
 @JsonSerializable()

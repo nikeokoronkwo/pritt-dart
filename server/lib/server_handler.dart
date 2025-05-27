@@ -1,6 +1,6 @@
 // ignore_for_file: library_prefixes
 
-import 'package:pritt_server/src/routes/api/package/%5Bname%5D.get.dart'
+import 'package:pritt_server/src/routes/api/package/%5Bname%5D/index.get.dart'
     as packageNameGet;
 import 'package:pritt_server/src/routes/api/packages.get.dart' as packagesGet;
 import 'package:shelf/shelf.dart';

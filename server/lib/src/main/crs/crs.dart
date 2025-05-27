@@ -128,7 +128,8 @@ class CoreRegistryService implements CRSController {
       {String? language, Map<String, dynamic>? env}) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final file = await ofs.get('/${scope == null ? name : '$scope/$name'}/$version.tgz');
+      final file = await ofs
+          .get('/${scope == null ? name : '$scope/$name'}/$version.tgz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
         file.contentType ?? 'application/gzip',
@@ -253,8 +254,8 @@ class CoreRegistryService implements CRSController {
       {String? language, Map<String, dynamic>? env}) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final pkg =
-          await db.getPackageWithVersion(name, Version.parse(version), scope: scope);
+      final pkg = await db.getPackageWithVersion(name, Version.parse(version),
+          scope: scope);
 
       if (language != null && pkg.package.language != language) {
         return CRSResponse.error(
@@ -364,7 +365,8 @@ class CoreRegistryService implements CRSController {
       Map<String, dynamic>? env}) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final contributors = await db.getContributorsForPackage(name, scope: scope);
+      final contributors =
+          await db.getContributorsForPackage(name, scope: scope);
 
       return CRSResponse.success(
         body: contributors,

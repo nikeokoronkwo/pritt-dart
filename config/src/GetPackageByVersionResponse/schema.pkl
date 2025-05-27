@@ -1,2 +1,62 @@
 module GetPackageByVersionResponse
 
+import "../../lib/package.pkl" as p
+
+name: String
+
+scope: String?
+
+description: String?
+
+version: p.Version
+
+author: p.Author
+
+contributors: Listing<p.Contributor>
+
+language: String?
+
+created_at: String
+
+/// info 
+info: Mapping<String, Any>
+
+/// env
+env: Mapping<String, Any>
+
+/// metadata
+metadata: Mapping<String, Any>
+
+/// signatures
+signatures: Listing<p.Signature>
+
+/// whether the package is deprecated
+deprecated: Boolean?
+
+/// deprecation message
+deprecationMessage: String?((this != null).implies(deprecated == true))
+
+/// whether the package is yanked
+yanked: Boolean?
+
+/// The readme info
+readme: String?
+
+/// The configuration file information
+config: ConfigFile?
+
+/// The file hash
+hash: String?
+
+/// The integrity hash
+integrity: String?
+
+
+/// An object to represent configuration information
+class ConfigFile {
+    /// The name of the config file
+    name: String
+
+    /// The data in the file
+    data: String
+}
