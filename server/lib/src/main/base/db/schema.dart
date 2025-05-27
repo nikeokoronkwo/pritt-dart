@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../utils/version.dart';
-import 'annotations.dart';
+import 'annotations/schema.dart';
 
 part 'schema.g.dart';
 
@@ -65,6 +65,9 @@ class Package {
   /// This information is not used at the moment, and is reserved for future iterations
   VCS vcs;
 
+  /// The VCS URL of the package, if applicable
+  Uri? vcsUrl;
+
   /// The archive directory path of the given package.
   ///
   /// This archive is usually for the Object File System and so is relative to that
@@ -72,6 +75,12 @@ class Package {
 
   /// The license of the given package
   String? license;
+
+  /// Whether a package is scoped or not
+  bool get scoped => scope != null;
+
+  /// The scope of the package, if it is scoped
+  String? scope;
 
   Package({
     required this.id,
@@ -85,6 +94,8 @@ class Package {
     this.vcs = VCS.git,
     required this.archive,
     this.license,
+    this.scope,
+    this.vcsUrl
   }) : updated = updated ?? created;
 }
 
@@ -178,6 +189,9 @@ class PackageContributors {
   @ForeignKey(User, property: 'id')
   User contributor;
 
+  /// When the contributor was added to the package
+  DateTime addedAt;
+
   /// The kind of privileges this contributor has, when contributing to this package.
   ///
   /// No contributor can have [Privileges.ultimate] except the author himself, unless he passes the package down to another person (not possible in pritt yet)
@@ -189,7 +203,9 @@ class PackageContributors {
     required this.package,
     required this.contributor,
     required this.privileges,
-  });
+    required this.addedAt,
+  }) : assert(privileges.contains(Privileges.ultimate) && privileges.length == 1,
+            "Ultimate privilege cannot be combined with read privilege");
 }
 
 /// User information
@@ -228,6 +244,59 @@ class User {
       required this.email,
       required this.createdAt,
       required this.updatedAt});
+}
+
+/// A scope is an organizational unit for packages
+class Scope {
+  /// The id of the scope
+  @primary
+  String id;
+
+  /// The name of the scope
+  @unique
+  String name;
+
+  /// The description of the scope
+  String? description;
+
+  /// The time the scope was created
+  DateTime createdAt;
+
+  /// The time the scope was last updated
+  DateTime updatedAt;
+
+  Scope({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+}
+
+/// A join table for users and scopes
+@Table('organization_members')
+class ScopeUsers {
+  @ForeignKey(Scope, property: 'id')
+  @Key(name: 'organization_id')
+  Scope scope;
+
+  @ForeignKey(User, property: 'id')
+  @Key(name: 'user_id')
+  User user;
+
+  /// The privileges the user has in the scope
+  Iterable<Privileges> privileges;
+
+  /// When the user was added to the scope
+  DateTime joinedAt;
+
+  ScopeUsers({
+    required this.scope,
+    required this.user,
+    required this.privileges,
+    required this.joinedAt,
+  });
 }
 
 @JsonSerializable()

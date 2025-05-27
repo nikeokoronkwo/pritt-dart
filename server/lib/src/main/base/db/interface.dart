@@ -48,6 +48,8 @@ abstract interface class PrittDatabaseInterface
   /// add a new package to the database
   FutureOr<Package> addNewPackage({
     required String name,
+    String? scope,
+    String? description,
     required String version,
     required User author,
     required String language,
@@ -62,13 +64,27 @@ abstract interface class PrittDatabaseInterface
   /// (i.e [Package.version])
   FutureOr<PackageVersions> addNewVersionOfPackage({
     required String name,
+    String? scope,
     required String version,
+    String? description,
+    required String hash,
+    required String signature,
+    required String integrity,
+    String? readme,
+    String? config,
+    String? configName,
+    Map<String, dynamic> info = const {},
+    Map<String, String> env = const {},
+    Map<String, dynamic> metadata = const {},
     required User author,
     required String language,
     required VCS vcs,
     Uri? archive,
     Iterable<User>? contributors,
   });
+
+  /// Add a user as a contributor to a package
+  FutureOr<Package> addContributorToPackage(String name, User user, Privileges privileges, {String? scope});
 
   /// Updates a new version of a package with archive details such as hash, signature, integrity, etc
   FutureOr<PackageVersions> updateNewPackageWithArchiveDetails({
@@ -81,31 +97,31 @@ abstract interface class PrittDatabaseInterface
 
   /// update a package with new information
   FutureOr<Package> updatePackage(
-      String name, Package Function(Package) updates);
+      String name, Package Function(Package) updates, {String? scope});
 
   /// update a version of a package with new information
   FutureOr<Package> updateVersionOfPackage(String name, Version version,
-      PackageVersions Function(PackageVersions) updates);
+      PackageVersions Function(PackageVersions) updates, {String? scope});
 
   /// Yanks a given version of a package
-  FutureOr<PackageVersions> yankVersionOfPackage(String name, Version version);
+  FutureOr<PackageVersions> yankVersionOfPackage(String name, Version version, {String? scope});
 
   /// Deprecates a given version of a package
   FutureOr<PackageVersions> deprecateVersionOfPackage(
-      String name, Version version);
+      String name, Version version, {String? scope});
 
   /// Get a package
-  FutureOr<Package> getPackage(String name, {String? language});
+  FutureOr<Package> getPackage(String name, {String? language, String? scope});
 
   /// Get a specific version of a package
-  FutureOr<PackageVersions> getPackageWithVersion(String name, Version version);
+  FutureOr<PackageVersions> getPackageWithVersion(String name, Version version, {String? scope});
 
   /// Get all versions of a package
   FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(String name,
-      {Package? package});
+      {Package? package, String? scope});
 
   /// Get all versions of a package via [Stream]
-  Stream<PackageVersions> getAllVersionsOfPackageStream(String name);
+  Stream<PackageVersions> getAllVersionsOfPackageStream(String name, {String? scope});
 
   /// Get packages
   FutureOr<Iterable<Package>> getPackages();
@@ -129,7 +145,7 @@ abstract interface class PrittDatabaseInterface
 
   /// Get contributors for a specific package
   FutureOr<Map<User, Iterable<Privileges>>> getContributorsForPackage(
-      String name);
+      String name, {String? scope});
 
   /// Get contributors for a specific package via [Stream]
   Stream<User> getContributorsForPackageStream(String name);
@@ -168,4 +184,60 @@ abstract interface class PrittDatabaseInterface
 
   /// Get a user by access token
   FutureOr<User> getUserByAccessToken(String accessToken);
+
+  /// Get the organizations a user is part of
+  FutureOr<Iterable<Scope>> getOrganizationsForUser(String id);
+
+  /// Get the organizations a user is part of via [Stream]
+  Stream<Scope> getOrganizationsForUserStream(String id);
+
+  /// Get organization information given the name of the organization
+  FutureOr<Scope> getOrganizationByName(String name);
+
+  /// Get all organizations
+  FutureOr<Iterable<Scope>> getOrganizations();
+  /// Get all organizations via [Stream]
+  Stream<Scope> getOrganizationsStream();
+
+  /// Create a new organization
+  FutureOr<Scope> createOrganization({
+    required String name,
+    String? description,
+    required User owner,
+  });
+
+  /// Update an organization
+  FutureOr<Scope> updateOrganization({
+    required String name,
+    Scope Function(Scope)? updates,
+  });
+
+  /// Get packages for a specific organization by its [name]
+  FutureOr<Iterable<Package>> getPackagesForOrganization(String name);
+
+  /// Get packages for a specific organization via [Stream]
+  Stream<Package> getPackagesForOrganizationStream(String name);
+
+  /// Get all members of an organization
+  FutureOr<Map<User, Iterable<Privileges>>> getMembersForOrganization(
+      String name);
+  /// Get all members of an organization via [Stream]
+  Stream<User> getMembersForOrganizationStream(String name);
+  /// Add a user to an organization
+  FutureOr<ScopeUsers> addUserToOrganization({
+    required String organizationName,
+    required User user,
+    Iterable<Privileges> privileges = const [],
+  });
+  /// Remove a user from an organization
+  FutureOr<ScopeUsers> removeUserFromOrganization({
+    required String organizationName,
+    required User user,
+  });
+  /// Update a user's privileges in an organization
+  FutureOr<ScopeUsers> updateUserPrivilegesInOrganization({
+    required String organizationName,
+    required User user,
+    Iterable<Privileges> privileges = const [],
+  });
 }

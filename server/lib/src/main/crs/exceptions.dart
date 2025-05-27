@@ -47,7 +47,8 @@ enum CRSExceptionType {
 class UnauthorizedException implements Exception {
   final String message;
   final String? token;
-  UnauthorizedException(this.message, {this.token});
+  final Object? source;
+  UnauthorizedException(this.message, {this.token, this.source});
 }
 
 class ExpiredTokenException implements Exception {

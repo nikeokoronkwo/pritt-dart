@@ -120,12 +120,36 @@ class CoreRegistryService implements CRSController {
     await db.disconnect();
   }
 
+  (String name, {String? scope}) parsePackageName(String packageName) {
+    final parts = packageName.split('/');
+    if (parts.length > 1) {
+      if (parts.first.startsWith('@')) {
+        // Scoped package
+        if (parts.length < 2) {
+          throw ArgumentError('Invalid scoped package name: $packageName. Package names should only start with @ and be followed by a package name if scoped.');
+        }
+        // Return the last part as the package name and the first part as the scope
+        if (parts.length > 2) {
+          throw ArgumentError(
+              'Invalid scoped package name: $packageName, expected format: @scope/package');
+        }
+      return (parts.last, scope: parts.first.replaceFirst('@', ''));
+      } else {
+        throw ArgumentError(
+          'Invalid package name: $packageName, expected format: @scope/package or package');
+      }
+    } else {
+      return (parts.first, scope: null);
+    }
+  }
+
   @override
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
       String packageName, String version,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      final file = await ofs.get('/$packageName/$version.tgz');
+      final (name, scope: scope) = parsePackageName(packageName);
+      final file = await ofs.get('/${scope == null ? name : '$scope/$name'}/$version.tgz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
         file.contentType ?? 'application/gzip',
@@ -155,7 +179,8 @@ class CoreRegistryService implements CRSController {
   Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      final package = await db.getPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final package = await db.getPackage(name, scope: scope);
       final latestVersion = package.version;
 
       if (language != null && package.language != language) {
@@ -206,7 +231,8 @@ class CoreRegistryService implements CRSController {
   Future<CRSResponse<Package>> getPackageDetails(String packageName,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      final package = await db.getPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final package = await db.getPackage(name, scope: scope);
 
       if (language != null && package.language != language) {
         return CRSResponse.error(
@@ -247,9 +273,9 @@ class CoreRegistryService implements CRSController {
       String packageName, String version,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      // TODO: Implement [db.getPackageWithVersion] method
+      final (name, scope: scope) = parsePackageName(packageName);
       final pkg =
-          await db.getPackageWithVersion(packageName, Version.parse(version));
+          await db.getPackageWithVersion(name, Version.parse(version), scope: scope);
 
       if (language != null && pkg.package.language != language) {
         return CRSResponse.error(
@@ -291,7 +317,8 @@ class CoreRegistryService implements CRSController {
       {String? language,
       Map<String, dynamic>? env}) async {
     try {
-      final packages = await db.getAllVersionsOfPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final packages = await db.getAllVersionsOfPackage(name, scope: scope);
 
       if (language != null &&
           !packages.every((pkg) => pkg.package.language == language)) {
@@ -327,7 +354,8 @@ class CoreRegistryService implements CRSController {
   CRSResponse<Stream<PackageVersions>> getPackagesStream(String packageName,
       {String? language, Map<String, dynamic>? env}) {
     try {
-      final packages = db.getAllVersionsOfPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final packages = db.getAllVersionsOfPackage(name, scope: scope);
 
       var pkgStream = Stream.fromFuture(packages)
           .asyncExpand((e) => Stream.fromIterable(e));
@@ -356,7 +384,8 @@ class CoreRegistryService implements CRSController {
       {String? language,
       Map<String, dynamic>? env}) async {
     try {
-      final contributors = await db.getContributorsForPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final contributors = await db.getContributorsForPackage(name, scope: scope);
 
       return CRSResponse.success(
         body: contributors,

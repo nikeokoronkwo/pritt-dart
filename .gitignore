@@ -24,3 +24,7 @@ node_modules
 dist
 
 out
+
+web-ref
+
+*.pem
