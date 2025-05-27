@@ -620,6 +620,16 @@ class YankAdapterResponse {
 }
 
 @JsonSerializable()
+class YankPackageByVersionRequest {
+  YankPackageByVersionRequest();
+
+  factory YankPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
+      _$YankPackageByVersionRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$YankPackageByVersionRequestToJson(this);
+}
+
+@JsonSerializable()
 class YankPackageByVersionResponse {
   YankPackageByVersionResponse();
 
@@ -698,39 +708,133 @@ abstract interface class PrittInterface {
     bool all,
   });
 
-  /// **Get a package from the Pritt Server with the given name and specified version**
+  /// **Get a package from the Pritt Server with the given name**
+  /// GET /api/package/@{scope}/{name}
+  ///
+  /// Throws:
+  ///   - [NotFoundError] on status code 404
+  _i3.FutureOr<GetPackageResponse> getPackageByNameWithScope({
+    required String scope,
+    required String name,
+    String lang,
+    bool all,
+  });
+
+  /// **Publish a package to the Pritt Server**
+  /// POST /api/package/@{scope}/{name}
+  ///
+  /// This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+  /// Throws:
+  ///   - [UnauthorizedError] on status code 401
+  _i3.FutureOr<PublishPackageResponse> publishPackageWithScope(
+    PublishPackageRequest body, {
+    required String scope,
+    required String name,
+    String lang,
+    bool all,
+  });
+
+  /// **Yank an empty package**
+  /// DELETE /api/package/@{scope}/{name}
+  ///
+  /// This endpoint is for yanking packages from the pritt registry
+  /// Throws:
+  ///   - [UnauthorizedError] on status code 401
+  ///   - [NotFoundError] on status code 404
+  _i3.FutureOr<YankPackageResponse> yankPackageByNameWithScope(
+    YankPackageRequest body, {
+    required String scope,
+    required String name,
+    String lang,
+    bool all,
+  });
+
+  /// **Get a package from the Pritt Server with the given name**
   /// GET /api/package/{name}/{version}
   ///
   /// Throws:
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion({
+  _i3.FutureOr<GetPackageByVersionResponse> getPackageByNameWithVersion({
     required String name,
+    String lang,
     required String version,
+    bool all,
   });
 
-  /// **Publish a package to the Pritt Server with a specified version**
+  /// **Publish a package to the Pritt Server**
   /// POST /api/package/{name}/{version}
   ///
-  /// This endpoint is used for publishing new versions of existing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed. To publish a new package, use the `/api/package/{name}` POST
+  /// This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
-  _i3.FutureOr<PublishPackageByVersionResponse> publishPackageWithVersion(
+  _i3.FutureOr<PublishPackageByVersionResponse> publishPackageVersion(
     PublishPackageByVersionRequest body, {
     required String name,
+    String lang,
     required String version,
+    bool all,
   });
 
-  /// **Yank a version of a package **
+  /// **Yank an empty package**
   /// DELETE /api/package/{name}/{version}
   ///
-  /// This endpoint is for yanking a published version of a package from the pritt registry
+  /// This endpoint is for yanking packages from the pritt registry
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
-  ///   - [UnauthorizedError] on status code 403
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageResponse> yankPackageByNameAndVersion({
+  _i3.FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
+    YankPackageByVersionResponse body, {
+    required String name,
+    String lang,
+    required String version,
+    bool all,
+  });
+
+  /// **Get a package from the Pritt Server with the given name**
+  /// GET /api/package/@{scope}/{name}/{version}
+  ///
+  /// Throws:
+  ///   - [NotFoundError] on status code 404
+  _i3.FutureOr<GetPackageByVersionResponse>
+      getPackageByNameWithScopeAndVersion({
+    required String scope,
     required String name,
     required String version,
+    String lang,
+    bool all,
+  });
+
+  /// **Publish a package to the Pritt Server**
+  /// POST /api/package/@{scope}/{name}/{version}
+  ///
+  /// This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+  /// Throws:
+  ///   - [UnauthorizedError] on status code 401
+  _i3.FutureOr<PublishPackageByVersionResponse>
+      publishPackageWithScopeAndVersion(
+    PublishPackageByVersionRequest body, {
+    required String scope,
+    required String name,
+    required String version,
+    String lang,
+    bool all,
+  });
+
+  /// **Yank an empty package**
+  /// DELETE /api/package/@{scope}/{name}/{version}
+  ///
+  /// This endpoint is for yanking packages from the pritt registry
+  /// Throws:
+  ///   - [UnauthorizedError] on status code 401
+  ///   - [NotFoundError] on status code 404
+  _i3.FutureOr<YankPackageByVersionRequest>
+      yankPackageByNameWithScopeAndVersion(
+    YankPackageByVersionResponse body, {
+    required String scope,
+    required String name,
+    required String version,
+    String lang,
+    bool all,
   });
 
   /// **Upload a package to the Pritt Server**

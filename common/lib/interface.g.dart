@@ -409,6 +409,14 @@ Map<String, dynamic> _$YankAdapterResponseToJson(
         YankAdapterResponse instance) =>
     <String, dynamic>{};
 
+YankPackageByVersionRequest _$YankPackageByVersionRequestFromJson(
+        Map<String, dynamic> json) =>
+    YankPackageByVersionRequest();
+
+Map<String, dynamic> _$YankPackageByVersionRequestToJson(
+        YankPackageByVersionRequest instance) =>
+    <String, dynamic>{};
+
 YankPackageByVersionResponse _$YankPackageByVersionResponseFromJson(
         Map<String, dynamic> json) =>
     YankPackageByVersionResponse();
