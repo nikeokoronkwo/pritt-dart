@@ -1,0 +1,6 @@
+module GetCurrentUserResponse
+
+extends "../GetUserResponse/schema.pkl"
+
+/// The ID of the user
+id: String

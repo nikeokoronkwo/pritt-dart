@@ -1356,6 +1356,30 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
       ) as _i7.FutureOr<_i3.YankPackageByVersionRequest>);
 
   @override
+  _i7.FutureOr<_i3.GetUserResponse> getCurrentUser() => (super.noSuchMethod(
+        Invocation.method(
+          #getCurrentUser,
+          [],
+        ),
+        returnValue:
+            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
+          this,
+          Invocation.method(
+            #getCurrentUser,
+            [],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
+          this,
+          Invocation.method(
+            #getCurrentUser,
+            [],
+          ),
+        )),
+      ) as _i7.FutureOr<_i3.GetUserResponse>);
+
+  @override
   void addHeaderEntry(
     String? key,
     String? value,

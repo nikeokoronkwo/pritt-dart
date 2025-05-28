@@ -830,6 +830,36 @@ paths {
             }
         }
     }
+    ["/api/user"] {
+        get {
+            summary = "Get the current user from Pritt"
+            description = "Get user information from Pritt about a particular user via auth"
+            operationId = "getCurrentUser"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetUserResponse")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
     ["/api/scope/@{scope}"] {
         parameters {
             new {

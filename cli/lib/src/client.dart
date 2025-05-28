@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:pritt_cli/src/client/authentication.dart';
 import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
 import 'package:pritt_common/interface.dart';
 
-typedef Plugin = GetAdapterResponse;
-
 class PrittClient extends ApiClient implements PrittInterface {
-  PrittClient({super.url});
+  PrittClient({super.url, String? accessToken}) : super(authentication: accessToken == null ? null : HttpBearerAuth(accessToken: accessToken));
 
   @override
   FutureOr<AddAdapterResponse> addAdapterWithId(AddAdapterRequest body,
@@ -220,6 +219,12 @@ class PrittClient extends ApiClient implements PrittInterface {
       {required String name,
       required String version}) {
     // TODO: implement yankPackageVersionByName
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetUserResponse> getCurrentUser() {
+    // TODO: implement getCurrentUser
     throw UnimplementedError();
   }
 }

@@ -8,10 +8,16 @@ Future<User?> checkAuthorization(String authHeader,
       authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
   // check if the token is valid
   try {
-    final user = await crs.db.checkAuthorization(token);
-    if (user == null) {
+    final authResults = await crs.db.checkAuthorization(token);
+    if (authResults == null) {
       return null;
     }
+
+    // double check
+    final (user: user, metadata: meta) = authResults;
+
+    if (user.name != meta.name || user.email != meta.email) return null;
+
     return user;
   } catch (e) {
     if (throwExceptions) rethrow;

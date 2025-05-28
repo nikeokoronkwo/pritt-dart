@@ -3,7 +3,17 @@ import "shared.pkl" as s
 open class Plugin {
   name: String
 
+  version: s.Version
+
+  /// The description of the adapter
   description: String?
 
-  version: s.Version
+  /// The language the adapter is associated with
+  language: String?
+
+  /// The date the adapter was uploaded
+  uploaded_at: String
+
+  /// The url link to the source code of the adapter, if any
+  source_url: String?
 }

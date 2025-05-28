@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:pritt_cli/src/cli/table.dart';
 import 'package:pritt_cli/src/client.dart';
+import 'package:pritt_cli/src/utils/typedefs.dart';
 import 'package:pritt_common/interface.dart';
 
 enum TerminalSize {

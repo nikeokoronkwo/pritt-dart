@@ -50,24 +50,16 @@ class LoginCommand extends PrittCommand {
     // check if user is logged in
     var userCredentials = await UserCredentials.fetch();
 
-    if (userCredentials == null) {
+    if (userCredentials == null || userCredentials.isExpired) {
       // else log user in
       userCredentials = await loginUser(client, rootRunner);
+      await userCredentials.update();
     } else {
-      if (userCredentials.accessTokenExpires.isBefore(DateTime.now())) {
-        // if user is logged in, but token is expired, log user in
-        logger.info('Access token expired. Logging in again...');
-        // log user in
-        userCredentials = await loginUser(client, rootRunner);
-      } else {
-        // else
-        // if user is logged in, and token is not expired, display user info
-        logger.info("You are already logged in...");
-      }
-      // if user is logged in, state that user is logged in
+      // if user is logged in, and token is not expired, display user info
+      logger.info("You are already logged in...");
     }
 
-    await userCredentials.update();
+
 
     // get user info from login details
 
