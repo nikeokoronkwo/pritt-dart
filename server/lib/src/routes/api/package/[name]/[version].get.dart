@@ -40,7 +40,12 @@ final handler = defineRequestHandler((event) async {
                 created: sig.created.toIso8601String()))
             .toList(),
         readme: pkg.readme,
-        config: pkg.config == null ? null : common.ConfigFile(name: pkg.configName!, data: pkg.config!,),
+        config: pkg.config == null
+            ? null
+            : common.ConfigFile(
+                name: pkg.configName!,
+                data: pkg.config!,
+              ),
         deprecated: (isAuthorized) ? pkg.isDeprecated : null,
         yanked: (isAuthorized) ? pkg.isYanked : null,
         deprecationMessage: (isAuthorized) ? pkg.deprecationMessage : null,

@@ -125,7 +125,8 @@ final handler = defineRequestHandler((event) async {
         setResponseCode(event, 404);
         return common.NotFoundError(
                 error: 'Version not found',
-                message: 'Some versions of the package @$pkgScope/$pkgName were not found')
+                message:
+                    'Some versions of the package @$pkgScope/$pkgName were not found')
             .toJson();
       default:
         setResponseCode(event, 500);

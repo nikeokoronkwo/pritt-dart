@@ -1,1 +1,21 @@
 module GetAdapterResponse
+
+import "../../lib/shared.pkl" as s
+
+/// The name of the adapter
+name: String
+
+/// The current version of the adapter in system
+version: s.Version
+
+/// The description of the adapter
+description: String?
+
+/// The language the adapter is associated with
+language: String?
+
+/// The date the adapter was uploaded
+uploaded_at: String
+
+/// The url link to the source code of the adapter, if any
+source_url: String?

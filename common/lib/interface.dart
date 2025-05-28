@@ -185,10 +185,29 @@ class ExpiredError {
 
 @JsonSerializable()
 class GetAdapterResponse {
-  GetAdapterResponse();
+  GetAdapterResponse({
+    required this.name,
+    required this.version,
+    this.description,
+    this.language,
+    required this.uploaded_at,
+    this.source_url,
+  });
 
   factory GetAdapterResponse.fromJson(Map<String, dynamic> json) =>
       _$GetAdapterResponseFromJson(json);
+
+  final String name;
+
+  final String version;
+
+  final String? description;
+
+  final String? language;
+
+  final String uploaded_at;
+
+  final String? source_url;
 
   Map<String, dynamic> toJson() => _$GetAdapterResponseToJson(this);
 }
@@ -204,13 +223,114 @@ class GetAdaptersByLangResponse {
 }
 
 @JsonSerializable()
+class Plugin {
+  Plugin({
+    required this.name,
+    required this.version,
+    this.description,
+    this.language,
+    required this.uploaded_at,
+    this.source_url,
+  });
+
+  factory Plugin.fromJson(Map<String, dynamic> json) => _$PluginFromJson(json);
+
+  final String name;
+
+  final String version;
+
+  final String? description;
+
+  final String? language;
+
+  final String uploaded_at;
+
+  final String? source_url;
+
+  Map<String, dynamic> toJson() => _$PluginToJson(this);
+}
+
+@JsonSerializable()
 class GetAdaptersResponse {
-  GetAdaptersResponse();
+  GetAdaptersResponse({required this.adapters});
 
   factory GetAdaptersResponse.fromJson(Map<String, dynamic> json) =>
       _$GetAdaptersResponseFromJson(json);
 
+  final List<Plugin>? adapters;
+
   Map<String, dynamic> toJson() => _$GetAdaptersResponseToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum UserPackageRelationship {
+  author('author'),
+  contributor('contributor');
+
+  const UserPackageRelationship(this.value);
+
+  final String value;
+}
+
+@JsonEnum(valueField: 'value')
+enum Privilege {
+  read('read'),
+  write('write'),
+  publish('publish'),
+  ultimate('ultimate');
+
+  const Privilege(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class PackageMap {
+  PackageMap({
+    required this.name,
+    required this.type,
+    this.privileges = const [],
+  });
+
+  factory PackageMap.fromJson(Map<String, dynamic> json) =>
+      _$PackageMapFromJson(json);
+
+  final String name;
+
+  final UserPackageRelationship type;
+
+  final List<Privilege>? privileges;
+
+  Map<String, dynamic> toJson() => _$PackageMapToJson(this);
+}
+
+@JsonSerializable()
+class GetCurrentUserResponse {
+  GetCurrentUserResponse({
+    required this.name,
+    required this.email,
+    required this.created_at,
+    required this.updated_at,
+    required this.packages,
+    required this.id,
+  });
+
+  factory GetCurrentUserResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetCurrentUserResponseFromJson(json);
+
+  final String name;
+
+  final String email;
+
+  final String created_at;
+
+  final String updated_at;
+
+  final List<PackageMap>? packages;
+
+  final String id;
+
+  Map<String, dynamic> toJson() => _$GetCurrentUserResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -227,18 +347,6 @@ class Author {
   final String email;
 
   Map<String, dynamic> toJson() => _$AuthorToJson(this);
-}
-
-@JsonEnum(valueField: 'value')
-enum Privilege {
-  read('read'),
-  write('write'),
-  publish('publish'),
-  ultimate('ultimate');
-
-  const Privilege(this.value);
-
-  final String value;
 }
 
 @JsonSerializable()
@@ -503,34 +611,21 @@ class GetPackagesResponse {
   Map<String, dynamic> toJson() => _$GetPackagesResponseToJson(this);
 }
 
-@JsonEnum(valueField: 'value')
-enum UserPackageRelationship {
-  author('author'),
-  contributor('contributor');
-
-  const UserPackageRelationship(this.value);
-
-  final String value;
-}
-
 @JsonSerializable()
-class PackageMap {
-  PackageMap({
+class GetScopeResponse {
+  GetScopeResponse({
     required this.name,
-    required this.type,
-    this.privileges = const [],
+    required this.is_member,
   });
 
-  factory PackageMap.fromJson(Map<String, dynamic> json) =>
-      _$PackageMapFromJson(json);
+  factory GetScopeResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetScopeResponseFromJson(json);
 
   final String name;
 
-  final UserPackageRelationship type;
+  final bool is_member;
 
-  final List<Privilege>? privileges;
-
-  Map<String, dynamic> toJson() => _$PackageMapToJson(this);
+  Map<String, dynamic> toJson() => _$GetScopeResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -743,7 +838,10 @@ abstract interface class PrittInterface {
   /// GET /api/packages
   ///
   /// This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
-  _i3.FutureOr<GetPackagesResponse> getPackages({String index});
+  _i3.FutureOr<GetPackagesResponse> getPackages({
+    String index,
+    String user,
+  });
 
   /// **Get a package from the Pritt Server with the given name**
   /// GET /api/package/{name}
@@ -751,9 +849,9 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<GetPackageResponse> getPackageByName({
-    required String name,
     String lang,
     bool all,
+    required String name,
   });
 
   /// **Publish a package to the Pritt Server**
@@ -765,8 +863,6 @@ abstract interface class PrittInterface {
   _i3.FutureOr<PublishPackageResponse> publishPackage(
     PublishPackageRequest body, {
     required String name,
-    String lang,
-    bool all,
   });
 
   /// **Yank an empty package**
@@ -779,8 +875,6 @@ abstract interface class PrittInterface {
   _i3.FutureOr<YankPackageResponse> yankPackageByName(
     YankPackageRequest body, {
     required String name,
-    String lang,
-    bool all,
   });
 
   /// **Get a package from the Pritt Server with the given name**
@@ -789,10 +883,10 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<GetPackageResponse> getPackageByNameWithScope({
-    required String scope,
-    required String name,
     String lang,
     bool all,
+    required String scope,
+    required String name,
   });
 
   /// **Publish a package to the Pritt Server**
@@ -805,8 +899,6 @@ abstract interface class PrittInterface {
     PublishPackageRequest body, {
     required String scope,
     required String name,
-    String lang,
-    bool all,
   });
 
   /// **Yank an empty package**
@@ -820,8 +912,6 @@ abstract interface class PrittInterface {
     YankPackageRequest body, {
     required String scope,
     required String name,
-    String lang,
-    bool all,
   });
 
   /// **Get a package from the Pritt Server with the given name**
@@ -830,10 +920,10 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<GetPackageByVersionResponse> getPackageByNameWithVersion({
-    required String name,
     String lang,
-    required String version,
     bool all,
+    required String name,
+    required String version,
   });
 
   /// **Publish a package to the Pritt Server**
@@ -845,9 +935,7 @@ abstract interface class PrittInterface {
   _i3.FutureOr<PublishPackageByVersionResponse> publishPackageVersion(
     PublishPackageByVersionRequest body, {
     required String name,
-    String lang,
     required String version,
-    bool all,
   });
 
   /// **Yank an empty package**
@@ -860,9 +948,7 @@ abstract interface class PrittInterface {
   _i3.FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
     YankPackageByVersionResponse body, {
     required String name,
-    String lang,
     required String version,
-    bool all,
   });
 
   /// **Get a package from the Pritt Server with the given name**
@@ -872,11 +958,11 @@ abstract interface class PrittInterface {
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<GetPackageByVersionResponse>
       getPackageByNameWithScopeAndVersion({
+    String lang,
+    bool all,
     required String scope,
     required String name,
     required String version,
-    String lang,
-    bool all,
   });
 
   /// **Publish a package to the Pritt Server**
@@ -891,8 +977,6 @@ abstract interface class PrittInterface {
     required String scope,
     required String name,
     required String version,
-    String lang,
-    bool all,
   });
 
   /// **Yank an empty package**
@@ -908,8 +992,6 @@ abstract interface class PrittInterface {
     required String scope,
     required String name,
     required String version,
-    String lang,
-    bool all,
   });
 
   /// **Upload a package to the Pritt Server**
@@ -945,6 +1027,26 @@ abstract interface class PrittInterface {
     AddUserRequest body, {
     required String id,
   });
+
+  /// **Get the current user from Pritt**
+  /// GET /api/user
+  ///
+  /// Get user information from Pritt about a particular user via auth
+  /// Throws:
+  ///   - [NotFoundError] on status code 404
+  _i3.FutureOr<GetUserResponse> getCurrentUser();
+
+  /// **Get information about a scope/organization**
+  /// GET /api/scope/@{scope}
+  ///
+  /// This GET Request retrieves information about a given scope/organization
+  _i3.FutureOr<GetScopeResponse> getOrganization({required String scope});
+
+  /// **Get all packages from the Pritt Server for a given scope**
+  /// GET /api/scope/@{scope}/packages
+  ///
+  /// This GET Request retrieves metadata about all the packages in the registry for a given scope. To get more information on a specific package use /api/package/@{scope}/{name}
+  _i3.FutureOr<GetPackagesResponse> getOrgPackages({required String scope});
 
   /// **Get all custom adapters**
   /// GET /api/adapters

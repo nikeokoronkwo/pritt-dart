@@ -60,8 +60,9 @@ void main(List<String> args) async {
     print("Generated types at ${results['out'] ?? '.'}");
 
     exit(0);
-  } catch (e) {
+  } catch (e, stackTrace) {
     print(e);
+    print(stackTrace);
     exit(1);
   }
 }

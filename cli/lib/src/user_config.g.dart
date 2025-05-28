@@ -12,6 +12,7 @@ UserCredentials _$UserCredentialsFromJson(Map<String, dynamic> json) =>
       accessToken: json['access_token'] as String,
       accessTokenExpires:
           DateTime.parse(json['access_token_expires'] as String),
+      id: json['user_id'] as String,
     );
 
 Map<String, dynamic> _$UserCredentialsToJson(UserCredentials instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$UserCredentialsToJson(UserCredentials instance) =>
       'uri': instance.uri.toString(),
       'access_token': instance.accessToken,
       'access_token_expires': instance.accessTokenExpires.toIso8601String(),
+      'user_id': instance.id,
     };

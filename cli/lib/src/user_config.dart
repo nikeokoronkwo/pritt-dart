@@ -28,24 +28,28 @@ class UserCredentials {
   @JsonKey(name: 'access_token_expires')
   DateTime accessTokenExpires;
 
+  /// The user id
+  @JsonKey(name: 'user_id')
+  String id;
+
   static final _file = File(p.join(homeDirectory, '.pritt', 'config.json'));
 
   String get path => _file.path;
 
   UserCredentials(
-      {Uri? uri, required this.accessToken, required this.accessTokenExpires})
+      {Uri? uri, required this.accessToken, required this.accessTokenExpires, required this.id})
       : uri = uri ?? Uri.parse(mainPrittInstance);
 
   /// [duration] in seconds
   factory UserCredentials.fromExpirationDuration(
-      {required String accessToken, required int duration, Uri? uri}) {
+      {required String accessToken, required int duration, Uri? uri, required String id}) {
     uri ??= Uri.parse(mainPrittInstance);
 
     final timeNow = DateTime.now();
     final timeExpiration = timeNow.add(Duration(seconds: duration));
 
     return UserCredentials(
-        uri: uri, accessToken: accessToken, accessTokenExpires: timeExpiration);
+        uri: uri, accessToken: accessToken, accessTokenExpires: timeExpiration, id: id);
   }
 
   factory UserCredentials.fromJson(Map<String, dynamic> json) =>
@@ -64,14 +68,14 @@ class UserCredentials {
   }
 
   static Future<UserCredentials> create(String accessToken,
-      {Uri? uri, int? accessTokenDuration}) async {
+      {Uri? uri, int? accessTokenDuration, required String id}) async {
     // give default duration of
     accessTokenDuration ??= (7 * 4 * 3) * (24 * 3600);
 
     // create or overwrite configuration file
     try {
       final credentialsObject = UserCredentials.fromExpirationDuration(
-          accessToken: accessToken, duration: accessTokenDuration, uri: uri);
+          accessToken: accessToken, duration: accessTokenDuration, uri: uri, id: id);
 
       await _file.writeAsString(json.encode(credentialsObject.toJson()));
 
@@ -116,6 +120,8 @@ class UserCredentials {
 
     return this;
   }
+
+  bool get isExpired => accessTokenExpires.isBefore(DateTime.now());
 }
 
 UserCredentials loginUser() {

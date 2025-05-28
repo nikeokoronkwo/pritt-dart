@@ -59,6 +59,15 @@ paths {
                     type = "string"
                 }
             }
+            new {
+                name = "user"
+                `in` = "query"
+                required = false
+                description = "Pass a user id to show"
+                schema {
+                    type = "string"
+                }
+            }
         }
         get {
             summary = "Get all packages from the Pritt Server"
@@ -88,28 +97,30 @@ paths {
                     type = "string"
                 }
             }
-            new {
-                name = "lang"
-                `in` = "query"
-                required = false
-                description = "The language associated with the package"
-                schema {
-                    type = "string"
-                }
-            }
-            new {
-                name = "all"
-                `in` = "query"
-                required = false
-                description = "Whether to get all the versions of the package, including yanked and deprecated versions" 
-                schema {
-                    type = "boolean"
-                }
-            }
         }
         get {
             operationId = "getPackageByName"
             summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -233,28 +244,30 @@ paths {
                     type = "string"
                 }
             }
-            new {
-                name = "lang"
-                `in` = "query"
-                required = false
-                description = "The language associated with the package"
-                schema {
-                    type = "string"
-                }
-            }
-            new {
-                name = "all"
-                `in` = "query"
-                required = false
-                description = "Whether to get all the versions of the package, including yanked and deprecated versions" 
-                schema {
-                    type = "boolean"
-                }
-            }
         }
         get {
             operationId = "getPackageByNameWithScope"
             summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -370,15 +383,6 @@ paths {
                 }
             }
             new {
-                name = "lang"
-                `in` = "query"
-                required = false
-                description = "The language associated with the package"
-                schema {
-                    type = "string"
-                }
-            }
-            new {
                 name = "version"
                 `in` = "path"
                 required = true
@@ -387,19 +391,30 @@ paths {
                     type = "string"
                 }
             }
-            new {
-                name = "all"
-                `in` = "query"
-                required = false
-                description = "Whether to get all the versions of the package, including yanked and deprecated versions" 
-                schema {
-                    type = "boolean"
-                }
-            }
         }
         get {
             operationId = "getPackageByNameWithVersion"
             summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -532,28 +547,30 @@ paths {
                     type = "string"
                 }
             }
-            new {
-                name = "lang"
-                `in` = "query"
-                required = false
-                description = "The language associated with the package"
-                schema {
-                    type = "string"
-                }
-            }
-            new {
-                name = "all"
-                `in` = "query"
-                required = false
-                description = "Whether to get all the versions of the package, including yanked and deprecated versions" 
-                schema {
-                    type = "boolean"
-                }
-            }
         }
         get {
             operationId = "getPackageByNameWithScopeAndVersion"
             summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -809,6 +826,94 @@ paths {
             security {
                 new {
                     ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/user"] {
+        get {
+            summary = "Get the current user from Pritt"
+            description = "Get user information from Pritt about a particular user via auth"
+            operationId = "getCurrentUser"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetUserResponse")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/scope/@{scope}"] {
+        parameters {
+            new {
+                name = "scope"
+                `in` = "path"
+                required = true
+                description = "The scope name"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get information about a scope/organization"
+            operationId = "getOrganization"
+            description = "This GET Request retrieves information about a given scope/organization"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetScopeResponse")
+                            example = oks["GetScopeResponse"]
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/scope/@{scope}/packages"] {
+        parameters {
+            new {
+                name = "scope"
+                `in` = "path"
+                required = true
+                description = "The scope name"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get all packages from the Pritt Server for a given scope"
+            operationId = "getOrgPackages"
+            description = "This GET Request retrieves metadata about all the packages in the registry for a given scope. To get more information on a specific package use /api/package/@{scope}/{name}"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackagesResponse")
+                            example = oks["GetPackagesResponse"]
+                        }
+                    }
                 }
             }
         }
