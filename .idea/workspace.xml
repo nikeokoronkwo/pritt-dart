@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="CLI: Implement `info`">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Pkl Template" />
+        <option value="Pkl File" />
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;nikeokoronkwo&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/nikeokoronkwo/pritt-dart.git&quot;,
+    &quot;accountId&quot;: &quot;3e8c0017-6a9d-4997-9fdb-bb907bd756f8&quot;
+  }
+}</component>
+  <component name="PklProject">
+    <pkl-project project-file-uri="file://$PROJECT_DIR$/config/PklProject" package-uri="&lt;UNKNOWN&gt;">
+      <declared-dependency name="openapi-contrib" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1.0.3" />
+      <declared-dependency name="openapi" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2.1.3" />
+      <declared-dependency name="toml" uri="package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0" />
+      <declared-dependency name="go" uri="package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.8.0" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1" type="remote" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1.0.3" checksum-sha256="da5191e7b92645424915695d3292aa9d11367e7e476e07d3e7515d6f070cae74" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2" type="remote" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2.1.3" checksum-sha256="84b9669c5bf54f9de43acd4183f8fabbe05258a728e6117182bc2cc94bd63692" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-go/pkl.golang@0" type="remote" uri="package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.8.0" checksum-sha256="75c7687642f5a2177c94ffa9546c2f1a00810c426698dcc7b4dc63d6c89c27f7" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1" type="remote" uri="package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0" checksum-sha256="ab5ec52c453bda3db3b4cb7302a8700ddb4565febc532d5173c0b97e317785d1" />
+      <evaluator-settings />
+    </pkl-project>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2xhLzMKYmO5IIHKYzG81IjiBXqr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Dart Command Line App.CLI.executor": "Run",
+    "Dart Command Line App.Server.executor": "Run",
+    "Dart Command Line App.house.dart.executor": "Run",
+    "Dart Test.CSV Encoding Testing in csv_test.dart.executor": "Run",
+    "Dart Test.Client Testing in list_test.dart.executor": "Run",
+    "Dart Test.Table Testing in table_test.dart.executor": "Run",
+    "Dart Test.Tests in progress_bar_test.dart.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Shell Script.PKL Testing.executor": "Run",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cli/lib/src/cli" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Compound.Full Stack">
+    <configuration name="CSV Encoding Testing in csv_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/csv_test.dart" />
+      <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
+      <option name="testName" value="CSV Encoding Testing" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Client Testing in list_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/list_test.dart" />
+      <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
+      <option name="testName" value="Client Testing" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Table Testing in table_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/table_test.dart" />
+      <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
+      <option name="testName" value="Table Testing" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in progress_bar_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/progress_bar_test.dart" />
+      <option name="testName" value="progress_bar_test.dart" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Compound.Full Stack" />
+      <item itemvalue="Dart Command Line App.CLI" />
+      <item itemvalue="Dart Command Line App.Server" />
+      <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
+      <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+      <item itemvalue="Dart Test.Table Testing in table_test.dart" />
+      <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
+      <item itemvalue="Shell Script.PKL Testing" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
+        <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+        <item itemvalue="Dart Test.Table Testing in table_test.dart" />
+        <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="" />
+      <created>1748385619379</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1748385619379</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added Idea">
+      <option name="closed" value="true" />
+      <created>1748386133597</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748386133597</updated>
+    </task>
+    <task id="LOCAL-00003" summary="CLI: Implement Mock Testing and Table Functionality">
+      <option name="closed" value="true" />
+      <created>1748410162712</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1748410162712</updated>
+    </task>
+    <task id="LOCAL-00004" summary="CLI Updtes (with some server ones as well)&#10;&#10;CLI:&#10;- Completed Table Listing&#10;&#10;Others:&#10;- Updated schema.pkl for various schemas&#10;- Added pkl testing to IntelliJ&#10;- Formatting">
+      <option name="closed" value="true" />
+      <created>1748446848923</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1748446848923</updated>
+    </task>
+    <task id="LOCAL-00005" summary="CLI: Implement `adapter list` and `package list`">
+      <option name="closed" value="true" />
+      <created>1748453271422</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1748453271422</updated>
+    </task>
+    <task id="LOCAL-00006" summary="CLI: Implement `info`">
+      <option name="closed" value="true" />
+      <created>1748455624843</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1748455624843</updated>
+    </task>
+    <task id="LOCAL-00007" summary="CLI: Implement `info`">
+      <option name="closed" value="true" />
+      <created>1748470179157</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1748470179157</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added Idea" />
+    <MESSAGE value="redoing this" />
+    <MESSAGE value="added Idea" />
+    <MESSAGE value="CLI: Implement Mock Testing and Table Functionality" />
+    <MESSAGE value="CLI Updtes (with some server ones as well)&#10;&#10;CLI:&#10;- Completed Table Listing&#10;&#10;Others:&#10;- Updated schema.pkl for various schemas&#10;- Added pkl testing to IntelliJ&#10;- Formatting" />
+    <MESSAGE value="CLI: Implement `adapter list` and `package list`" />
+    <MESSAGE value="CLI: Implemented `info`" />
+    <MESSAGE value="CLI: Implement `info`" />
+    <option name="LAST_COMMIT_MESSAGE" value="CLI: Implement `info`" />
+  </component>
+</project>
