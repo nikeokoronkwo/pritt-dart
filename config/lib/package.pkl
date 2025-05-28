@@ -1,7 +1,8 @@
 
 import "pkl:semver"
 
-typealias Version = String(semver.isValid(this))
+import "shared.pkl" as s
+
 typealias Privilege = "read"|"write"|"publish"|"ultimate"
 
 /// The base definition of a package
@@ -22,7 +23,7 @@ open class Package extends ImplPackage {
 
     description: String?
     
-    version: Version
+    version: s.Version
 
     author: Author
 

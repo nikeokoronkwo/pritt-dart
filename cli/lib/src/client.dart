@@ -4,6 +4,8 @@ import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
 import 'package:pritt_common/interface.dart';
 
+typedef Plugin = GetAdapterResponse;
+
 class PrittClient extends ApiClient implements PrittInterface {
   PrittClient({super.url});
 
@@ -58,6 +60,18 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
+  FutureOr<GetPackagesResponse> getOrgPackages({required String scope}) {
+    // TODO: implement getOrgPackages
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetScopeResponse> getOrganization({required String scope}) {
+    // TODO: implement getOrganization
+    throw UnimplementedError();
+  }
+
+  @override
   FutureOr<StreamedContent> getPackageArchiveWithName() {
     // TODO: implement getPackageArchiveWithName
     throw UnimplementedError();
@@ -65,41 +79,38 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<GetPackageResponse> getPackageByName(
-      {required String name, String? lang, bool? all}) {
+      {String? lang, bool? all, required String name}) {
     // TODO: implement getPackageByName
     throw UnimplementedError();
   }
 
   @override
   FutureOr<GetPackageResponse> getPackageByNameWithScope(
-      {required String scope, required String name, String? lang, bool? all}) {
+      {String? lang, bool? all, required String scope, required String name}) {
     // TODO: implement getPackageByNameWithScope
     throw UnimplementedError();
   }
 
   @override
   FutureOr<GetPackageByVersionResponse> getPackageByNameWithScopeAndVersion(
-      {required String scope,
+      {String? lang,
+      bool? all,
+      required String scope,
       required String name,
-      required String version,
-      String? lang,
-      bool? all}) {
+      required String version}) {
     // TODO: implement getPackageByNameWithScopeAndVersion
     throw UnimplementedError();
   }
 
   @override
   FutureOr<GetPackageByVersionResponse> getPackageByNameWithVersion(
-      {required String name,
-      String? lang,
-      required String version,
-      bool? all}) {
+      {String? lang, bool? all, required String name, required String version}) {
     // TODO: implement getPackageByNameWithVersion
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<GetPackagesResponse> getPackages({String? index}) {
+  FutureOr<GetPackagesResponse> getPackages({String? index, String? user}) {
     // TODO: implement getPackages
     throw UnimplementedError();
   }
@@ -118,7 +129,7 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<PublishPackageResponse> publishPackage(PublishPackageRequest body,
-      {required String name, String? lang, bool? all}) {
+      {required String name}) {
     // TODO: implement publishPackage
     throw UnimplementedError();
   }
@@ -127,9 +138,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   FutureOr<PublishPackageByVersionResponse> publishPackageVersion(
       PublishPackageByVersionRequest body,
       {required String name,
-      String? lang,
-      required String version,
-      bool? all}) {
+      required String version}) {
     // TODO: implement publishPackageVersion
     throw UnimplementedError();
   }
@@ -138,9 +147,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   FutureOr<PublishPackageResponse> publishPackageWithScope(
       PublishPackageRequest body,
       {required String scope,
-      required String name,
-      String? lang,
-      bool? all}) {
+      required String name}) {
     // TODO: implement publishPackageWithScope
     throw UnimplementedError();
   }
@@ -150,9 +157,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       PublishPackageByVersionRequest body,
       {required String scope,
       required String name,
-      required String version,
-      String? lang,
-      bool? all}) {
+      required String version}) {
     // TODO: implement publishPackageWithScopeAndVersion
     throw UnimplementedError();
   }
@@ -185,7 +190,7 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<YankPackageResponse> yankPackageByName(YankPackageRequest body,
-      {required String name, String? lang, bool? all}) {
+      {required String name}) {
     // TODO: implement yankPackageByName
     throw UnimplementedError();
   }
@@ -194,9 +199,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   FutureOr<YankPackageResponse> yankPackageByNameWithScope(
       YankPackageRequest body,
       {required String scope,
-      required String name,
-      String? lang,
-      bool? all}) {
+      required String name}) {
     // TODO: implement yankPackageByNameWithScope
     throw UnimplementedError();
   }
@@ -206,9 +209,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       YankPackageByVersionResponse body,
       {required String scope,
       required String name,
-      required String version,
-      String? lang,
-      bool? all}) {
+      required String version}) {
     // TODO: implement yankPackageByNameWithScopeAndVersion
     throw UnimplementedError();
   }
@@ -217,9 +218,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
       YankPackageByVersionResponse body,
       {required String name,
-      String? lang,
-      required String version,
-      bool? all}) {
+      required String version}) {
     // TODO: implement yankPackageVersionByName
     throw UnimplementedError();
   }

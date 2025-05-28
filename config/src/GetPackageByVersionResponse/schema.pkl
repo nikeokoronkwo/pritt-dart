@@ -1,6 +1,7 @@
 module GetPackageByVersionResponse
 
 import "../../lib/package.pkl" as p
+import "../../lib/shared.pkl" as s
 
 name: String
 
@@ -8,7 +9,7 @@ scope: String?
 
 description: String?
 
-version: p.Version
+version: s.Version
 
 author: p.Author
 

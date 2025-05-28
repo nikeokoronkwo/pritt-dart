@@ -36,5 +36,13 @@ const mockAuthors = [
   (name: 'foo', email: 'foo@example.com'),
   (name: 'bar', email: 'bar@example.com'),
   (name: 'qux', email: 'qux@example.com'),
-  (name: 'pritt', email: 'pritt@pritt.com')
+  (name: 'pritt', email: 'pritt@pritt.com'),
+  (name: 'John Doe', email: 'jdoe@pritt.com'),
+  (name: 'Nike Okoronkwo', email: 'neokoronkwo@pritt.com'),
+  (name: 'Madison Adenuga', email: 'madenuga@pritt.com'),
+  (name: 'Michael Phillips', email: 'mphillips@pritt.com'),
+];
+
+const languages = [
+  'rust', 'cpp', 'c', 'dart'
 ];

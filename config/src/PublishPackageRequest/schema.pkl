@@ -3,12 +3,13 @@ module PublishPackageRequest
 
 import "../../lib/schema.pkl" as ConfigSchema
 import "../../lib/package.pkl"
+import "../../lib/shared.pkl" as s
 
 /// The name of the package to publish
 name: String
 
 /// The version of the package to publish
-version: package.Version
+version: s.Version
 
 /// The configuration info about the package
 config: Mapping<String, Any>

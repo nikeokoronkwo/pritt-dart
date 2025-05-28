@@ -15,8 +15,8 @@ void main() {
     setUp(() {
       client = MockPrittClient();
 
-      when(client.getPackages())
-          .thenReturn(GetPackagesResponse(packages: createMockPackages(scoped: true)));
+      when(client.getPackages()).thenReturn(
+          GetPackagesResponse(packages: createMockPackages(scoped: true)));
     });
 
     test('List Packages Usage', () async {
@@ -25,5 +25,7 @@ void main() {
 
       print(text);
     });
+
+
   });
 }

@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Full Stack" type="CompoundRunConfigurationType">
+    <toRun name="CLI" type="DartCommandLineRunConfigurationType" />
+    <toRun name="Server" type="DartCommandLineRunConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

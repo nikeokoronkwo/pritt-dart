@@ -7,7 +7,7 @@ import 'package:pritt_common/interface.dart';
 
 import '../utils/mocks/packages.dart';
 
-void main(List<String> args) {
+void main() {
   group('Client Testing', () {
     late final MockPrittClient client;
 
@@ -18,8 +18,6 @@ void main(List<String> args) {
           .thenReturn(GetPackagesResponse(packages: createMockPackages()));
     });
 
-    test('Client Usage', () {
-
-    });
+    test('Client Usage', () {});
   });
 }

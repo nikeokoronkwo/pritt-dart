@@ -1,0 +1,9 @@
+import "shared.pkl" as s
+
+open class Plugin {
+  name: String
+
+  description: String?
+
+  version: s.Version
+}

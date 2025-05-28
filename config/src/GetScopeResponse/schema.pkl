@@ -1,0 +1,7 @@
+module GetScopeResponse
+
+/// The name of the organization
+name: String
+
+/// Whether the person requesting is a member
+is_member: Boolean

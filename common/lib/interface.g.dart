@@ -89,10 +89,24 @@ Map<String, dynamic> _$ExpiredErrorToJson(ExpiredError instance) =>
     };
 
 GetAdapterResponse _$GetAdapterResponseFromJson(Map<String, dynamic> json) =>
-    GetAdapterResponse();
+    GetAdapterResponse(
+      name: json['name'] as String,
+      version: json['version'] as String,
+      description: json['description'] as String?,
+      language: json['language'] as String?,
+      uploaded_at: json['uploaded_at'] as String,
+      source_url: json['source_url'] as String?,
+    );
 
 Map<String, dynamic> _$GetAdapterResponseToJson(GetAdapterResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'name': instance.name,
+      'version': instance.version,
+      'description': instance.description,
+      'language': instance.language,
+      'uploaded_at': instance.uploaded_at,
+      'source_url': instance.source_url,
+    };
 
 GetAdaptersByLangResponse _$GetAdaptersByLangResponseFromJson(
         Map<String, dynamic> json) =>
@@ -320,6 +334,18 @@ Map<String, dynamic> _$GetPackagesResponseToJson(
     <String, dynamic>{
       'next_url': instance.next_url,
       'packages': instance.packages,
+    };
+
+GetScopeResponse _$GetScopeResponseFromJson(Map<String, dynamic> json) =>
+    GetScopeResponse(
+      name: json['name'] as String,
+      is_member: json['is_member'] as bool,
+    );
+
+Map<String, dynamic> _$GetScopeResponseToJson(GetScopeResponse instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'is_member': instance.is_member,
     };
 
 PackageMap _$PackageMapFromJson(Map<String, dynamic> json) => PackageMap(

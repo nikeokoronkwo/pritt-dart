@@ -10,9 +10,10 @@ class PackageListCommand extends PrittCommand {
   PackageListCommand() {
     argParser
       ..addOption('language', abbr: 'l', help: 'Filter by language')
-      ..addOption('output',
-          abbr: 'o',
-          help: 'Write as a JSON output to a file',
-          valueHelp: 'file');
+      ..addOption('json',
+          help: 'Write as a JSON output to a file', valueHelp: 'file')
+      ..addOption('all',
+          abbr: 'a',
+          help: 'Write all packages, rather than those owned by a user');
   }
 }

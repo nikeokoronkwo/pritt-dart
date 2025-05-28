@@ -19,8 +19,8 @@ Handler serverHandler() {
     ..get('/api/package/:name', packageNameGet.handler)
     ..get('/api/package/:name/:version', packageNameVersionGet.handler)
     ..get('/api/package/@:scope/:name', packageScopeNameGet.handler)
-    ..get('/api/package/@:scope/:name/:version', packageScopeNameVersionGet.handler)
-    ;
+    ..get('/api/package/@:scope/:name/:version',
+        packageScopeNameVersionGet.handler);
 
   return app.call;
 }

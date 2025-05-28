@@ -1,4 +1,3 @@
-
 import 'package:pritt_common/interface.dart' as common;
 import 'package:pritt_server/pritt_server.dart';
 import 'package:pritt_server/src/main/base/db/schema.dart';
@@ -19,12 +18,14 @@ final handler = defineRequestHandler((event) async {
 
   try {
     // get the package version
-    final pkg = await crs.db.getPackageWithVersion(pkgName, pkgVer, scope: pkgScope);
+    final pkg =
+        await crs.db.getPackageWithVersion(pkgName, pkgVer, scope: pkgScope);
 
     var author = common.Author(
         name: pkg.package.author.name, email: pkg.package.author.email);
 
-    final contributors = await crs.db.getContributorsForPackage(pkgName, scope: pkgScope);
+    final contributors =
+        await crs.db.getContributorsForPackage(pkgName, scope: pkgScope);
 
     // return
     final resp = common.GetPackageByVersionResponse(
@@ -43,7 +44,12 @@ final handler = defineRequestHandler((event) async {
                 created: sig.created.toIso8601String()))
             .toList(),
         readme: pkg.readme,
-        config: pkg.config == null ? null : common.ConfigFile(name: pkg.configName!, data: pkg.config!,),
+        config: pkg.config == null
+            ? null
+            : common.ConfigFile(
+                name: pkg.configName!,
+                data: pkg.config!,
+              ),
         deprecated: (isAuthorized) ? pkg.isDeprecated : null,
         yanked: (isAuthorized) ? pkg.isYanked : null,
         deprecationMessage: (isAuthorized) ? pkg.deprecationMessage : null,
@@ -80,7 +86,8 @@ final handler = defineRequestHandler((event) async {
         setResponseCode(event, 404);
         return common.NotFoundError(
                 error: 'Version not found',
-                message: 'Some versions of the package @$pkgScope/$pkgName were not found')
+                message:
+                    'Some versions of the package @$pkgScope/$pkgName were not found')
             .toJson();
       default:
         setResponseCode(event, 500);

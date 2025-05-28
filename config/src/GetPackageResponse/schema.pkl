@@ -1,12 +1,13 @@
 module GetPackageResponse
 
 import "../../lib/package.pkl"
+import "../../lib/shared.pkl" as s
 
 /// The name of the package retrieved
 name: String
 
 /// The latest version of the package retrieved
-latest_version: String
+latest_version: s.Version
 
 /// The author of the package
 author: package.Author

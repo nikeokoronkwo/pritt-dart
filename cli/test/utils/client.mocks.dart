@@ -124,31 +124,9 @@ class _FakeAuthPollResponse_8 extends _i1.SmartFake
         );
 }
 
-class _FakeGetPackageResponse_9 extends _i1.SmartFake
-    implements _i3.GetPackageResponse {
-  _FakeGetPackageResponse_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeGetPackageByVersionResponse_10 extends _i1.SmartFake
-    implements _i3.GetPackageByVersionResponse {
-  _FakeGetPackageByVersionResponse_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeGetPackagesResponse_11 extends _i1.SmartFake
+class _FakeGetPackagesResponse_9 extends _i1.SmartFake
     implements _i3.GetPackagesResponse {
-  _FakeGetPackagesResponse_11(
+  _FakeGetPackagesResponse_9(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -157,9 +135,42 @@ class _FakeGetPackagesResponse_11 extends _i1.SmartFake
         );
 }
 
-class _FakeGetUserResponse_12 extends _i1.SmartFake
+class _FakeGetScopeResponse_10 extends _i1.SmartFake
+    implements _i3.GetScopeResponse {
+  _FakeGetScopeResponse_10(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGetPackageResponse_11 extends _i1.SmartFake
+    implements _i3.GetPackageResponse {
+  _FakeGetPackageResponse_11(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGetPackageByVersionResponse_12 extends _i1.SmartFake
+    implements _i3.GetPackageByVersionResponse {
+  _FakeGetPackageByVersionResponse_12(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGetUserResponse_13 extends _i1.SmartFake
     implements _i3.GetUserResponse {
-  _FakeGetUserResponse_12(
+  _FakeGetUserResponse_13(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -168,9 +179,9 @@ class _FakeGetUserResponse_12 extends _i1.SmartFake
         );
 }
 
-class _FakeGetUsersResponse_13 extends _i1.SmartFake
+class _FakeGetUsersResponse_14 extends _i1.SmartFake
     implements _i3.GetUsersResponse {
-  _FakeGetUsersResponse_13(
+  _FakeGetUsersResponse_14(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -179,9 +190,9 @@ class _FakeGetUsersResponse_13 extends _i1.SmartFake
         );
 }
 
-class _FakePublishPackageResponse_14 extends _i1.SmartFake
+class _FakePublishPackageResponse_15 extends _i1.SmartFake
     implements _i3.PublishPackageResponse {
-  _FakePublishPackageResponse_14(
+  _FakePublishPackageResponse_15(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -190,9 +201,9 @@ class _FakePublishPackageResponse_14 extends _i1.SmartFake
         );
 }
 
-class _FakePublishPackageByVersionResponse_15 extends _i1.SmartFake
+class _FakePublishPackageByVersionResponse_16 extends _i1.SmartFake
     implements _i3.PublishPackageByVersionResponse {
-  _FakePublishPackageByVersionResponse_15(
+  _FakePublishPackageByVersionResponse_16(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -201,9 +212,9 @@ class _FakePublishPackageByVersionResponse_15 extends _i1.SmartFake
         );
 }
 
-class _FakeUploadAdapterResponse_16 extends _i1.SmartFake
+class _FakeUploadAdapterResponse_17 extends _i1.SmartFake
     implements _i3.UploadAdapterResponse {
-  _FakeUploadAdapterResponse_16(
+  _FakeUploadAdapterResponse_17(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -212,9 +223,9 @@ class _FakeUploadAdapterResponse_16 extends _i1.SmartFake
         );
 }
 
-class _FakeUploadPackageResponse_17 extends _i1.SmartFake
+class _FakeUploadPackageResponse_18 extends _i1.SmartFake
     implements _i3.UploadPackageResponse {
-  _FakeUploadPackageResponse_17(
+  _FakeUploadPackageResponse_18(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -223,9 +234,9 @@ class _FakeUploadPackageResponse_17 extends _i1.SmartFake
         );
 }
 
-class _FakeYankAdapterResponse_18 extends _i1.SmartFake
+class _FakeYankAdapterResponse_19 extends _i1.SmartFake
     implements _i3.YankAdapterResponse {
-  _FakeYankAdapterResponse_18(
+  _FakeYankAdapterResponse_19(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -234,9 +245,9 @@ class _FakeYankAdapterResponse_18 extends _i1.SmartFake
         );
 }
 
-class _FakeYankPackageResponse_19 extends _i1.SmartFake
+class _FakeYankPackageResponse_20 extends _i1.SmartFake
     implements _i3.YankPackageResponse {
-  _FakeYankPackageResponse_19(
+  _FakeYankPackageResponse_20(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -245,9 +256,9 @@ class _FakeYankPackageResponse_19 extends _i1.SmartFake
         );
 }
 
-class _FakeYankPackageByVersionRequest_20 extends _i1.SmartFake
+class _FakeYankPackageByVersionRequest_21 extends _i1.SmartFake
     implements _i3.YankPackageByVersionRequest {
-  _FakeYankPackageByVersionRequest_20(
+  _FakeYankPackageByVersionRequest_21(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -256,8 +267,8 @@ class _FakeYankPackageByVersionRequest_20 extends _i1.SmartFake
         );
 }
 
-class _FakeBaseResponse_21 extends _i1.SmartFake implements _i2.BaseResponse {
-  _FakeBaseResponse_21(
+class _FakeBaseResponse_22 extends _i1.SmartFake implements _i2.BaseResponse {
+  _FakeBaseResponse_22(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -534,6 +545,64 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
       ) as _i7.FutureOr<_i3.AuthPollResponse>);
 
   @override
+  _i7.FutureOr<_i3.GetPackagesResponse> getOrgPackages(
+          {required String? scope}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getOrgPackages,
+          [],
+          {#scope: scope},
+        ),
+        returnValue: _i7.Future<_i3.GetPackagesResponse>.value(
+            _FakeGetPackagesResponse_9(
+          this,
+          Invocation.method(
+            #getOrgPackages,
+            [],
+            {#scope: scope},
+          ),
+        )),
+        returnValueForMissingStub: _i7.Future<_i3.GetPackagesResponse>.value(
+            _FakeGetPackagesResponse_9(
+          this,
+          Invocation.method(
+            #getOrgPackages,
+            [],
+            {#scope: scope},
+          ),
+        )),
+      ) as _i7.FutureOr<_i3.GetPackagesResponse>);
+
+  @override
+  _i7.FutureOr<_i3.GetScopeResponse> getOrganization(
+          {required String? scope}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getOrganization,
+          [],
+          {#scope: scope},
+        ),
+        returnValue:
+            _i7.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
+          this,
+          Invocation.method(
+            #getOrganization,
+            [],
+            {#scope: scope},
+          ),
+        )),
+        returnValueForMissingStub:
+            _i7.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
+          this,
+          Invocation.method(
+            #getOrganization,
+            [],
+            {#scope: scope},
+          ),
+        )),
+      ) as _i7.FutureOr<_i3.GetScopeResponse>);
+
+  @override
   _i7.FutureOr<_i3.StreamedContent> getPackageArchiveWithName() =>
       (super.noSuchMethod(
         Invocation.method(
@@ -560,43 +629,43 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
 
   @override
   _i7.FutureOr<_i3.GetPackageResponse> getPackageByName({
-    required String? name,
     String? lang,
     bool? all,
+    required String? name,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPackageByName,
           [],
           {
-            #name: name,
             #lang: lang,
             #all: all,
+            #name: name,
           },
         ),
         returnValue:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_9(
+            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByName,
             [],
             {
-              #name: name,
               #lang: lang,
               #all: all,
+              #name: name,
             },
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_9(
+            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByName,
             [],
             {
-              #name: name,
               #lang: lang,
               #all: all,
+              #name: name,
             },
           ),
         )),
@@ -604,47 +673,47 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
 
   @override
   _i7.FutureOr<_i3.GetPackageResponse> getPackageByNameWithScope({
-    required String? scope,
-    required String? name,
     String? lang,
     bool? all,
+    required String? scope,
+    required String? name,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPackageByNameWithScope,
           [],
           {
-            #scope: scope,
-            #name: name,
             #lang: lang,
             #all: all,
+            #scope: scope,
+            #name: name,
           },
         ),
         returnValue:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_9(
+            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByNameWithScope,
             [],
             {
-              #scope: scope,
-              #name: name,
               #lang: lang,
               #all: all,
+              #scope: scope,
+              #name: name,
             },
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_9(
+            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByNameWithScope,
             [],
             {
-              #scope: scope,
-              #name: name,
               #lang: lang,
               #all: all,
+              #scope: scope,
+              #name: name,
             },
           ),
         )),
@@ -653,52 +722,52 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   @override
   _i7.FutureOr<_i3.GetPackageByVersionResponse>
       getPackageByNameWithScopeAndVersion({
+    String? lang,
+    bool? all,
     required String? scope,
     required String? name,
     required String? version,
-    String? lang,
-    bool? all,
   }) =>
           (super.noSuchMethod(
             Invocation.method(
               #getPackageByNameWithScopeAndVersion,
               [],
               {
+                #lang: lang,
+                #all: all,
                 #scope: scope,
                 #name: name,
                 #version: version,
-                #lang: lang,
-                #all: all,
               },
             ),
             returnValue: _i7.Future<_i3.GetPackageByVersionResponse>.value(
-                _FakeGetPackageByVersionResponse_10(
+                _FakeGetPackageByVersionResponse_12(
               this,
               Invocation.method(
                 #getPackageByNameWithScopeAndVersion,
                 [],
                 {
+                  #lang: lang,
+                  #all: all,
                   #scope: scope,
                   #name: name,
                   #version: version,
-                  #lang: lang,
-                  #all: all,
                 },
               ),
             )),
             returnValueForMissingStub:
                 _i7.Future<_i3.GetPackageByVersionResponse>.value(
-                    _FakeGetPackageByVersionResponse_10(
+                    _FakeGetPackageByVersionResponse_12(
               this,
               Invocation.method(
                 #getPackageByNameWithScopeAndVersion,
                 [],
                 {
+                  #lang: lang,
+                  #all: all,
                   #scope: scope,
                   #name: name,
                   #version: version,
-                  #lang: lang,
-                  #all: all,
                 },
               ),
             )),
@@ -706,77 +775,89 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
 
   @override
   _i7.FutureOr<_i3.GetPackageByVersionResponse> getPackageByNameWithVersion({
-    required String? name,
     String? lang,
-    required String? version,
     bool? all,
+    required String? name,
+    required String? version,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPackageByNameWithVersion,
           [],
           {
-            #name: name,
             #lang: lang,
-            #version: version,
             #all: all,
+            #name: name,
+            #version: version,
           },
         ),
         returnValue: _i7.Future<_i3.GetPackageByVersionResponse>.value(
-            _FakeGetPackageByVersionResponse_10(
+            _FakeGetPackageByVersionResponse_12(
           this,
           Invocation.method(
             #getPackageByNameWithVersion,
             [],
             {
-              #name: name,
               #lang: lang,
-              #version: version,
               #all: all,
+              #name: name,
+              #version: version,
             },
           ),
         )),
         returnValueForMissingStub:
             _i7.Future<_i3.GetPackageByVersionResponse>.value(
-                _FakeGetPackageByVersionResponse_10(
+                _FakeGetPackageByVersionResponse_12(
           this,
           Invocation.method(
             #getPackageByNameWithVersion,
             [],
             {
-              #name: name,
               #lang: lang,
-              #version: version,
               #all: all,
+              #name: name,
+              #version: version,
             },
           ),
         )),
       ) as _i7.FutureOr<_i3.GetPackageByVersionResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetPackagesResponse> getPackages({String? index}) =>
+  _i7.FutureOr<_i3.GetPackagesResponse> getPackages({
+    String? index,
+    String? user,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPackages,
           [],
-          {#index: index},
+          {
+            #index: index,
+            #user: user,
+          },
         ),
         returnValue: _i7.Future<_i3.GetPackagesResponse>.value(
-            _FakeGetPackagesResponse_11(
+            _FakeGetPackagesResponse_9(
           this,
           Invocation.method(
             #getPackages,
             [],
-            {#index: index},
+            {
+              #index: index,
+              #user: user,
+            },
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.GetPackagesResponse>.value(
-            _FakeGetPackagesResponse_11(
+            _FakeGetPackagesResponse_9(
           this,
           Invocation.method(
             #getPackages,
             [],
-            {#index: index},
+            {
+              #index: index,
+              #user: user,
+            },
           ),
         )),
       ) as _i7.FutureOr<_i3.GetPackagesResponse>);
@@ -790,7 +871,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue:
-            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_12(
+            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
           this,
           Invocation.method(
             #getUserById,
@@ -799,7 +880,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_12(
+            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
           this,
           Invocation.method(
             #getUserById,
@@ -816,7 +897,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [],
         ),
         returnValue:
-            _i7.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_13(
+            _i7.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
           this,
           Invocation.method(
             #getUsers,
@@ -824,7 +905,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_13(
+            _i7.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
           this,
           Invocation.method(
             #getUsers,
@@ -837,43 +918,29 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   _i7.FutureOr<_i3.PublishPackageResponse> publishPackage(
     _i3.PublishPackageRequest? body, {
     required String? name,
-    String? lang,
-    bool? all,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
           #publishPackage,
           [body],
-          {
-            #name: name,
-            #lang: lang,
-            #all: all,
-          },
+          {#name: name},
         ),
         returnValue: _i7.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_14(
+            _FakePublishPackageResponse_15(
           this,
           Invocation.method(
             #publishPackage,
             [body],
-            {
-              #name: name,
-              #lang: lang,
-              #all: all,
-            },
+            {#name: name},
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_14(
+            _FakePublishPackageResponse_15(
           this,
           Invocation.method(
             #publishPackage,
             [body],
-            {
-              #name: name,
-              #lang: lang,
-              #all: all,
-            },
+            {#name: name},
           ),
         )),
       ) as _i7.FutureOr<_i3.PublishPackageResponse>);
@@ -882,9 +949,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   _i7.FutureOr<_i3.PublishPackageByVersionResponse> publishPackageVersion(
     _i3.PublishPackageByVersionRequest? body, {
     required String? name,
-    String? lang,
     required String? version,
-    bool? all,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -892,37 +957,31 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {
             #name: name,
-            #lang: lang,
             #version: version,
-            #all: all,
           },
         ),
         returnValue: _i7.Future<_i3.PublishPackageByVersionResponse>.value(
-            _FakePublishPackageByVersionResponse_15(
+            _FakePublishPackageByVersionResponse_16(
           this,
           Invocation.method(
             #publishPackageVersion,
             [body],
             {
               #name: name,
-              #lang: lang,
               #version: version,
-              #all: all,
             },
           ),
         )),
         returnValueForMissingStub:
             _i7.Future<_i3.PublishPackageByVersionResponse>.value(
-                _FakePublishPackageByVersionResponse_15(
+                _FakePublishPackageByVersionResponse_16(
           this,
           Invocation.method(
             #publishPackageVersion,
             [body],
             {
               #name: name,
-              #lang: lang,
               #version: version,
-              #all: all,
             },
           ),
         )),
@@ -933,8 +992,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     _i3.PublishPackageRequest? body, {
     required String? scope,
     required String? name,
-    String? lang,
-    bool? all,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -943,12 +1000,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {
             #scope: scope,
             #name: name,
-            #lang: lang,
-            #all: all,
           },
         ),
         returnValue: _i7.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_14(
+            _FakePublishPackageResponse_15(
           this,
           Invocation.method(
             #publishPackageWithScope,
@@ -956,13 +1011,11 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {
               #scope: scope,
               #name: name,
-              #lang: lang,
-              #all: all,
             },
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_14(
+            _FakePublishPackageResponse_15(
           this,
           Invocation.method(
             #publishPackageWithScope,
@@ -970,8 +1023,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {
               #scope: scope,
               #name: name,
-              #lang: lang,
-              #all: all,
             },
           ),
         )),
@@ -984,8 +1035,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? scope,
     required String? name,
     required String? version,
-    String? lang,
-    bool? all,
   }) =>
           (super.noSuchMethod(
             Invocation.method(
@@ -995,12 +1044,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 #scope: scope,
                 #name: name,
                 #version: version,
-                #lang: lang,
-                #all: all,
               },
             ),
             returnValue: _i7.Future<_i3.PublishPackageByVersionResponse>.value(
-                _FakePublishPackageByVersionResponse_15(
+                _FakePublishPackageByVersionResponse_16(
               this,
               Invocation.method(
                 #publishPackageWithScopeAndVersion,
@@ -1009,14 +1056,12 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                   #scope: scope,
                   #name: name,
                   #version: version,
-                  #lang: lang,
-                  #all: all,
                 },
               ),
             )),
             returnValueForMissingStub:
                 _i7.Future<_i3.PublishPackageByVersionResponse>.value(
-                    _FakePublishPackageByVersionResponse_15(
+                    _FakePublishPackageByVersionResponse_16(
               this,
               Invocation.method(
                 #publishPackageWithScopeAndVersion,
@@ -1025,8 +1070,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                   #scope: scope,
                   #name: name,
                   #version: version,
-                  #lang: lang,
-                  #all: all,
                 },
               ),
             )),
@@ -1044,7 +1087,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue: _i7.Future<_i3.UploadAdapterResponse>.value(
-            _FakeUploadAdapterResponse_16(
+            _FakeUploadAdapterResponse_17(
           this,
           Invocation.method(
             #uploadAdapterWithToken,
@@ -1053,7 +1096,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.UploadAdapterResponse>.value(
-            _FakeUploadAdapterResponse_16(
+            _FakeUploadAdapterResponse_17(
           this,
           Invocation.method(
             #uploadAdapterWithToken,
@@ -1075,7 +1118,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue: _i7.Future<_i3.UploadPackageResponse>.value(
-            _FakeUploadPackageResponse_17(
+            _FakeUploadPackageResponse_18(
           this,
           Invocation.method(
             #uploadPackageWithToken,
@@ -1084,7 +1127,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.UploadPackageResponse>.value(
-            _FakeUploadPackageResponse_17(
+            _FakeUploadPackageResponse_18(
           this,
           Invocation.method(
             #uploadPackageWithToken,
@@ -1132,7 +1175,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue: _i7.Future<_i3.YankAdapterResponse>.value(
-            _FakeYankAdapterResponse_18(
+            _FakeYankAdapterResponse_19(
           this,
           Invocation.method(
             #yankAdapterWithId,
@@ -1141,7 +1184,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.YankAdapterResponse>.value(
-            _FakeYankAdapterResponse_18(
+            _FakeYankAdapterResponse_19(
           this,
           Invocation.method(
             #yankAdapterWithId,
@@ -1155,43 +1198,29 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   _i7.FutureOr<_i3.YankPackageResponse> yankPackageByName(
     _i3.YankPackageRequest? body, {
     required String? name,
-    String? lang,
-    bool? all,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
           #yankPackageByName,
           [body],
-          {
-            #name: name,
-            #lang: lang,
-            #all: all,
-          },
+          {#name: name},
         ),
         returnValue: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_19(
+            _FakeYankPackageResponse_20(
           this,
           Invocation.method(
             #yankPackageByName,
             [body],
-            {
-              #name: name,
-              #lang: lang,
-              #all: all,
-            },
+            {#name: name},
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_19(
+            _FakeYankPackageResponse_20(
           this,
           Invocation.method(
             #yankPackageByName,
             [body],
-            {
-              #name: name,
-              #lang: lang,
-              #all: all,
-            },
+            {#name: name},
           ),
         )),
       ) as _i7.FutureOr<_i3.YankPackageResponse>);
@@ -1201,8 +1230,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     _i3.YankPackageRequest? body, {
     required String? scope,
     required String? name,
-    String? lang,
-    bool? all,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1211,12 +1238,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {
             #scope: scope,
             #name: name,
-            #lang: lang,
-            #all: all,
           },
         ),
         returnValue: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_19(
+            _FakeYankPackageResponse_20(
           this,
           Invocation.method(
             #yankPackageByNameWithScope,
@@ -1224,13 +1249,11 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {
               #scope: scope,
               #name: name,
-              #lang: lang,
-              #all: all,
             },
           ),
         )),
         returnValueForMissingStub: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_19(
+            _FakeYankPackageResponse_20(
           this,
           Invocation.method(
             #yankPackageByNameWithScope,
@@ -1238,8 +1261,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {
               #scope: scope,
               #name: name,
-              #lang: lang,
-              #all: all,
             },
           ),
         )),
@@ -1252,8 +1273,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? scope,
     required String? name,
     required String? version,
-    String? lang,
-    bool? all,
   }) =>
           (super.noSuchMethod(
             Invocation.method(
@@ -1263,12 +1282,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 #scope: scope,
                 #name: name,
                 #version: version,
-                #lang: lang,
-                #all: all,
               },
             ),
             returnValue: _i7.Future<_i3.YankPackageByVersionRequest>.value(
-                _FakeYankPackageByVersionRequest_20(
+                _FakeYankPackageByVersionRequest_21(
               this,
               Invocation.method(
                 #yankPackageByNameWithScopeAndVersion,
@@ -1277,14 +1294,12 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                   #scope: scope,
                   #name: name,
                   #version: version,
-                  #lang: lang,
-                  #all: all,
                 },
               ),
             )),
             returnValueForMissingStub:
                 _i7.Future<_i3.YankPackageByVersionRequest>.value(
-                    _FakeYankPackageByVersionRequest_20(
+                    _FakeYankPackageByVersionRequest_21(
               this,
               Invocation.method(
                 #yankPackageByNameWithScopeAndVersion,
@@ -1293,8 +1308,6 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                   #scope: scope,
                   #name: name,
                   #version: version,
-                  #lang: lang,
-                  #all: all,
                 },
               ),
             )),
@@ -1304,9 +1317,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   _i7.FutureOr<_i3.YankPackageByVersionRequest> yankPackageVersionByName(
     _i3.YankPackageByVersionResponse? body, {
     required String? name,
-    String? lang,
     required String? version,
-    bool? all,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1314,37 +1325,31 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {
             #name: name,
-            #lang: lang,
             #version: version,
-            #all: all,
           },
         ),
         returnValue: _i7.Future<_i3.YankPackageByVersionRequest>.value(
-            _FakeYankPackageByVersionRequest_20(
+            _FakeYankPackageByVersionRequest_21(
           this,
           Invocation.method(
             #yankPackageVersionByName,
             [body],
             {
               #name: name,
-              #lang: lang,
               #version: version,
-              #all: all,
             },
           ),
         )),
         returnValueForMissingStub:
             _i7.Future<_i3.YankPackageByVersionRequest>.value(
-                _FakeYankPackageByVersionRequest_20(
+                _FakeYankPackageByVersionRequest_21(
           this,
           Invocation.method(
             #yankPackageVersionByName,
             [body],
             {
               #name: name,
-              #lang: lang,
               #version: version,
-              #all: all,
             },
           ),
         )),
@@ -1395,7 +1400,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #formParams: formParams,
           },
         ),
-        returnValue: _i7.Future<_i2.BaseResponse>.value(_FakeBaseResponse_21(
+        returnValue: _i7.Future<_i2.BaseResponse>.value(_FakeBaseResponse_22(
           this,
           Invocation.method(
             #request,
@@ -1415,7 +1420,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i2.BaseResponse>.value(_FakeBaseResponse_21(
+            _i7.Future<_i2.BaseResponse>.value(_FakeBaseResponse_22(
           this,
           Invocation.method(
             #request,

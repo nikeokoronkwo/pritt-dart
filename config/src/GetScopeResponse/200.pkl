@@ -1,0 +1,5 @@
+amends "schema.pkl"
+
+name = "ramen"
+
+is_member = true
