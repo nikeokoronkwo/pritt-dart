@@ -234,8 +234,12 @@
           "tableFrom": "packages",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": ["author_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -243,12 +247,16 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "packages_name_key": {
-          "columns": ["name"],
+          "columns": [
+            "name"
+          ],
           "nullsNotDistinct": false,
           "name": "packages_name_key"
         },
         "packages_version_key": {
-          "columns": ["version"],
+          "columns": [
+            "version"
+          ],
           "nullsNotDistinct": false,
           "name": "packages_version_key"
         }
@@ -287,8 +295,12 @@
           "tableFrom": "package_contributors",
           "tableTo": "packages",
           "schemaTo": "public",
-          "columnsFrom": ["package_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "package_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -297,8 +309,12 @@
           "tableFrom": "package_contributors",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": ["contributor_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "contributor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -357,12 +373,16 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "plugins_name_key": {
-          "columns": ["name"],
+          "columns": [
+            "name"
+          ],
           "nullsNotDistinct": false,
           "name": "plugins_name_key"
         },
         "plugins_language_key": {
-          "columns": ["language"],
+          "columns": [
+            "language"
+          ],
           "nullsNotDistinct": false,
           "name": "plugins_language_key"
         }
@@ -493,8 +513,12 @@
           "tableFrom": "package_versions",
           "tableTo": "packages",
           "schemaTo": "public",
-          "columnsFrom": ["package_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "package_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -502,7 +526,10 @@
       "compositePrimaryKeys": {
         "package_versions_pkey": {
           "name": "package_versions_pkey",
-          "columns": ["package_id", "version"]
+          "columns": [
+            "package_id",
+            "version"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -514,17 +541,31 @@
   "enums": {
     "public.plugin_archive_type": {
       "name": "plugin_archive_type",
-      "values": ["single", "multi"],
+      "values": [
+        "single",
+        "multi"
+      ],
       "schema": "public"
     },
     "public.privilege": {
       "name": "privilege",
-      "values": ["read", "write", "publish", "ultimate"],
+      "values": [
+        "read",
+        "write",
+        "publish",
+        "ultimate"
+      ],
       "schema": "public"
     },
     "public.version_control_system": {
       "name": "version_control_system",
-      "values": ["git", "svn", "fossil", "mercurial", "other"],
+      "values": [
+        "git",
+        "svn",
+        "fossil",
+        "mercurial",
+        "other"
+      ],
       "schema": "public"
     },
     "public.version_kind": {

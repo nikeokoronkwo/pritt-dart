@@ -1,5 +1,6 @@
 
 
+import 'dart:convert';
 import 'dart:js_interop';
 
 import 'config.dart';
@@ -46,10 +47,22 @@ Future<void> transformTemplates(
   }
 
   // run generate migrations
-  childProcess.execSync('pnpx @better-auth/cli generate --config ./server/utils/auth.ts --output ./server/db/schema/auth.ts --y', ExecOptions(cwd: path.dirname(outputDir)));
+  final v = await Future.sync(() => 
+    childProcess.execSync('pnpx @better-auth/cli generate --config ./server/utils/auth.ts --output ./server/db/schema/auth.ts --y', ExecOptions(cwd: outputDir)));
 
   // run migrate migrations
   // TODO:
+  // read schema file
+  final schemaFile = "./server/db/schema.ts";
+
+  String schemaFileContents = await File(path.join(outputDir, schemaFile)).readAsString();
+
+  final lines = const LineSplitter().convert(schemaFileContents);
+  lines.insert(0, "import * as auth from './schema/auth'");
+  final spreadIndex = lines.indexWhere((i) => i.trim().startsWith('...'));
+  lines.insert(spreadIndex, '...auth,');
+  
+  await File(path.join(outputDir, schemaFile)).writeAsString(lines.join('\n'));
 
   // continue
 
