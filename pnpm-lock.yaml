@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      tsx:
+        specifier: ^4.19.4
+        version: 4.19.4
 
   packages/openapigen/js:
     dependencies:
@@ -63,15 +67,15 @@ importers:
       '@types/babel__generator':
         specifier: ^7.27.0
         version: 7.27.0
-      '@types/babel__template':
-        specifier: ^7.4.4
-        version: 7.4.4
       '@types/node':
         specifier: ^22.15.21
         version: 22.15.23
       esbuild:
         specifier: 0.25.4
         version: 0.25.4
+      tsx:
+        specifier: ^4.19.4
+        version: 4.19.4
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -187,15 +191,30 @@ importers:
       '@nuxt/test-utils':
         specifier: 3.19.0
         version: 3.19.0(@types/node@22.15.23)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(jiti@2.4.2)(magicast@0.3.5)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vitest@3.1.4(@types/debug@4.1.12)(@types/node@22.15.23)(happy-dom@17.4.7)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(yaml@2.8.0)
+      '@tanstack/vue-form':
+        specifier: ^1.12.0
+        version: 1.12.0(vue@3.5.14(typescript@5.8.3))
       '@unhead/vue':
         specifier: ^2.0.3
         version: 2.0.10(vue@3.5.14(typescript@5.8.3))
+      better-auth:
+        specifier: ^1.2.8
+        version: 1.2.8
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
+      drizzle-orm:
+        specifier: ^0.44.0
+        version: 0.44.0(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/pg@8.15.2)(better-sqlite3@11.10.0)(kysely@0.28.2)(pg@8.16.0)(prisma@5.22.0)
       eslint:
         specifier: ^9.0.0
         version: 9.27.0(jiti@2.4.2)
       nuxt:
         specifier: ^3.17.4
         version: 3.17.4(@parcel/watcher@2.5.1)(@types/node@22.15.23)(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0)(drizzle-orm@0.44.0(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/pg@8.15.2)(better-sqlite3@11.10.0)(kysely@0.28.2)(pg@8.16.0)(prisma@5.22.0)))(drizzle-orm@0.44.0(@prisma/client@5.22.0(prisma@5.22.0))(@types/better-sqlite3@7.6.13)(@types/pg@8.15.2)(better-sqlite3@11.10.0)(kysely@0.28.2)(pg@8.16.0)(prisma@5.22.0))(eslint@9.27.0(jiti@2.4.2))(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.41.0)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.23)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(yaml@2.8.0)
+      pg:
+        specifier: ^8.16.0
+        version: 8.16.0
       vue:
         specifier: ^3.5.14
         version: 3.5.14(typescript@5.8.3)
@@ -203,12 +222,33 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.14(typescript@5.8.3))
     devDependencies:
+      '@better-auth/cli':
+        specifier: ^1.2.8
+        version: 1.2.8(@babel/core@7.27.1)(@types/pg@8.15.2)(kysely@0.28.2)(magicast@0.3.5)(pg@8.16.0)
+      '@types/pg':
+        specifier: ^8.15.2
+        version: 8.15.2
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      drizzle-kit:
+        specifier: ^0.31.1
+        version: 0.31.1
+      eslint-config-prettier:
+        specifier: ^10.1.5
+        version: 10.1.5(eslint@9.27.0(jiti@2.4.2))
       happy-dom:
         specifier: ^17.4.7
         version: 17.4.7
+      prettier:
+        specifier: 3.5.3
+        version: 3.5.3
+      prettier-plugin-tailwindcss:
+        specifier: ^0.6.11
+        version: 0.6.11(prettier@3.5.3)
+      tsx:
+        specifier: ^4.19.4
+        version: 4.19.4
       vitest:
         specifier: ^3.1.4
         version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.23)(happy-dom@17.4.7)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0)
@@ -1647,9 +1687,6 @@ packages:
 
   '@types/babel__generator@7.27.0':
     resolution: {integrity: sha512-ufFd2Xi92OAVPYsy+P4n7/U7e68fex0+Ee8gSG9KX7eo084CWiQ4sdxktvdl0bOPupXtVJPY19zk6EwWqUQ8lg==}
-
-  '@types/babel__template@7.4.4':
-    resolution: {integrity: sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==}
 
   '@types/better-sqlite3@7.6.13':
     resolution: {integrity: sha512-NMv9ASNARoKksWtsq/SHakpYAYnhBrQgGD8zkLYk/jaK8jUGn08CfEdTRgYhMypUQAfzSP8W6gNLe0q19/t4VA==}
@@ -8118,11 +8155,6 @@ snapshots:
 
   '@types/babel__generator@7.27.0':
     dependencies:
-      '@babel/types': 7.27.3
-
-  '@types/babel__template@7.4.4':
-    dependencies:
-      '@babel/parser': 7.27.3
       '@babel/types': 7.27.3
 
   '@types/better-sqlite3@7.6.13':

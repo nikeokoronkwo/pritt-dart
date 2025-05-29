@@ -8,12 +8,16 @@
     "schema": "pkl eval config/main.pkl --project-dir config -f yaml -o config/out/openapi.yaml && pkl eval config/main.pkl --project-dir config -f json -o config/out/openapi.json",
     "format": "dart format .",
     "server": "./tools/denv.dart --cwd server -- dart run bin/server.dart",
-    "gen:common": "./scripts/openapigen ./config/out/openapi.yaml -o ./common"
+    "gen:common": "./scripts/openapigen ./config/out/openapi.yaml -o ./common",
+    "gen:web": "./scripts/webgen"
   },
   "packageManager": "pnpm@9.15.2+sha256.022309bb31359142b65bfa889e0406d2eebd5acfffca47e6944acf29d9d6a66b",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
     ]
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4"
   }
 }

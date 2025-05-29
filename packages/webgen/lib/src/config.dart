@@ -10,9 +10,9 @@ class WebGenTemplateConfig {
 
   final WGTStyle style;
 
-  final String icon;
+  final String? icon;
 
-  final String logo;
+  final String? logo;
 
   final List<String> assets;
 
@@ -25,9 +25,9 @@ class WebGenTemplateConfig {
   const WebGenTemplateConfig({
     required this.name,
     required this.style,
-    required this.icon,
-    required this.logo,
-    required this.assets,
+    this.icon,
+    this.logo,
+    this.assets = const [],
     this.meta,
     required this.auth,
     this.env
@@ -40,6 +40,7 @@ class WebGenTemplateConfig {
 @JsonSerializable()
 class WGTAuth {
   // bool emailAndPassword;
+  @JsonKey(name: 'magic_link')
   bool magicLink;
   bool passkey;
   bool google;
@@ -53,8 +54,8 @@ class WGTAuth {
   WGTAuth({
     required this.magicLink,
     required this.passkey,
-    required this.google,
-    required this.github,
+    this.google = false,
+    this.github = false,
     this.sso,
     this.oidc,
     this.oauth = const []
@@ -114,12 +115,12 @@ class WGTStyle {
 class WGTMeta {
   final String title;
   final String description;
-  final String keywords;
+  final List<String> keywords;
   
   const WGTMeta({
     required this.title,
     required this.description,
-    required this.keywords,
+    this.keywords = const [],
   });
 
   factory WGTMeta.fromJson(Map<String, dynamic> json) => _$WGTMetaFromJson(json);

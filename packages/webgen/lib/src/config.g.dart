@@ -11,10 +11,12 @@ WebGenTemplateConfig _$WebGenTemplateConfigFromJson(
     WebGenTemplateConfig(
       name: json['name'] as String,
       style: WGTStyle.fromJson(json['style']),
-      icon: json['icon'] as String,
-      logo: json['logo'] as String,
-      assets:
-          (json['assets'] as List<dynamic>).map((e) => e as String).toList(),
+      icon: json['icon'] as String?,
+      logo: json['logo'] as String?,
+      assets: (json['assets'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       meta: json['meta'] == null
           ? null
           : WGTMeta.fromJson(json['meta'] as Map<String, dynamic>),
@@ -38,10 +40,10 @@ Map<String, dynamic> _$WebGenTemplateConfigToJson(
     };
 
 WGTAuth _$WGTAuthFromJson(Map<String, dynamic> json) => WGTAuth(
-      magicLink: json['magicLink'] as bool,
+      magicLink: json['magic_link'] as bool,
       passkey: json['passkey'] as bool,
-      google: json['google'] as bool,
-      github: json['github'] as bool,
+      google: json['google'] as bool? ?? false,
+      github: json['github'] as bool? ?? false,
       sso: json['sso'],
       oidc: json['oidc'],
       oauth: (json['oauth'] as List<dynamic>?)
@@ -50,7 +52,7 @@ WGTAuth _$WGTAuthFromJson(Map<String, dynamic> json) => WGTAuth(
     );
 
 Map<String, dynamic> _$WGTAuthToJson(WGTAuth instance) => <String, dynamic>{
-      'magicLink': instance.magicLink,
+      'magic_link': instance.magicLink,
       'passkey': instance.passkey,
       'google': instance.google,
       'github': instance.github,
@@ -77,7 +79,10 @@ Map<String, dynamic> _$WGTStyleToJson(WGTStyle instance) => <String, dynamic>{
 WGTMeta _$WGTMetaFromJson(Map<String, dynamic> json) => WGTMeta(
       title: json['title'] as String,
       description: json['description'] as String,
-      keywords: json['keywords'] as String,
+      keywords: (json['keywords'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$WGTMetaToJson(WGTMeta instance) => <String, dynamic>{

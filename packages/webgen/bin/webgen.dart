@@ -8,6 +8,8 @@ import 'package:pritt_webgen/src/config.dart';
 import 'package:pritt_webgen/src/js/fs.dart';
 import 'package:pritt_webgen/src/js/handlebars.dart' as handlebars;
 import 'package:pritt_webgen/src/js/js.dart';
+import 'package:pritt_webgen/src/transform.dart';
+import 'package:yaml/yaml.dart';
 
 final argParser = ArgParser()
   ..addOption('input',
@@ -77,15 +79,16 @@ void main(List<String> args) async {
   }
 
   final configContent = await configFile.readAsString();
-  final config = WebGenTemplateConfig.fromJson(jsonDecode(configContent));
+  final config = WebGenTemplateConfig.fromJson(jsonDecode(jsonEncode(loadYaml(configContent))));
 
   // perform transformation
-  final templateFiles = (await readdir(
-              templateDir.path,
-              FSReadDirOptions(
-                  encoding: 'utf8', recursive: true, withFileTypes: true))
-          .toDart)
-      .toDart;
+  // final templateFiles = (await readdir(
+  //             templateDir.path,
+  //             FSReadDirOptions(
+  //                 encoding: 'utf8', recursive: true, withFileTypes: true))
+  //         .toDart)
+  //     .toDart;
+  await transformTemplates(dir.path, templateDir.path, outDir.path, config);
   
 
   // if template dir is in new dir, remove
@@ -93,8 +96,17 @@ void main(List<String> args) async {
     final relPath = path.relative(dir.path, templateDir.path);
     final newPath = path.join(outDir.path, relPath);
 
-    Directory(newPath).deleteSync(recursive: true);
+    await Directory(newPath).delete(recursive: true);
   }
+
+  print("""\n\n
+Perform the following commands to complete:
+
+\tcd ${outDir.path}
+\tmkdir -p ./server/db/schema
+\tpnpx @better-auth/cli generate --config ./server/utils/auth.ts --output ./server/db/schema/auth.ts
+
+""");
 }
 
 bool isSubDir(String parent, String child) {

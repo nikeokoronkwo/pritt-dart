@@ -1,9 +1,11 @@
 import * as t from "@babel/types"
-import template from "@babel/template"
+// @ts-ignore
+import * as templ from "@babel/template"
 import { generate } from "@babel/generator"
 import { AuthOptions } from "./types";
 
 
+const template = templ.default.default;
 
 /**
  * 
@@ -17,7 +19,8 @@ import { AuthOptions } from "./types";
  */
 export function generateAuthConfig(options: AuthOptions): {
     filename: string,
-    code: string
+    code: string,
+    name?: string
 }[] {
     // generate server 
     const serverImports = generateAuthImports(options);
@@ -30,17 +33,14 @@ export function generateAuthConfig(options: AuthOptions): {
 
     const {code: authFileCode} = generate(serverAst)
 
-    console.log(authFileCode, '\n');
-
     const clientAst = generateAuthClient(options);
 
     const {code: authClientCode} = generate(clientAst);
 
-    console.log(authClientCode, '\n')
-
     return [{
         filename: 'server/utils/auth.ts',
-        code: authFileCode
+        code: authFileCode,
+        name: 'auth'
     }, {
         filename: 'utils/client.ts',
         code: authClientCode
@@ -167,13 +167,18 @@ function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
     const betterAuthDrizzleAdapterSpecifiers = [
         t.importSpecifier(t.identifier('drizzleAdapter'), t.identifier('drizzleAdapter'))
     ];
+
+    const otherImports = [];
     //
     const betterAuthPluginSpecifiers = [];
     if (options.magicLink) betterAuthPluginSpecifiers.push(
         t.importSpecifier(t.identifier('magicLink'), t.identifier('magicLink'))
     );
-    if (options.passkey) betterAuthPluginSpecifiers.push(
-        t.importSpecifier(t.identifier('passkey'), t.identifier('passkey'))
+    if (options.passkey) otherImports.push(
+        t.importDeclaration(
+            [t.importSpecifier(t.identifier('passkey'), t.identifier('passkey'))],
+            t.stringLiteral('better-auth/plugins/passkey')
+        )
     )
     if (options.admin) betterAuthPluginSpecifiers.push(
         t.importSpecifier(t.identifier('admin'), t.identifier('admin'))
@@ -191,10 +196,11 @@ function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
         // db and schema
         t.importDeclaration(
             [t.importSpecifier(t.identifier('db'), t.identifier('db')), t.importSpecifier(t.identifier('schema'), t.identifier('schema'))],
-            t.stringLiteral('../db/index.ts')
+            t.stringLiteral('../db/index')
         ),
         // plugins
-        t.importDeclaration(betterAuthPluginSpecifiers, t.stringLiteral("better-auth/plugins"))
+        t.importDeclaration(betterAuthPluginSpecifiers, t.stringLiteral("better-auth/plugins")),
+        ...otherImports
     ];
 }
 
@@ -334,8 +340,8 @@ function generateAuthExport(options: AuthOptions, imports: t.ImportDeclaration[]
     )
 }
 
-const magicLinkCode = template`
+const magicLinkCode = template(`
     // code...
     const o = 9;
     const f = 9;
-`;
+`);

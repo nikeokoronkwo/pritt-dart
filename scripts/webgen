@@ -2,7 +2,7 @@
 
 cd packages/webgen
 pnpm i
-pnpm bundle
 pnpm compile
+pnpm bundle
 cd -
 node packages/webgen/dist/webgen.js $@
