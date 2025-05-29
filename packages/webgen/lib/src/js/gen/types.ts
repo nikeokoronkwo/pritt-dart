@@ -1,8 +1,8 @@
 export interface AuthOptions {
     name: string; //
     title: string; //
-    magicLink?: boolean, //
-    passkey?: boolean, //
+    magicLink: boolean, //
+    passkey: boolean, //
     oauth: {
         github: boolean, //
         google: boolean, //
@@ -13,19 +13,14 @@ export interface AuthOptions {
             discoveryUrl: string,
         }[]
     },
-    admin: boolean,
-    orgs: boolean,
+    admin: boolean, //
+    orgs: boolean, //
     sso: boolean,
     oidc: boolean,
     twoFactorAuth: boolean,
     tableNames?: {
         users: string;
         accounts: string;
-
     }
     
-}
-
-export interface DatabaseOptions {
-
 }

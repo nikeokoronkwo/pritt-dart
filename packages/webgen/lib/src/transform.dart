@@ -14,8 +14,16 @@ void transformTemplates(
 ) {
   // start with generating files
   final templateOptions = TemplateOptions(
-    auth: AuthOptions
-  )
+    auth: AuthOptions()
+  );
+
+  // generate config
+
+  // run generate migrations
+  
+  // run migrate migrations
+
+  // continue
 
   // generate layouts
 

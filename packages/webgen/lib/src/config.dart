@@ -39,16 +39,37 @@ class WebGenTemplateConfig {
 
 @JsonSerializable()
 class WGTAuth {
-  dynamic emailAndPassword;
-  dynamic passkey;
-  dynamic google;
-  dynamic github;
-  dynamic apple;
-  dynamic microsoft;
+  // bool emailAndPassword;
+  bool magicLink;
+  bool passkey;
+  bool google;
+  bool github;
+  // bool apple;
+  // bool microsoft;
   dynamic sso;
   dynamic oidc;
+  Iterable<WGTOAuth> oauth;
 
-  
+  WGTAuth({
+    required this.magicLink,
+    required this.passkey,
+    required this.google,
+    required this.github,
+    this.sso,
+    this.oidc,
+    this.oauth = const []
+  });
+
+  factory WGTAuth.fromJson(Map<String, dynamic> json) => _$WGTAuthFromJson(json);
+  Map<String, dynamic> toJson() => _$WGTAuthToJson(this);
+}
+
+@JsonSerializable()
+class WGTOAuth {
+  WGTOAuth();
+
+  factory WGTOAuth.fromJson(Map<String,dynamic> json) => _$WGTOAuthFromJson(json);
+  Map<String, dynamic> toJson() => _$WGTOAuthToJson(this);
 }
 
 @JsonSerializable() 
