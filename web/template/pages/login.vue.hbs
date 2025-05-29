@@ -1,0 +1,78 @@
+<script setup lang="ts">
+{{#if auth.magicLink}}
+  import { useForm } from '@tanstack/vue-form'
+{{/if}}
+
+{{#if auth.magicLink}}
+  const form = useForm({
+    defaultValues: {
+        fullName: '',
+    },
+    onSubmit: async ({ value }) => {
+        // Do something with form data
+        console.log(value)
+
+        signInMagicLink();
+
+        // show dialog notification
+    },
+  })
+  
+  function signInMagicLink() { }
+{{/if}}
+
+  {{#if auth.passkey}}
+    function signInWithPasskey() { }
+  {{/if}}
+</script>
+
+<template>
+  <div>
+    <!-- Card -->
+
+    <div>
+      <!-- Sign In Title -->
+
+      <div>
+        <!-- Main Sign in title -->
+        <div></div>
+        <!-- Or create new account -->
+        <div>
+          or
+          <span>create a new account</span>
+        </div>
+      </div>
+
+      <!-- Sign In Options -->
+
+      <div>
+
+        <!-- Passkey button -->
+        {{#if auth.passkey}}
+          <div></div>
+        {{/if}}
+
+        <!-- Magic Link -->
+
+        {{#if auth.magicLink}}
+          <form @submit.prevent.stop="form.handleSubmit">
+            <div>
+                <!-- Email Input -->
+                <form.Field name="email">
+                    <!-- TODO: Format -->
+                    <template v-slot="{ field }">
+                        <input
+                            :name="field.name"
+                            :value="field.state.value"
+                            @blur="field.handleBlur"
+                            @input="(e) => field.handleChange((e.target as HTMLInputElement).value)"
+                        />
+                    </template>
+                </form.Field>
+            </div>
+          </form>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

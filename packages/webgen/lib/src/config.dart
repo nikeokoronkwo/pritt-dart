@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'config/style.dart';
 
+part 'config.g.dart';
+
 @JsonSerializable()
 class WebGenTemplateConfig {
   final String name;
@@ -18,6 +20,8 @@ class WebGenTemplateConfig {
 
   final WGTAuth auth;
 
+  final Map<String, String>? env;
+
   const WebGenTemplateConfig({
     required this.name,
     required this.style,
@@ -26,7 +30,11 @@ class WebGenTemplateConfig {
     required this.assets,
     this.meta,
     required this.auth,
+    this.env
   });
+
+  factory WebGenTemplateConfig.fromJson(Map<String, dynamic> json) => _$WebGenTemplateConfigFromJson(json);
+  Map<String, dynamic> toJson() => _$WebGenTemplateConfigToJson(this);
 }
 
 @JsonSerializable()
@@ -39,6 +47,8 @@ class WGTAuth {
   dynamic microsoft;
   dynamic sso;
   dynamic oidc;
+
+  
 }
 
 @JsonSerializable() 
@@ -75,6 +85,7 @@ class WGTStyle {
     // If the input is neither a Map nor a String, return the default style
     throw ArgumentError('Invalid JSON format: $json');
   }
+  
   Map<String, dynamic> toJson() => _$WGTStyleToJson(this);
 }
 /// Metadata definitions used for SEO

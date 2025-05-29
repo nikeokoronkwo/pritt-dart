@@ -33,16 +33,15 @@ Map<String, dynamic> _$WebGenTemplateConfigToJson(
       'auth': instance.auth,
     };
 
-WGTAuth _$WGTAuthFromJson(Map<String, dynamic> json) => WGTAuth(
-      emailAndPassword: json['emailAndPassword'],
-      passkey: json['passkey'],
-      google: json['google'],
-      github: json['github'],
-      apple: json['apple'],
-      microsoft: json['microsoft'],
-      sso: json['sso'],
-      oidc: json['oidc'],
-    );
+WGTAuth _$WGTAuthFromJson(Map<String, dynamic> json) => WGTAuth()
+  ..emailAndPassword = json['emailAndPassword']
+  ..passkey = json['passkey']
+  ..google = json['google']
+  ..github = json['github']
+  ..apple = json['apple']
+  ..microsoft = json['microsoft']
+  ..sso = json['sso']
+  ..oidc = json['oidc'];
 
 Map<String, dynamic> _$WGTAuthToJson(WGTAuth instance) => <String, dynamic>{
       'emailAndPassword': instance.emailAndPassword,
