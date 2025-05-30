@@ -140,6 +140,8 @@ void main(List<String> args) async {
 
       // anyways
       if (filePath != null) {
+        if (filePath.contains('node_modules') || filePath.contains('.nuxt') || filePath.contains('.data')) continue;
+        
         final String destPath;
         final isTemplate = path.dirname(filePath).startsWith('template');
         if (isTemplate) {
@@ -148,6 +150,8 @@ void main(List<String> args) async {
         } else {
           destPath = path.join(outDir.path, filePath);
         }
+
+        await mkdir(path.dirname(destPath), FSMkdirOptions(recursive: true)).toDart;
 
         if (modification) {
           // normal mod
@@ -169,7 +173,7 @@ void main(List<String> args) async {
             await copyFile(path.join(dir.path, filePath), destPath).toDart;
           } else {
             // deletion
-            await File(destPath).delete();
+            await File(path.extname(filePath) == '.hbs' ? destPath.replaceAll('.hbs', '') : destPath).delete();
           }
         }
       }

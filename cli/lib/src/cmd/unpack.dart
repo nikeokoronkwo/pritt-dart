@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
+import 'package:path/path.dart' as p;
+import 'package:pritt_cli/src/archive.dart';
+
 import 'package:pritt_cli/src/cli/progress_bar.dart';
 import 'package:pritt_cli/src/client.dart';
 import 'package:pritt_cli/src/package.dart';
@@ -61,22 +65,36 @@ class UnpackCommand extends PrittCommand {
         url: userCredentials.uri.toString(),
         accessToken: userCredentials.accessToken);
 
+    final pkgName = scope != null ? '@$scope/$name}' : name;
+
     // get archive of package
+    logger.info('Fetching Package $pkgName');
+
     final content = await client.getPackageArchiveWithName(
-        name: scope != null ? '@$scope/$name}' : name, version: version);
+        name: pkgName, version: version);
 
     final contentLength = content.length;
 
+    // download contents
     final ProgressBar progressBar = ProgressBar('Downloading Package',
         completeMessage: 'Package Downloaded');
 
+    final outName = (argResults?['output'] ?? _suitableFileName(name: name, scope: scope, version: version));
+    final directory = Directory(outName);
+
+    if (await directory.exists() && !argResults?['force']) {
+      logger.severe('Directory already exists.');
+      logger.stderr('To overwrite contents, pass the --force flag');
+      exit(2);
+    } else { await directory.create(recursive: true); }
+
     final File tarFile =
-        await File((argResults?['output'] ?? name) + '.tar.gz').create();
+        await File(outName + '.tar.gz').create();
     final sink = tarFile.openWrite();
 
     int bytesReceived = 0;
 
-    final completer = Completer<void>();
+    final downloadCompleter = Completer<void>();
 
     content.data.listen(
       (chunk) {
@@ -87,18 +105,46 @@ class UnpackCommand extends PrittCommand {
       onDone: () async {
         await sink.close();
         progressBar.end();
-        completer.complete();
+        downloadCompleter.complete();
       },
       onError: (e, st) async {
         await sink.close();
-        completer.completeError(e, st);
+        downloadCompleter.completeError(e, st);
       },
       cancelOnError: true,
     );
 
-    await completer.future;
+    await downloadCompleter.future;
 
     // now deflate, and open
     // TODO: Complete
+
+    logger.info('Expanding Contents');
+
+    // extract tar.gz and save to directory
+    await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+
+    logger.stdout('Package $pkgName has been unpacked at $outName');
+
+    return;
+  }
+}
+
+String _suitableFileName({required String name, String? scope, String? version, String? outputDir}) {
+  final directoryContext = Directory(p.dirname(outputDir == null ? p.current : p.absolute(outputDir)));
+  final files = directoryContext.listSync();
+
+  if (scope == null) {
+    if (files.where((f) => p.basenameWithoutExtension(f.path) == name).isNotEmpty) { // if a file has the name
+      return '$name@$version';
+    } else {
+      return name;
+    }
+  } else {
+    if (files.where((f) => p.basenameWithoutExtension(f.path) == '@${scope}_${name}').isNotEmpty) { // if a file has the name
+      return '@${scope}_$name@$version';
+    } else {
+      return '@${scope}_$name';
+    }
   }
 }
