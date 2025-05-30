@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=build /app/.output/ ./
 
 # Change the port and host
+# TODO: Set env
 ENV PORT 80
 ENV HOST 0.0.0.0
 

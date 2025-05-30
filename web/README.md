@@ -14,7 +14,8 @@ The Pritt Web Application
 
 ### Other Tech Stack Features
 
-- Tanstack Form
+- Tanstack Form: Form Input and Validation
+- Zod: Validation
 
 ### To be considered
 
