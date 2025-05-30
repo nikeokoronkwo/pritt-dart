@@ -18,7 +18,8 @@ class WGTStyleColours {
     required this.accent,
   });
 
-  factory WGTStyleColours.fromJson(Map<String, dynamic> json) => _$WGTStyleColoursFromJson(json);
+  factory WGTStyleColours.fromJson(Map<String, dynamic> json) =>
+      _$WGTStyleColoursFromJson(json);
   Map<String, dynamic> toJson() => _$WGTStyleColoursToJson(this);
 }
 

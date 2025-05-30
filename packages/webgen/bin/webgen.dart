@@ -5,6 +5,7 @@ import 'package:args/args.dart';
 import 'package:node_io/node_io.dart';
 import 'package:node_interop/path.dart';
 import 'package:pritt_webgen/src/config.dart';
+import 'package:pritt_webgen/src/js/child_process.dart';
 import 'package:pritt_webgen/src/js/fs.dart';
 import 'package:pritt_webgen/src/js/handlebars.dart' as handlebars;
 import 'package:pritt_webgen/src/js/js.dart';
@@ -23,7 +24,9 @@ final argParser = ArgParser()
       help: 'The template directory (i.e the dir where the template is)',
       defaultsTo: 'web/template')
   ..addOption('config',
-      abbr: 'c', help: 'The configuration file to read the template config', defaultsTo: 'template.yaml')
+      abbr: 'c',
+      help: 'The configuration file to read the template config',
+      defaultsTo: 'template.yaml')
   ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help information')
   ..addOption('js-file',
       abbr: 'j',
@@ -37,11 +40,25 @@ void main(List<String> args) async {
 
   // await importModule(argResults['js-file']).toDart;
 
+  print('LOG: Getting Arguments...');
+
   final dir = Directory(argResults['input']);
   final templateDir = Directory(argResults['template']);
 
   final outDir = Directory(argResults['output']);
 
+  if (outDir.existsSync()) {
+    print('LOG: Cleaning up previous build...');
+    outDir.deleteSync(recursive: true);
+  }
+
+  outDir.createSync();
+
+  print('LOG: Updating Drizzle Schema...');
+  execSync('pnpm db:pull',
+      ChildProcessExecOptions(encoding: 'utf-8', cwd: dir.path));
+
+  print('LOG: Copying Files...');
   // copy over files
   final files = (await readdir(
               dir.path,
@@ -68,18 +85,25 @@ void main(List<String> args) async {
     }
   }
 
+  // run install
+  print('LOG: Installing Dependencies...');
+  execSync(
+      'pnpm i', ChildProcessExecOptions(cwd: outDir.path, encoding: 'utf-8'));
+
+  print('LOG: Reading Configuration...');
   // get configuration
   final configFile = File(argResults['config'] == 'template.yaml'
       ? path.join(dir.path, 'template.yaml')
       : argResults['config']);
-  
+
   if (!configFile.existsSync()) {
     print('Configuration file not found: ${configFile.path}');
     return;
   }
 
   final configContent = await configFile.readAsString();
-  final config = WebGenTemplateConfig.fromJson(jsonDecode(jsonEncode(loadYaml(configContent))));
+  final config = WebGenTemplateConfig.fromJson(
+      jsonDecode(jsonEncode(loadYaml(configContent))));
 
   // perform transformation
   // final templateFiles = (await readdir(
@@ -89,7 +113,6 @@ void main(List<String> args) async {
   //         .toDart)
   //     .toDart;
   await transformTemplates(dir.path, templateDir.path, outDir.path, config);
-  
 
   // if template dir is in new dir, remove
   if (isSubDir(dir.path, templateDir.path)) {
@@ -99,14 +122,9 @@ void main(List<String> args) async {
     await Directory(newPath).delete(recursive: true);
   }
 
-  print("""\n\n
-Perform the following commands to complete:
-
-\tcd ${outDir.path}
-\tmkdir -p ./server/db/schema
-\tpnpx @better-auth/cli generate --config ./server/utils/auth.ts --output ./server/db/schema/auth.ts
-
-""");
+  print('ALL DONE!');
+  print(
+      'NOTE: Migrations have not been applied yet. You can apply migrations by running `pnpm db:migrate` in the directory');
 }
 
 bool isSubDir(String parent, String child) {

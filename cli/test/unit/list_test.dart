@@ -25,7 +25,5 @@ void main() {
 
       print(text);
     });
-
-
   });
 }

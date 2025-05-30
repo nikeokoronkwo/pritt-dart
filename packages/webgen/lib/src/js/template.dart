@@ -1,5 +1,3 @@
-
-
 import 'dart:js_interop';
 
 import 'gen.dart';

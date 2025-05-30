@@ -22,18 +22,18 @@ class WebGenTemplateConfig {
 
   final Map<String, String>? env;
 
-  const WebGenTemplateConfig({
-    required this.name,
-    required this.style,
-    this.icon,
-    this.logo,
-    this.assets = const [],
-    this.meta,
-    required this.auth,
-    this.env
-  });
+  const WebGenTemplateConfig(
+      {required this.name,
+      required this.style,
+      this.icon,
+      this.logo,
+      this.assets = const [],
+      this.meta,
+      required this.auth,
+      this.env});
 
-  factory WebGenTemplateConfig.fromJson(Map<String, dynamic> json) => _$WebGenTemplateConfigFromJson(json);
+  factory WebGenTemplateConfig.fromJson(Map<String, dynamic> json) =>
+      _$WebGenTemplateConfigFromJson(json);
   Map<String, dynamic> toJson() => _$WebGenTemplateConfigToJson(this);
 }
 
@@ -51,17 +51,17 @@ class WGTAuth {
   dynamic oidc;
   Iterable<WGTOAuth> oauth;
 
-  WGTAuth({
-    required this.magicLink,
-    required this.passkey,
-    this.google = false,
-    this.github = false,
-    this.sso,
-    this.oidc,
-    this.oauth = const []
-  });
+  WGTAuth(
+      {required this.magicLink,
+      required this.passkey,
+      this.google = false,
+      this.github = false,
+      this.sso,
+      this.oidc,
+      this.oauth = const []});
 
-  factory WGTAuth.fromJson(Map<String, dynamic> json) => _$WGTAuthFromJson(json);
+  factory WGTAuth.fromJson(Map<String, dynamic> json) =>
+      _$WGTAuthFromJson(json);
   Map<String, dynamic> toJson() => _$WGTAuthToJson(this);
 }
 
@@ -69,11 +69,12 @@ class WGTAuth {
 class WGTOAuth {
   WGTOAuth();
 
-  factory WGTOAuth.fromJson(Map<String,dynamic> json) => _$WGTOAuthFromJson(json);
+  factory WGTOAuth.fromJson(Map<String, dynamic> json) =>
+      _$WGTOAuthFromJson(json);
   Map<String, dynamic> toJson() => _$WGTOAuthToJson(this);
 }
 
-@JsonSerializable() 
+@JsonSerializable()
 class WGTStyle {
   static const defaultStyle = WGTStyle(
     colours: WGTStyleColours(
@@ -107,23 +108,24 @@ class WGTStyle {
     // If the input is neither a Map nor a String, return the default style
     throw ArgumentError('Invalid JSON format: $json');
   }
-  
+
   Map<String, dynamic> toJson() => _$WGTStyleToJson(this);
 }
+
 /// Metadata definitions used for SEO
 @JsonSerializable()
 class WGTMeta {
   final String title;
   final String description;
   final List<String> keywords;
-  
+
   const WGTMeta({
     required this.title,
     required this.description,
     this.keywords = const [],
   });
 
-  factory WGTMeta.fromJson(Map<String, dynamic> json) => _$WGTMetaFromJson(json);
+  factory WGTMeta.fromJson(Map<String, dynamic> json) =>
+      _$WGTMetaFromJson(json);
   Map<String, dynamic> toJson() => _$WGTMetaToJson(this);
 }
-

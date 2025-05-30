@@ -9,11 +9,10 @@ import 'js.dart';
 external String execSync(String command, [ChildProcessExecOptions? options]);
 
 extension type ChildProcessExecOptions._(JSObject _) implements JSObject {
-  external ChildProcessExecOptions({
-    String? cwd, String? env, String? shell, String? encoding = 'utf8'
-  });
+  external ChildProcessExecOptions(
+      {String? cwd, String? env, String? shell, String? encoding = 'utf8'});
   external String? get cwd;
-  external JSRecord<JSString, JSString>? get env; 
+  external JSRecord<JSString, JSString>? get env;
   external String? get shell;
   external String? get encoding;
 }

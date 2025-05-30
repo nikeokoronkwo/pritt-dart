@@ -43,3 +43,9 @@ extension type FSMkdirOptions._(JSObject _) implements JSObject {
   external String get mode;
   external bool get recursive;
 }
+
+@JS('writeFile')
+external JSPromise writeFile(String output, JSAny code, [String? encoding]);
+
+JSPromise writeFileAsString(String output, String code) =>
+    writeFile(output, code.toJS, 'utf-8');

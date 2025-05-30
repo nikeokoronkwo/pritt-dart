@@ -6,7 +6,11 @@ import 'package:pritt_cli/src/constants.dart';
 import 'package:pritt_common/interface.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
-  PrittClient({super.url, String? accessToken}) : super(authentication: accessToken == null ? null : HttpBearerAuth(accessToken: accessToken));
+  PrittClient({super.url, String? accessToken})
+      : super(
+            authentication: accessToken == null
+                ? null
+                : HttpBearerAuth(accessToken: accessToken));
 
   @override
   FutureOr<AddAdapterResponse> addAdapterWithId(AddAdapterRequest body,
@@ -103,7 +107,10 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<GetPackageByVersionResponse> getPackageByNameWithVersion(
-      {String? lang, bool? all, required String name, required String version}) {
+      {String? lang,
+      bool? all,
+      required String name,
+      required String version}) {
     // TODO: implement getPackageByNameWithVersion
     throw UnimplementedError();
   }

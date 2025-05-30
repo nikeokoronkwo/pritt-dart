@@ -43,6 +43,4 @@ const mockAuthors = [
   (name: 'Michael Phillips', email: 'mphillips@pritt.com'),
 ];
 
-const languages = [
-  'rust', 'cpp', 'c', 'dart'
-];
+const languages = ['rust', 'cpp', 'c', 'dart'];
