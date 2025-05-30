@@ -4,10 +4,15 @@
   {{/if}}
 
   {{#if auth.magicLink}}
-    const form = useForm({ defaultValues: { fullName: '', }, onSubmit: async ({
-    value }) => { // Do something with form data console.log(value)
-    signInMagicLink(); // show dialog notification }, }) function
-    signInMagicLink() { }
+    const form = useForm({ defaultValues: { fullName: '', }, 
+      onSubmit: async ({ value }) => { // Do something with form data console.log(value)
+        signInMagicLink(); // show dialog notification 
+      }, 
+    }) 
+    
+    function signInMagicLink() {
+
+    }
   {{/if}}
 
   {{#if auth.passkey}}

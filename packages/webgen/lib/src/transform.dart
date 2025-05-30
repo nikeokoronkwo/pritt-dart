@@ -4,14 +4,21 @@ import 'dart:js_interop';
 import 'config.dart';
 import 'js/fs.dart';
 import 'js/gen.dart';
+import 'js/handlebars.dart';
 import 'js/template.dart';
 import 'package:node_io/node_io.dart';
 import 'package:node_interop/path.dart';
 import 'package:node_interop/child_process.dart';
 
+class TransformationResult {
+  TemplateOptions options;
+
+  TransformationResult(this.options);
+}
+
 /// Transforms the templates in the input directory using the provided
 /// configuration and writes the output to the specified output directory.
-Future<void> transformTemplates(String inputDir, String templateDir,
+Future<TransformationResult> transformTemplates(String inputDir, String templateDir,
     String outputDir, WebGenTemplateConfig config) async {
   // start with generating files
   final templateOptions = TemplateOptions(
@@ -87,12 +94,23 @@ Future<void> transformTemplates(String inputDir, String templateDir,
                   encoding: 'utf8', recursive: true, withFileTypes: true))
           .toDart)
       .toDart;
-  for (final file in files) {
+  for (final file in files.where((f) => f.isFile())) {
     final destPath = path.join(
-        outputDir, path.relative(templateDir, file.parentPath), file.name);
+        outputDir, path.relative(templateDir, file.parentPath), file.name.replaceAll('.hbs', ''));
+    final actualPath = path.join(
+      templateDir, path.relative(templateDir, file.parentPath), file.name
+    );
 
-    print(destPath);
+    final actualContents = await File(actualPath).readAsString();
+    final destContents = compileString(actualContents)(templateOptions);
+
+    await mkdir(path.dirname(destPath), FSMkdirOptions(recursive: true)).toDart;
+    await writeFileAsString(
+          destPath, destContents)
+      .toDart;
   }
 
   // generate index files
+
+  return TransformationResult(templateOptions);
 }

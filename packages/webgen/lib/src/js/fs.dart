@@ -3,6 +3,8 @@ library fs;
 
 import 'dart:js_interop';
 
+import 'iterator.dart';
+
 @JS('cp')
 external JSPromise cp(String src, String dest, [FSCPOptions? options]);
 
@@ -18,7 +20,7 @@ external JSPromise<JSArray<Dirent>> readdir(String path,
 
 extension type FSReadDirOptions._(JSObject _) implements JSObject {
   external FSReadDirOptions(
-      {String encoding, bool withFileTypes = true, bool recursive});
+      {String encoding, bool withFileTypes, bool recursive});
   external String? get encoding;
   external bool? get withFileTypes;
   external bool? get recursive;
@@ -49,3 +51,20 @@ external JSPromise writeFile(String output, JSAny code, [String? encoding]);
 
 JSPromise writeFileAsString(String output, String code) =>
     writeFile(output, code.toJS, 'utf-8');
+
+@JS('watch')
+external JSAsyncIterator<FSWatchEvent> watch(String dir, [FSWatchOptions? options]);
+
+/// TODO: .signal
+extension type FSWatchOptions._(JSObject _) implements JSObject {
+  external FSWatchOptions({bool persistent, bool recursive, String encoding});
+  external bool get persistent;
+  external bool get recursive;
+  external String get encoding;
+}
+
+extension type FSWatchEvent._(JSObject _) implements JSObject {
+  external FSWatchEvent({String? filename, String eventType});
+  external String? get filename;
+  external String get eventType;
+}

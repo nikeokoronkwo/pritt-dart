@@ -2,3 +2,6 @@
 build
 coverage
 pnpm-lock.yaml
+
+# Prettier does not handle vue handlebars well
+*.vue.hbs

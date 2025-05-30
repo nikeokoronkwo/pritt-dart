@@ -8,6 +8,7 @@ import 'package:pritt_webgen/src/config.dart';
 import 'package:pritt_webgen/src/js/child_process.dart';
 import 'package:pritt_webgen/src/js/fs.dart';
 import 'package:pritt_webgen/src/js/handlebars.dart' as handlebars;
+import 'package:pritt_webgen/src/js/iterator.dart';
 import 'package:pritt_webgen/src/js/js.dart';
 import 'package:pritt_webgen/src/transform.dart';
 import 'package:yaml/yaml.dart';
@@ -28,6 +29,7 @@ final argParser = ArgParser()
       help: 'The configuration file to read the template config',
       defaultsTo: 'template.yaml')
   ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help information')
+  ..addFlag('watch', abbr: 'w', negatable: false, help: 'Watch the input directory for changes')
   ..addOption('js-file',
       abbr: 'j',
       help: 'The JS File containing utilities used',
@@ -112,7 +114,7 @@ void main(List<String> args) async {
   //                 encoding: 'utf8', recursive: true, withFileTypes: true))
   //         .toDart)
   //     .toDart;
-  await transformTemplates(dir.path, templateDir.path, outDir.path, config);
+  final result = await transformTemplates(dir.path, templateDir.path, outDir.path, config);
 
   // if template dir is in new dir, remove
   if (isSubDir(dir.path, templateDir.path)) {
@@ -122,6 +124,48 @@ void main(List<String> args) async {
     await Directory(newPath).delete(recursive: true);
   }
 
+  if (argResults.wasParsed('watch')) {
+    // watch
+    final watcher = watch(dir.path, FSWatchOptions(recursive: true));
+    // Felicity Smoak: Of course it would, because I am smart
+    // Oliver: I can't focus with you blabbing into my ear
+    await for (final entry in watcher.toDartStream) {
+      final filePath = entry.filename;
+      final modification = entry.eventType == 'change';
+      print('${entry.eventType} on ${entry.filename}');
+
+      // anyways
+      if (filePath != null) {
+        final String destPath;
+        final isTemplate = path.dirname(filePath).startsWith('template');
+        if (isTemplate) {
+          destPath = path.join(outDir.path, filePath.split(path.sep).skip(1).join(path.sep));
+        } else {
+          destPath = path.join(outDir.path, filePath);
+        }
+
+        if (modification) {
+          // normal mod
+          if (isTemplate && path.extname(filePath) == '.hbs') {
+            final fileContents = await File(path.join(dir.path, filePath)).readAsString();
+            final destContents = handlebars.compileString(fileContents)(result.options);
+            await writeFileAsString(destPath, destContents).toDart;
+          } else {
+            await copyFile(path.join(dir.path, filePath), destPath).toDart;
+          }
+        } else {
+          final currentFile = File(path.join(dir.path, filePath));
+          if (await currentFile.exists()) {
+            // addition
+            await copyFile(path.join(dir.path, filePath), destPath).toDart;
+          } else {
+            // deletion
+            await File(destPath).delete();
+          }
+        }
+      }
+    }
+  }
   print('ALL DONE!');
   print(
       'NOTE: Migrations have not been applied yet. You can apply migrations by running `pnpm db:migrate` in the directory');
