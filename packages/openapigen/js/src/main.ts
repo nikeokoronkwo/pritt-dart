@@ -15,21 +15,26 @@ interface OAPIGenMethods {
   summary?: string; //
   description?: string; //
   parameters: OpenAPIV3.ParameterObject[];
-  body?: {
-    type: string;
-    name?: string;
-    schema?: OpenAPIV3.SchemaObject;
-  } | {
-    type: undefined;
-    name: undefined;
-    schema: undefined;
-    ref?: string;
-  };
-  returns?: Record<string, {
-    type: string;
-    name?: string;
-    schema?: OpenAPIV3.SchemaObject;
-  }>;
+  body?:
+    | {
+        type: string;
+        name?: string;
+        schema?: OpenAPIV3.SchemaObject;
+      }
+    | {
+        type: undefined;
+        name: undefined;
+        schema: undefined;
+        ref?: string;
+      };
+  returns?: Record<
+    string,
+    {
+      type: string;
+      name?: string;
+      schema?: OpenAPIV3.SchemaObject;
+    }
+  >;
 }
 
 /** Parses the OpenAPI document and generates an object map used for generating code */
@@ -54,18 +59,21 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
       | OpenAPIV3.ReferenceObject
       | OpenAPIV3.RequestBodyObject
       | undefined,
-  ): {
-    type: string;
-    name?: string;
-    schema?: OpenAPIV3.SchemaObject;
-    required?: boolean;
-  } | {
-    type: undefined;
-    name: undefined;
-    schema: undefined;
-    ref?: string;
-    required?: boolean;
-  } | undefined {
+  ):
+    | {
+        type: string;
+        name?: string;
+        schema?: OpenAPIV3.SchemaObject;
+        required?: boolean;
+      }
+    | {
+        type: undefined;
+        name: undefined;
+        schema: undefined;
+        ref?: string;
+        required?: boolean;
+      }
+    | undefined {
     if (responseInfo) {
       if ("$ref" in responseInfo) {
         return {
@@ -82,7 +90,9 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
         );
 
         let name = obj.schema?.title
-          ? (obj.schema.title !== "schema" ? obj.schema?.title : "unknown")
+          ? obj.schema.title !== "schema"
+            ? obj.schema?.title
+            : "unknown"
           : undefined;
         if (name === "unknown") name = searchComponent(obj);
 
@@ -108,10 +118,12 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
       name: operation?.operationId,
       summary: operation?.summary,
       description: operation?.description,
-      parameters: [...[
-        ...(operation?.parameters as OpenAPIV3.ParameterObject[] ?? []),
-        ...parameters,
-      ]],
+      parameters: [
+        ...[
+          ...((operation?.parameters as OpenAPIV3.ParameterObject[]) ?? []),
+          ...parameters,
+        ],
+      ],
       body: transformBodySchema(operation?.requestBody),
       returns: Object.assign(
         {},
@@ -130,49 +142,51 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
   return {
     docs: spec.info?.description,
     schemas,
-    methods: Object.entries(spec.paths ?? {}).map(([k, v]) => {
-      const returnArray: OAPIGenMethods[] = [];
-      if (v?.get) {
-        returnArray.push(
-          generateMethod(
-            v.get,
-            "GET",
-            k,
-            v.parameters as OpenAPIV3.ParameterObject[],
-          ),
-        );
-      }
-      if (v?.post) {
-        returnArray.push(
-          generateMethod(
-            v.post,
-            "POST",
-            k,
-            v.parameters as OpenAPIV3.ParameterObject[],
-          ),
-        );
-      }
-      if (v?.delete) {
-        returnArray.push(
-          generateMethod(
-            v.delete,
-            "DELETE",
-            k,
-            v.parameters as OpenAPIV3.ParameterObject[],
-          ),
-        );
-      }
-      if (v?.put) {
-        returnArray.push(
-          generateMethod(
-            v.put,
-            "PUT",
-            k,
-            v.parameters as OpenAPIV3.ParameterObject[],
-          ),
-        );
-      }
-      return returnArray;
-    }).reduce((previous, current, index) => previous.concat(current)),
+    methods: Object.entries(spec.paths ?? {})
+      .map(([k, v]) => {
+        const returnArray: OAPIGenMethods[] = [];
+        if (v?.get) {
+          returnArray.push(
+            generateMethod(
+              v.get,
+              "GET",
+              k,
+              v.parameters as OpenAPIV3.ParameterObject[],
+            ),
+          );
+        }
+        if (v?.post) {
+          returnArray.push(
+            generateMethod(
+              v.post,
+              "POST",
+              k,
+              v.parameters as OpenAPIV3.ParameterObject[],
+            ),
+          );
+        }
+        if (v?.delete) {
+          returnArray.push(
+            generateMethod(
+              v.delete,
+              "DELETE",
+              k,
+              v.parameters as OpenAPIV3.ParameterObject[],
+            ),
+          );
+        }
+        if (v?.put) {
+          returnArray.push(
+            generateMethod(
+              v.put,
+              "PUT",
+              k,
+              v.parameters as OpenAPIV3.ParameterObject[],
+            ),
+          );
+        }
+        return returnArray;
+      })
+      .reduce((previous, current, index) => previous.concat(current)),
   };
 }

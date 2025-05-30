@@ -11,14 +11,19 @@ WebGenTemplateConfig _$WebGenTemplateConfigFromJson(
     WebGenTemplateConfig(
       name: json['name'] as String,
       style: WGTStyle.fromJson(json['style']),
-      icon: json['icon'] as String,
-      logo: json['logo'] as String,
-      assets:
-          (json['assets'] as List<dynamic>).map((e) => e as String).toList(),
+      icon: json['icon'] as String?,
+      logo: json['logo'] as String?,
+      assets: (json['assets'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       meta: json['meta'] == null
           ? null
           : WGTMeta.fromJson(json['meta'] as Map<String, dynamic>),
       auth: WGTAuth.fromJson(json['auth'] as Map<String, dynamic>),
+      env: (json['env'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$WebGenTemplateConfigToJson(
@@ -31,29 +36,34 @@ Map<String, dynamic> _$WebGenTemplateConfigToJson(
       'assets': instance.assets,
       'meta': instance.meta,
       'auth': instance.auth,
+      'env': instance.env,
     };
 
 WGTAuth _$WGTAuthFromJson(Map<String, dynamic> json) => WGTAuth(
-      emailAndPassword: json['emailAndPassword'],
-      passkey: json['passkey'],
-      google: json['google'],
-      github: json['github'],
-      apple: json['apple'],
-      microsoft: json['microsoft'],
+      magicLink: json['magic_link'] as bool,
+      passkey: json['passkey'] as bool,
+      google: json['google'] as bool? ?? false,
+      github: json['github'] as bool? ?? false,
       sso: json['sso'],
       oidc: json['oidc'],
+      oauth: (json['oauth'] as List<dynamic>?)
+              ?.map((e) => WGTOAuth.fromJson(e as Map<String, dynamic>)) ??
+          const [],
     );
 
 Map<String, dynamic> _$WGTAuthToJson(WGTAuth instance) => <String, dynamic>{
-      'emailAndPassword': instance.emailAndPassword,
+      'magic_link': instance.magicLink,
       'passkey': instance.passkey,
       'google': instance.google,
       'github': instance.github,
-      'apple': instance.apple,
-      'microsoft': instance.microsoft,
       'sso': instance.sso,
       'oidc': instance.oidc,
+      'oauth': instance.oauth.toList(),
     };
+
+WGTOAuth _$WGTOAuthFromJson(Map<String, dynamic> json) => WGTOAuth();
+
+Map<String, dynamic> _$WGTOAuthToJson(WGTOAuth instance) => <String, dynamic>{};
 
 WGTStyle _$WGTStyleFromJson(Map<String, dynamic> json) => WGTStyle(
       colours:
@@ -69,7 +79,10 @@ Map<String, dynamic> _$WGTStyleToJson(WGTStyle instance) => <String, dynamic>{
 WGTMeta _$WGTMetaFromJson(Map<String, dynamic> json) => WGTMeta(
       title: json['title'] as String,
       description: json['description'] as String,
-      keywords: json['keywords'] as String,
+      keywords: (json['keywords'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$WGTMetaToJson(WGTMeta instance) => <String, dynamic>{

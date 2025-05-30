@@ -1,4 +1,3 @@
-
 import 'package:shelf/shelf.dart';
 
 import '../main/adapter/adapter/resolve.dart';

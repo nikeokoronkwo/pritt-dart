@@ -7,4 +7,10 @@ version: 0.1.0
 
 style: default
 
+meta:
+  title: "Pritt Package Registry"
+  description: The Package Registry In Today's Time!
 
+auth:
+  magic_link: true
+  passkey: true

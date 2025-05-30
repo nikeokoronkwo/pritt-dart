@@ -807,7 +807,8 @@ FROM plugins p
 extension Authorization on PrittDatabase {
   /// Check for the authorization of a user
   /// TODO: Implement a better way to check for authorization, maybe put this behind a cache
-  Future<({User user, PrittAuthMetadata metadata})?> checkAuthorization(String accessToken) async {
+  Future<({User user, PrittAuthMetadata metadata})?> checkAuthorization(
+      String accessToken) async {
     final result = await _pool.execute(Sql.named('''
 SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
 FROM users

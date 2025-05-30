@@ -59,8 +59,6 @@ class LoginCommand extends PrittCommand {
       logger.info("You are already logged in...");
     }
 
-
-
     // get user info from login details
 
     // display user log in info

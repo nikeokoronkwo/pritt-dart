@@ -37,19 +37,28 @@ class UserCredentials {
   String get path => _file.path;
 
   UserCredentials(
-      {Uri? uri, required this.accessToken, required this.accessTokenExpires, required this.id})
+      {Uri? uri,
+      required this.accessToken,
+      required this.accessTokenExpires,
+      required this.id})
       : uri = uri ?? Uri.parse(mainPrittInstance);
 
   /// [duration] in seconds
   factory UserCredentials.fromExpirationDuration(
-      {required String accessToken, required int duration, Uri? uri, required String id}) {
+      {required String accessToken,
+      required int duration,
+      Uri? uri,
+      required String id}) {
     uri ??= Uri.parse(mainPrittInstance);
 
     final timeNow = DateTime.now();
     final timeExpiration = timeNow.add(Duration(seconds: duration));
 
     return UserCredentials(
-        uri: uri, accessToken: accessToken, accessTokenExpires: timeExpiration, id: id);
+        uri: uri,
+        accessToken: accessToken,
+        accessTokenExpires: timeExpiration,
+        id: id);
   }
 
   factory UserCredentials.fromJson(Map<String, dynamic> json) =>
@@ -75,7 +84,10 @@ class UserCredentials {
     // create or overwrite configuration file
     try {
       final credentialsObject = UserCredentials.fromExpirationDuration(
-          accessToken: accessToken, duration: accessTokenDuration, uri: uri, id: id);
+          accessToken: accessToken,
+          duration: accessTokenDuration,
+          uri: uri,
+          id: id);
 
       await _file.writeAsString(json.encode(credentialsObject.toJson()));
 

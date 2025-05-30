@@ -1,4 +1,5 @@
 packages:
   - web
+  - web-ref
   - e2e
   - packages/**
