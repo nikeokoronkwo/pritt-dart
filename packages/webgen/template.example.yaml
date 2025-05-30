@@ -1,4 +1,3 @@
-
 # Company name
 name:
 
@@ -31,7 +30,7 @@ assets:
   - img/ref.jpg
 
 # Supports MD and AsciiDoc (all optional)
-terms-of-use: 
+terms-of-use:
 privacy-policy:
 cookie-policy:
 

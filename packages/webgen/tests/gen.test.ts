@@ -7,18 +7,18 @@ const specDir = "./test/specs";
 
 test("", async () => {
   generateAuthConfig({
-    name: 'test',
-    title: 'Test Site',
-      magicLink: true,
-      passkey: true,
-      oauth: {
-        github: true,
-        google: true
-      },
-      admin: true,
-      orgs: true,
-      oidc: false,
-      sso: false,
-      twoFactorAuth: false
+    name: "test",
+    title: "Test Site",
+    magicLink: true,
+    passkey: true,
+    oauth: {
+      github: true,
+      google: true,
+    },
+    admin: true,
+    orgs: true,
+    oidc: false,
+    sso: false,
+    twoFactorAuth: false,
   });
 });

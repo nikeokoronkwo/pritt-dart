@@ -14,4 +14,3 @@ meta:
 auth:
   magic_link: true
   passkey: true
-  

@@ -1,7 +1,6 @@
 name: pritt_services_only
 
 services:
-
   filestorage:
     image: quay.io/minio/minio
     ports:

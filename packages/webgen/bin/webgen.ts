@@ -5,7 +5,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as child_process from "node:child_process";
 import Handlebars from "handlebars";
-import { z } from "zod"
+import { z } from "zod";
 import { generateAuthConfig } from "../lib/src/js/gen/auth.js";
 
 const require = createRequire(import.meta.url);
@@ -16,13 +16,11 @@ globalThis.fs = fs;
 globalThis.path = path;
 globalThis.child_process = child_process;
 
-
 // dependencies
 globalThis.Handlebars = Handlebars;
 
 // funcs
-globalThis.generateAuthConfig = generateAuthConfig
-
+globalThis.generateAuthConfig = generateAuthConfig;
 
 // dart main runner
 globalThis.dartMainRunner = async function (main, args) {
