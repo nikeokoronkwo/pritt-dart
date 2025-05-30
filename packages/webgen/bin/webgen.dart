@@ -125,6 +125,7 @@ void main(List<String> args) async {
   }
 
   if (argResults.wasParsed('watch')) {
+    print('STARTED WATCHING FOR CHANGES...');
     // watch
     final watcher = watch(dir.path, FSWatchOptions(recursive: true));
     // Felicity Smoak: Of course it would, because I am smart
@@ -149,7 +150,7 @@ void main(List<String> args) async {
           if (isTemplate && path.extname(filePath) == '.hbs') {
             final fileContents = await File(path.join(dir.path, filePath)).readAsString();
             final destContents = handlebars.compileString(fileContents)(result.options);
-            await writeFileAsString(destPath, destContents).toDart;
+            await writeFileAsString(destPath.replaceAll('.hbs', ''), destContents).toDart;
           } else {
             await copyFile(path.join(dir.path, filePath), destPath).toDart;
           }
