@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:js_interop';
 
+import 'package:node_interop/child_process.dart';
+import 'package:node_interop/path.dart';
+import 'package:node_io/node_io.dart';
+
 import 'config.dart';
 import 'js/fs.dart';
 import 'js/gen.dart';
 import 'js/handlebars.dart';
 import 'js/template.dart';
-import 'package:node_io/node_io.dart';
-import 'package:node_interop/path.dart';
-import 'package:node_interop/child_process.dart';
 
 class TransformationResult {
   TemplateOptions options;
@@ -18,8 +19,8 @@ class TransformationResult {
 
 /// Transforms the templates in the input directory using the provided
 /// configuration and writes the output to the specified output directory.
-Future<TransformationResult> transformTemplates(String inputDir, String templateDir,
-    String outputDir, WebGenTemplateConfig config) async {
+Future<TransformationResult> transformTemplates(String inputDir,
+    String templateDir, String outputDir, WebGenTemplateConfig config) async {
   // start with generating files
   final templateOptions = TemplateOptions(
       auth: AuthOptions(
@@ -96,18 +97,17 @@ Future<TransformationResult> transformTemplates(String inputDir, String template
       .toDart;
   for (final file in files.where((f) => f.isFile())) {
     final destPath = path.join(
-        outputDir, path.relative(templateDir, file.parentPath), file.name.replaceAll('.hbs', ''));
+        outputDir,
+        path.relative(templateDir, file.parentPath),
+        file.name.replaceAll('.hbs', ''));
     final actualPath = path.join(
-      templateDir, path.relative(templateDir, file.parentPath), file.name
-    );
+        templateDir, path.relative(templateDir, file.parentPath), file.name);
 
     final actualContents = await File(actualPath).readAsString();
     final destContents = compileString(actualContents)(templateOptions);
 
     await mkdir(path.dirname(destPath), FSMkdirOptions(recursive: true)).toDart;
-    await writeFileAsString(
-          destPath, destContents)
-      .toDart;
+    await writeFileAsString(destPath, destContents).toDart;
   }
 
   // generate index files

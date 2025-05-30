@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pritt_server/src/main/adapter/adapter.dart';
@@ -16,14 +18,15 @@ void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
     late MockCRSArchiveController mockArchiveController;
-    late MockJsonable mockMetaResult;
+    late MockJsonConvertible mockMetaResult;
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-      mockMetaResult = MockJsonable();
+      mockMetaResult = MockJsonConvertible();
     });
 
+    // TODO: More Tests
     group('Meta Adapter Result', () {
       when(mockMetaResult.toJson()).thenReturn({'name': 1, 'age': 2});
 
@@ -34,7 +37,7 @@ void main() {
           return AdapterMetaResult(mockMetaResult);
         },
         retrieve: (requestObject, controller) async {
-          return AdapterResult();
+          return AdapterArchiveResult(Stream.empty(), 'test.tar.gz');
         },
       );
 

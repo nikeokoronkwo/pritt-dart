@@ -53,7 +53,8 @@ JSPromise writeFileAsString(String output, String code) =>
     writeFile(output, code.toJS, 'utf-8');
 
 @JS('watch')
-external JSAsyncIterator<FSWatchEvent> watch(String dir, [FSWatchOptions? options]);
+external JSAsyncIterator<FSWatchEvent> watch(String dir,
+    [FSWatchOptions? options]);
 
 /// TODO: .signal
 extension type FSWatchOptions._(JSObject _) implements JSObject {

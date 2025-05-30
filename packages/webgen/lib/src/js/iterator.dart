@@ -1,11 +1,12 @@
 /// A base interface for the [AsyncIterator] protocol
-/// 
+///
 /// This is based on
 import 'dart:async';
 import 'dart:js_interop';
 
 @JS('AsyncIterator')
-extension type JSAsyncIterator<T extends JSAny>._(JSObject _) implements JSObject {
+extension type JSAsyncIterator<T extends JSAny>._(JSObject _)
+    implements JSObject {
   external JSPromise<JSAsyncIteratorReturn<T>> next([T value]);
   @JS('return')
   external JSPromise<JSAsyncIteratorReturn<T>> $return([T value]);
@@ -16,8 +17,6 @@ extension ToDartStreamIterator<T extends JSAny> on JSAsyncIterator<T> {
   Stream<T> get toDartStream => streamFromIterator(toDart);
 }
 
-
-
 class JSStreamIterator<T extends JSAny> implements StreamIterator<T> {
   JSAsyncIterator<T> iterator;
 
@@ -25,12 +24,12 @@ class JSStreamIterator<T extends JSAny> implements StreamIterator<T> {
   T? _currentValue;
 
   JSStreamIterator(this.iterator);
-  
+
   @override
   Future cancel() {
     return iterator.$return().toDart;
   }
-  
+
   @override
   // TODO: implement current
   T get current {
@@ -40,9 +39,9 @@ class JSStreamIterator<T extends JSAny> implements StreamIterator<T> {
       throw Exception('No value');
     } else {
       return _currentValue!;
-    } 
+    }
   }
-  
+
   @override
   Future<bool> moveNext() async {
     final value = await (iterator.next().toDart);
@@ -64,13 +63,12 @@ Stream<T> streamFromIterator<T>(StreamIterator<T> iterator) async* {
 
 /// The only method not implemented is `AsyncGenerator.throw`, as JS Errors are not implemented...
 @JS('AsyncGenerator')
-extension type JSAsyncGenerator<T extends JSAny>._(JSObject _) implements JSAsyncIterator {
-  
-}
+extension type JSAsyncGenerator<T extends JSAny>._(JSObject _)
+    implements JSAsyncIterator {}
 
-extension type JSAsyncIteratorReturn<T extends JSAny>._(JSObject _) implements JSObject {
+extension type JSAsyncIteratorReturn<T extends JSAny>._(JSObject _)
+    implements JSObject {
   external JSAsyncIteratorReturn({bool done, T value});
   external bool get done;
   external T get value;
 }
-

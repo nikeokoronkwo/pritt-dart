@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:js_interop';
 
 import 'package:args/args.dart';
-import 'package:node_io/node_io.dart';
 import 'package:node_interop/path.dart';
+import 'package:node_io/node_io.dart';
 import 'package:pritt_webgen/src/config.dart';
 import 'package:pritt_webgen/src/js/child_process.dart';
 import 'package:pritt_webgen/src/js/fs.dart';
 import 'package:pritt_webgen/src/js/handlebars.dart' as handlebars;
 import 'package:pritt_webgen/src/js/iterator.dart';
-import 'package:pritt_webgen/src/js/js.dart';
 import 'package:pritt_webgen/src/transform.dart';
 import 'package:yaml/yaml.dart';
 
@@ -29,7 +28,10 @@ final argParser = ArgParser()
       help: 'The configuration file to read the template config',
       defaultsTo: 'template.yaml')
   ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help information')
-  ..addFlag('watch', abbr: 'w', negatable: false, help: 'Watch the input directory for changes')
+  ..addFlag('watch',
+      abbr: 'w',
+      negatable: false,
+      help: 'Watch the input directory for changes')
   ..addOption('js-file',
       abbr: 'j',
       help: 'The JS File containing utilities used',
@@ -114,7 +116,8 @@ void main(List<String> args) async {
   //                 encoding: 'utf8', recursive: true, withFileTypes: true))
   //         .toDart)
   //     .toDart;
-  final result = await transformTemplates(dir.path, templateDir.path, outDir.path, config);
+  final result =
+      await transformTemplates(dir.path, templateDir.path, outDir.path, config);
 
   // if template dir is in new dir, remove
   if (isSubDir(dir.path, templateDir.path)) {
@@ -140,7 +143,8 @@ void main(List<String> args) async {
         final String destPath;
         final isTemplate = path.dirname(filePath).startsWith('template');
         if (isTemplate) {
-          destPath = path.join(outDir.path, filePath.split(path.sep).skip(1).join(path.sep));
+          destPath = path.join(
+              outDir.path, filePath.split(path.sep).skip(1).join(path.sep));
         } else {
           destPath = path.join(outDir.path, filePath);
         }
@@ -148,9 +152,13 @@ void main(List<String> args) async {
         if (modification) {
           // normal mod
           if (isTemplate && path.extname(filePath) == '.hbs') {
-            final fileContents = await File(path.join(dir.path, filePath)).readAsString();
-            final destContents = handlebars.compileString(fileContents)(result.options);
-            await writeFileAsString(destPath.replaceAll('.hbs', ''), destContents).toDart;
+            final fileContents =
+                await File(path.join(dir.path, filePath)).readAsString();
+            final destContents =
+                handlebars.compileString(fileContents)(result.options);
+            await writeFileAsString(
+                    destPath.replaceAll('.hbs', ''), destContents)
+                .toDart;
           } else {
             await copyFile(path.join(dir.path, filePath), destPath).toDart;
           }
