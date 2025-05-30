@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:io/ansi.dart';
 import 'package:pritt_cli/src/client.dart';

@@ -18,6 +18,8 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
   @JsonKey(name: 'result_type')
   final CustomAdapterResultType resultType;
 
+  CustomAdapterResult({required this.resultType});
+
   AdapterResult toAdapterResult();
 
   factory CustomAdapterResult.fromJson(Map<String, dynamic> json) {
@@ -28,20 +30,58 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
       CustomAdapterResultType.archive => throw UnimplementedError(),
     };
   }
+
 }
 
 // TODO: Implement
 class CustomAdapterMetaResult extends CustomAdapterResult
     implements AdapterMetaResult {
+
+  CustomAdapterMetaResult({required super.resultType});
+
   @override
   // TODO: implement responseType
   ResponseType get responseType => throw UnimplementedError();
+
+  @override
+  // TODO: implement body
+  JsonConvertible get body => throw UnimplementedError();
+
+  @override
+  AdapterResult toAdapterResult() {
+    // TODO: implement toAdapterResult
+    throw UnimplementedError();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
 }
 
 // TODO: Implement
 class CustomAdapterArchiveResult extends CustomAdapterResult
     implements AdapterMetaResult {
+  CustomAdapterArchiveResult({required super.resultType});
+
   @override
   // TODO: implement responseType
   ResponseType get responseType => throw UnimplementedError();
+
+  @override
+  // TODO: implement body
+  JsonConvertible get body => throw UnimplementedError();
+
+  @override
+  AdapterResult toAdapterResult() {
+    // TODO: implement toAdapterResult
+    throw UnimplementedError();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
 }

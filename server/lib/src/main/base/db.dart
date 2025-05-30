@@ -855,6 +855,6 @@ WHERE access_token = @accessToken
       updatedAt: columnMap['updated_at'] as DateTime,
     );
 
-    return user;
+    return (user: user, metadata: meta);
   }
 }

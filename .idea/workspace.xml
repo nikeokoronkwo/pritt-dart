@@ -5,7 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="CLI: Implement `info`">
+      <change afterPath="$PROJECT_DIR$/cli/lib/src/cmd/adapter/unpack.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cli/lib/src/cmd/package/publish.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cli/lib/src/package.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pritt-dart.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pritt-dart.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/adapter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/adapter.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/adapter/list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/adapter/list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/info.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/package.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/package.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/publish.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/publish.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/publish/adapter.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/publish/package.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/adapter/publish.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/unpack.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/unpack.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/unpack/adapter.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/unpack/package.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/cas/adapter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/cas/adapter.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +98,7 @@
     "Shell Script.PKL Testing.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart",
+    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/cli/lib/src/cmd/adapter",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "show.migrate.to.gradle.popup": "false"
   }
