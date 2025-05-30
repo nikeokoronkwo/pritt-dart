@@ -33,7 +33,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<StreamedContent> getAdapterArchiveWithName() {
+  FutureOr<StreamedContent> getAdapterArchiveWithName({required String name}) {
     // TODO: implement getAdapterArchiveWithName
     throw UnimplementedError();
   }
@@ -75,7 +75,8 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<StreamedContent> getPackageArchiveWithName() {
+  FutureOr<StreamedContent> getPackageArchiveWithName(
+      {required String name, String? version}) {
     // TODO: implement getPackageArchiveWithName
     throw UnimplementedError();
   }

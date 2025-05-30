@@ -15,7 +15,11 @@ PkgRepName parsePackageInfo(String raw) {
 
   identifier = first;
 
-  if (rest.isEmpty) { version = null; } else { version = rest.first; }
+  if (rest.isEmpty) {
+    version = null;
+  } else {
+    version = rest.first;
+  }
 
   final (name, scope: scope) = parsePackageName(identifier);
 

@@ -11,6 +11,8 @@ class Content {
   const Content(this.raw);
 
   final List<int> raw;
+
+  int get length => raw.length;
 }
 
 class TextContent extends Content {
@@ -42,11 +44,15 @@ class JSONContent extends Content {
 class StreamedContent extends Content {
   StreamedContent(
     this.name,
-    this.data, {
+    this.data,
+    this.length, {
     this.contentType = 'application/octet-stream',
   }) : super([]);
 
   Stream<List<int>> data;
+
+  @override
+  int length;
 
   String name;
 
@@ -1114,9 +1120,13 @@ abstract interface class PrittInterface {
 
   /// GET /api/archive/package/{name}
   ///
-  _i3.FutureOr<StreamedContent> getPackageArchiveWithName();
+  _i3.FutureOr<StreamedContent> getPackageArchiveWithName({
+    required String name,
+    String version,
+  });
 
-  /// GET /api/archive/adapter/{id}
+  /// GET /api/archive/adapter/{name}
   ///
-  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName();
+  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName(
+      {required String name});
 }

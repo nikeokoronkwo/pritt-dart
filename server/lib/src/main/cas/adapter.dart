@@ -30,13 +30,11 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
       CustomAdapterResultType.archive => throw UnimplementedError(),
     };
   }
-
 }
 
 // TODO: Implement
 class CustomAdapterMetaResult extends CustomAdapterResult
     implements AdapterMetaResult {
-
   CustomAdapterMetaResult({required super.resultType});
 
   @override

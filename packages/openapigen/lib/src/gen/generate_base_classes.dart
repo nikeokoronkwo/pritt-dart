@@ -17,7 +17,13 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
       ..fields.add(Field((f) => f
         ..name = 'raw'
         ..type = refer('List<int>')
-        ..modifier = FieldModifier.final$))),
+        ..modifier = FieldModifier.final$))
+      ..methods.add(Method((m) => m
+        ..name = 'length'
+        ..returns = refer('int')
+        ..type = MethodType.getter
+        ..lambda = true
+        ..body = const Code('raw.length')))),
 
     // text content
     Class((c) => c
@@ -94,6 +100,9 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
           Parameter((p) => p
             ..name = 'data'
             ..toThis = true),
+          Parameter((p) => p
+            ..name = 'length'
+            ..toThis = true),
         ])
         ..optionalParameters.add(Parameter((p) => p
           ..name = 'contentType'
@@ -102,9 +111,14 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
           ..defaultTo = literalString('application/octet-stream').code))
         ..initializers.add(literal(refer('super')).call([literal([])]).code)))
       ..fields.addAll([
+        // TODO: Make all fields final
         Field((f) => f
           ..name = 'data'
           ..type = refer('Stream<List<int>>')),
+        Field((f) => f
+          ..annotations.add(refer('override'))
+          ..name = 'length'
+          ..type = refer('int')),
         Field((f) => f
           ..name = 'name'
           ..type = refer('String')),

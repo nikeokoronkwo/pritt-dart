@@ -1171,6 +1171,26 @@ paths {
         }
     }
     ["/api/archive/package/{name}"] {
+        parameters {
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the adapter, or an identifier associated with it"
+                schema {
+                    type = "string"
+                }
+            }
+            new {
+                name = "version"
+                `in` = "query"
+                required = false
+                description = "The version of the package to unpack"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         get {
             operationId = "getPackageArchiveWithName"
             responses {
@@ -1193,7 +1213,18 @@ paths {
             }
         }
     }
-    ["/api/archive/adapter/{id}"] {
+    ["/api/archive/adapter/{name}"] {
+        parameters {
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the adapter, or an identifier associated with it"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         get {
             operationId = "getAdapterArchiveWithName"
             responses {
