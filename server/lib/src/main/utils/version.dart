@@ -80,8 +80,9 @@ class Version implements Comparable<Version> {
     } else {
       if (preRelease!.startsWith('beta')) return VersionType.beta;
       if (preRelease!.startsWith('rc')) return VersionType.rc;
-      if (preRelease!.startsWith('experimental'))
+      if (preRelease!.startsWith('experimental')) {
         return VersionType.experimental;
+      }
       if (preRelease!.startsWith('canary')) return VersionType.canary;
       if (preRelease!.startsWith('next')) return VersionType.next;
     }
@@ -96,10 +97,12 @@ class Version implements Comparable<Version> {
     if (patch != other.patch) return patch.compareTo(other.patch);
 
     // Compare prerelease (if both have it)
-    if (preRelease == null && other.preRelease != null)
+    if (preRelease == null && other.preRelease != null) {
       return 1; // this is release, other is pre
-    if (preRelease != null && other.preRelease == null)
+    }
+    if (preRelease != null && other.preRelease == null) {
       return -1; // this is pre, other is release
+    }
     if (preRelease != null && other.preRelease != null) {
       final pre1 = _splitPrerelease(preRelease!);
       final pre2 = _splitPrerelease(other.preRelease!);

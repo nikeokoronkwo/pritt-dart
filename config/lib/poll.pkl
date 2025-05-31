@@ -1,0 +1,5 @@
+
+
+typealias ValidatedPollStatus = "success" | "fail" | "error"
+
+typealias PollStatus = ValidatedPollStatus | "expired" | "pending"

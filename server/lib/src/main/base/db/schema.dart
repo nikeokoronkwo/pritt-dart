@@ -346,4 +346,49 @@ class Plugin {
   });
 }
 
-enum PluginArchiveType { single, multi }
+enum PluginArchiveType {
+  single,
+  multi;
+
+  static PluginArchiveType fromString(String name) =>
+      PluginArchiveType.values.firstWhere((v) => v.name == name);
+}
+
+/// Authorization Session Tasks
+class AuthorizationSession {
+  @Key(name: 'session_id')
+  String sessionId;
+
+  String? userId;
+
+  AuthorizationStatus status;
+
+  @Key(name: 'expires_at')
+  DateTime expiresAt;
+
+  String deviceId;
+
+  AuthorizationSession({
+    required this.sessionId,
+    this.userId,
+    required this.deviceId,
+    this.status = AuthorizationStatus.pending,
+    required this.expiresAt,
+  }) {
+    if (expiresAt.isBefore(DateTime.now()) &&
+        status == AuthorizationStatus.pending) {
+      status = AuthorizationStatus.expired;
+    }
+  }
+}
+
+enum AuthorizationStatus {
+  pending,
+  success,
+  fail,
+  expired,
+  error;
+
+  static AuthorizationStatus fromString(String name) =>
+      AuthorizationStatus.values.firstWhere((v) => v.name == name);
+}

@@ -55,7 +55,7 @@ final handler = defineRequestHandler((event) async {
     final archive = await crs.ofs.get(package.body!.archive.path);
 
     return archive.data;
-  } on CRSException catch (e) {
+  } on CRSException {
     // handle error
   } catch (e) {
     // unknown error

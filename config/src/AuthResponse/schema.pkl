@@ -3,10 +3,10 @@ module AuthResponse
 /// The token used for authentication on the client (CLI) side
 token: String
 
-/// A number to represent the number of seconds from when the request was made before the request becomes expired
+/// Time to represent the number of seconds from when the request was made before the request becomes expired
 /// 
 /// Expect some 
-token_expires: Int
+token_expires: String
 
 /// A unique id used to identify the person requesting for an ID
 id: String

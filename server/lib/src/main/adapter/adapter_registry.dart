@@ -18,8 +18,6 @@ import 'adapter.dart';
 import 'core/dart.dart';
 import 'core/npm.dart';
 
-import 'package:sqlite3/sqlite3.dart';
-
 /// An adapter registry implementation
 ///
 /// The adapter registry is responsible for retrieving and controlling adapters in Pritt.

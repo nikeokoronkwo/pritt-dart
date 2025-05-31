@@ -38,7 +38,7 @@ Map<String, dynamic> _$PollResponseToJson(PollResponse instance) =>
 
 AuthPollResponse _$AuthPollResponseFromJson(Map<String, dynamic> json) =>
     AuthPollResponse(
-      status: $enumDecode(_$PollStatusEnumMap, json['status']),
+      status: json['status'],
       response: json['response'] == null
           ? null
           : PollResponse.fromJson(json['response'] as Map<String, dynamic>),
@@ -46,19 +46,13 @@ AuthPollResponse _$AuthPollResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$AuthPollResponseToJson(AuthPollResponse instance) =>
     <String, dynamic>{
-      'status': _$PollStatusEnumMap[instance.status]!,
+      'status': instance.status,
       'response': instance.response,
     };
 
-const _$PollStatusEnumMap = {
-  PollStatus.pending: 'pending',
-  PollStatus.success: 'success',
-  PollStatus.error: 'error',
-};
-
 AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
       token: json['token'] as String,
-      token_expires: (json['token_expires'] as num).toInt(),
+      token_expires: json['token_expires'] as String,
       id: json['id'] as String,
     );
 
@@ -67,6 +61,43 @@ Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>
       'token': instance.token,
       'token_expires': instance.token_expires,
       'id': instance.id,
+    };
+
+AuthValidateRequest _$AuthValidateRequestFromJson(Map<String, dynamic> json) =>
+    AuthValidateRequest(
+      user_id: json['user_id'] as String,
+      session_id: json['session_id'] as String,
+      time: json['time'] as String,
+      status: $enumDecode(_$ValidatedPollStatusEnumMap, json['status']),
+      error: json['error'] as String?,
+    );
+
+Map<String, dynamic> _$AuthValidateRequestToJson(
+        AuthValidateRequest instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'session_id': instance.session_id,
+      'time': instance.time,
+      'status': _$ValidatedPollStatusEnumMap[instance.status]!,
+      'error': instance.error,
+    };
+
+const _$ValidatedPollStatusEnumMap = {
+  ValidatedPollStatus.success: 'success',
+  ValidatedPollStatus.fail: 'fail',
+  ValidatedPollStatus.error: 'error',
+};
+
+AuthValidateResponse _$AuthValidateResponseFromJson(
+        Map<String, dynamic> json) =>
+    AuthValidateResponse(
+      validated: json['validated'] as bool,
+    );
+
+Map<String, dynamic> _$AuthValidateResponseToJson(
+        AuthValidateResponse instance) =>
+    <String, dynamic>{
+      'validated': instance.validated,
     };
 
 Error _$ErrorFromJson(Map<String, dynamic> json) => Error(

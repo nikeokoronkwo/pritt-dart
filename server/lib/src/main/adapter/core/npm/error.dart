@@ -11,6 +11,7 @@ class NpmError with JsonConvertible {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'error': error,

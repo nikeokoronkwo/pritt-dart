@@ -8,9 +8,8 @@ Future<void> safeExtractTarGz({
   int maxTotalSizeBytes = 100 * 1024 * 1024, // 100MB
 }) async {
   final compressedBytes = await tarGzFile.readAsBytes();
-  final archive = TarDecoder().decodeBytes(
-      GZipDecoder().decodeBytes(compressedBytes)
-  );
+  final archive =
+      TarDecoder().decodeBytes(GZipDecoder().decodeBytes(compressedBytes));
 
   int totalSize = 0;
 

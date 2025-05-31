@@ -1083,6 +1083,17 @@ paths {
         }
     }
     ["/api/auth/new"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "query"
+                required = false
+                description = "The Device ID used to identify the CLI source"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         description = "Create a new token used for authenticating/creating a new user"
         post {
             summary = "Create token for a user"
@@ -1094,6 +1105,14 @@ paths {
                     content {
                         ["application/json"] {
                             schema = schemaRef("AuthResponse")
+                        }
+                    }
+                }
+                ["5XX"] {
+                    description = "Server Error"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ServerError")
                         }
                     }
                 }
@@ -1113,16 +1132,33 @@ paths {
             }
           }
         }
+        // TODO: What if we authenticate the website itself?
         post {
             summary = "Validte Authentication Response"
             operationId = "validateAuthStatus"
-            description = "Validate or authenticate a user, creating a user if needed"
+            description = "Validate or authenticate a user"
+            requestBody {
+                description = "The request body containing all the information needed to validate a user's status"
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("AuthValidateRequest")
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("AuthPollResponse")
+                            schema = schemaRef("AuthValidateResponse")
+                        }
+                    }
+                }
+                ["402"] {
+                    description = "Authorization did not complete or errored out"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthError")
                         }
                     }
                 }
@@ -1140,6 +1176,17 @@ paths {
     ["/api/auth/status"] {
         description = "Get the status of authentication for a user, usually used by the command line to poll"
         post {
+            parameters {
+                new {
+                    name = "id"
+                    `in` = "query"
+                    required = true
+                    description = "The Session ID"
+                    schema {
+                        type = "string"
+                    }
+                }
+            }
             summary = "Get Authentication Status"
             operationId = "getAuthStatus"
             responses {

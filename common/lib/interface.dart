@@ -103,17 +103,6 @@ class AddUserResponse {
   Map<String, dynamic> toJson() => _$AddUserResponseToJson(this);
 }
 
-@JsonEnum(valueField: 'value')
-enum PollStatus {
-  pending('pending'),
-  success('success'),
-  error('error');
-
-  const PollStatus(this.value);
-
-  final String value;
-}
-
 @JsonSerializable()
 class PollResponse {
   PollResponse();
@@ -134,7 +123,7 @@ class AuthPollResponse {
   factory AuthPollResponse.fromJson(Map<String, dynamic> json) =>
       _$AuthPollResponseFromJson(json);
 
-  final PollStatus status;
+  final dynamic status;
 
   final PollResponse? response;
 
@@ -154,11 +143,60 @@ class AuthResponse {
 
   final String token;
 
-  final int token_expires;
+  final String token_expires;
 
   final String id;
 
   Map<String, dynamic> toJson() => _$AuthResponseToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum ValidatedPollStatus {
+  success('success'),
+  fail('fail'),
+  error('error');
+
+  const ValidatedPollStatus(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class AuthValidateRequest {
+  AuthValidateRequest({
+    required this.user_id,
+    required this.session_id,
+    required this.time,
+    required this.status,
+    this.error,
+  });
+
+  factory AuthValidateRequest.fromJson(Map<String, dynamic> json) =>
+      _$AuthValidateRequestFromJson(json);
+
+  final String user_id;
+
+  final String session_id;
+
+  final String time;
+
+  final ValidatedPollStatus status;
+
+  final String? error;
+
+  Map<String, dynamic> toJson() => _$AuthValidateRequestToJson(this);
+}
+
+@JsonSerializable()
+class AuthValidateResponse {
+  AuthValidateResponse({required this.validated});
+
+  factory AuthValidateResponse.fromJson(Map<String, dynamic> json) =>
+      _$AuthValidateResponseFromJson(json);
+
+  final bool validated;
+
+  Map<String, dynamic> toJson() => _$AuthValidateResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -1100,15 +1138,20 @@ abstract interface class PrittInterface {
   /// POST /api/auth/new
   ///
   /// Create a new token used for authenticating/creating a new user
-  _i3.FutureOr<AuthResponse> createNewAuthStatus();
+  /// Throws:
+  ///   - [ServerError] on status code 5XX
+  _i3.FutureOr<AuthResponse> createNewAuthStatus({String id});
 
   /// **Validte Authentication Response**
   /// POST /api/auth/validate
   ///
-  /// Validate or authenticate a user, creating a user if needed
+  /// Validate or authenticate a user
   /// Throws:
   ///   - [ExpiredError] on status code 405
-  _i3.FutureOr<AuthPollResponse> validateAuthStatus({String token});
+  _i3.FutureOr<AuthValidateResponse> validateAuthStatus(
+    AuthValidateRequest body, {
+    String token,
+  });
 
   /// **Get Authentication Status**
   /// POST /api/auth/status

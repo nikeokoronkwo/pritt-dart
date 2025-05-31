@@ -70,8 +70,8 @@ class UnpackCommand extends PrittCommand {
     // get archive of package
     logger.info('Fetching Package $pkgName');
 
-    final content = await client.getPackageArchiveWithName(
-        name: pkgName, version: version);
+    final content =
+        await client.getPackageArchiveWithName(name: pkgName, version: version);
 
     final contentLength = content.length;
 
@@ -79,17 +79,19 @@ class UnpackCommand extends PrittCommand {
     final ProgressBar progressBar = ProgressBar('Downloading Package',
         completeMessage: 'Package Downloaded');
 
-    final outName = (argResults?['output'] ?? _suitableFileName(name: name, scope: scope, version: version));
+    final outName = (argResults?['output'] ??
+        _suitableFileName(name: name, scope: scope, version: version));
     final directory = Directory(outName);
 
     if (await directory.exists() && !argResults?['force']) {
       logger.severe('Directory already exists.');
       logger.stderr('To overwrite contents, pass the --force flag');
       exit(2);
-    } else { await directory.create(recursive: true); }
+    } else {
+      await directory.create(recursive: true);
+    }
 
-    final File tarFile =
-        await File(outName + '.tar.gz').create();
+    final File tarFile = await File(outName + '.tar.gz').create();
     final sink = tarFile.openWrite();
 
     int bytesReceived = 0;
@@ -130,18 +132,26 @@ class UnpackCommand extends PrittCommand {
   }
 }
 
-String _suitableFileName({required String name, String? scope, String? version, String? outputDir}) {
-  final directoryContext = Directory(p.dirname(outputDir == null ? p.current : p.absolute(outputDir)));
+String _suitableFileName(
+    {required String name, String? scope, String? version, String? outputDir}) {
+  final directoryContext = Directory(
+      p.dirname(outputDir == null ? p.current : p.absolute(outputDir)));
   final files = directoryContext.listSync();
 
   if (scope == null) {
-    if (files.where((f) => p.basenameWithoutExtension(f.path) == name).isNotEmpty) { // if a file has the name
+    if (files
+        .where((f) => p.basenameWithoutExtension(f.path) == name)
+        .isNotEmpty) {
+      // if a file has the name
       return '$name@$version';
     } else {
       return name;
     }
   } else {
-    if (files.where((f) => p.basenameWithoutExtension(f.path) == '@${scope}_${name}').isNotEmpty) { // if a file has the name
+    if (files
+        .where((f) => p.basenameWithoutExtension(f.path) == '@${scope}_${name}')
+        .isNotEmpty) {
+      // if a file has the name
       return '@${scope}_$name@$version';
     } else {
       return '@${scope}_$name';

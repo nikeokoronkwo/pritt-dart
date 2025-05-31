@@ -7,6 +7,8 @@ CREATE TYPE version_control_system AS ENUM ('git', 'svn', 'fossil', 'mercurial',
 CREATE TYPE version_kind AS ENUM ('major', 'experimental', 'beta', 'next', 'rc', 'canary', 'other');
 CREATE TYPE plugin_archive_type AS ENUM ('single', 'multi');
 
+CREATE TYPE authorization_status AS ENUM ('pending', 'success', 'fail', 'expired', 'error');
+
 -- Validates Signatures passed to the `signature` field in the `package_versions` table
 CREATE OR REPLACE FUNCTION validate_signatures()
 RETURNS trigger AS $$
@@ -84,7 +86,7 @@ CREATE TABLE packages (
     CONSTRAINT valid_scope CHECK (scope ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
     CONSTRAINT scoped_means_scope CHECK (scoped = TRUE AND scope IS NOT NULL OR scoped = FALSE AND scope IS NULL),
     FOREIGN KEY (author_id) REFERENCES users (id),
-    FOREIGN KEY (scope) REFERENCES organizations (name),
+    FOREIGN KEY (scope) REFERENCES organizations (name)
 );
 
 -- Ensure that the combination of name and scope is unique

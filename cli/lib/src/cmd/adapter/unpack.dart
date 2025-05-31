@@ -20,7 +20,7 @@ class AdapterUnpackCommand extends PrittCommand {
   // TODO: implement invocation
   String get invocation => 'pritt adapter unpack <name> [flags]';
 
-  AdapterUnpackCommand()  {
+  AdapterUnpackCommand() {
     argParser
       ..addFlag(
         'force',
@@ -61,8 +61,7 @@ class AdapterUnpackCommand extends PrittCommand {
     // get archive of package
     logger.info('Fetching Adapter $name');
 
-    final content = await client.getAdapterArchiveWithName(
-        name: name);
+    final content = await client.getAdapterArchiveWithName(name: name);
 
     final contentLength = content.length;
 
@@ -77,10 +76,11 @@ class AdapterUnpackCommand extends PrittCommand {
       logger.severe('Directory already exists.');
       logger.stderr('To overwrite contents, pass the --force flag');
       exit(2);
-    } else { await directory.create(recursive: true); }
+    } else {
+      await directory.create(recursive: true);
+    }
 
-    final File tarFile =
-    await File(outName + '.tar.gz').create();
+    final File tarFile = await File(outName + '.tar.gz').create();
     final sink = tarFile.openWrite();
 
     int bytesReceived = 0;
@@ -88,7 +88,7 @@ class AdapterUnpackCommand extends PrittCommand {
     final downloadCompleter = Completer<void>();
 
     content.data.listen(
-          (chunk) {
+      (chunk) {
         sink.add(chunk);
         bytesReceived += chunk.length;
         progressBar.tick(bytesReceived, contentLength);

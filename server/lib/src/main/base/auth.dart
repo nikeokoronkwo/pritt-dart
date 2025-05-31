@@ -87,11 +87,11 @@ class PrittAuth implements PrittAuthInterface {
       } else {
         throw Exception('The token payload is not a valid object.');
       }
-    } on JWTExpiredException catch (e) {
+    } on JWTExpiredException {
       throw ExpiredTokenException(
           'The access token has expired. Please log in again.',
           token: token);
-    } on JWTNotActiveException catch (e) {
+    } on JWTNotActiveException {
       throw JWTNotActiveException();
     } on JWTInvalidException catch (e) {
       throw JWTInvalidException(e.message);

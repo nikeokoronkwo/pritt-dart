@@ -1,12 +1,16 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
+import 'package:pritt_server/src/main/base/db/annotations/cache.dart';
+import 'package:slugid/slugid.dart';
+import 'package:crypto/crypto.dart';
+
 import 'package:pritt_server/src/main/base/auth.dart';
 import 'package:pritt_server/src/main/crs/exceptions.dart';
 import 'package:pritt_server/src/utils/auth.dart';
-import 'package:slugid/slugid.dart';
 
 import '../utils/version.dart';
 import 'db/interface.dart';
@@ -801,6 +805,74 @@ FROM plugins p
       {String? scope}) {
     // TODO: implement yankVersionOfPackage
     throw UnimplementedError();
+  }
+
+  @override
+  @Cacheable()
+  Future<AuthorizationSession> attachUserToAuthSession(
+      {required String sessionId, required String userId}) async {
+    late Result result;
+
+    await _pool.runTx((session) async {
+      final rs = await session.execute(
+          r'''SELECT (expires_at, status) FROM authorization_sessions WHERE session_id = $1''',
+          parameters: [sessionId]);
+      final expiresAt = rs[0][0] as DateTime;
+      var status = AuthorizationStatus.fromString(rs[0][1] as String);
+      if (expiresAt.isBefore(DateTime.now()) &&
+          status == AuthorizationStatus.pending)
+        status = AuthorizationStatus.expired;
+
+      result = await session.execute(r'''
+        UPDATE authorization_sessions
+        SET user_id = $1, status = $2
+        WHERE session_id = $3
+        RETURNING *;
+      ''', parameters: [userId, status.name, sessionId]);
+    });
+
+    final columnMap = result.first.toColumnMap();
+
+    return AuthorizationSession(
+        sessionId: sessionId,
+        deviceId: columnMap['device_id'] as String,
+        expiresAt: columnMap['expires_at'] as DateTime,
+        userId: userId);
+  }
+
+  @override
+  @Cacheable()
+  Future<AuthorizationSession> createNewAuthSession(
+      {required String deviceId}) async {
+    final enc = sha256.convert(utf8.encode(deviceId)).toString();
+    final expiresAt = DateTime.now().add(Duration(hours: 1));
+
+    final sessionId = Slugid(enc);
+
+    final result = await _pool.execute(r'''
+    INSERT INTO authorization_sessions (session_id, expires_at, device_id)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+    ''', parameters: [sessionId.toString(), expiresAt, deviceId]);
+
+    final row = result.first;
+    final columnMap = row.toColumnMap();
+
+    return AuthorizationSession(
+        sessionId: sessionId.toString(),
+        deviceId: deviceId,
+        expiresAt: expiresAt);
+  }
+
+  @override
+  @Cacheable()
+  Future<AuthorizationStatus> getAuthSessionStatus(
+      {required String sessionId}) async {
+    final result = await _pool.execute(
+        r'''SELECT (status) FROM authorization_sessions WHERE session_id = $1''',
+        parameters: [sessionId]);
+
+    return AuthorizationStatus.fromString(result[0][0] as String);
   }
 }
 

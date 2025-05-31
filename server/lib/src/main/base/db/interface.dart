@@ -254,4 +254,21 @@ abstract interface class PrittDatabaseInterface
     required User user,
     Iterable<Privileges> privileges = const [],
   });
+
+  /// Add a new authorization request and generate an auth token to use
+  Future<AuthorizationSession> createNewAuthSession({
+    required String deviceId,
+  });
+
+  /// Gets the status of a current auth sessions
+  Future<AuthorizationStatus> getAuthSessionStatus({
+    required String sessionId,
+  });
+
+  /// Updates an auth session with a user's credentials
+  Future<AuthorizationSession> attachUserToAuthSession({
+    required String sessionId,
+    required String userId,
+    AuthorizationStatus? newStatus
+  });
 }

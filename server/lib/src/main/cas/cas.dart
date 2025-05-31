@@ -91,10 +91,11 @@ class CustomAdapterService {
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
         body: json.encode({'resolveObject': obj.toJson()}));
 
-    if (response.statusCode != 200)
+    if (response.statusCode != 200) {
       throw ClientException(
         'Failed to find adapter: ${response.body}',
       );
+    }
 
     print(response.body);
 

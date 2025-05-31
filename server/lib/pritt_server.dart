@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:pritt_server/adapter_handler.dart';
 import 'package:pritt_server/server_handler.dart';
 import 'package:pritt_server/src/main/adapter/adapter_registry.dart';
