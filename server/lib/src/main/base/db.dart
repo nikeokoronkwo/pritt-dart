@@ -4,15 +4,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
-import 'package:pritt_server/src/main/base/db/annotations/cache.dart';
 import 'package:slugid/slugid.dart';
 import 'package:crypto/crypto.dart';
 
-import 'package:pritt_server/src/main/base/auth.dart';
-import 'package:pritt_server/src/main/crs/exceptions.dart';
-import 'package:pritt_server/src/utils/auth.dart';
-
+import '../crs/exceptions.dart';
 import '../utils/version.dart';
+
+import 'auth.dart';
+import 'db/annotations/cache.dart';
 import 'db/interface.dart';
 import 'db/schema.dart';
 
@@ -29,9 +28,9 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   /// prepared statements
   final Map<String, Statement> _statements = {};
 
-  PrittDatabase._({required Pool pool, required KeySet keySet})
+  PrittDatabase._({required Pool pool})
       : _pool = pool,
-        auth = PrittAuth(keySet);
+        auth = PrittAuth();
 
   // TODO: Find a better singleton way of doing these db calls
   static PrittDatabase? db;
@@ -56,9 +55,7 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
     required String username,
     required String password,
     bool devMode = false,
-    KeySet? keySet,
   }) async {
-    keySet ??= await loadKeySet();
     if (db == null) {
       final pool = Pool.withEndpoints([
         Endpoint(
@@ -76,7 +73,7 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
 
       _preparePool(pool);
 
-      db = PrittDatabase._(pool: pool, keySet: keySet);
+      db = PrittDatabase._(pool: pool);
     }
     dbConnections++;
 
@@ -94,12 +91,12 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   }
 
   @override
-  FutureOr<User> createUser(
+  FutureOr<(User, String)> createUser(
       {required String name, required String email}) async {
     final id = Slugid.nice();
     final createdAt = DateTime.now();
     final accessTokenExpiresAt = createdAt.add(Duration(days: 10));
-    final accessToken = auth.createAccessTokenForUser(
+    final (key: accessToken, hash: accessTokenHash) = auth.createAccessTokenForUser(
       name: name,
       email: email,
       expiresAt: accessTokenExpiresAt,
@@ -114,7 +111,7 @@ RETURNING *;''', parameters: [
         id,
         name,
         email,
-        accessToken,
+        accessTokenHash,
         accessTokenExpiresAt,
         createdAt
       ]);
@@ -122,16 +119,17 @@ RETURNING *;''', parameters: [
       final row = result.first;
       final columnMap = row.toColumnMap();
 
-      return User(
+      return (User(
           id: columnMap['id'] as String,
           name: name,
-          accessToken: accessToken,
+          accessToken: accessTokenHash,
           accessTokenExpiresAt: accessTokenExpiresAt,
           email: email,
           createdAt: createdAt,
-          updatedAt: columnMap['updated_at'] as DateTime);
-    } catch (e) {}
-    throw UnimplementedError();
+          updatedAt: columnMap['updated_at'] as DateTime), accessToken);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
@@ -810,24 +808,25 @@ FROM plugins p
   @override
   @Cacheable()
   Future<AuthorizationSession> attachUserToAuthSession(
-      {required String sessionId, required String userId}) async {
+      {required String sessionId, required String userId, AuthorizationStatus? newStatus}) async {
     late Result result;
 
     await _pool.runTx((session) async {
       final rs = await session.execute(
-          r'''SELECT (expires_at, status) FROM authorization_sessions WHERE session_id = $1''',
+          r'''SELECT expires_at, status FROM authorization_sessions WHERE session_id = $1''',
           parameters: [sessionId]);
       final expiresAt = rs[0][0] as DateTime;
       var status = AuthorizationStatus.fromString(rs[0][1] as String);
       if (expiresAt.isBefore(DateTime.now()) &&
           status == AuthorizationStatus.pending)
         status = AuthorizationStatus.expired;
+      else if (newStatus != null) status = newStatus;
 
       result = await session.execute(r'''
         UPDATE authorization_sessions
         SET user_id = $1, status = $2
         WHERE session_id = $3
-        RETURNING *;
+        RETURNING *
       ''', parameters: [userId, status.name, sessionId]);
     });
 
@@ -852,7 +851,7 @@ FROM plugins p
     final result = await _pool.execute(r'''
     INSERT INTO authorization_sessions (session_id, expires_at, device_id)
     VALUES ($1, $2, $3)
-    RETURNING *;
+    RETURNING *
     ''', parameters: [sessionId.toString(), expiresAt, deviceId]);
 
     final row = result.first;
@@ -869,47 +868,90 @@ FROM plugins p
   Future<AuthorizationStatus> getAuthSessionStatus(
       {required String sessionId}) async {
     final result = await _pool.execute(
-        r'''SELECT (status) FROM authorization_sessions WHERE session_id = $1''',
+        r'''SELECT status FROM authorization_sessions WHERE session_id = $1''',
         parameters: [sessionId]);
 
     return AuthorizationStatus.fromString(result[0][0] as String);
+  }
+
+  @override
+  Future<(User, String)> updateUserAccessToken({required String id}) async {
+    final updatedAt = DateTime.now();
+    final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
+    late String token;
+
+    final result = await _pool.runTx((session) async {
+      final userResult = await session.execute(r'''SELECT name, email FROM users WHERE id = $1''', parameters: [id]);
+
+      final mainResult = userResult.first.toColumnMap();
+      final (key: accessToken, hash: accessTokenHash) = auth.createAccessTokenForUser(
+        name: mainResult['name'],
+        email: mainResult['email'],
+        expiresAt: accessTokenExpiresAt,
+      );
+      token = accessToken;
+      return await session.execute(r'''
+UPDATE users      
+SET access_token = $1, access_token_expires_at = $2, updated_at = $3
+WHERE id = $4
+RETURNING *
+      ''', parameters: [accessTokenHash, accessTokenExpiresAt, updatedAt, id]);
+
+    });
+
+    final columnMap = result.first.toColumnMap();
+
+    return (User(
+        id: columnMap['id'] as String,
+        name: columnMap['name'] as String,
+        accessToken: columnMap['access_token'] as String,
+        accessTokenExpiresAt: accessTokenExpiresAt,
+        email: columnMap['email'] as String,
+        createdAt: columnMap['created_at'] as DateTime,
+        updatedAt: updatedAt), token);
   }
 }
 
 extension Authorization on PrittDatabase {
   /// Check for the authorization of a user
   /// TODO: Implement a better way to check for authorization, maybe put this behind a cache
-  Future<({User user, PrittAuthMetadata metadata})?> checkAuthorization(
+  Future<User?> checkAuthorization(
       String accessToken) async {
-    final result = await _pool.execute(Sql.named('''
-SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
-FROM users
-WHERE access_token = @accessToken
-'''), parameters: {
-      'accessToken': accessToken,
-    });
-
-    if (result.isEmpty) {
-      throw UnauthorizedException('Invalid access token');
-    }
-
-    final row = result.first;
-    final columnMap = row.toColumnMap();
+    bool noToken;
 
     // validate access token expiration
     if (accessToken.isEmpty) {
       throw UnauthorizedException('Access token is empty');
     }
 
-    final PrittAuthMetadata meta;
-    try {
-      meta = auth.validateAccessToken(accessToken);
-    } catch (e) {
-      throw UnauthorizedException('Invalid access token format',
-          token: accessToken, source: e);
+    final result = await _pool.runTx((session) async {
+      final rs = await session.execute(r'''SELECT access_token FROM users''');
+      final accessTokenHashes = rs.map((row) => row[0] as String);
+      final successFullToken = accessTokenHashes.where((hash) => auth.validateAccessToken(accessToken, hash));
+      if (successFullToken.isEmpty) {
+        noToken = true;
+      } else if (successFullToken.singleOrNull == null) {
+        noToken = false;
+      } else {
+        return await session.execute(Sql.named('''
+SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
+FROM users
+WHERE access_token = @accessToken'''), parameters: {
+          'accessToken': successFullToken.first
+        });
+        noToken = false;
+      }
+    });
+
+    if (result == null) throw UnauthorizedException('Invalid access token', token: accessToken);
+    if (result.isEmpty) {
+      throw UnauthorizedException('Invalid access token', token: accessToken);
     }
 
-    // double check the access token expiration
+    final row = result.first;
+    final columnMap = row.toColumnMap();
+
+    // check the access token expiration
     // TODO: Double check other details
     final expirationTime = columnMap['access_token_expires_at'] as DateTime;
     if (expirationTime.isBefore(DateTime.now())) {
@@ -927,6 +969,6 @@ WHERE access_token = @accessToken
       updatedAt: columnMap['updated_at'] as DateTime,
     );
 
-    return (user: user, metadata: meta);
+    return user;
   }
 }

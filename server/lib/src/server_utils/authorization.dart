@@ -13,12 +13,7 @@ Future<User?> checkAuthorization(String authHeader,
       return null;
     }
 
-    // double check
-    final (user: user, metadata: meta) = authResults;
-
-    if (user.name != meta.name || user.email != meta.email) return null;
-
-    return user;
+    return authResults;
   } catch (e) {
     if (throwExceptions) rethrow;
     return null;

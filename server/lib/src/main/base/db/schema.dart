@@ -247,6 +247,13 @@ class User {
       required this.updatedAt});
 }
 
+// class NewUser extends User {
+//   /// The current access token for the given user
+//   ///
+//   /// This is used for authenticating workflows for the CLI, installing packages, etc
+//   // String accessToken;
+// }
+
 /// A scope is an organizational unit for packages
 class Scope {
   /// The id of the scope

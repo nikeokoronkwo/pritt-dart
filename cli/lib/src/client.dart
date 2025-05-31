@@ -26,8 +26,9 @@ class PrittClient extends ApiClient implements PrittInterface {
     throw UnimplementedError();
   }
 
+  // TODO(openapigen): id not nullable
   @override
-  FutureOr<AuthResponse> createNewAuthStatus() {
+  FutureOr<AuthResponse> createNewAuthStatus({String? id}) {
     // TODO: implement createNewAuthStatus
     throw UnimplementedError();
   }
@@ -184,7 +185,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<AuthPollResponse> validateAuthStatus({String? token}) {
+  FutureOr<AuthValidateResponse> validateAuthStatus(AuthValidateRequest body, {String? token}) {
     // TODO: implement validateAuthStatus
     throw UnimplementedError();
   }

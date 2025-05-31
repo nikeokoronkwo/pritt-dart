@@ -9,7 +9,7 @@ class PublishCommand extends PrittCommand {
   @override
   String description = "Publish a package to Pritt";
 
-  PublishCommand() {}
+  PublishCommand();
 
   @override
   FutureOr? run() {

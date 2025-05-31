@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:pritt_cli/src/cli/table.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/utils/typedefs.dart';
 import 'package:pritt_common/interface.dart';
 
 enum TerminalSize {
@@ -11,9 +9,9 @@ enum TerminalSize {
   large;
 
   static TerminalSize fromSize(int col) {
-    if (col > 120)
+    if (col > 120) {
       return large;
-    else if (col >= 100)
+    } else if (col >= 100)
       return medium;
     else
       return small;
@@ -21,7 +19,7 @@ enum TerminalSize {
 }
 
 String listPackageInfo(List<Package> pkgs) {
-  var terminalColumns;
+  int terminalColumns;
   try {
     terminalColumns = stdout.terminalColumns;
   } on StdoutException catch (_) {

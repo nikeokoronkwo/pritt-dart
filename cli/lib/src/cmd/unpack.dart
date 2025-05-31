@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
@@ -149,7 +148,7 @@ String _suitableFileName(
     }
   } else {
     if (files
-        .where((f) => p.basenameWithoutExtension(f.path) == '@${scope}_${name}')
+        .where((f) => p.basenameWithoutExtension(f.path) == '@${scope}_$name')
         .isNotEmpty) {
       // if a file has the name
       return '@${scope}_$name@$version';

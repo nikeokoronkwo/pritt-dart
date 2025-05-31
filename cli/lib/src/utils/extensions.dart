@@ -12,20 +12,22 @@ extension IsUrl on String {
 
 extension Limits<T extends num> on Iterable<T> {
   T get max {
-    return this.fold(0 as T, (previous, current) {
-      if (previous > current)
+    return fold(0 as T, (previous, current) {
+      if (previous > current) {
         return previous;
-      else
+      } else {
         return current;
+      }
     });
   }
 
   T get min {
-    return this.fold(0 as T, (previous, current) {
-      if (previous < current)
+    return fold(0 as T, (previous, current) {
+      if (previous < current) {
         return previous;
-      else
+      } else {
         return current;
+      }
     });
   }
 }

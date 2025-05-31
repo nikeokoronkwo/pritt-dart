@@ -39,6 +39,7 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
       }
 
       final packageManager = pm.pmObject;
+      return null;
 
       // read config
     },

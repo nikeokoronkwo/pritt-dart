@@ -1,7 +1,5 @@
-import 'dart:math';
 
 import 'package:pritt_cli/src/cli/table.dart';
-import 'package:test/scaffolding.dart';
 import 'package:test/test.dart';
 
 final Map<String, List<List<String>>> testData = {

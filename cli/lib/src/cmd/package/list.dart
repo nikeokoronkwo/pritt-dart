@@ -87,9 +87,10 @@ class PackageListCommand extends PrittCommand {
                 path: '',
                 query: '',
               ) ?? styleItalic.wrap('unknown')}');
-      if (e.message.startsWith('Failed host lookup'))
+      if (e.message.startsWith('Failed host lookup')) {
         logger.severe(
             'Either the URL does not exist, or you are not connected to the internet');
+      }
       exit(1);
     }
   }

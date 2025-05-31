@@ -6,7 +6,7 @@ enum Indentation { left, center, right }
 /// A table in the terminal, with rows and columns
 class Table {
   List<List<String>> array;
-  List<String>? _header;
+  final List<String>? _header;
 
   List<String> get header => _header ?? array.first;
   List<List<String>> get lines =>
@@ -24,7 +24,7 @@ class Table {
       Indentation indentation = Indentation.center}) {
     StringBuffer sink = StringBuffer();
 
-    final allLines = _header != null ? [...array, _header!] : array;
+    final allLines = _header != null ? [...array, _header] : array;
 
     // index lengths to use as
     final lineSpacings =
@@ -64,12 +64,13 @@ class Table {
           indentation: indentation));
     }
     // bottom border
-    if (lines.isNotEmpty)
+    if (lines.isNotEmpty) {
       sink.writeln(_writeLine(List.filled(rows, ''),
           sep: '+',
           ifEmpty: '-',
           lineSpacings: lineSpacings,
           indentation: indentation));
+    }
 
     return sink.toString();
   }

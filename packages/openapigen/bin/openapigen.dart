@@ -1,8 +1,6 @@
-import 'dart:js_interop';
 
 import 'package:args/args.dart';
 import 'package:node_io/node_io.dart';
-import 'package:path/path.dart' as p;
 import 'package:pritt_openapi_gen/src/gen.dart';
 import 'package:pritt_openapi_gen/src/js.dart';
 import 'package:pritt_openapi_gen/src/node_helpers.dart';

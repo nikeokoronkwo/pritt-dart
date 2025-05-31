@@ -68,15 +68,21 @@ Future<TransformationResult> transformTemplates(String inputDir,
   await writeFileAsString(path.join(outputDir, schemaFile), lines.join('\n'))
       .toDart;
 
+  
+
   // update the auth code
-  // manual patcj
+  // manual patch
   // TODO: File bug and get this fixed
   String authDrizzleCode =
       await File(path.join(outputDir, './server/db/schema/auth.ts'))
           .readAsString();
   authDrizzleCode = authDrizzleCode
       .replaceFirst('.default(member)', r".default('member')")
-      .replaceFirst('.default(pending)', r".default('pending')");
+      .replaceFirst('.default(pending)', r".default('pending')")
+      .replaceAll('=> user.id', '=> auth_user.id');
+  final adcLines = const LineSplitter().convert(authDrizzleCode);
+  adcLines.insert(0, 'import { users } from "./schema"');
+  authDrizzleCode = adcLines.join('\n');
 
   await writeFileAsString(
           path.join(outputDir, './server/db/schema/auth.ts'), authDrizzleCode)

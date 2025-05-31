@@ -63,7 +63,6 @@ class PubspecConfig extends Config {
       required super.version,
       required super.description,
       required super.author,
-      super.license,
       super.private});
 
   factory PubspecConfig.fromJson(Map<String, dynamic> json, Author author) {

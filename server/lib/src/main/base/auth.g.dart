@@ -17,3 +17,20 @@ Map<String, dynamic> _$PrittAuthMetadataToJson(PrittAuthMetadata instance) =>
       'name': instance.name,
       'email': instance.email,
     };
+
+APIKeyResult _$APIKeyResultFromJson(Map<String, dynamic> json) => APIKeyResult(
+      apiKey: json['apiKey'] as String,
+      keyHash: json['keyHash'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      prefix: json['prefix'] as String,
+      length: (json['length'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$APIKeyResultToJson(APIKeyResult instance) =>
+    <String, dynamic>{
+      'apiKey': instance.apiKey,
+      'keyHash': instance.keyHash,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'prefix': instance.prefix,
+      'length': instance.length,
+    };

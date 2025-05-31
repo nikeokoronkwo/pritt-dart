@@ -160,7 +160,7 @@ abstract interface class PrittDatabaseInterface
   Stream<User> getContributorsForPackageStream(String name);
 
   /// Create a user
-  FutureOr<User> createUser({
+  FutureOr<(User, String)> createUser({
     required String name,
     required String email,
   });
@@ -170,6 +170,11 @@ abstract interface class PrittDatabaseInterface
     required String name,
     required String email,
     User Function(User)? updates,
+  });
+
+  /// Update the access token for a user
+  FutureOr<(User, String)> updateUserAccessToken({
+    required String id,
   });
 
   /// Get a user

@@ -94,6 +94,7 @@ class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
       required super.onConfigure,
       this.packageManagers = const {}});
 
+  @override
   PackageManager? get packageManager =>
       throw Exception("Use `packageManagers` instead");
 }

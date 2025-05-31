@@ -3,7 +3,6 @@ import 'package:pritt_server/server_handler.dart';
 import 'package:pritt_server/src/main/adapter/adapter_registry.dart';
 import 'package:pritt_server/src/main/base/db.dart';
 import 'package:pritt_server/src/main/base/storage.dart';
-import 'package:pritt_server/src/utils/auth.dart';
 import 'package:shelf/shelf.dart';
 
 import 'src/main/crs/crs.dart';
@@ -11,8 +10,6 @@ import 'src/main/crs/crs.dart';
 late CoreRegistryService crs;
 
 late AdapterRegistry registry;
-
-late KeySet keySet;
 
 Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
   // Load environment variables for the S3 URL and database connection
@@ -23,8 +20,6 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
   final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
 
   // read keys for authentication
-  await loadKeySet();
-
   final db = await PrittDatabase.connect(
       host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
       port: dbUri?.port ??
