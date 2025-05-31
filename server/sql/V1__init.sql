@@ -144,6 +144,20 @@ CREATE TABLE plugins (
     -- TODO: More properties (author, ...)
 );
 
+CREATE TABLE authorization_sessions (
+    session_id TEXT PRIMARY KEY NOT NULL,
+    user_id TEXT,
+    status authorization_status NOT NULL DEFAULT 'pending',
+    expires_at TIMESTAMPTZ NOT NULL,
+    device_id TEXT UNIQUE NOT NULL,
+
+    -- TODO: CRON to clean up
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+-- TODO: Use index
+CREATE INDEX idx_login_sessions_expiry ON authorization_sessions (expires_at);
+
 
 -- CREATE TABLE package_publishing_tasks (
     
