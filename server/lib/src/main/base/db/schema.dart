@@ -322,7 +322,8 @@ enum AccessTokenType {
   extended,
   pipeline;
 
-  static AccessTokenType fromString(String name) => AccessTokenType.values.firstWhere((v) => v.name == name);
+  static AccessTokenType fromString(String name) =>
+      AccessTokenType.values.firstWhere((v) => v.name == name);
 }
 
 /// A join table for users and scopes
@@ -392,17 +393,16 @@ class Plugin {
 
   VCS? vcs;
 
-  Plugin({
-    required this.id,
-    required this.name,
-    required this.language,
-    this.description,
-    required this.archive,
-    this.archiveType = PluginArchiveType.single,
-    required this.sourceType,
-    this.url,
-    this.vcs
-  });
+  Plugin(
+      {required this.id,
+      required this.name,
+      required this.language,
+      this.description,
+      required this.archive,
+      this.archiveType = PluginArchiveType.single,
+      required this.sourceType,
+      this.url,
+      this.vcs});
 }
 
 enum PluginArchiveType {
@@ -414,7 +414,10 @@ enum PluginArchiveType {
 }
 
 enum PluginSourceType {
-  hosted, vcs, local, other;
+  hosted,
+  vcs,
+  local,
+  other;
 
   static PluginSourceType fromString(String name) =>
       PluginSourceType.values.firstWhere((v) => v.name == name);

@@ -291,6 +291,9 @@ abstract interface class PrittDatabaseInterface
   Future<AuthorizationSession> completeAuthSession(
       {required String sessionId,
       required String userId,
-      String? accessToken,
       TaskStatus? newStatus});
+
+  /// Update an auth session, and get the access token for the session
+  Future<({AuthorizationSession session, String token, DateTime tokenExpiration})> updateAuthSessionWithAccessToken(
+      {required String sessionId});
 }

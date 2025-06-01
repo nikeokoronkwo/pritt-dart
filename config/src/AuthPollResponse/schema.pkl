@@ -4,7 +4,7 @@ import "../../lib/poll.pkl"
 
 status: poll.PollStatus
 
-response: PollResponse | PollSuccessResponse | PollErrorResponse
+response: Mapping<String, Any>?
 
 open class PollResponse {
   message: String

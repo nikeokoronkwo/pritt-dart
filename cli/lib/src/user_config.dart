@@ -89,7 +89,7 @@ class UserCredentials {
       int? accessTokenDuration,
       required String id,
       String? deviceId}) async {
-    // give default duration of
+    // give default duration of 3 months, in secs
     accessTokenDuration ??= (7 * 4 * 3) * (24 * 3600);
 
     // create or overwrite configuration file

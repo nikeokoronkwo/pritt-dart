@@ -37,6 +37,7 @@ AuthDetailsResponse _$AuthDetailsResponseFromJson(Map<String, dynamic> json) =>
       device: json['device'] as String,
       code: json['code'] as String,
       status: $enumDecode(_$PollStatusEnumMap, json['status']),
+      user_id: json['user_id'] as String?,
     );
 
 Map<String, dynamic> _$AuthDetailsResponseToJson(
@@ -47,6 +48,7 @@ Map<String, dynamic> _$AuthDetailsResponseToJson(
       'device': instance.device,
       'code': instance.code,
       'status': _$PollStatusEnumMap[instance.status]!,
+      'user_id': instance.user_id,
     };
 
 const _$PollStatusEnumMap = {
@@ -70,7 +72,7 @@ Map<String, dynamic> _$AuthErrorToJson(AuthError instance) => <String, dynamic>{
 AuthPollResponse _$AuthPollResponseFromJson(Map<String, dynamic> json) =>
     AuthPollResponse(
       status: $enumDecode(_$PollStatusEnumMap, json['status']),
-      response: json['response'],
+      response: json['response'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$AuthPollResponseToJson(AuthPollResponse instance) =>

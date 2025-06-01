@@ -1,4 +1,3 @@
-
 import 'package:pritt_common/interface.dart' as common;
 
 import 'package:pritt_server/pritt_server.dart';
@@ -23,8 +22,8 @@ final handler = defineRequestHandler((event) async {
         TaskStatus.fail => common.PollStatus.fail,
         TaskStatus.expired => common.PollStatus.expired,
         TaskStatus.error => common.PollStatus.error,
-      }
-  );
+      },
+      user_id: details.userId);
 
   return resp.toJson();
 });

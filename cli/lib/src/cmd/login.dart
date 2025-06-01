@@ -62,8 +62,11 @@ class LoginCommand extends PrittCommand {
     }
 
     // get user info from login details
+    final user = await client.getUserById(id: userCredentials.userId);
+    // TODO: Cache user
 
     // display user log in info
+    logger.fine('Logged in as: ${user.name}');
   }
 
   /// Log a user in to the Pritt server
@@ -86,7 +89,9 @@ class LoginCommand extends PrittCommand {
         'NOTE: This token expires at ${expiresDate.hour.toString().padLeft(2, '0')}:${expiresDate.minute.toString().padLeft(2, '0')}');
 
     var authPollStatus = PollStatus.pending;
-    var authPollResponse;
+    Map<String, dynamic> authPollResponse = {};
+
+    logger.stdout('Waiting for response...');
 
     while (authPollStatus == PollStatus.pending) {
       final authStatus = await client.getAuthStatus(id: authRequest.token);
@@ -94,7 +99,7 @@ class LoginCommand extends PrittCommand {
       switch (authStatus.status) {
         case PollStatus.fail:
         case PollStatus.error:
-          authPollResponse = authStatus.response;
+          authPollResponse = authStatus.response ?? {};
           authPollStatus = authStatus.status;
           break;
         default:
@@ -109,22 +114,36 @@ class LoginCommand extends PrittCommand {
     // check the status
     switch (authPollStatus) {
       case PollStatus.success:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        // log success
+        logger.fine('You are successfully logged in!');
+        String id;
+        if (authPollResponse['id'] != null) {
+          id = authPollResponse['id'];
+        } else {
+          final details =
+              await client.getAuthDetailsById(id: authRequest.token);
+          id = details.user_id ?? 'unknown'; // TODO: Exception, rather than 'unknown'
+        }
+
+        return await UserCredentials.create(
+          authPollResponse['access_token'] as String,
+          id: id,
+          uri: Uri.parse(client.url),
+          accessTokenDuration: (authPollResponse['access_token_expires_at'] is String ? DateTime.parse(authPollResponse['access_token_expires_at']) : authPollResponse['access_token_expires_at'] as DateTime).difference(DateTime.now()).inSeconds
+        );
       case PollStatus.fail:
         // TODO: Handle this case.
-        throw UnimplementedError();
+        throw Exception('Login Failed');
       case PollStatus.error:
         // TODO: Handle this case.
-        throw UnimplementedError();
+        throw Exception('Error Occured During Login: $authPollResponse');
       case PollStatus.expired:
         // TODO: Handle this case.
-        throw UnimplementedError();
+        throw ExpiredError(expired_time: authPollResponse['access_token_expires_at']);
       case PollStatus.pending:
         // TODO: Handle this case.
-        throw UnimplementedError();
+        throw Exception();
     }
 
-    throw UnimplementedError('Login not implemented yet');
   }
 }

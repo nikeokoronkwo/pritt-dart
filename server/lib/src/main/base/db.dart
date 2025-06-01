@@ -573,11 +573,16 @@ FROM plugins p
           description: columnMap['description'] as String?,
           language: columnMap['language'] as String,
           archive: Uri.file(columnMap['archive'] as String),
-          archiveType: PluginArchiveType.fromString(columnMap['archive_type'] as String),
-          sourceType: PluginSourceType.fromString(columnMap['source_type'] as String),
-          url: (columnMap['url'] as String?) == null ? null : Uri.parse(columnMap['url']),
-          vcs: (columnMap['vcs'] as String?) == null ? null : VCS.fromString(columnMap['vcs'])
-      );
+          archiveType:
+              PluginArchiveType.fromString(columnMap['archive_type'] as String),
+          sourceType:
+              PluginSourceType.fromString(columnMap['source_type'] as String),
+          url: (columnMap['url'] as String?) == null
+              ? null
+              : Uri.parse(columnMap['url']),
+          vcs: (columnMap['vcs'] as String?) == null
+              ? null
+              : VCS.fromString(columnMap['vcs']));
     });
   }
 
@@ -765,9 +770,7 @@ FROM plugins p
   Future<AuthorizationSession> completeAuthSession(
       {required String sessionId,
       required String userId,
-      String? accessToken,
       TaskStatus? newStatus}) async {
-
     // run transaction
     final result = await _pool.runTx((session) async {
       final hash;
@@ -785,15 +788,51 @@ FROM plugins p
         status = TaskStatus.expired;
       else if (newStatus != null) status = newStatus;
 
-      // set access token if null
+      return await session.execute(r'''
+        UPDATE authorization_sessions
+        SET user_id = $1, status = $2, authorized_at = now()
+        WHERE session_id = $3
+        RETURNING *
+      ''', parameters: [userId, status.name, sessionId]);
+    });
+
+    final columnMap = result.first.toColumnMap();
+
+    return AuthorizationSession(
+        id: columnMap['id'] as String,
+        sessionId: sessionId,
+        deviceId: columnMap['device_id'] as String,
+        status: TaskStatus.fromString(columnMap['status'] as String),
+        authorizedAt: columnMap['authorized_at'] as DateTime,
+        startedAt: columnMap['started_at'] as DateTime,
+        expiresAt: columnMap['expires_at'] as DateTime,
+        userId: userId,
+        code: columnMap['code'] as String);
+  }
+
+  @override
+  Future<({AuthorizationSession session, String token, DateTime tokenExpiration})> updateAuthSessionWithAccessToken(
+      {required String sessionId}) async {
+    String? token;
+    final updatedAt = DateTime.now();
+    final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
+
+    final result = await _pool.runTx((session) async {
+      final hash;
+      // get current status of session
+      final rs = await session.execute(
+          r'''SELECT user_id FROM authorization_sessions WHERE session_id = $1''',
+          parameters: [sessionId]);
+
+      final row = rs.first.toColumnMap();
+
+      // set access token
       // for the most part, logging in would require making a new access token, but what would happen to other devices?
-      if (accessToken == null) {
-        final updatedAt = DateTime.now();
-        final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
+
 
         final userInfoQuery = await session.execute(
             r'''SELECT name, email FROM users WHERE id = $1''',
-            parameters: [userId]);
+            parameters: [row['user_id'] as String]);
         final userInfo = userInfoQuery.first.toColumnMap();
 
         // generate new token
@@ -802,42 +841,42 @@ FROM plugins p
           email: userInfo['email'],
           expiresAt: accessTokenExpiresAt,
         );
-        accessToken ??= key;
+        token = key;
         hash = accessTokenHash;
         final _ = await _pool.execute(r'''
 INSERT INTO access_tokens (user_id, hash, token_type, device_id, expires_at)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING *''', parameters: [
-          userId,
+          row['user_id'] as String,
           accessTokenHash,
           AccessTokenType.device,
           row['device_id'] as String,
-          expiresAt
+          accessTokenExpiresAt
         ]);
-      } else hash = auth.hashToken(accessToken!);
 
       return await session.execute(r'''
         UPDATE authorization_sessions
-        SET user_id = $1, status = $2, access_token = $3, authorized_at = now()
-        WHERE session_id = $4
+        SET access_token = $1, authorized_at = now()
+        WHERE session_id = $2
         RETURNING *
-      ''', parameters: [userId, status.name, hash, sessionId]);
+      ''', parameters: [hash, sessionId]);
     });
 
     final columnMap = result.first.toColumnMap();
 
-    return AuthorizationSession(
-      id: columnMap['id'] as String,
-      sessionId: sessionId,
-      deviceId: columnMap['device_id'] as String,
-      status: TaskStatus.fromString(columnMap['status'] as String),
-      authorizedAt: columnMap['authorized_at'] as DateTime,
-      startedAt: columnMap['started_at'] as DateTime,
-      expiresAt: columnMap['expires_at'] as DateTime,
-      accessToken: accessToken,
-      userId: userId,
-      code: columnMap['code'] as String
-    );
+    return (session: AuthorizationSession(
+        id: columnMap['id'] as String,
+        sessionId: sessionId,
+        deviceId: columnMap['device_id'] as String,
+        status: TaskStatus.fromString(columnMap['status'] as String),
+        authorizedAt: columnMap['authorized_at'] as DateTime,
+        startedAt: columnMap['started_at'] as DateTime,
+        expiresAt: columnMap['expires_at'] as DateTime,
+        userId: columnMap['user_id'] as String,
+        accessToken: (token ?? columnMap['access_token']) as String,
+        code: columnMap['code'] as String),
+    token: (token ?? columnMap['access_token']) as String,
+    tokenExpiration: accessTokenExpiresAt);
   }
 
   @override
@@ -991,7 +1030,8 @@ RETURNING *''', parameters: [
 
   @override
   @Cacheable()
-  Future<AuthorizationSession> getAuthSessionDetails({required String sessionId}) async {
+  Future<AuthorizationSession> getAuthSessionDetails(
+      {required String sessionId}) async {
     if (_statements['getAuthSessionDetails'] == null) {
       _statements['getAuthSessionDetails'] = await _pool.prepare('''
 SELECT id, session_id, user_id, status, authorized_at, started_at, expires_at, device_id, code, access_token
@@ -1000,23 +1040,21 @@ WHERE session_id = @sessionId
 ''');
     }
 
-    final result = await _statements['getAllVersionsOfPackage']!.run({
-      'sessionId': sessionId
-    });
+    final result = await _statements['getAllVersionsOfPackage']!
+        .run({'sessionId': sessionId});
 
     final columnMap = result.first.toColumnMap();
 
     return AuthorizationSession(
-      id: columnMap['id'] as String,
-      sessionId: sessionId,
-      userId: columnMap['user_id'] as String?,
-      authorizedAt: columnMap['authorized_at'] as DateTime,
-      startedAt: columnMap['started_at'] as DateTime,
-      expiresAt: columnMap['expires_at'] as DateTime,
-      deviceId: columnMap['device_id'] as String,
-      code: columnMap['code'] as String,
-      accessToken: columnMap['access_token'] as String
-    );
+        id: columnMap['id'] as String,
+        sessionId: sessionId,
+        userId: columnMap['user_id'] as String?,
+        authorizedAt: columnMap['authorized_at'] as DateTime,
+        startedAt: columnMap['started_at'] as DateTime,
+        expiresAt: columnMap['expires_at'] as DateTime,
+        deviceId: columnMap['device_id'] as String,
+        code: columnMap['code'] as String,
+        accessToken: columnMap['access_token'] as String);
   }
 }
 
@@ -1024,7 +1062,8 @@ extension Authorization on PrittDatabase {
   /// Check for the authorization of a user
   /// TODO: Implement a better way to check for authorization, maybe put this behind a cache
   @Cacheable()
-  Future<User?> checkAuthorization(String accessToken, {AccessTokenType? tokenType}) async {
+  Future<User?> checkAuthorization(String accessToken,
+      {AccessTokenType? tokenType}) async {
     bool noToken;
 
     // validate access token expiration
@@ -1035,7 +1074,8 @@ extension Authorization on PrittDatabase {
     final result = await _pool.runTx((session) async {
       final rs = await session.execute(r'''SELECT hash FROM access_tokens''');
       final accessTokenHashes = rs.map((row) => row[0] as String);
-      final successFullToken = accessTokenHashes.where((hash) => auth.validateAccessToken(accessToken, hash));
+      final successFullToken = accessTokenHashes
+          .where((hash) => auth.validateAccessToken(accessToken, hash));
       if (successFullToken.isEmpty) {
         noToken = true;
       } else if (successFullToken.singleOrNull == null) {
@@ -1045,16 +1085,17 @@ extension Authorization on PrittDatabase {
 SELECT u.id, u.name, u.email, u.created_at, u.updated_at, a.token_type, a.expires_at as access_token_expires_at
 FROM users u
 INNER JOIN access_tokens a ON a.user_id = u.id
-WHERE a.hash = @accessToken'''), parameters: {
-          'accessToken': successFullToken.first
-        });
+WHERE a.hash = @accessToken'''),
+            parameters: {'accessToken': successFullToken.first});
       }
     });
 
     if (result == null)
-      throw UnauthorizedException('Invalid access token', type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
+      throw UnauthorizedException('Invalid access token',
+          type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
     if (result.isEmpty) {
-      throw UnauthorizedException('Invalid access token', type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
+      throw UnauthorizedException('Invalid access token',
+          type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
     }
 
     final row = result.first;
@@ -1062,8 +1103,8 @@ WHERE a.hash = @accessToken'''), parameters: {
 
     // if a token type is presented, validate the token type
     if (tokenType != null) {
-      final targetTokenType = AccessTokenType.fromString(
-          columnMap['token_type'] as String);
+      final targetTokenType =
+          AccessTokenType.fromString(columnMap['token_type'] as String);
       if (targetTokenType != tokenType) {
         throw UnauthorizedException(
             'The device wanting to access with this access code is not authorized',
@@ -1093,9 +1134,9 @@ WHERE a.hash = @accessToken'''), parameters: {
 
 String generateRandomCode({int length = 8, String? seed}) {
   final random = Random.secure();
-  
+
   final characters = 'ABCDEFGHJKLMNOPQRSTUVWXYZ234567890';
-  
+
   final input;
   if (seed == null) {
     input = characters;

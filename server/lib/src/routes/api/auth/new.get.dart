@@ -24,8 +24,8 @@ final handler = defineRequestHandler((event) async {
     final response = common.AuthResponse(
         token: authSession.sessionId,
         token_expires: authSession.expiresAt.toIso8601String(),
-    device: authSession.deviceId,
-    code: authSession.code);
+        device: authSession.deviceId,
+        code: authSession.code);
 
     return response.toJson();
   } catch (e) {

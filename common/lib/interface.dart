@@ -124,6 +124,7 @@ class AuthDetailsResponse {
     required this.device,
     required this.code,
     required this.status,
+    this.user_id,
   });
 
   factory AuthDetailsResponse.fromJson(Map<String, dynamic> json) =>
@@ -138,6 +139,8 @@ class AuthDetailsResponse {
   final String code;
 
   final PollStatus status;
+
+  final String? user_id;
 
   Map<String, dynamic> toJson() => _$AuthDetailsResponseToJson(this);
 }
@@ -163,7 +166,7 @@ class AuthError {
 class AuthPollResponse {
   AuthPollResponse({
     required this.status,
-    required this.response,
+    this.response,
   });
 
   factory AuthPollResponse.fromJson(Map<String, dynamic> json) =>
@@ -171,7 +174,7 @@ class AuthPollResponse {
 
   final PollStatus status;
 
-  final dynamic response;
+  final Map<String, dynamic>? response;
 
   Map<String, dynamic> toJson() => _$AuthPollResponseToJson(this);
 }
