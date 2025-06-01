@@ -886,7 +886,7 @@ RETURNING *''', parameters: [
     final enc = sha256.convert(utf8.encode(deviceId)).toString();
     final expiresAt = DateTime.now().add(Duration(hours: 1));
 
-    final sessionId = Slugid(enc);
+    final sessionId = enc.substring(0, 10);
 
     final code = generateRandomCode();
 

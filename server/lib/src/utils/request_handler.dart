@@ -24,7 +24,7 @@ class ResponseBuilder {
   ResponseBuilder();
 
   Response Function(Object? body) build() {
-    return (body) => Response(statusCode == 200 ? 204 : statusCode,
+    return (body) => Response(statusCode,
         body: body, headers: headers);
   }
 }

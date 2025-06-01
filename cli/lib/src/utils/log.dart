@@ -10,28 +10,42 @@ class Logger {
 
   Logger();
 
-  stderr(Object msg) {}
+  stderr(Object msg) {
+    io.stderr.writeln(msg);
+  }
+
   void stdout(Object msg) {
     io.stdout.writeln(msg);
   }
 
   void severe(Object msg, {bool stderr = true, Object? error}) {
-    io.stdout.writeln(red.wrap(msg.toString()));
+    (stderr ? io.stderr : io.stdout).writeln(red.wrap(msg.toString()));
+    if (error != null) io.stderr.writeln(error);
   }
 
-  fine(Object msg) {}
-  info(Object msg) {}
-  verbose(Object msg) {}
+  void fine(Object msg) {
+    io.stdout.writeln(green.wrap(msg.toString()));
+  }
+
+  void info(Object msg) {
+    io.stdout.writeln(blue.wrap(msg.toString()));
+  }
+
+  void verbose(Object msg) {}
 }
 
 class VerboseLogger implements Logger {
   final l.Logger _logger;
 
   @override
-  fine(Object msg) {}
+  fine(Object msg) {
+    _logger.fine(green.wrap(msg.toString()));
+  }
 
   @override
-  info(Object msg) {}
+  info(Object msg) {
+    _logger.info(blue.wrap(msg.toString()));
+  }
 
   @override
   void severe(Object msg, {bool stderr = true, Object? error}) {
@@ -39,17 +53,23 @@ class VerboseLogger implements Logger {
   }
 
   @override
-  stderr(Object msg) {}
+  void stderr(Object msg) {
+    io.stderr.writeln(msg);
+  }
 
   @override
-  void stdout(Object msg) {}
+  void stdout(Object msg) {
+    io.stdout.writeln(msg);
+  }
 
   @override
   verbose(Object msg) {
     _logger.log(VERBOSE, styleDim.wrap(msg.toString()));
   }
 
-  VerboseLogger() : _logger = l.Logger('devenv') {
+  VerboseLogger() : _logger = l.Logger('pritt') {
+    if (!l.hierarchicalLoggingEnabled) l.hierarchicalLoggingEnabled = true;
+
     _logger.level = l.Level.ALL;
     _logger.onRecord.listen((record) {
       print('${record.level.name}: ${record.time}: ${record.message}');

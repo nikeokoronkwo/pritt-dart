@@ -20,6 +20,36 @@ class ApiClient {
 
   ApiClient({this.url = 'http://localhost:8080', this.authentication});
 
+  Future<http.Response> requestBasic(
+    String path,
+    Method method,
+    QueryParams queryParams,
+    String? hash,
+    Object? body, {
+    String? contentType,
+    Map<String, String>? headerParams,
+  }) async {
+    assert(body is! Stream && body is! List<int>,
+        'For Streamed Requests, use the normal request');
+    return await request(path, method, queryParams, hash, body,
+        streamResponse: false,
+        headerParams: headerParams,
+        contentType: contentType) as http.Response;
+  }
+
+  Future<http.StreamedResponse> requestStreamed(
+    String path,
+    Method method,
+    QueryParams queryParams,
+    String? hash,
+    Object body, {
+    String? contentType,
+    Map<String, String>? headerParams,
+  }) async {
+    return await request(path, method, queryParams, hash, body,
+        streamResponse: true) as http.StreamedResponse;
+  }
+
   Future<http.BaseResponse> request(
     String path,
     Method method,
@@ -44,7 +74,8 @@ class ApiClient {
         ? '?${queryParams.entries.map((e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}').join('&')}'
         : '';
     final stringifiedHash = hash == null ? '' : '#${Uri.encodeComponent(hash)}';
-    final uri = Uri.parse('$url$path$stringifiedQueryParams$stringifiedHash');
+    final uri = Uri.parse(
+        '$url${path.startsWith('/') ? path.substring(1) : path}$stringifiedQueryParams$stringifiedHash');
 
     try {
       // TODO: Handle stream requests
@@ -82,3 +113,14 @@ class ApiClient {
 }
 
 enum Method { GET, POST, PUT, DELETE }
+
+class ApiException<T> implements Exception {
+  T body;
+  int statusCode;
+
+  ApiException(this.body, {this.statusCode = 400})
+      : assert(100 <= statusCode && statusCode < 600,
+            'Status Code should between 100 and 600 to be valid');
+  ApiException.internalServerError(this.body) : statusCode = 500;
+  ApiException.notFound(this.body) : statusCode = 404;
+}

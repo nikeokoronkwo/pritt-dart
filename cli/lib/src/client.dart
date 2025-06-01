@@ -1,16 +1,42 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:http/http.dart';
 import 'package:pritt_cli/src/client/authentication.dart';
 import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
+import 'package:pritt_cli/src/utils/log.dart';
 import 'package:pritt_common/interface.dart';
+import 'package:retry/retry.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
+  final retryClient = RetryOptions(maxAttempts: 3);
+  Map<String, String> get _prittHeaders =>
+      {HttpHeaders.userAgentHeader: 'pritt cli'};
+
   PrittClient({super.url, String? accessToken})
       : super(
             authentication: accessToken == null
                 ? null
                 : HttpBearerAuth(accessToken: accessToken));
+
+  Future<bool> healthCheck({bool verbose = false}) async {
+    try {
+      // TODO: Retry
+      int counter = 0;
+      final resp = await retryClient.retry(() {
+        if (verbose) {
+          print('Attempt #${++counter}');
+        }
+        return request('/', Method.GET, {}, null, null)
+            .timeout(Duration(seconds: 2));
+      }, retryIf: (e) => e is SocketException || e is TimeoutException);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   @override
   FutureOr<AddAdapterResponse> addAdapterWithId(AddAdapterRequest body,
@@ -28,9 +54,24 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   // TODO(openapigen): id not nullable
   @override
-  FutureOr<AuthResponse> createNewAuthStatus({String? id}) {
-    // TODO: implement createNewAuthStatus
-    throw UnimplementedError();
+  FutureOr<AuthResponse> createNewAuthStatus({String? id}) async {
+    final response = await requestBasic(
+        '/api/auth/new', Method.GET, {'id': id!}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return AuthResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: 401);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
@@ -247,3 +288,24 @@ class PrittClient extends ApiClient implements PrittInterface {
 
 /// A single root client that connects to the main pritt url
 final rootClient = PrittClient(url: mainPrittInstance);
+
+/// Extension for the Logger to handle exceptions
+extension HandleApiException on Logger {
+  void describe(ApiException exception) {
+    this.verbose('Error from server: ${exception.statusCode}');
+    try {
+      this.verbose('Message: ${exception.body.toJson()}');
+    } catch (_) {
+      this.verbose(switch (exception.body) {
+        String s => 'Message: $s',
+        Error err => 'Message: ${err.toJson()}',
+        Object o => 'Unknown Message: $o',
+        null => 'No Message'
+      });
+    }
+    this.severe('The Server returned a status code of ${exception.statusCode}');
+    if (this is! VerboseLogger) {
+      this.stdout('Run with --verbose to see verbose logging');
+    }
+  }
+}

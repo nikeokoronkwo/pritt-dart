@@ -13,7 +13,7 @@ final handler = defineRequestHandler((event) async {
 
   if (!userAgent.toString().toLowerCase().contains('pritt cli')) {
     setResponseCode(event, 401);
-    return 'Unauthorized: You should not be accessing this';
+    return common.UnauthorizedError(error: 'Unauthorized: You should not be accessing this').toJson();
   }
 
   try {
@@ -29,8 +29,9 @@ final handler = defineRequestHandler((event) async {
 
     return response.toJson();
   } catch (e) {
+    print(e);
     // handle exception
     setResponseCode(event, 500);
-    return 'Unknown Error';
+    common.ServerError(error: 'Unknown Error: $e').toJson();
   }
 });
