@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_cli/src/device_id.dart';
