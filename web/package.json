@@ -25,7 +25,9 @@
     "@nuxt/image": "1.10.0",
     "@nuxt/scripts": "0.11.7",
     "@nuxt/test-utils": "3.19.0",
+    "@nuxtjs/color-mode": "3.5.2",
     "@scalar/nuxt": "0.4.6",
+    "@tailwindcss/vite": "^4.1.8",
     "@tanstack/vue-form": "^1.12.0",
     "@unhead/vue": "^2.0.3",
     "better-auth": "^1.2.8",
@@ -35,11 +37,13 @@
     "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.17.4",
     "pg": "^8.16.0",
+    "tailwindcss": "^4.1.8",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@better-auth/cli": "^1.2.8",
+    "@tailwindcss/forms": "^0.5.10",
     "@types/pg": "^8.15.2",
     "@vue/test-utils": "^2.4.6",
     "drizzle-kit": "^0.31.1",

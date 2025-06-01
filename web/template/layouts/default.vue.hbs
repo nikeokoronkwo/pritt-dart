@@ -1,0 +1,51 @@
+<script setup lang="ts">
+  // color mode
+const route = useRoute()
+
+const colorMode = useColorMode()
+
+function switchColorMode() {
+  const currentMode = colorMode.value;
+  if (currentMode === 'dark') {
+    colorMode.preference = 'light'
+  } else {
+    colorMode.preference = 'dark'
+  }
+}
+
+function changeColorModeToSystem() {
+
+}
+</script>
+
+<template>
+  <div class="w-full transition-colors ease-in-out duration-75">
+    <!-- Header -->
+    <div class="w-full h-7 my-auto py-2 sticky flex flex-row justify-between px-2">
+      <!-- Logo -->
+      <div></div>
+
+      <!-- Ending Options -->
+      <div class="space-x-3">
+        <nav>
+          <NuxtLink />
+          <NuxtLink />
+        </nav>
+
+        <NuxtLink>Login</NuxtLink>
+
+        <!-- Color Mode -->
+        <button @click.prevent="switchColorMode()" class="">
+          <Icon v-if="colorMode.preference === 'light'" name="material-symbols:sunny-outline-rounded" />
+          <Icon v-else-if="colorMode.preference === 'dark'" name="material-symbols:dark-mode-outline-rounded" />
+          <Icon v-else name="material-symbols:sunny-outline-rounded" />
+        </button>
+      </div>
+    </div>
+    <slot />
+  </div>
+</template>
+
+<style>
+  /* Global Styles */
+</style>
