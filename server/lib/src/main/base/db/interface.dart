@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:pritt_server/src/main/base/db/annotations/cache.dart';
+
 import '../../utils/version.dart';
 import 'schema.dart';
 
@@ -160,7 +162,7 @@ abstract interface class PrittDatabaseInterface
   Stream<User> getContributorsForPackageStream(String name);
 
   /// Create a user
-  FutureOr<(User, String)> createUser({
+  FutureOr<User> createUser({
     required String name,
     required String email,
   });
@@ -172,10 +174,13 @@ abstract interface class PrittDatabaseInterface
     User Function(User)? updates,
   });
 
-  /// Update the access token for a user
-  FutureOr<(User, String)> updateUserAccessToken({
-    required String id,
-  });
+  /// Create a new access token for a user
+  FutureOr<(AccessToken, {String token})> createAccessTokenForUser(
+      {required String id,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo});
 
   /// Get a user
   FutureOr<User> getUser(String id);
@@ -190,11 +195,14 @@ abstract interface class PrittDatabaseInterface
   Stream<User> getUsersStream();
 
   /// Set the access token for a user
-  FutureOr<User> setAccessTokenForUser({
-    required String id,
-    required String accessToken,
-    required DateTime expiresAt,
-  });
+  FutureOr<(AccessToken, {String token})> setAccessTokenForUser(
+      {required String id,
+      required String accessToken,
+      required DateTime expiresAt,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo});
 
   /// Get a user by access token
   FutureOr<User> getUserByAccessToken(String accessToken);
@@ -261,19 +269,28 @@ abstract interface class PrittDatabaseInterface
   });
 
   /// Add a new authorization request and generate an auth token to use
+  @Cacheable()
   Future<AuthorizationSession> createNewAuthSession({
     required String deviceId,
   });
 
   /// Gets the status of a current auth sessions
-  Future<AuthorizationStatus> getAuthSessionStatus({
+  @Cacheable()
+  Future<({TaskStatus status, String? id})> getAuthSessionStatus({
+    required String sessionId,
+  });
+
+  /// Gets current auth session details
+  @Cacheable()
+  Future<AuthorizationSession> getAuthSessionDetails({
     required String sessionId,
   });
 
   /// Updates an auth session with a user's credentials
-  Future<AuthorizationSession> attachUserToAuthSession({
-    required String sessionId,
-    required String userId,
-    AuthorizationStatus? newStatus
-  });
+  @Cacheable()
+  Future<AuthorizationSession> completeAuthSession(
+      {required String sessionId,
+      required String userId,
+      String? accessToken,
+      TaskStatus? newStatus});
 }

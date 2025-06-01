@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:postgres/postgres.dart';
 import 'package:slugid/slugid.dart';
@@ -91,42 +92,26 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   }
 
   @override
-  FutureOr<(User, String)> createUser(
+  FutureOr<User> createUser(
       {required String name, required String email}) async {
     final id = Slugid.nice();
-    final createdAt = DateTime.now();
-    final accessTokenExpiresAt = createdAt.add(Duration(days: 10));
-    final (key: accessToken, hash: accessTokenHash) = auth.createAccessTokenForUser(
-      name: name,
-      email: email,
-      expiresAt: accessTokenExpiresAt,
-    );
 
     // TODO: Access Token Generation
     try {
       final result = await _pool.execute(r'''
-INSERT INTO users (id, name, email, access_token, access_token_expires_at, created_at) 
-VALUES ($1, $2, $3, $4, $5, $6) 
-RETURNING *;''', parameters: [
-        id,
-        name,
-        email,
-        accessTokenHash,
-        accessTokenExpiresAt,
-        createdAt
-      ]);
+INSERT INTO users (id, name, email) 
+VALUES ($1, $2, $3) 
+RETURNING *''', parameters: [id, name, email]);
 
       final row = result.first;
       final columnMap = row.toColumnMap();
 
-      return (User(
+      return User(
           id: columnMap['id'] as String,
           name: name,
-          accessToken: accessTokenHash,
-          accessTokenExpiresAt: accessTokenExpiresAt,
           email: email,
-          createdAt: createdAt,
-          updatedAt: columnMap['updated_at'] as DateTime), accessToken);
+          createdAt: columnMap['created_at'] as DateTime? ?? DateTime.now(),
+          updatedAt: columnMap['updated_at'] as DateTime);
     } catch (e) {
       rethrow;
     }
@@ -191,7 +176,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
     if (_statements['getPackage'] == null) {
       _statements['getPackage'] = await _pool.prepare(Sql.named('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, u.access_token_expires_at, u.created_at as author_created_at, u.updated_at as author_updated_at
+       u.id as author_id, u.name as author_name, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 WHERE p.name = @name AND p.scope = @scope
@@ -219,9 +204,6 @@ WHERE p.name = @name AND p.scope = @scope
           id: columnMap['author_id'] as String,
           name: columnMap['author_name'] as String,
           email: columnMap['author_email'] as String,
-          accessToken: columnMap['access_token'] as String,
-          accessTokenExpiresAt:
-              columnMap['access_token_expires_at'] as DateTime,
           createdAt: columnMap['author_created_at'] as DateTime,
           updatedAt: columnMap['author_updated_at'] as DateTime,
         ),
@@ -261,7 +243,7 @@ SELECT reltuples::bigint AS estimate FROM pg_class where relname = 'packages';
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, u.access_token_expires_at, u.created_at as author_created_at, u.updated_at as author_updated_at
+       u.id as author_id, u.name as author_name, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 ''');
@@ -280,9 +262,6 @@ LEFT JOIN users u ON p.author_id = u.id
             id: columnMap['author_id'] as String,
             name: columnMap['author_name'] as String,
             email: columnMap['author_email'] as String,
-            accessToken: columnMap['access_token'] as String,
-            accessTokenExpiresAt:
-                columnMap['access_token_expires_at'] as DateTime,
             createdAt: columnMap['author_created_at'] as DateTime,
             updatedAt: columnMap['author_updated_at'] as DateTime,
           ),
@@ -332,7 +311,7 @@ LEFT JOIN users u ON p.author_id = u.id
     // less cacheable
     if (_statements['getUsers'] == null) {
       _statements['getUsers'] = await _pool.prepare('''
-SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
+SELECT id, name, email, created_at, updated_at
 FROM users
 ''');
     }
@@ -344,8 +323,6 @@ FROM users
         id: columnMap['id'] as String,
         name: columnMap['name'] as String,
         email: columnMap['email'] as String,
-        accessToken: columnMap['access_token'] as String,
-        accessTokenExpiresAt: columnMap['access_token_expires_at'] as DateTime,
         createdAt: columnMap['created_at'] as DateTime,
         updatedAt: columnMap['updated_at'] as DateTime,
       );
@@ -364,8 +341,8 @@ SELECT pv.version, pv.version_type, pv.created_at, pv.info, pv.env, pv.metadata,
        p.id as package_id, p.name as package_name, p.scope as package_scope, p.language as package_language, p.created_at as package_created_at, 
        p.updated_at as package_updated_at, p.version as package_latest_version, p.vcs as package_vcs, p.vcs_url as package_vcs_url, 
        p.archive as package_archive, p.description as package_description, p.license as package_license,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, 
-       u.access_token_expires_at, u.created_at as author_created_at, 
+       u.id as author_id, u.name as author_name, u.email as author_email,
+       u.created_at as author_created_at, 
        u.updated_at as author_updated_at
 FROM package_versions pv
 INNER JOIN packages p ON pv.package_id = p.id
@@ -396,9 +373,6 @@ LIMIT 1
           author: User(
             id: columnMap['author_id'] as String,
             name: columnMap['author_name'] as String,
-            accessToken: columnMap['access_token'] as String,
-            accessTokenExpiresAt:
-                columnMap['access_token_expires_at'] as DateTime,
             email: columnMap['author_email'] as String,
             createdAt: columnMap['author_created_at'] as DateTime,
             updatedAt: columnMap['author_updated_at'] as DateTime,
@@ -435,15 +409,6 @@ LIMIT 1
   }
 
   @override
-  FutureOr<User> setAccessTokenForUser(
-      {required String id,
-      required String accessToken,
-      required DateTime expiresAt}) {
-    // TODO: implement setAccessTokenForUser
-    throw UnimplementedError();
-  }
-
-  @override
   FutureOr<PackageVersions> updateNewPackageWithArchiveDetails(
       {required String name,
       required String version,
@@ -470,7 +435,7 @@ LIMIT 1
     // not cacheable
 
     final result = await _pool.execute(Sql.named('''
-SELECT u.id, u.name, u.email, u.access_token, u.access_token_expires_at, u.created_at, u.updated_at,
+SELECT u.id, u.name, u.email, u.created_at, u.updated_at,
        pc.package_id as package_id, pc.privileges as privileges
 FROM package_contributors pc
 LEFT JOIN users u ON pc.contributor_id = u.id
@@ -487,9 +452,6 @@ WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope = @s
             id: columnMap['id'] as String,
             name: columnMap['name'] as String,
             email: columnMap['email'] as String,
-            accessToken: columnMap['access_token'] as String,
-            accessTokenExpiresAt:
-                columnMap['access_token_expires_at'] as DateTime,
             createdAt: columnMap['created_at'] as DateTime,
             updatedAt: columnMap['updated_at'] as DateTime,
           ),
@@ -512,7 +474,7 @@ WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope = @s
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.access_token, u.access_token_expires_at, u.created_at as author_created_at, u.updated_at as author_updated_at
+       u.id as author_id, u.name as author_name, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 ''');
@@ -530,9 +492,6 @@ LEFT JOIN users u ON p.author_id = u.id
                     id: columnMap['author_id'] as String,
                     name: columnMap['author_name'] as String,
                     email: columnMap['author_email'] as String,
-                    accessToken: columnMap['access_token'] as String,
-                    accessTokenExpiresAt:
-                        columnMap['access_token_expires_at'] as DateTime,
                     createdAt: columnMap['author_created_at'] as DateTime,
                     updatedAt: columnMap['author_updated_at'] as DateTime,
                   ),
@@ -551,7 +510,7 @@ LEFT JOIN users u ON p.author_id = u.id
     // less cacheable
     if (_statements['getUsers'] == null) {
       _statements['getUsers'] = await _pool.prepare('''
-SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
+SELECT id, name, email, created_at, updated_at
 FROM users
 ''');
     }
@@ -564,9 +523,6 @@ FROM users
                 id: columnMap['id'] as String,
                 name: columnMap['name'] as String,
                 email: columnMap['email'] as String,
-                accessToken: columnMap['access_token'] as String,
-                accessTokenExpiresAt:
-                    columnMap['access_token_expires_at'] as DateTime,
                 createdAt: columnMap['created_at'] as DateTime,
                 updatedAt: columnMap['updated_at'] as DateTime,
               );
@@ -602,7 +558,7 @@ FROM users
     // cacheable
     if (_statements['getPlugins'] == null) {
       _statements['getPlugins'] = await _pool.prepare('''
-SELECT p.id, p.name, p.language, p.description, p.archive, p.archive_type
+SELECT p.id, p.name, p.language, p.description, p.archive, p.archive_type, p.source_type, p.url, p.vcs
 FROM plugins p
 ''');
     }
@@ -617,12 +573,11 @@ FROM plugins p
           description: columnMap['description'] as String?,
           language: columnMap['language'] as String,
           archive: Uri.file(columnMap['archive'] as String),
-          archiveType: switch (columnMap['archive_type'] as String) {
-            'single' => PluginArchiveType.single,
-            'multi' => PluginArchiveType.multi,
-            _ => throw Exception(
-                "Unknown Plugin Archive Type ${columnMap['archive_type']}")
-          });
+          archiveType: PluginArchiveType.fromString(columnMap['archive_type'] as String),
+          sourceType: PluginSourceType.fromString(columnMap['source_type'] as String),
+          url: (columnMap['url'] as String?) == null ? null : Uri.parse(columnMap['url']),
+          vcs: (columnMap['vcs'] as String?) == null ? null : VCS.fromString(columnMap['vcs'])
+      );
     });
   }
 
@@ -807,36 +762,82 @@ FROM plugins p
 
   @override
   @Cacheable()
-  Future<AuthorizationSession> attachUserToAuthSession(
-      {required String sessionId, required String userId, AuthorizationStatus? newStatus}) async {
-    late Result result;
+  Future<AuthorizationSession> completeAuthSession(
+      {required String sessionId,
+      required String userId,
+      String? accessToken,
+      TaskStatus? newStatus}) async {
 
-    await _pool.runTx((session) async {
+    // run transaction
+    final result = await _pool.runTx((session) async {
+      final hash;
+      // get current status of session
       final rs = await session.execute(
-          r'''SELECT expires_at, status FROM authorization_sessions WHERE session_id = $1''',
+          r'''SELECT expires_at, status, device_id FROM authorization_sessions WHERE session_id = $1''',
           parameters: [sessionId]);
-      final expiresAt = rs[0][0] as DateTime;
-      var status = AuthorizationStatus.fromString(rs[0][1] as String);
-      if (expiresAt.isBefore(DateTime.now()) &&
-          status == AuthorizationStatus.pending)
-        status = AuthorizationStatus.expired;
+
+      final row = rs.first.toColumnMap();
+
+      // validate if expired or not
+      final expiresAt = row['expires_at'] as DateTime;
+      var status = TaskStatus.fromString(row['status'] as String);
+      if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending)
+        status = TaskStatus.expired;
       else if (newStatus != null) status = newStatus;
 
-      result = await session.execute(r'''
+      // set access token if null
+      // for the most part, logging in would require making a new access token, but what would happen to other devices?
+      if (accessToken == null) {
+        final updatedAt = DateTime.now();
+        final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
+
+        final userInfoQuery = await session.execute(
+            r'''SELECT name, email FROM users WHERE id = $1''',
+            parameters: [userId]);
+        final userInfo = userInfoQuery.first.toColumnMap();
+
+        // generate new token
+        final (key: key, hash: accessTokenHash) = auth.createAccessTokenForUser(
+          name: userInfo['name'],
+          email: userInfo['email'],
+          expiresAt: accessTokenExpiresAt,
+        );
+        accessToken ??= key;
+        hash = accessTokenHash;
+        final _ = await _pool.execute(r'''
+INSERT INTO access_tokens (user_id, hash, token_type, device_id, expires_at)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING *''', parameters: [
+          userId,
+          accessTokenHash,
+          AccessTokenType.device,
+          row['device_id'] as String,
+          expiresAt
+        ]);
+      } else hash = auth.hashToken(accessToken!);
+
+      return await session.execute(r'''
         UPDATE authorization_sessions
-        SET user_id = $1, status = $2
-        WHERE session_id = $3
+        SET user_id = $1, status = $2, access_token = $3, authorized_at = now()
+        WHERE session_id = $4
         RETURNING *
-      ''', parameters: [userId, status.name, sessionId]);
+      ''', parameters: [userId, status.name, hash, sessionId]);
     });
 
     final columnMap = result.first.toColumnMap();
 
     return AuthorizationSession(
-        sessionId: sessionId,
-        deviceId: columnMap['device_id'] as String,
-        expiresAt: columnMap['expires_at'] as DateTime,
-        userId: userId);
+      id: columnMap['id'] as String,
+      sessionId: sessionId,
+      deviceId: columnMap['device_id'] as String,
+      status: TaskStatus.fromString(columnMap['status'] as String),
+      authorizedAt: columnMap['authorized_at'] as DateTime,
+      startedAt: columnMap['started_at'] as DateTime,
+      expiresAt: columnMap['expires_at'] as DateTime,
+      accessToken: accessToken,
+      userId: userId,
+      code: columnMap['code'] as String
+    );
   }
 
   @override
@@ -848,75 +849,182 @@ FROM plugins p
 
     final sessionId = Slugid(enc);
 
+    final code = generateRandomCode();
+
     final result = await _pool.execute(r'''
-    INSERT INTO authorization_sessions (session_id, expires_at, device_id)
-    VALUES ($1, $2, $3)
+    INSERT INTO authorization_sessions (session_id, expires_at, device_id, code)
+    VALUES ($1, $2, $3, $4)
     RETURNING *
-    ''', parameters: [sessionId.toString(), expiresAt, deviceId]);
+    ''', parameters: [sessionId.toString(), expiresAt, deviceId, code]);
 
     final row = result.first;
     final columnMap = row.toColumnMap();
 
     return AuthorizationSession(
-        sessionId: sessionId.toString(),
-        deviceId: deviceId,
-        expiresAt: expiresAt);
+      sessionId: sessionId.toString(),
+      deviceId: deviceId,
+      expiresAt: expiresAt,
+      code: code,
+      id: columnMap['id'] as String,
+      startedAt: columnMap['started_at'] as DateTime? ?? DateTime.now(),
+    );
   }
 
   @override
   @Cacheable()
-  Future<AuthorizationStatus> getAuthSessionStatus(
+  Future<({TaskStatus status, String? id})> getAuthSessionStatus(
       {required String sessionId}) async {
     final result = await _pool.execute(
-        r'''SELECT status FROM authorization_sessions WHERE session_id = $1''',
+        r'''SELECT status, user_id FROM authorization_sessions WHERE session_id = $1''',
         parameters: [sessionId]);
 
-    return AuthorizationStatus.fromString(result[0][0] as String);
+    final row = result.first.toColumnMap();
+    return (
+      status: TaskStatus.fromString(row['status'] as String),
+      id: row['user_id'] as String?
+    );
   }
 
   @override
-  Future<(User, String)> updateUserAccessToken({required String id}) async {
-    final updatedAt = DateTime.now();
-    final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
+  FutureOr<(AccessToken, {String token})> createAccessTokenForUser(
+      {required String id,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo}) async {
     late String token;
+    DateTime createdAt = DateTime.now();
+    DateTime expiresAt = createdAt.add(Duration(days: 10));
 
+    /// Create an access token
     final result = await _pool.runTx((session) async {
-      final userResult = await session.execute(r'''SELECT name, email FROM users WHERE id = $1''', parameters: [id]);
+      final userQuery =
+          await session.execute(r'''SELECT name, email''', parameters: []);
+      final userColumnMap = userQuery.first.toColumnMap();
 
-      final mainResult = userResult.first.toColumnMap();
-      final (key: accessToken, hash: accessTokenHash) = auth.createAccessTokenForUser(
-        name: mainResult['name'],
-        email: mainResult['email'],
-        expiresAt: accessTokenExpiresAt,
+      // generate the token
+      final (key: accessToken, hash: accessTokenHash) =
+          auth.createAccessTokenForUser(
+        name: userColumnMap['name'],
+        email: userColumnMap['email'],
+        expiresAt: expiresAt,
       );
-      token = accessToken;
-      return await session.execute(r'''
-UPDATE users      
-SET access_token = $1, access_token_expires_at = $2, updated_at = $3
-WHERE id = $4
-RETURNING *
-      ''', parameters: [accessTokenHash, accessTokenExpiresAt, updatedAt, id]);
 
+      /// set token
+      token = accessToken;
+
+      // add a new access token table
+      return await session.execute(r'''
+INSERT INTO access_tokens (user_id, hash, token_type, description, device_id, expires_at, device_info)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING *''', parameters: [
+        id,
+        accessTokenHash,
+        tokenType.name,
+        description,
+        deviceId,
+        expiresAt,
+        /* FIXME: This should be fixed */ deviceInfo
+      ]);
     });
 
     final columnMap = result.first.toColumnMap();
 
-    return (User(
-        id: columnMap['id'] as String,
-        name: columnMap['name'] as String,
-        accessToken: columnMap['access_token'] as String,
-        accessTokenExpiresAt: accessTokenExpiresAt,
-        email: columnMap['email'] as String,
-        createdAt: columnMap['created_at'] as DateTime,
-        updatedAt: updatedAt), token);
+    return (
+      AccessToken(
+          id: columnMap['id'] as String,
+          userId: id,
+          hash: columnMap['hash'] as String,
+          tokenType: tokenType,
+          description: columnMap['description'] as String?,
+          deviceId: columnMap['device_id'] as String?,
+          expiresAt: expiresAt,
+          lastUsedAt: columnMap['last_used_at'] as DateTime,
+          createdAt: createdAt,
+          deviceInfo: columnMap['device_info'] as Map<String, dynamic>),
+      token: token
+    );
+  }
+
+  @override
+  FutureOr<(AccessToken, {String token})> setAccessTokenForUser(
+      {required String id,
+      required String accessToken,
+      required DateTime expiresAt,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo}) async {
+    // hash token
+    final hash = auth.hashToken(accessToken);
+
+    final result = await _pool.execute(r'''
+INSERT INTO access_tokens (user_id, hash, token_type, description, device_id, expires_at, device_info)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING *''', parameters: [
+      id,
+      hash,
+      tokenType.name,
+      description,
+      deviceId,
+      expiresAt,
+      /* FIXME: This should be fixed */ deviceInfo
+    ]);
+
+    final columnMap = result.first.toColumnMap();
+
+    return (
+      AccessToken(
+          id: columnMap['id'] as String,
+          userId: id,
+          hash: columnMap['hash'] as String,
+          tokenType: tokenType,
+          description: columnMap['description'] as String?,
+          deviceId: columnMap['device_id'] as String?,
+          expiresAt: expiresAt,
+          lastUsedAt: columnMap['last_used_at'] as DateTime,
+          createdAt: columnMap['created_at'] as DateTime,
+          deviceInfo: columnMap['device_info'] as Map<String, dynamic>),
+      token: accessToken
+    );
+  }
+
+  @override
+  @Cacheable()
+  Future<AuthorizationSession> getAuthSessionDetails({required String sessionId}) async {
+    if (_statements['getAuthSessionDetails'] == null) {
+      _statements['getAuthSessionDetails'] = await _pool.prepare('''
+SELECT id, session_id, user_id, status, authorized_at, started_at, expires_at, device_id, code, access_token
+FROM authorization_sessions
+WHERE session_id = @sessionId
+''');
+    }
+
+    final result = await _statements['getAllVersionsOfPackage']!.run({
+      'sessionId': sessionId
+    });
+
+    final columnMap = result.first.toColumnMap();
+
+    return AuthorizationSession(
+      id: columnMap['id'] as String,
+      sessionId: sessionId,
+      userId: columnMap['user_id'] as String?,
+      authorizedAt: columnMap['authorized_at'] as DateTime,
+      startedAt: columnMap['started_at'] as DateTime,
+      expiresAt: columnMap['expires_at'] as DateTime,
+      deviceId: columnMap['device_id'] as String,
+      code: columnMap['code'] as String,
+      accessToken: columnMap['access_token'] as String
+    );
   }
 }
 
 extension Authorization on PrittDatabase {
   /// Check for the authorization of a user
   /// TODO: Implement a better way to check for authorization, maybe put this behind a cache
-  Future<User?> checkAuthorization(
-      String accessToken) async {
+  @Cacheable()
+  Future<User?> checkAuthorization(String accessToken, {AccessTokenType? tokenType}) async {
     bool noToken;
 
     // validate access token expiration
@@ -925,7 +1033,7 @@ extension Authorization on PrittDatabase {
     }
 
     final result = await _pool.runTx((session) async {
-      final rs = await session.execute(r'''SELECT access_token FROM users''');
+      final rs = await session.execute(r'''SELECT hash FROM access_tokens''');
       final accessTokenHashes = rs.map((row) => row[0] as String);
       final successFullToken = accessTokenHashes.where((hash) => auth.validateAccessToken(accessToken, hash));
       if (successFullToken.isEmpty) {
@@ -934,22 +1042,34 @@ extension Authorization on PrittDatabase {
         noToken = false;
       } else {
         return await session.execute(Sql.named('''
-SELECT id, name, email, access_token, access_token_expires_at, created_at, updated_at
-FROM users
-WHERE access_token = @accessToken'''), parameters: {
+SELECT u.id, u.name, u.email, u.created_at, u.updated_at, a.token_type, a.expires_at as access_token_expires_at
+FROM users u
+INNER JOIN access_tokens a ON a.user_id = u.id
+WHERE a.hash = @accessToken'''), parameters: {
           'accessToken': successFullToken.first
         });
-        noToken = false;
       }
     });
 
-    if (result == null) throw UnauthorizedException('Invalid access token', token: accessToken);
+    if (result == null)
+      throw UnauthorizedException('Invalid access token', type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
     if (result.isEmpty) {
-      throw UnauthorizedException('Invalid access token', token: accessToken);
+      throw UnauthorizedException('Invalid access token', type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
     }
 
     final row = result.first;
     final columnMap = row.toColumnMap();
+
+    // if a token type is presented, validate the token type
+    if (tokenType != null) {
+      final targetTokenType = AccessTokenType.fromString(
+          columnMap['token_type'] as String);
+      if (targetTokenType != tokenType) {
+        throw UnauthorizedException(
+            'The device wanting to access with this access code is not authorized',
+            type: UnauthorizedExceptionType.UNAUTHORIZED_DEVICE);
+      }
+    }
 
     // check the access token expiration
     // TODO: Double check other details
@@ -963,12 +1083,31 @@ WHERE access_token = @accessToken'''), parameters: {
       id: columnMap['id'] as String,
       name: columnMap['name'] as String,
       email: columnMap['email'] as String,
-      accessToken: columnMap['access_token'] as String,
-      accessTokenExpiresAt: columnMap['access_token_expires_at'] as DateTime,
       createdAt: columnMap['created_at'] as DateTime,
       updatedAt: columnMap['updated_at'] as DateTime,
     );
 
     return user;
   }
+}
+
+String generateRandomCode({int length = 8, String? seed}) {
+  final random = Random.secure();
+  
+  final characters = 'ABCDEFGHJKLMNOPQRSTUVWXYZ234567890';
+  
+  final input;
+  if (seed == null) {
+    input = characters;
+  } else {
+    var encodedSeed = base64Encode(utf8.encode(seed));
+    input = encodedSeed.split('').where((c) => characters.contains(c)).join('');
+  }
+
+  String output = '';
+  for (int i = 0; i < length; ++i) {
+    output += characters[random.nextInt(characters.length - 1)];
+  }
+
+  return output;
 }

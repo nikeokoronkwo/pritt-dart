@@ -1,4 +1,4 @@
-module AuthResponse
+open module AuthResponse
 
 /// The token used for authentication on the client (CLI) side
 token: String
@@ -9,4 +9,9 @@ token: String
 token_expires: String
 
 /// A unique id used to identify the person requesting for an ID
-id: String
+///
+/// The Device ID
+device: String
+
+/// The unique 8-character code
+code: String

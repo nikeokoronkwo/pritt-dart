@@ -1,0 +1,30 @@
+
+import 'package:pritt_common/interface.dart' as common;
+
+import 'package:pritt_server/pritt_server.dart';
+import 'package:pritt_server/src/main/base/db/schema.dart';
+import 'package:pritt_server/src/utils/request_handler.dart';
+
+final handler = defineRequestHandler((event) async {
+  // get id
+  final id = getParams(event, 'id') as String;
+
+  // get auth session
+  final details = await crs.db.getAuthSessionDetails(sessionId: id);
+
+  final resp = common.AuthDetailsResponse(
+      token: id,
+      token_expires: details.expiresAt.toIso8601String(),
+      device: details.deviceId,
+      code: details.code,
+      status: switch (details.status) {
+        TaskStatus.pending => common.PollStatus.pending,
+        TaskStatus.success => common.PollStatus.success,
+        TaskStatus.fail => common.PollStatus.fail,
+        TaskStatus.expired => common.PollStatus.expired,
+        TaskStatus.error => common.PollStatus.error,
+      }
+  );
+
+  return resp.toJson();
+});

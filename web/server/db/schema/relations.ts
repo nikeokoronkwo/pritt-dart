@@ -1,5 +1,21 @@
 import { relations } from "drizzle-orm/relations";
-import { users, packages, organizations, authorizationSessions, organizationMembers, packageContributors, packageVersions } from "./schema";
+import { users, accessTokens, packages, organizations, authorizationSessions, packagePublishingTasks, organizationMembers, packageContributors, packageVersions } from "./schema";
+
+export const accessTokensRelations = relations(accessTokens, ({one}) => ({
+	user: one(users, {
+		fields: [accessTokens.userId],
+		references: [users.id]
+	}),
+}));
+
+export const usersRelations = relations(users, ({many}) => ({
+	accessTokens: many(accessTokens),
+	packages: many(packages),
+	authorizationSessions: many(authorizationSessions),
+	packagePublishingTasks: many(packagePublishingTasks),
+	organizationMembers: many(organizationMembers),
+	packageContributors: many(packageContributors),
+}));
 
 export const packagesRelations = relations(packages, ({one, many}) => ({
 	user: one(users, {
@@ -14,13 +30,6 @@ export const packagesRelations = relations(packages, ({one, many}) => ({
 	packageVersions: many(packageVersions),
 }));
 
-export const usersRelations = relations(users, ({many}) => ({
-	packages: many(packages),
-	authorizationSessions: many(authorizationSessions),
-	organizationMembers: many(organizationMembers),
-	packageContributors: many(packageContributors),
-}));
-
 export const organizationsRelations = relations(organizations, ({many}) => ({
 	packages: many(packages),
 	organizationMembers: many(organizationMembers),
@@ -29,6 +38,13 @@ export const organizationsRelations = relations(organizations, ({many}) => ({
 export const authorizationSessionsRelations = relations(authorizationSessions, ({one}) => ({
 	user: one(users, {
 		fields: [authorizationSessions.userId],
+		references: [users.id]
+	}),
+}));
+
+export const packagePublishingTasksRelations = relations(packagePublishingTasks, ({one}) => ({
+	user: one(users, {
+		fields: [packagePublishingTasks.userId],
 		references: [users.id]
 	}),
 }));

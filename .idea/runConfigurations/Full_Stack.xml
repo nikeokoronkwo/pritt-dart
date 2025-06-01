@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Full Stack" type="CompoundRunConfigurationType">
-    <toRun name="CLI" type="DartCommandLineRunConfigurationType" />
     <toRun name="Server" type="DartCommandLineRunConfigurationType" />
     <toRun name="Compose (services only)" type="docker-deploy" />
     <method v="2" />

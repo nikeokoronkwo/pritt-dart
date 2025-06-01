@@ -48,9 +48,14 @@ class UnauthorizedException implements Exception {
   final String message;
   final String? token;
   final Object? source;
-  UnauthorizedException(this.message, {this.token, this.source});
+  final UnauthorizedExceptionType? type;
+  UnauthorizedException(this.message, {this.token, this.type, this.source});
 }
 
+enum UnauthorizedExceptionType {
+  INVALID_TOKEN,
+  UNAUTHORIZED_DEVICE
+}
 class ExpiredTokenException implements Exception {
   final String message;
   final String? token;

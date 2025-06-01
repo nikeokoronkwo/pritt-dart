@@ -58,7 +58,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<AuthPollResponse> getAuthStatus() {
+  FutureOr<AuthPollResponse> getAuthStatus({String? id}) {
     // TODO: implement getAuthStatus
     throw UnimplementedError();
   }
@@ -185,7 +185,8 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<AuthValidateResponse> validateAuthStatus(AuthValidateRequest body, {String? token}) {
+  FutureOr<AuthValidateResponse> validateAuthStatus(AuthValidateRequest body,
+      {String? token}) {
     // TODO: implement validateAuthStatus
     throw UnimplementedError();
   }
@@ -234,6 +235,12 @@ class PrittClient extends ApiClient implements PrittInterface {
   @override
   FutureOr<GetUserResponse> getCurrentUser() {
     // TODO: implement getCurrentUser
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id}) {
+    // TODO: implement getAuthDetailsById
     throw UnimplementedError();
   }
 }

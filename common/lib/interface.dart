@@ -103,29 +103,75 @@ class AddUserResponse {
   Map<String, dynamic> toJson() => _$AddUserResponseToJson(this);
 }
 
+@JsonEnum(valueField: 'value')
+enum PollStatus {
+  success('success'),
+  fail('fail'),
+  error('error'),
+  expired('expired'),
+  pending('pending');
+
+  const PollStatus(this.value);
+
+  final String value;
+}
+
 @JsonSerializable()
-class PollResponse {
-  PollResponse();
+class AuthDetailsResponse {
+  AuthDetailsResponse({
+    required this.token,
+    required this.token_expires,
+    required this.device,
+    required this.code,
+    required this.status,
+  });
 
-  factory PollResponse.fromJson(Map<String, dynamic> json) =>
-      _$PollResponseFromJson(json);
+  factory AuthDetailsResponse.fromJson(Map<String, dynamic> json) =>
+      _$AuthDetailsResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PollResponseToJson(this);
+  final String token;
+
+  final String token_expires;
+
+  final String device;
+
+  final String code;
+
+  final PollStatus status;
+
+  Map<String, dynamic> toJson() => _$AuthDetailsResponseToJson(this);
+}
+
+@JsonSerializable()
+class AuthError {
+  AuthError({
+    this.error,
+    required this.status,
+  });
+
+  factory AuthError.fromJson(Map<String, dynamic> json) =>
+      _$AuthErrorFromJson(json);
+
+  final String? error;
+
+  final PollStatus status;
+
+  Map<String, dynamic> toJson() => _$AuthErrorToJson(this);
 }
 
 @JsonSerializable()
 class AuthPollResponse {
   AuthPollResponse({
     required this.status,
-    this.response,
+    required this.response,
   });
 
   factory AuthPollResponse.fromJson(Map<String, dynamic> json) =>
       _$AuthPollResponseFromJson(json);
 
-  final dynamic status;
+  final PollStatus status;
 
-  final PollResponse? response;
+  final dynamic response;
 
   Map<String, dynamic> toJson() => _$AuthPollResponseToJson(this);
 }
@@ -135,7 +181,8 @@ class AuthResponse {
   AuthResponse({
     required this.token,
     required this.token_expires,
-    required this.id,
+    required this.device,
+    required this.code,
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) =>
@@ -145,7 +192,9 @@ class AuthResponse {
 
   final String token_expires;
 
-  final String id;
+  final String device;
+
+  final String code;
 
   Map<String, dynamic> toJson() => _$AuthResponseToJson(this);
 }
@@ -1142,11 +1191,20 @@ abstract interface class PrittInterface {
   ///   - [ServerError] on status code 5XX
   _i3.FutureOr<AuthResponse> createNewAuthStatus({String id});
 
+  /// **Get the details for an auth session**
+  /// GET /api/auth/details/{id}
+  ///
+  /// Get the details for an auth session
+  /// Throws:
+  ///   - [null] on status code 404
+  _i3.FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id});
+
   /// **Validte Authentication Response**
   /// POST /api/auth/validate
   ///
   /// Validate or authenticate a user
   /// Throws:
+  ///   - [AuthError] on status code 402
   ///   - [ExpiredError] on status code 405
   _i3.FutureOr<AuthValidateResponse> validateAuthStatus(
     AuthValidateRequest body, {
@@ -1159,7 +1217,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   ///   - [ExpiredError] on status code 405
-  _i3.FutureOr<AuthPollResponse> getAuthStatus();
+  _i3.FutureOr<AuthPollResponse> getAuthStatus({String id});
 
   /// GET /api/archive/package/{name}
   ///

@@ -1,9 +1,11 @@
-import { pgTable, index, integer, varchar, timestamp, boolean, unique, text, foreignKey, check, primaryKey, jsonb, json, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, index, integer, varchar, timestamp, boolean, unique, text, foreignKey, uuid, jsonb, check, primaryKey, json, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
-export const authorizationStatus = pgEnum("authorization_status", ['pending', 'success', 'fail', 'expired', 'error'])
+export const accessTokenType = pgEnum("access_token_type", ['device', 'personal', 'extended', 'pipeline'])
 export const pluginArchiveType = pgEnum("plugin_archive_type", ['single', 'multi'])
+export const pluginSourceType = pgEnum("plugin_source_type", ['hosted', 'vcs', 'local', 'other'])
 export const privilege = pgEnum("privilege", ['read', 'write', 'publish', 'ultimate'])
+export const taskStatus = pgEnum("task_status", ['pending', 'success', 'fail', 'expired', 'error'])
 export const versionControlSystem = pgEnum("version_control_system", ['git', 'svn', 'fossil', 'mercurial', 'other'])
 export const versionKind = pgEnum("version_kind", ['major', 'experimental', 'beta', 'next', 'rc', 'canary', 'other'])
 
@@ -37,11 +39,30 @@ export const users = pgTable("users", {
 	id: text().primaryKey().notNull(),
 	name: text().notNull(),
 	email: text().notNull(),
-	accessToken: text("access_token").notNull(),
-	accessTokenExpiresAt: timestamp("access_token_expires_at", { withTimezone: true, mode: 'string' }).notNull(),
+	avatarUrl: text("avatar_url").notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 });
+
+export const accessTokens = pgTable("access_tokens", {
+	id: uuid().default(sql`uuid_generate_v4()`).primaryKey().notNull(),
+	userId: text("user_id").notNull(),
+	hash: text().notNull(),
+	tokenType: accessTokenType("token_type").notNull(),
+	description: text(),
+	deviceId: text("device_id"),
+	expiresAt: timestamp("expires_at", { withTimezone: true, mode: 'string' }).notNull(),
+	lastUsedAt: timestamp("last_used_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	deviceInfo: jsonb("device_info"),
+}, (table) => [
+	foreignKey({
+			columns: [table.userId],
+			foreignColumns: [users.id],
+			name: "access_tokens_user_id_fkey"
+		}).onDelete("cascade"),
+	unique("access_tokens_hash_key").on(table.hash),
+]);
 
 export const packages = pgTable("packages", {
 	id: text().primaryKey().notNull(),
@@ -83,25 +104,53 @@ export const plugins = pgTable("plugins", {
 	description: text(),
 	archive: text().notNull(),
 	archiveType: pluginArchiveType("archive_type").default('single').notNull(),
+	sourceType: pluginSourceType("source_type").default('other').notNull(),
+	url: text(),
+	vcs: versionControlSystem(),
 }, (table) => [
 	unique("plugins_name_key").on(table.name),
 	unique("plugins_language_key").on(table.language),
+	check("valid_name", sql`name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'::text`),
+	check("url_source_type_check", sql`(source_type <> ALL (ARRAY['vcs'::plugin_source_type, 'hosted'::plugin_source_type])) OR (url IS NOT NULL)`),
+	check("vcs_source_type_check", sql`(source_type <> 'vcs'::plugin_source_type) OR (vcs IS NOT NULL)`),
 ]);
 
 export const authorizationSessions = pgTable("authorization_sessions", {
-	sessionId: text("session_id").primaryKey().notNull(),
+	id: uuid().default(sql`uuid_generate_v4()`).primaryKey().notNull(),
+	sessionId: text("session_id").notNull(),
 	userId: text("user_id"),
-	status: authorizationStatus().default('pending').notNull(),
+	status: taskStatus().default('pending').notNull(),
+	authorizedAt: timestamp("authorized_at", { withTimezone: true, mode: 'string' }),
+	startedAt: timestamp("started_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: 'string' }).notNull(),
 	deviceId: text("device_id").notNull(),
+	code: varchar().notNull(),
+	accessToken: text("access_token"),
 }, (table) => [
 	index("idx_login_sessions_expiry").using("btree", table.expiresAt.asc().nullsLast().op("timestamptz_ops")),
 	foreignKey({
 			columns: [table.userId],
 			foreignColumns: [users.id],
 			name: "authorization_sessions_user_id_fkey"
-		}),
-	unique("authorization_sessions_device_id_key").on(table.deviceId),
+		}).onDelete("set null"),
+	unique("authorization_sessions_session_id_key").on(table.sessionId),
+	unique("authorization_sessions_code_key").on(table.code),
+]);
+
+export const packagePublishingTasks = pgTable("package_publishing_tasks", {
+	id: uuid().default(sql`uuid_generate_v4()`).primaryKey().notNull(),
+	status: taskStatus().default('pending').notNull(),
+	userId: text("user_id").notNull(),
+	scope: text(),
+	package: text().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.userId],
+			foreignColumns: [users.id],
+			name: "package_publishing_tasks_user_id_fkey"
+		}).onDelete("set null"),
 ]);
 
 export const organizationMembers = pgTable("organization_members", {

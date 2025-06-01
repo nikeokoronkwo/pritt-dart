@@ -7,7 +7,11 @@ CREATE TYPE version_control_system AS ENUM ('git', 'svn', 'fossil', 'mercurial',
 CREATE TYPE version_kind AS ENUM ('major', 'experimental', 'beta', 'next', 'rc', 'canary', 'other');
 CREATE TYPE plugin_archive_type AS ENUM ('single', 'multi');
 
-CREATE TYPE authorization_status AS ENUM ('pending', 'success', 'fail', 'expired', 'error');
+CREATE TYPE access_token_type AS ENUM ('device', 'personal', 'extended', 'pipeline');
+
+CREATE TYPE task_status AS ENUM ('pending', 'success', 'fail', 'expired', 'error');
+
+CREATE TYPE plugin_source_type AS ENUM ('hosted', 'vcs', 'local', 'other');
 
 -- Validates Signatures passed to the `signature` field in the `package_versions` table
 CREATE OR REPLACE FUNCTION validate_signatures()
@@ -42,8 +46,7 @@ CREATE TABLE users (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
-    access_token TEXT NOT NULL,
-    access_token_expires_at TIMESTAMPTZ NOT NULL,
+    avatar_url TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -65,6 +68,19 @@ CREATE TABLE organization_members (
     FOREIGN KEY (organization_id) REFERENCES organizations (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     PRIMARY KEY (organization_id, user_id)
+);
+
+CREATE TABLE access_tokens (
+    id UUID PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+    user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    hash TEXT UNIQUE NOT NULL,
+    token_type access_token_type NOT NULL,
+    description TEXT,
+    device_id TEXT,
+    expires_at TIMESTAMPTZ NOT NULL,
+    last_used_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    device_info JSONB
 );
 
 CREATE TABLE packages (
@@ -142,25 +158,42 @@ CREATE TABLE plugins (
     "language" TEXT UNIQUE NOT NULL,
     description TEXT,
     archive TEXT NOT NULL,
-    archive_type plugin_archive_type NOT NULL DEFAULT 'single'
+    archive_type plugin_archive_type NOT NULL DEFAULT 'single',
+    source_type plugin_source_type NOT NULL DEFAULT 'other',
+    url TEXT,
+    vcs version_control_system,
     -- TODO: More properties (author, ...)
+    CONSTRAINT valid_name CHECK (name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
+    CONSTRAINT url_source_type_check CHECK (source_type NOT IN ('vcs', 'hosted') OR url IS NOT NULL),
+    CONSTRAINT vcs_source_type_check CHECK (source_type != 'vcs' OR vcs IS NOT NULL)
 );
 
 CREATE TABLE authorization_sessions (
-    session_id TEXT PRIMARY KEY NOT NULL,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,
+    session_id TEXT UNIQUE NOT NULL,
     user_id TEXT,
-    status authorization_status NOT NULL DEFAULT 'pending',
+    status task_status NOT NULL DEFAULT 'pending',
+    authorized_at TIMESTAMPTZ,
+    started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     expires_at TIMESTAMPTZ NOT NULL,
-    device_id TEXT UNIQUE NOT NULL,
+    device_id TEXT NOT NULL,
+    code VARCHAR UNIQUE NOT NULL,
+    access_token TEXT,
 
     -- TODO: CRON to clean up
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
 );
 
 -- TODO: Use index
 CREATE INDEX idx_login_sessions_expiry ON authorization_sessions (expires_at);
 
-
--- CREATE TABLE package_publishing_tasks (
-    
--- );
+-- TODO: Complete
+CREATE TABLE package_publishing_tasks (
+    id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+    status task_status NOT NULL DEFAULT 'pending',
+    user_id TEXT NOT NULL REFERENCES users (id) ON DELETE SET NULL,
+    scope text,
+    package text NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);

@@ -540,10 +540,12 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
       ) as _i7.FutureOr<_i3.GetAdaptersByLangResponse>);
 
   @override
-  _i7.FutureOr<_i3.AuthPollResponse> getAuthStatus() => (super.noSuchMethod(
+  _i7.FutureOr<_i3.AuthPollResponse> getAuthStatus({String? id}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getAuthStatus,
           [],
+          {#id: id},
         ),
         returnValue:
             _i7.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
@@ -551,6 +553,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           Invocation.method(
             #getAuthStatus,
             [],
+            {#id: id},
           ),
         )),
         returnValueForMissingStub:
@@ -559,6 +562,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           Invocation.method(
             #getAuthStatus,
             [],
+            {#id: id},
           ),
         )),
       ) as _i7.FutureOr<_i3.AuthPollResponse>);

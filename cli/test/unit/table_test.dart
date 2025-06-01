@@ -1,4 +1,3 @@
-
 import 'package:pritt_cli/src/cli/table.dart';
 import 'package:test/test.dart';
 

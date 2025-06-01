@@ -1119,6 +1119,44 @@ paths {
             }
         }
     }
+    ["/api/auth/details/{id}"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "path"
+                required = true
+                description = "The Session ID"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        summary = "Get the details for an auth session"
+        description = "Get the details for an authorization session given its session id"
+        get {
+            summary = "Get the details for an auth session"
+            description = "Get the details for an auth session"
+            operationId = "getAuthDetailsById"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthDetailsResponse")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundResponse")
+                        }
+                    }
+                }
+            }
+        }
+    }
     ["/api/auth/validate"] {
         description = "Validate or authenticate a user, creating a user if needed"
         parameters {

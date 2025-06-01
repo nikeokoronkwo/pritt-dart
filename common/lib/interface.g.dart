@@ -30,37 +30,68 @@ AddUserResponse _$AddUserResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AddUserResponseToJson(AddUserResponse instance) =>
     <String, dynamic>{};
 
-PollResponse _$PollResponseFromJson(Map<String, dynamic> json) =>
-    PollResponse();
+AuthDetailsResponse _$AuthDetailsResponseFromJson(Map<String, dynamic> json) =>
+    AuthDetailsResponse(
+      token: json['token'] as String,
+      token_expires: json['token_expires'] as String,
+      device: json['device'] as String,
+      code: json['code'] as String,
+      status: $enumDecode(_$PollStatusEnumMap, json['status']),
+    );
 
-Map<String, dynamic> _$PollResponseToJson(PollResponse instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$AuthDetailsResponseToJson(
+        AuthDetailsResponse instance) =>
+    <String, dynamic>{
+      'token': instance.token,
+      'token_expires': instance.token_expires,
+      'device': instance.device,
+      'code': instance.code,
+      'status': _$PollStatusEnumMap[instance.status]!,
+    };
+
+const _$PollStatusEnumMap = {
+  PollStatus.success: 'success',
+  PollStatus.fail: 'fail',
+  PollStatus.error: 'error',
+  PollStatus.expired: 'expired',
+  PollStatus.pending: 'pending',
+};
+
+AuthError _$AuthErrorFromJson(Map<String, dynamic> json) => AuthError(
+      error: json['error'] as String?,
+      status: $enumDecode(_$PollStatusEnumMap, json['status']),
+    );
+
+Map<String, dynamic> _$AuthErrorToJson(AuthError instance) => <String, dynamic>{
+      'error': instance.error,
+      'status': _$PollStatusEnumMap[instance.status]!,
+    };
 
 AuthPollResponse _$AuthPollResponseFromJson(Map<String, dynamic> json) =>
     AuthPollResponse(
-      status: json['status'],
-      response: json['response'] == null
-          ? null
-          : PollResponse.fromJson(json['response'] as Map<String, dynamic>),
+      status: $enumDecode(_$PollStatusEnumMap, json['status']),
+      response: json['response'],
     );
 
 Map<String, dynamic> _$AuthPollResponseToJson(AuthPollResponse instance) =>
     <String, dynamic>{
-      'status': instance.status,
+      'status': _$PollStatusEnumMap[instance.status]!,
       'response': instance.response,
     };
 
 AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
       token: json['token'] as String,
       token_expires: json['token_expires'] as String,
-      id: json['id'] as String,
+      device: json['device'] as String,
+      code: json['code'] as String,
     );
 
 Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>
     <String, dynamic>{
       'token': instance.token,
       'token_expires': instance.token_expires,
-      'id': instance.id,
+      'device': instance.device,
+      'code': instance.code,
     };
 
 AuthValidateRequest _$AuthValidateRequestFromJson(Map<String, dynamic> json) =>
