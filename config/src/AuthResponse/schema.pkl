@@ -9,4 +9,6 @@ token: String
 token_expires: String
 
 /// A unique id used to identify the person requesting for an ID
+///
+/// The Device ID
 id: String

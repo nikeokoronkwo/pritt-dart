@@ -78,6 +78,42 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
     });
   }
 
+  if (schema.hasProperty('oneOf'.toJS).toDart) {
+    final obj = schema.getProperty('oneOf'.toJS) as JSArray<JSObject>;
+
+    // nested enums
+    if (obj.toDart.any((o) => o.hasProperty('enum'.toJS).toDart)) {
+      // enum
+      final basicEnumValues = obj.toDart
+          .where((o) => o.hasProperty('enum'.toJS).toDart)
+          .map((o) => (o.getProperty('enum'.toJS) as JSArray<JSString>)
+              .toDart
+              .map((v) => v.toDart))
+          .reduce((previous, current) => [...previous, ...current]);
+
+      final enumeration = Enum((e) => e
+        ..annotations.add(
+            refer('JsonEnum').call([], {'valueField': literalString('value')}))
+        ..constructors.add(Constructor((c) => c
+          ..requiredParameters.add(Parameter((p) => p
+            ..name = 'value'
+            ..toThis = true))))
+        ..fields.add(Field((f) => f
+          ..name = 'value'
+          ..type = refer('String')))
+        ..name = schema.getProperty('title'.toJS).dartify() as String? ?? name
+        ..values.addAll(basicEnumValues.map((ev) {
+          return EnumValue((val) => val
+            ..name = ev
+            ..arguments.add(literalString(ev)));
+        })));
+
+      componentSpecs.putIfAbsent(name, () => enumeration);
+
+      return refer(enumeration.name + (required ? '' : '?'));
+    }
+  }
+
   if (schema.hasProperty('enum'.toJS).toDart) {
     final enumValues = schema.getProperty('enum'.toJS) as JSArray<JSString>;
     final dartifiedEnumValues = enumValues.toDart.map((v) => v.toDart);

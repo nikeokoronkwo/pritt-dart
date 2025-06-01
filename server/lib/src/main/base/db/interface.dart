@@ -160,7 +160,7 @@ abstract interface class PrittDatabaseInterface
   Stream<User> getContributorsForPackageStream(String name);
 
   /// Create a user
-  FutureOr<(User, String)> createUser({
+  FutureOr<User> createUser({
     required String name,
     required String email,
   });
@@ -172,10 +172,13 @@ abstract interface class PrittDatabaseInterface
     User Function(User)? updates,
   });
 
-  /// Update the access token for a user
-  FutureOr<(User, String)> updateUserAccessToken({
-    required String id,
-  });
+  /// Create a new access token for a user
+  FutureOr<(AccessToken, {String token})> createAccessTokenForUser(
+      {required String id,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo});
 
   /// Get a user
   FutureOr<User> getUser(String id);
@@ -190,11 +193,14 @@ abstract interface class PrittDatabaseInterface
   Stream<User> getUsersStream();
 
   /// Set the access token for a user
-  FutureOr<User> setAccessTokenForUser({
-    required String id,
-    required String accessToken,
-    required DateTime expiresAt,
-  });
+  FutureOr<(AccessToken, {String token})> setAccessTokenForUser(
+      {required String id,
+      required String accessToken,
+      required DateTime expiresAt,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo});
 
   /// Get a user by access token
   FutureOr<User> getUserByAccessToken(String accessToken);
@@ -266,14 +272,14 @@ abstract interface class PrittDatabaseInterface
   });
 
   /// Gets the status of a current auth sessions
-  Future<AuthorizationStatus> getAuthSessionStatus({
+  Future<({TaskStatus status, String? id})> getAuthSessionDetails({
     required String sessionId,
   });
 
   /// Updates an auth session with a user's credentials
-  Future<AuthorizationSession> attachUserToAuthSession({
-    required String sessionId,
-    required String userId,
-    AuthorizationStatus? newStatus
-  });
+  Future<AuthorizationSession> completeAuthSession(
+      {required String sessionId,
+      required String userId,
+      String? accessToken,
+      TaskStatus? newStatus});
 }

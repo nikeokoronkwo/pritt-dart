@@ -68,8 +68,6 @@ Future<TransformationResult> transformTemplates(String inputDir,
   await writeFileAsString(path.join(outputDir, schemaFile), lines.join('\n'))
       .toDart;
 
-  
-
   // update the auth code
   // manual patch
   // TODO: File bug and get this fixed

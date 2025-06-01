@@ -4,47 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/Compose__services_only_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT">
+      <change afterPath="$PROJECT_DIR$/cli/lib/src/device_id.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Full_Stack.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Full_Stack.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/archive.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/archive.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cli/table.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cli/table.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/client.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/client.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/adapter/list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/adapter/list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/hidden/auto_update.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/hidden/auto_update.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/package/list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/package/list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/publish.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/publish.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/server.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/server.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/unpack.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/unpack.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/output.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/output.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/plugins/base.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/plugins/base.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/plugins/dart.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/plugins/dart.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/plugins/npm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/plugins/npm.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/utils/extensions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/utils/extensions.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/test/unit/csv_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/test/unit/csv_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/test/unit/table_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/test/unit/table_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/test/utils/client.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/test/utils/client.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/test/utils/client.mocks.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/test/utils/client.mocks.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/openapigen/bin/openapigen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/openapigen/bin/openapigen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/webgen/lib/src/js/gen/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/webgen/lib/src/js/gen/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/webgen/lib/src/transform.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/webgen/lib/src/transform.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/pritt_server.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/pritt_server.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/auth.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/auth.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/auth.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db/interface.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/db/interface.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db/schema.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/db/schema.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/server_utils/authorization.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/server_utils/authorization.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/utils/auth.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/server/db/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/server/db/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/server/db/schema/relations.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/server/db/schema/relations.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/server/db/schema/schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/server/db/schema/schema.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/cmd/login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/cmd/login.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/user_config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/user_config.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/lib/src/user_config.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/user_config.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/lib/interface.dart" beforeDir="false" afterPath="$PROJECT_DIR$/common/lib/interface.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/lib/interface.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/common/lib/interface.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/openapigen/lib/src/gen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/openapigen/lib/src/gen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +105,7 @@
       <recent name="$PROJECT_DIR$/cli/lib/src/cli" />
     </key>
   </component>
-  <component name="RunManager" selected="Compound.Full Stack">
+  <component name="RunManager" selected="Dart Command Line App.Server">
     <configuration name="CSV Encoding Testing in csv_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
       <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/csv_test.dart" />
       <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
@@ -284,7 +253,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748660628562</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT">
+      <option name="closed" value="true" />
+      <created>1748669447191</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1748669447191</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -313,6 +290,7 @@
     <MESSAGE value="added .gitattributes for generated files" />
     <MESSAGE value="added new SQL table" />
     <MESSAGE value="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql" />
-    <option name="LAST_COMMIT_MESSAGE" value="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql" />
+    <MESSAGE value="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT" />
+    <option name="LAST_COMMIT_MESSAGE" value="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT" />
   </component>
 </project>

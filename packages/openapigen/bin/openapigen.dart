@@ -1,4 +1,3 @@
-
 import 'package:args/args.dart';
 import 'package:node_io/node_io.dart';
 import 'package:pritt_openapi_gen/src/gen.dart';

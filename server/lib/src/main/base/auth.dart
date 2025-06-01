@@ -56,7 +56,8 @@ class APIKeyResult {
     required this.length,
   });
 
-  factory APIKeyResult.fromJson(Map<String, dynamic> json) => _$APIKeyResultFromJson(json);
+  factory APIKeyResult.fromJson(Map<String, dynamic> json) =>
+      _$APIKeyResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$APIKeyResultToJson(this);
 }
@@ -64,7 +65,23 @@ class APIKeyResult {
 class PrittAccessTokenGenerator {
   static final Random _secureRandom = Random.secure();
 
-  static APIKeyResult generateAPIKey(String prefix, int length, {Map<String, dynamic>? info}) {
+  static APIKeyResult hashAPIKey(String accessToken,
+      {Map<String, dynamic>? info}) {
+    final keyHash = sha256
+        .convert(utf8.encode(accessToken + (info?.values.join('') ?? '')))
+        .toString()
+        .substring(0, 8);
+
+    return APIKeyResult(
+        apiKey: accessToken,
+        keyHash: keyHash,
+        createdAt: DateTime.now(),
+        prefix: accessToken.substring(0, 3),
+        length: accessToken.length);
+  }
+
+  static APIKeyResult generateAPIKey(String prefix, int length,
+      {Map<String, dynamic>? info}) {
     final randomLength = length - prefix.length;
 
     final randomBytes = Uint8List(randomLength);
@@ -81,8 +98,8 @@ class PrittAccessTokenGenerator {
       for (int i = 0; i < 8; i++) {
         additionalBytes[i] = _secureRandom.nextInt(256);
       }
-      final additional = base64Encode(additionalBytes)
-          .replaceAll(RegExp(r'[+/=]'), '');
+      final additional =
+          base64Encode(additionalBytes).replaceAll(RegExp(r'[+/=]'), '');
       randomPart += additional;
     }
 
@@ -95,10 +112,16 @@ class PrittAccessTokenGenerator {
         .toString()
         .substring(0, 8);
 
-    return APIKeyResult(apiKey: apiKey, keyHash: keyHash, createdAt: DateTime.now(), prefix: prefix, length: length);
+    return APIKeyResult(
+        apiKey: apiKey,
+        keyHash: keyHash,
+        createdAt: DateTime.now(),
+        prefix: prefix,
+        length: length);
   }
 
-  static bool verifyAPIKey(String apiKey, String keyHash, {Map<String, dynamic>? info}) {
+  static bool verifyAPIKey(String apiKey, String keyHash,
+      {Map<String, dynamic>? info}) {
     final computedHash = sha256
         .convert(utf8.encode(apiKey + (info?.values.join('') ?? '')))
         .toString()
@@ -128,6 +151,10 @@ class PrittAuth implements PrittAuthInterface<PrittAuthMetadata> {
 
   @override
   bool validateAccessToken(String token, String hash) {
-      return PrittAccessTokenGenerator.verifyAPIKey(token, hash);
+    return PrittAccessTokenGenerator.verifyAPIKey(token, hash);
+  }
+
+  String hashToken(String accessToken) {
+    return PrittAccessTokenGenerator.hashAPIKey(accessToken).keyHash;
   }
 }

@@ -54,10 +54,14 @@ class PackageListCommand extends PrittCommand {
           url: userCredentials.uri.toString(),
           accessToken: userCredentials.accessToken);
 
-      // get packages
-      var pkgs = allPackages
-          ? await client.getPackages()
-          : await client.getPackages(user: userCredentials.id);
+      var pkgs;
+
+      if (allPackages) {
+        // get packages
+        pkgs = await client.getPackages();
+      } else {
+        pkgs = await client.getPackages(user: userCredentials.userId);
+      }
 
       if (pkgs.packages == null || (pkgs.packages ?? []).isEmpty) {
         logger.stdout('There are no packages');

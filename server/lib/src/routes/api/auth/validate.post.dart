@@ -9,20 +9,22 @@ final handler = defineRequestHandler((event) async {
   try {
     // read the body
     // get the following details: user_id
-    final body = await getBody(event, (body) => common.AuthValidateRequest.fromJson(json.decode(body)));
+    final body = await getBody(event,
+        (body) => common.AuthValidateRequest.fromJson(json.decode(body)));
 
     // update the status
-    final session = await crs.db.attachUserToAuthSession(sessionId: body.session_id, userId: body.user_id);
+    final session = await crs.db.completeAuthSession(
+        sessionId: body.session_id, userId: body.user_id);
 
     // check status
     switch (session.status) {
-      case AuthorizationStatus.success:
+      case TaskStatus.success:
         final resp = common.AuthValidateResponse(validated: true);
         return resp.toJson();
-      case AuthorizationStatus.fail:
+      case TaskStatus.fail:
         final resp = common.AuthValidateResponse(validated: false);
         return resp.toJson();
-      case AuthorizationStatus.expired:
+      case TaskStatus.expired:
         setResponseCode(event, 405);
         return {
           'error': 'Authorization has expired. Please try again',
@@ -35,12 +37,8 @@ final handler = defineRequestHandler((event) async {
           'status': session.status.name
         };
     }
-
   } on TypeError catch (e) {
     setResponseCode(event, 400);
-    return {
-      'name': 'Invalid Request',
-      'error': 'Invalid Body for Request'
-    };
+    return {'name': 'Invalid Request', 'error': 'Invalid Body for Request'};
   }
 });

@@ -220,14 +220,6 @@ class User {
   /// The name of the user
   String name;
 
-  /// The current access token for the given user
-  ///
-  /// This is used for authenticating workflows for the CLI, installing packages, etc
-  String accessToken;
-
-  /// When the current access token expires
-  DateTime accessTokenExpiresAt;
-
   /// The email address of the user
   String email;
 
@@ -240,8 +232,6 @@ class User {
   User(
       {required this.id,
       required this.name,
-      required this.accessToken,
-      required this.accessTokenExpiresAt,
       required this.email,
       required this.createdAt,
       required this.updatedAt});
@@ -255,6 +245,7 @@ class User {
 // }
 
 /// A scope is an organizational unit for packages
+@Table('organizations')
 class Scope {
   /// The id of the scope
   @primary
@@ -280,6 +271,58 @@ class Scope {
     required this.createdAt,
     required this.updatedAt,
   });
+}
+
+class AccessToken {
+  String id;
+
+  /// The user
+  String userId;
+
+  /// The hashed version of the access token
+  String hash;
+
+  /// The type of access token used
+  /// Could be a personal one [AccessTokenType.personal], or for the CLI [AccessTokenType.device], or for Actions [AccessTokenType.pipeline]
+  AccessTokenType tokenType;
+
+  String? description;
+
+  /// The device id, if any
+  String? deviceId;
+
+  /// When the access token expires
+  DateTime expiresAt;
+
+  /// When the access token was last used
+  DateTime lastUsedAt;
+
+  /// When the access token was created
+  DateTime createdAt;
+
+  /// The device information
+  Map<String, dynamic>? deviceInfo;
+
+  AccessToken(
+      {required this.id,
+      required this.userId,
+      required this.hash,
+      required this.tokenType,
+      this.description,
+      this.deviceId,
+      required this.expiresAt,
+      required this.lastUsedAt,
+      required this.createdAt,
+      this.deviceInfo});
+}
+
+enum AccessTokenType {
+  device,
+  personal,
+  extended,
+  pipeline;
+
+  static AccessTokenType fromString(String name) => AccessTokenType.values.firstWhere((v) => v.name == name);
 }
 
 /// A join table for users and scopes
@@ -363,39 +406,56 @@ enum PluginArchiveType {
 
 /// Authorization Session Tasks
 class AuthorizationSession {
+  String id;
   @Key(name: 'session_id')
   String sessionId;
 
   String? userId;
 
-  AuthorizationStatus status;
+  TaskStatus status;
 
   @Key(name: 'expires_at')
   DateTime expiresAt;
 
+  /// The device ID information
   String deviceId;
 
+  String? accessToken;
+
+  /// When the auth flow started
+  DateTime startedAt;
+
+  /// When the auth flow was authorized
+  DateTime? authorizedAt;
+
+  /// A code to authorize with
+  String code;
+
   AuthorizationSession({
+    required this.id,
     required this.sessionId,
     this.userId,
     required this.deviceId,
-    this.status = AuthorizationStatus.pending,
+    this.status = TaskStatus.pending,
     required this.expiresAt,
+    required this.startedAt,
+    this.authorizedAt,
+    this.accessToken,
+    required this.code,
   }) {
-    if (expiresAt.isBefore(DateTime.now()) &&
-        status == AuthorizationStatus.pending) {
-      status = AuthorizationStatus.expired;
+    if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending) {
+      status = TaskStatus.expired;
     }
   }
 }
 
-enum AuthorizationStatus {
+enum TaskStatus {
   pending,
   success,
   fail,
   expired,
   error;
 
-  static AuthorizationStatus fromString(String name) =>
-      AuthorizationStatus.values.firstWhere((v) => v.name == name);
+  static TaskStatus fromString(String name) =>
+      TaskStatus.values.firstWhere((v) => v.name == name);
 }
