@@ -21,6 +21,8 @@ WebGenTemplateConfig _$WebGenTemplateConfigFromJson(
           ? null
           : WGTMeta.fromJson(json['meta'] as Map<String, dynamic>),
       auth: WGTAuth.fromJson(json['auth'] as Map<String, dynamic>),
+      catchLine: json['catchLine'] as String?,
+      description: json['description'] as String?,
       env: (json['env'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
@@ -30,6 +32,8 @@ Map<String, dynamic> _$WebGenTemplateConfigToJson(
         WebGenTemplateConfig instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'description': instance.description,
+      'catchLine': instance.catchLine,
       'style': instance.style,
       'icon': instance.icon,
       'logo': instance.logo,

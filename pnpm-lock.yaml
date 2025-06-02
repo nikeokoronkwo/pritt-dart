@@ -60,6 +60,9 @@ importers:
       '@babel/types':
         specifier: ^7.27.3
         version: 7.27.3
+      chroma-js:
+        specifier: ^3.1.2
+        version: 3.1.2
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -70,6 +73,9 @@ importers:
       '@types/babel__generator':
         specifier: ^7.27.0
         version: 7.27.0
+      '@types/chroma-js':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@types/node':
         specifier: ^22.15.21
         version: 22.15.23
@@ -215,6 +221,9 @@ importers:
       '@nuxt/test-utils':
         specifier: 3.19.0
         version: 3.19.0(@types/node@22.15.23)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(jiti@2.4.2)(lightningcss@1.30.1)(magicast@0.3.5)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vitest@3.1.4(@types/debug@4.1.12)(@types/node@22.15.23)(happy-dom@17.4.7)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(yaml@2.8.0)
+      '@nuxtjs/color-mode':
+        specifier: 3.5.2
+        version: 3.5.2(magicast@0.3.5)
       '@scalar/nuxt':
         specifier: 0.4.6
         version: 0.4.6(change-case@5.4.4)(jwt-decode@4.0.0)(magicast@0.3.5)(tailwindcss@4.1.8)(typescript@5.8.3)
@@ -261,6 +270,9 @@ importers:
       '@better-auth/cli':
         specifier: ^1.2.8
         version: 1.2.8(@babel/core@7.27.1)(@types/pg@8.15.2)(kysely@0.28.2)(magicast@0.3.5)(pg@8.16.0)
+      '@tailwindcss/forms':
+        specifier: ^0.5.10
+        version: 0.5.10(tailwindcss@4.1.8)
       '@types/pg':
         specifier: ^8.15.2
         version: 8.15.2
@@ -2056,6 +2068,9 @@ packages:
   '@types/better-sqlite3@7.6.13':
     resolution: {integrity: sha512-NMv9ASNARoKksWtsq/SHakpYAYnhBrQgGD8zkLYk/jaK8jUGn08CfEdTRgYhMypUQAfzSP8W6gNLe0q19/t4VA==}
 
+  '@types/chroma-js@3.1.1':
+    resolution: {integrity: sha512-SFCr4edNkZ1bGaLzGz7rgR1bRzVX4MmMxwsIa3/Bh6ose8v+hRpneoizHv0KChdjxaXyjRtaMq7sCuZSzPomQA==}
+
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
@@ -2861,6 +2876,9 @@ packages:
   chownr@3.0.0:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
+
+  chroma-js@3.1.2:
+    resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
 
   ci-info@4.2.0:
     resolution: {integrity: sha512-cYY9mypksY8NRqgDB1XD1RiJL338v/551niynFTGkZOO2LHuB2OmOYxDIe/ttN9AHwrqdum1360G3ald0W9kCg==}
@@ -9501,6 +9519,8 @@ snapshots:
     dependencies:
       '@types/node': 22.15.23
 
+  '@types/chroma-js@3.1.1': {}
+
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 2.1.0
@@ -10427,6 +10447,8 @@ snapshots:
   chownr@2.0.0: {}
 
   chownr@3.0.0: {}
+
+  chroma-js@3.1.2: {}
 
   ci-info@4.2.0: {}
 

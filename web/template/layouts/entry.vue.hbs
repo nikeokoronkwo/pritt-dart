@@ -3,6 +3,24 @@
     const navLinks = [];
 
     const bottomNavLinks = []
+
+    // color mode
+    const route = useRoute()
+
+    const colorMode = useColorMode()
+
+    function switchColorMode() {
+      const currentMode = colorMode.value;
+      if (currentMode === 'dark') {
+        colorMode.preference = 'light'
+      } else {
+        colorMode.preference = 'dark'
+      }
+    }
+
+    function changeColorModeToSystem() {
+
+    }
 </script>
 
 
@@ -10,13 +28,17 @@
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
         <header class="flex flex-row items-center align-middle justify-between sticky top-0 px-4 py-2 z-10">
-            <div></div>
             <div class="font-black">{{ name }}</div>
             <div class="flex flex-row items-center justify-center space-x-6">
                 <nav>
                     <NuxtLink v-for="link in navLinks" :key="link.name" :to="link.route">{{ link.name }}</NuxtLink>
                 </nav>
                 <NuxtLink to="/login">Login</NuxtLink>
+                <button class="flex flex-col items-center scale-150" @click.prevent="switchColorMode()">
+                    <Icon v-if="colorMode.preference === 'dark'" name="material-symbols:sunny-outline-rounded" />
+                    <Icon v-else-if="colorMode.preference === 'light'" name="material-symbols:dark-mode-outline-rounded" />
+                    <Icon v-else name="material-symbols:sunny-outline-rounded" />
+                </button>
             </div>
         </header>
         <main class="grow p-4 overflow-auto flex flex-col">

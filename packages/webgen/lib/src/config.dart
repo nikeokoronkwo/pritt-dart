@@ -34,6 +34,8 @@ class WebGenTemplateConfig {
       this.assets = const [],
       this.meta,
       required this.auth,
+      this.catchLine,
+      this.description,
       this.env});
 
   factory WebGenTemplateConfig.fromJson(Map<String, dynamic> json) =>
@@ -80,13 +82,35 @@ class WGTOAuth {
 
 @JsonSerializable()
 class WGTStyle {
-  static const defaultStyle = WGTStyle(
+  static final defaultStyle = WGTStyle(
     colours: WGTStyleColours(
-      primary: '#6200EE',
+      primary: {
+        50:  '#e6e6e6',
+        100: '#cccccc',
+        200: '#999999',
+        300: '#666666',
+        400: '#333333',
+        500: '#1a1a1a',
+        600: '#151515',
+        700: '#121212', // Original color
+        800: '#0e0e0e',
+        -1: '#121212'
+      },
       secondary: '#03DAC6',
       background: '#FFFFFF',
       text: '#000000',
-      accent: '#FF4081',
+      accent: {
+        50: "#ffe5e7",
+        100: "#FECFD1",
+        200: "#F8A4A9",
+        300: "#EC6C71",
+        400: "#DC3C44",
+        500: "#c1121f",
+        600: "#A00F1B",
+        700: "#800C16",
+        800: "#600A11",
+        -1: "#c1121f"
+      },
     ),
     font: WGTStyleFont.defaultFont,
   );

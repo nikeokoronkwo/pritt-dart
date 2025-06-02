@@ -6,7 +6,8 @@ import * as path from "node:path";
 import * as child_process from "node:child_process";
 import Handlebars from "handlebars";
 import { z } from "zod";
-import { generateAuthConfig } from "../lib/src/js/gen/auth.js";
+import { generateAuthConfig } from "../lib/src/js/gen/auth";
+import { generateTailwindColorScale } from "../lib/src/js/gradient";
 
 const require = createRequire(import.meta.url);
 
@@ -21,6 +22,7 @@ globalThis.Handlebars = Handlebars;
 
 // funcs
 globalThis.generateAuthConfig = generateAuthConfig;
+globalThis.generateTailwindColorScale = generateTailwindColorScale;
 
 // dart main runner
 globalThis.dartMainRunner = async function (main, args) {

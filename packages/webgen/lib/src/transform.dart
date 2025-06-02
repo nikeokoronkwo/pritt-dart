@@ -36,14 +36,16 @@ Future<TransformationResult> transformTemplates(String inputDir,
             github: config.auth.github,
           ),
           admin: true, // TODO: Optional?
-          orgs: true));
+          orgs: true
+      )
+    );
 
 
   // generate auth and db glue code
   await generateAuthAndDb(templateOptions, outputDir);
 
   // generate css
-  await generateTailwindCss(templateOptions, outputDir);
+  await generateTailwindCss(templateOptions, outputDir, config);
 
   // continue
 
@@ -75,10 +77,10 @@ Future<TransformationResult> transformTemplates(String inputDir,
 }
 
 /// Generates Tailwind CSS Code
-Future<void> generateTailwindCss(TemplateOptions templateOptions, String outputDir) async {
+Future<void> generateTailwindCss(TemplateOptions templateOptions, String outputDir, WebGenTemplateConfig config) async {
   print("LOG: Generating Tailwind CSS File");
   // generate CSS code
-  final cssCode = generateTailwindMainCssFile();
+  final cssCode = generateTailwindMainCssFile(config.style);
   final cssFileOutput = './assets/css/main.css';
 
   await mkdir(path.dirname(path.join(outputDir, cssFileOutput)), FSMkdirOptions(recursive: true)).toDart;

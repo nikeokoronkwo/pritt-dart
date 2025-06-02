@@ -8,20 +8,20 @@ part of 'style.dart';
 
 WGTStyleColours _$WGTStyleColoursFromJson(Map<String, dynamic> json) =>
     WGTStyleColours(
-      primary: json['primary'] as String,
+      primary: WGTCS.fromJson(json['primary']),
       secondary: json['secondary'] as String?,
       background: json['background'] as String?,
       text: json['text'] as String?,
-      accent: json['accent'] as String,
+      accent: WGTCS.fromJson(json['accent']),
     );
 
 Map<String, dynamic> _$WGTStyleColoursToJson(WGTStyleColours instance) =>
     <String, dynamic>{
-      'primary': instance.primary,
+      'primary': instance.primary.map((k, e) => MapEntry(k.toString(), e)),
       'secondary': instance.secondary,
       'background': instance.background,
       'text': instance.text,
-      'accent': instance.accent,
+      'accent': instance.accent.map((k, e) => MapEntry(k.toString(), e)),
     };
 
 WGTStyleFont _$WGTStyleFontFromJson(Map<String, dynamic> json) => WGTStyleFont(
