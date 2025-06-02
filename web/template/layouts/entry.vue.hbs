@@ -1,0 +1,36 @@
+<script setup lang="ts">
+    // TODO: Links from templates
+    const navLinks = [];
+
+    const bottomNavLinks = []
+</script>
+
+
+<template>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="flex flex-row items-center align-middle justify-between sticky top-0 px-4 py-2 z-10">
+            <div></div>
+            <div class="font-black">{{ name }}</div>
+            <div class="flex flex-row items-center justify-center space-x-6">
+                <nav>
+                    <NuxtLink v-for="link in navLinks" :key="link.name" :to="link.route">{{ link.name }}</NuxtLink>
+                </nav>
+                <NuxtLink to="/login">Login</NuxtLink>
+            </div>
+        </header>
+        <main class="grow p-4 overflow-auto flex flex-col">
+            <slot />
+        </main>
+        <footer class="flex flex-none flex-col p-2 text-gray-400 min-h-4">
+            <div class="flex flex-row justify-between items-center gap-2 px-4 py-1 pb-1">
+                <NuxtLink v-for="link in bottomNavLinks" :key="link.name" :to="link.route" :target="link.external ? '_blank' : '_self'" :external="link.external" class="text-sm">
+                    {{ link.name }}
+                </NuxtLink>
+            </div>
+            <small class="text-xs">
+                {{ name }} (C) Copyright {{ time.year }}
+            </small>
+        </footer>
+    </div>
+</template>

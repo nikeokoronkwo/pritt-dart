@@ -25,6 +25,7 @@ Future<TransformationResult> transformTemplates(String inputDir,
   // start with generating files
   final templateOptions = TemplateOptions(
       name: config.name,
+      time: TimeOptions.fromDateTime(DateTime.now()),
       auth: AuthOptions(
           name: config.name,
           title: config.meta?.title ?? config.name,
