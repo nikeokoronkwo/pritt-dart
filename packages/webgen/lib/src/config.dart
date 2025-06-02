@@ -8,6 +8,10 @@ part 'config.g.dart';
 class WebGenTemplateConfig {
   final String name;
 
+  final String? description;
+
+  final String? catchLine;
+
   final WGTStyle style;
 
   final String? icon;

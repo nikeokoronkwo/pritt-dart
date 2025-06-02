@@ -24,6 +24,7 @@ Future<TransformationResult> transformTemplates(String inputDir,
     String templateDir, String outputDir, WebGenTemplateConfig config) async {
   // start with generating files
   final templateOptions = TemplateOptions(
+      name: config.name,
       auth: AuthOptions(
           name: config.name,
           title: config.meta?.title ?? config.name,
