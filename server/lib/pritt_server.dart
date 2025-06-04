@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pritt_server/adapter_handler.dart';
 import 'package:pritt_server/server_handler.dart';
 import 'package:pritt_server/src/main/adapter/adapter_registry.dart';
@@ -17,7 +19,8 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
       defaultValue:
           'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '6007')}');
 
-  final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
+  final databaseUrl = dbUrl ?? (Platform.environment['DATABASE_URL'] != null ? String.fromEnvironment('DATABASE_URL') : null);
+  final dbUri = databaseUrl == null ? null : Uri.parse(databaseUrl);
 
   // read keys for authentication
   final db = await PrittDatabase.connect(
@@ -36,6 +39,7 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
 
   registry = await AdapterRegistry.connect(
     db: db,
+    runnerUri: Uri.parse(String.fromEnvironment('PRITT_RUNNER_URL'))
   );
 
   crs = await CoreRegistryService.connect(db: db, storage: storage);

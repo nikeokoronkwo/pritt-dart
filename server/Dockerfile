@@ -22,8 +22,24 @@ RUN dart pub get --offline
 
 WORKDIR /app
 
+# ENVS
+# either
+# ENV DATABASE_URL
+# or
+# ENV DATABASE_NAME
+# ENV DATABASE_USERNAME
+# ENV DATABASE_PASSWORD
+# ENV DATABASE_PORT
+# ENV DATABASE_HOST
+
+# Other ENVS
+# ENV S3_SECRET_KEY
+# ENV S3_ACCESS_KEY
+# ENV S3_LOCAL_PORT (if local)
+# ENV PRITT_RUNNER_URL
+
 # RUN dart pub get
-RUN ./tools/denv.dart --cwd server -- dart compile exe bin/server.dart -o bin/server
+RUN dart compile exe bin/server.dart -o bin/server
 
 
 # Build minimal serving image from AOT-compiled `/server`
