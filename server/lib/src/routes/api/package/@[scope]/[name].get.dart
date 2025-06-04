@@ -45,13 +45,14 @@ final handler = defineRequestHandler((event) async {
         latest: (() {
           final latestPkg =
               pkgVersions.firstWhere((pv) => pv.version == pkg.version);
-          return common.VerbosePackage(
+          return common.LatestPackage(
               name: '@${pkg.scope}/${pkg.name}',
               version: latestPkg.version,
               author: author,
               created_at: latestPkg.created.toIso8601String(),
               info: latestPkg.info,
               env: latestPkg.env,
+              readme: latestPkg.readme,
               metadata: latestPkg.metadata,
               signatures: latestPkg.signatures
                   .map((sig) => common.Signature(
@@ -92,6 +93,7 @@ final handler = defineRequestHandler((event) async {
         }),
         language: pkg.language,
         created_at: pkg.created.toIso8601String(),
+        updated_at: pkg.updated.toIso8601String(),
         description: pkg.description,
         author: author,
         contributors: contributors.entries.map((e) {
@@ -108,7 +110,17 @@ final handler = defineRequestHandler((event) async {
                       };
                     }).toList()
                   : null);
-        }).toList());
+        }).toList(),
+      license: pkg.license ?? 'Unknown',
+      vcs: switch (pkg.vcs) {
+        VCS.git => common.VCS.git,
+        VCS.svn => common.VCS.svn,
+        VCS.fossil => common.VCS.fossil,
+        VCS.mercurial => common.VCS.mercurial,
+        VCS.other => common.VCS.other,
+      },
+      vcs_url: pkg.vcsUrl.toString(),
+    );
 
     return resp.toJson();
 

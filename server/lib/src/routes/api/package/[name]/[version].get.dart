@@ -65,7 +65,8 @@ final handler = defineRequestHandler((event) async {
                       };
                     }).toList()
                   : null);
-        }).toList());
+        }).toList(),
+    );
 
     return resp.toJson();
 

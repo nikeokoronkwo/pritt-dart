@@ -368,9 +368,50 @@ Map<String, dynamic> _$GetPackageByVersionResponseToJson(
       'integrity': instance.integrity,
     };
 
+LatestPackage _$LatestPackageFromJson(Map<String, dynamic> json) =>
+    LatestPackage(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      description: json['description'] as String?,
+      version: json['version'] as String,
+      author: Author.fromJson(json['author'] as Map<String, dynamic>),
+      language: json['language'] as String?,
+      created_at: json['created_at'] as String,
+      updated_at: json['updated_at'] as String?,
+      info: json['info'] as Map<String, dynamic>,
+      env: json['env'] as Map<String, dynamic>,
+      metadata: json['metadata'] as Map<String, dynamic>,
+      signatures: (json['signatures'] as List<dynamic>?)
+          ?.map((e) => Signature.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      deprecated: json['deprecated'] as bool?,
+      yanked: json['yanked'] as bool?,
+      readme: json['readme'] as String?,
+    );
+
+Map<String, dynamic> _$LatestPackageToJson(LatestPackage instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'description': instance.description,
+      'version': instance.version,
+      'author': instance.author,
+      'language': instance.language,
+      'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
+      'info': instance.info,
+      'env': instance.env,
+      'metadata': instance.metadata,
+      'signatures': instance.signatures,
+      'deprecated': instance.deprecated,
+      'yanked': instance.yanked,
+      'readme': instance.readme,
+    };
+
 VerbosePackage _$VerbosePackageFromJson(Map<String, dynamic> json) =>
     VerbosePackage(
       name: json['name'] as String,
+      scope: json['scope'] as String?,
       description: json['description'] as String?,
       version: json['version'] as String,
       author: Author.fromJson(json['author'] as Map<String, dynamic>),
@@ -390,6 +431,7 @@ VerbosePackage _$VerbosePackageFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$VerbosePackageToJson(VerbosePackage instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'scope': instance.scope,
       'description': instance.description,
       'version': instance.version,
       'author': instance.author,
@@ -414,8 +456,12 @@ GetPackageResponse _$GetPackageResponseFromJson(Map<String, dynamic> json) =>
           ?.map((e) => Contributor.fromJson(e as Map<String, dynamic>))
           .toList(),
       language: json['language'] as String?,
+      license: json['license'] as String,
+      vcs: $enumDecode(_$VCSEnumMap, json['vcs']),
+      vcs_url: json['vcs_url'] as String?,
       created_at: json['created_at'] as String,
-      latest: VerbosePackage.fromJson(json['latest'] as Map<String, dynamic>),
+      updated_at: json['updated_at'] as String,
+      latest: LatestPackage.fromJson(json['latest'] as Map<String, dynamic>),
       versions: (json['versions'] as Map<String, dynamic>).map(
         (k, e) =>
             MapEntry(k, VerbosePackage.fromJson(e as Map<String, dynamic>)),
@@ -430,13 +476,26 @@ Map<String, dynamic> _$GetPackageResponseToJson(GetPackageResponse instance) =>
       'description': instance.description,
       'contributors': instance.contributors,
       'language': instance.language,
+      'license': instance.license,
+      'vcs': _$VCSEnumMap[instance.vcs]!,
+      'vcs_url': instance.vcs_url,
       'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
       'latest': instance.latest,
       'versions': instance.versions,
     };
 
+const _$VCSEnumMap = {
+  VCS.git: 'git',
+  VCS.svn: 'svn',
+  VCS.fossil: 'fossil',
+  VCS.mercurial: 'mercurial',
+  VCS.other: 'other',
+};
+
 Package _$PackageFromJson(Map<String, dynamic> json) => Package(
       name: json['name'] as String,
+      scope: json['scope'] as String?,
       description: json['description'] as String?,
       version: json['version'] as String,
       author: Author.fromJson(json['author'] as Map<String, dynamic>),
@@ -447,6 +506,7 @@ Package _$PackageFromJson(Map<String, dynamic> json) => Package(
 
 Map<String, dynamic> _$PackageToJson(Package instance) => <String, dynamic>{
       'name': instance.name,
+      'scope': instance.scope,
       'description': instance.description,
       'version': instance.version,
       'author': instance.author,

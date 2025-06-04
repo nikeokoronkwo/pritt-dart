@@ -1,3 +1,6 @@
 import "pkl:semver"
 
 typealias Version = String(semver.isValid(this))
+
+/// The Version Control System
+typealias VCS = "git"|"svn"|"fossil"|"mercurial"|"other"

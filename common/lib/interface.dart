@@ -174,7 +174,7 @@ class AuthPollResponse {
 
   final PollStatus status;
 
-  final Map<String, dynamic>? response;
+  final Map<String, dynamic> response;
 
   Map<String, dynamic> toJson() => _$AuthPollResponseToJson(this);
 }
@@ -570,10 +570,80 @@ class GetPackageByVersionResponse {
   Map<String, dynamic> toJson() => _$GetPackageByVersionResponseToJson(this);
 }
 
+@JsonEnum(valueField: 'value')
+enum VCS {
+  git('git'),
+  svn('svn'),
+  fossil('fossil'),
+  mercurial('mercurial'),
+  other('other');
+
+  const VCS(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class LatestPackage {
+  LatestPackage({
+    required this.name,
+    this.scope,
+    this.description,
+    required this.version,
+    required this.author,
+    this.language,
+    required this.created_at,
+    this.updated_at,
+    required this.info,
+    required this.env,
+    required this.metadata,
+    required this.signatures,
+    this.deprecated,
+    this.yanked,
+    this.readme,
+  });
+
+  factory LatestPackage.fromJson(Map<String, dynamic> json) =>
+      _$LatestPackageFromJson(json);
+
+  final String name;
+
+  final String? scope;
+
+  final String? description;
+
+  final String version;
+
+  final Author author;
+
+  final String? language;
+
+  final String created_at;
+
+  final String? updated_at;
+
+  final Map<String, dynamic> info;
+
+  final Map<String, dynamic> env;
+
+  final Map<String, dynamic> metadata;
+
+  final List<Signature>? signatures;
+
+  final bool? deprecated;
+
+  final bool? yanked;
+
+  final String? readme;
+
+  Map<String, dynamic> toJson() => _$LatestPackageToJson(this);
+}
+
 @JsonSerializable()
 class VerbosePackage {
   VerbosePackage({
     required this.name,
+    this.scope,
     this.description,
     required this.version,
     required this.author,
@@ -592,6 +662,8 @@ class VerbosePackage {
       _$VerbosePackageFromJson(json);
 
   final String name;
+
+  final String? scope;
 
   final String? description;
 
@@ -629,7 +701,11 @@ class GetPackageResponse {
     this.description,
     required this.contributors,
     this.language,
+    required this.license,
+    required this.vcs,
+    this.vcs_url,
     required this.created_at,
+    required this.updated_at,
     required this.latest,
     required this.versions,
   });
@@ -649,9 +725,17 @@ class GetPackageResponse {
 
   final String? language;
 
+  final String license;
+
+  final VCS vcs;
+
+  final String? vcs_url;
+
   final String created_at;
 
-  final VerbosePackage latest;
+  final String updated_at;
+
+  final LatestPackage latest;
 
   final Map<String, VerbosePackage> versions;
 
@@ -662,6 +746,7 @@ class GetPackageResponse {
 class Package {
   Package({
     required this.name,
+    this.scope,
     this.description,
     required this.version,
     required this.author,
@@ -674,6 +759,8 @@ class Package {
       _$PackageFromJson(json);
 
   final String name;
+
+  final String? scope;
 
   final String? description;
 
