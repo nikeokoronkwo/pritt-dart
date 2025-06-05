@@ -25,9 +25,6 @@ abstract interface class PrittLocalConfigUnawareController {
   /// TODO: Cache consistent calls
   FutureOr<common.Author> getCurrentAuthor();
 
-  /// The name of the configuration file
-  String configFileName();
-
   /// List files in a directory as a [Stream]
   Stream<String> listFilesAt(String directory, {bool deep = false});
 
@@ -45,13 +42,16 @@ abstract interface class PrittLocalConfigUnawareController {
 
   /// Log message
   void log(Object msg);
+
+  /// The name of the configuration file
+  String configFileName();
 }
 
 /// TODO: Get more functions for configuring
-abstract interface class PrittLocalController
+abstract interface class PrittLocalController<T>
     extends PrittLocalConfigUnawareController {
   /// Get the configuration from a project
-  FutureOr<T> getConfiguration<T extends Config>(String directory);
+  FutureOr<T> getConfiguration(String directory);
 
   /// Set to use package manager commands with hosted
   useHostedPMCommands();

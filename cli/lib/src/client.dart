@@ -25,7 +25,7 @@ class PrittClient extends ApiClient implements PrittInterface {
     try {
       // TODO: Retry
       int counter = 0;
-      final resp = await retryClient.retry(() {
+      await retryClient.retry(() {
         if (verbose) {
           print('Attempt #${++counter}');
         }

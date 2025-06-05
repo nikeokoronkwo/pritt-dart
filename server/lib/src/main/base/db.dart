@@ -811,8 +811,12 @@ FROM plugins p
   }
 
   @override
-  Future<({AuthorizationSession session, String token, DateTime tokenExpiration})> updateAuthSessionWithAccessToken(
-      {required String sessionId}) async {
+  Future<
+      ({
+        AuthorizationSession session,
+        String token,
+        DateTime tokenExpiration
+      })> updateAuthSessionWithAccessToken({required String sessionId}) async {
     String? token;
     final updatedAt = DateTime.now();
     final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
@@ -829,30 +833,29 @@ FROM plugins p
       // set access token
       // for the most part, logging in would require making a new access token, but what would happen to other devices?
 
+      final userInfoQuery = await session.execute(
+          r'''SELECT name, email FROM users WHERE id = $1''',
+          parameters: [row['user_id'] as String]);
+      final userInfo = userInfoQuery.first.toColumnMap();
 
-        final userInfoQuery = await session.execute(
-            r'''SELECT name, email FROM users WHERE id = $1''',
-            parameters: [row['user_id'] as String]);
-        final userInfo = userInfoQuery.first.toColumnMap();
-
-        // generate new token
-        final (key: key, hash: accessTokenHash) = auth.createAccessTokenForUser(
-          name: userInfo['name'],
-          email: userInfo['email'],
-          expiresAt: accessTokenExpiresAt,
-        );
-        token = key;
-        hash = accessTokenHash;
-        final _ = await _pool.execute(r'''
+      // generate new token
+      final (key: key, hash: accessTokenHash) = auth.createAccessTokenForUser(
+        name: userInfo['name'],
+        email: userInfo['email'],
+        expiresAt: accessTokenExpiresAt,
+      );
+      token = key;
+      hash = accessTokenHash;
+      final _ = await _pool.execute(r'''
 INSERT INTO access_tokens (user_id, hash, token_type, device_id, expires_at)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING *''', parameters: [
-          row['user_id'] as String,
-          accessTokenHash,
-          AccessTokenType.device,
-          row['device_id'] as String,
-          accessTokenExpiresAt
-        ]);
+        row['user_id'] as String,
+        accessTokenHash,
+        AccessTokenType.device,
+        row['device_id'] as String,
+        accessTokenExpiresAt
+      ]);
 
       return await session.execute(r'''
         UPDATE authorization_sessions
@@ -864,19 +867,21 @@ RETURNING *''', parameters: [
 
     final columnMap = result.first.toColumnMap();
 
-    return (session: AuthorizationSession(
-        id: columnMap['id'] as String,
-        sessionId: sessionId,
-        deviceId: columnMap['device_id'] as String,
-        status: TaskStatus.fromString(columnMap['status'] as String),
-        authorizedAt: columnMap['authorized_at'] as DateTime,
-        startedAt: columnMap['started_at'] as DateTime,
-        expiresAt: columnMap['expires_at'] as DateTime,
-        userId: columnMap['user_id'] as String,
-        accessToken: (token ?? columnMap['access_token']) as String,
-        code: columnMap['code'] as String),
-    token: (token ?? columnMap['access_token']) as String,
-    tokenExpiration: accessTokenExpiresAt);
+    return (
+      session: AuthorizationSession(
+          id: columnMap['id'] as String,
+          sessionId: sessionId,
+          deviceId: columnMap['device_id'] as String,
+          status: TaskStatus.fromString(columnMap['status'] as String),
+          authorizedAt: columnMap['authorized_at'] as DateTime,
+          startedAt: columnMap['started_at'] as DateTime,
+          expiresAt: columnMap['expires_at'] as DateTime,
+          userId: columnMap['user_id'] as String,
+          accessToken: (token ?? columnMap['access_token']) as String,
+          code: columnMap['code'] as String),
+      token: (token ?? columnMap['access_token']) as String,
+      tokenExpiration: accessTokenExpiresAt
+    );
   }
 
   @override

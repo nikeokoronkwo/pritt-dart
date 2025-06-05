@@ -26,46 +26,46 @@ final handler = defineRequestHandler((event) async {
 
     // return
     final resp = common.GetPackageByVersionResponse(
-        name: pkg.package.name,
-        version: pkg.version,
-        author: author,
-        created_at: pkg.created.toIso8601String(),
-        info: pkg.info,
-        env: pkg.env,
-        metadata: pkg.metadata,
-        signatures: pkg.signatures
-            .map((sig) => common.Signature(
-                public_key_id: sig.publicKeyId,
-                signature: sig.signature,
-                created: sig.created.toIso8601String()))
-            .toList(),
-        readme: pkg.readme,
-        config: pkg.config == null
-            ? null
-            : common.ConfigFile(
-                name: pkg.configName!,
-                data: pkg.config!,
-              ),
-        deprecated: (isAuthorized) ? pkg.isDeprecated : null,
-        yanked: (isAuthorized) ? pkg.isYanked : null,
-        deprecationMessage: (isAuthorized) ? pkg.deprecationMessage : null,
-        hash: isAuthorized ? pkg.hash : null,
-        integrity: isAuthorized ? pkg.integrity : null,
-        contributors: contributors.entries.map((e) {
-          return common.Contributor(
-              name: e.key.name,
-              email: e.key.email,
-              privileges: isAuthorized
-                  ? e.value.map((p) {
-                      return switch (p) {
-                        Privileges.read => common.Privilege.read,
-                        Privileges.write => common.Privilege.write,
-                        Privileges.publish => common.Privilege.publish,
-                        Privileges.ultimate => common.Privilege.ultimate,
-                      };
-                    }).toList()
-                  : null);
-        }).toList(),
+      name: pkg.package.name,
+      version: pkg.version,
+      author: author,
+      created_at: pkg.created.toIso8601String(),
+      info: pkg.info,
+      env: pkg.env,
+      metadata: pkg.metadata,
+      signatures: pkg.signatures
+          .map((sig) => common.Signature(
+              public_key_id: sig.publicKeyId,
+              signature: sig.signature,
+              created: sig.created.toIso8601String()))
+          .toList(),
+      readme: pkg.readme,
+      config: pkg.config == null
+          ? null
+          : common.ConfigFile(
+              name: pkg.configName!,
+              data: pkg.config!,
+            ),
+      deprecated: (isAuthorized) ? pkg.isDeprecated : null,
+      yanked: (isAuthorized) ? pkg.isYanked : null,
+      deprecationMessage: (isAuthorized) ? pkg.deprecationMessage : null,
+      hash: isAuthorized ? pkg.hash : null,
+      integrity: isAuthorized ? pkg.integrity : null,
+      contributors: contributors.entries.map((e) {
+        return common.Contributor(
+            name: e.key.name,
+            email: e.key.email,
+            privileges: isAuthorized
+                ? e.value.map((p) {
+                    return switch (p) {
+                      Privileges.read => common.Privilege.read,
+                      Privileges.write => common.Privilege.write,
+                      Privileges.publish => common.Privilege.publish,
+                      Privileges.ultimate => common.Privilege.ultimate,
+                    };
+                  }).toList()
+                : null);
+      }).toList(),
     );
 
     return resp.toJson();

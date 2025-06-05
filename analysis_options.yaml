@@ -6,3 +6,6 @@ linter:
     - directives_ordering
     - prefer_relative_imports
     - sort_pub_dependencies
+
+formatter:
+  page_width: 80

@@ -193,10 +193,10 @@ class LoginCommand extends PrittCommand {
 
 String _getTime(DateTime time, {bool verbose = true}) {
   if (verbose) return time.toIso8601String();
-  
+
   int hour = time.hour;
   int mins = time.minute;
   String suffix = time.hour >= 12 ? 'pm' : 'am';
-  
+
   return '${hour > 12 ? hour - 12 : hour}:${mins.toString().padLeft(2, '0')}';
 }

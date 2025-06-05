@@ -6,13 +6,18 @@ import 'gen.dart';
 import 'js.dart';
 
 extension type TemplateOptions._(JSObject _) implements JSObject {
-  external TemplateOptions({AuthOptions auth, String name, TimeOptions time, StyleOptions style});
+  external TemplateOptions(
+      {AuthOptions auth, String name, TimeOptions time, StyleOptions style});
+
   /// auth options
   external AuthOptions get auth;
+
   /// the name
   external String get name;
+
   /// the time options as an object
   external TimeOptions get time;
+
   /// Styling Options
   external StyleOptions get style;
 }
@@ -30,8 +35,8 @@ extension type TimeOptions._(JSObject _) implements JSObject {
 
 extension type StyleOptions._(JSObject _) implements JSObject {
   external StyleOptions({
-    JSRecord<JSNumber, JSString> primary, 
-    JSRecord<JSNumber, JSString> secondary, 
+    JSRecord<JSNumber, JSString> primary,
+    JSRecord<JSNumber, JSString> secondary,
   });
 
   external StyleFontOptions get font;

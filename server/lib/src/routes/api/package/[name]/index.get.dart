@@ -36,78 +36,77 @@ final handler = defineRequestHandler((event) async {
 
     // return
     final resp = common.GetPackageResponse(
-        name: pkg.name,
-        latest_version: pkg.version,
-        latest: (() {
-          final latestPkg =
-              pkgVersions.firstWhere((pv) => pv.version == pkg.version);
-          return common.LatestPackage(
-              name: pkg.name,
-              version: latestPkg.version,
-              author: author,
-              created_at: latestPkg.created.toIso8601String(),
-              info: latestPkg.info,
-              env: latestPkg.env,
-              readme: latestPkg.readme,
-              language: pkg.language,
-              metadata: latestPkg.metadata,
-              signatures: latestPkg.signatures
-                  .map((sig) => common.Signature(
-                      public_key_id: sig.publicKeyId,
-                      signature: sig.signature,
-                      created: sig.created.toIso8601String()))
-                  .toList(),
-              deprecated: (isAll == 'true' && isAuthorized)
-                  ? latestPkg.isDeprecated
-                  : null,
-              yanked: (isAll == 'true' && isAuthorized)
-                  ? latestPkg.isYanked
-                  : null);
-        })(),
-        versions: pkgVersions.asMap().map((index, pkgVer) {
-          return MapEntry(
-              pkgVer.version,
-              common.VerbosePackage(
-                  name: pkg.name,
-                  version: pkgVer.version,
-                  author: author,
-                  created_at: pkgVer.created.toIso8601String(),
-                  info: pkgVer.info,
-                  env: pkgVer.env,
-                  metadata: pkgVer.metadata,
-                  signatures: pkgVer.signatures
-                      .map((sig) => common.Signature(
-                          public_key_id: sig.publicKeyId,
-                          signature: sig.signature,
-                          created: sig.created.toIso8601String()))
-                      .toList(),
-                  deprecated: (isAll == 'true' && isAuthorized)
-                      ? pkgVer.isDeprecated
-                      : null,
-                  yanked: (isAll == 'true' && isAuthorized)
-                      ? pkgVer.isYanked
-                      : null));
-        }),
-        language: pkg.language,
-        created_at: pkg.created.toIso8601String(),
-        updated_at: pkg.updated.toIso8601String(),
-        description: pkg.description,
-        author: author,
-        contributors: contributors.entries.map((e) {
-          return common.Contributor(
-              name: e.key.name,
-              email: e.key.email,
-              privileges: isAuthorized
-                  ? e.value.map((p) {
-                      return switch (p) {
-                        Privileges.read => common.Privilege.read,
-                        Privileges.write => common.Privilege.write,
-                        Privileges.publish => common.Privilege.publish,
-                        Privileges.ultimate => common.Privilege.ultimate,
-                      };
-                    }).toList()
-                  : null);
-        }).toList(),
+      name: pkg.name,
+      latest_version: pkg.version,
+      latest: (() {
+        final latestPkg =
+            pkgVersions.firstWhere((pv) => pv.version == pkg.version);
+        return common.LatestPackage(
+            name: pkg.name,
+            version: latestPkg.version,
+            author: author,
+            created_at: latestPkg.created.toIso8601String(),
+            info: latestPkg.info,
+            env: latestPkg.env,
+            readme: latestPkg.readme,
+            language: pkg.language,
+            metadata: latestPkg.metadata,
+            signatures: latestPkg.signatures
+                .map((sig) => common.Signature(
+                    public_key_id: sig.publicKeyId,
+                    signature: sig.signature,
+                    created: sig.created.toIso8601String()))
+                .toList(),
+            deprecated: (isAll == 'true' && isAuthorized)
+                ? latestPkg.isDeprecated
+                : null,
+            yanked:
+                (isAll == 'true' && isAuthorized) ? latestPkg.isYanked : null);
+      })(),
+      versions: pkgVersions.asMap().map((index, pkgVer) {
+        return MapEntry(
+            pkgVer.version,
+            common.VerbosePackage(
+                name: pkg.name,
+                version: pkgVer.version,
+                author: author,
+                created_at: pkgVer.created.toIso8601String(),
+                info: pkgVer.info,
+                env: pkgVer.env,
+                metadata: pkgVer.metadata,
+                signatures: pkgVer.signatures
+                    .map((sig) => common.Signature(
+                        public_key_id: sig.publicKeyId,
+                        signature: sig.signature,
+                        created: sig.created.toIso8601String()))
+                    .toList(),
+                deprecated: (isAll == 'true' && isAuthorized)
+                    ? pkgVer.isDeprecated
+                    : null,
+                yanked: (isAll == 'true' && isAuthorized)
+                    ? pkgVer.isYanked
+                    : null));
+      }),
+      language: pkg.language,
+      created_at: pkg.created.toIso8601String(),
+      updated_at: pkg.updated.toIso8601String(),
+      description: pkg.description,
+      author: author,
+      contributors: contributors.entries.map((e) {
+        return common.Contributor(
+            name: e.key.name,
+            email: e.key.email,
+            privileges: isAuthorized
+                ? e.value.map((p) {
+                    return switch (p) {
+                      Privileges.read => common.Privilege.read,
+                      Privileges.write => common.Privilege.write,
+                      Privileges.publish => common.Privilege.publish,
+                      Privileges.ultimate => common.Privilege.ultimate,
+                    };
+                  }).toList()
+                : null);
+      }).toList(),
       license: pkg.license ?? 'Unknown',
       vcs: switch (pkg.vcs) {
         VCS.git => common.VCS.git,

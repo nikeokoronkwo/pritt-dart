@@ -18,7 +18,12 @@ final npmPM = PackageManager(
       );
     },
     onGet: () => ['npm', 'install'],
-    onRemove: (info) => ['npm', 'uninstall', info.name]);
+    onRemove: (info) => ['npm', 'uninstall', info.name],
+    onPublish: (info) {
+      assert(info.name.startsWith('@pritt'),
+          "In order to publish to pritt, you should have the '@pritt' namespace ");
+      return ['npm', 'publish'];
+    });
 
 final pnpmPM = PackageManager(
     name: 'pnpm',
@@ -38,7 +43,37 @@ final pnpmPM = PackageManager(
       );
     },
     onGet: () => ['pnpm', 'install'],
-    onRemove: (info) => ['pnpm', 'remove', info.name]);
+    onRemove: (info) => ['pnpm', 'remove', info.name],
+    onPublish: (info) {
+      assert(info.name.startsWith('@pritt'),
+          "In order to publish to pritt, you should have the '@pritt' namespace ");
+      return ['pnpm', 'publish'];
+    });
+
+final bunPM = PackageManager(
+    name: 'bun',
+    onAdd: (info) {
+      return PackageCmdArgs(
+        args: ['bun', 'add'],
+        resolveType: (name, type) {
+          return switch (type) {
+            PackageType.normal => [name],
+            PackageType.dev => ['-d', name],
+            PackageType.peer => ['--peer', name],
+            PackageType.optional => ['--optional', name],
+            _ => [name]
+          };
+        },
+        resolveVersion: (name, version) => '$name@$version',
+      );
+    },
+    onGet: () => ['bun', 'install'],
+    onRemove: (info) => ['bun', 'remove', info.name],
+    onPublish: (info) {
+      assert(info.name.startsWith('@pritt'),
+          "In order to publish to pritt, you should have the '@pritt' namespace ");
+      return ['bun', 'publish'];
+    });
 
 final yarnPM = PackageManager(
     name: 'yarn',
@@ -58,7 +93,12 @@ final yarnPM = PackageManager(
       );
     },
     onGet: () => ['yarn', 'install'],
-    onRemove: (info) => ['yarn', 'remove', info.name]);
+    onRemove: (info) => ['yarn', 'remove', info.name],
+    onPublish: (info) {
+      assert(info.name.startsWith('@pritt'),
+          "In order to publish to pritt, you should have the '@pritt' namespace ");
+      return ['yarn', 'publish'];
+    });
 
 enum NpmPackageManager {
   npm,

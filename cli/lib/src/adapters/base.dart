@@ -4,6 +4,7 @@ import 'package:pritt_cli/src/adapters/base/config.dart';
 import 'package:pritt_cli/src/adapters/base/workspace.dart';
 import 'package:pritt_cli/src/adapters/base/context.dart';
 import 'package:pritt_cli/src/adapters/base/controller.dart';
+import 'package:pritt_cli/src/ignore.dart';
 import 'package:pritt_cli/src/loader.dart';
 
 typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
@@ -30,10 +31,10 @@ class Handler<T extends Config> {
   final PackageManager? packageManager;
 
   /// The name of the file where configuration data is stored
-  final Loader<String> config;
+  final Loader<String, String> config;
 
   /// The ignore file
-  final Loader<Iterable<String>>? ignore;
+  final Loader<IgnoreFiles, String>? ignore;
 
   String get configFile => config.name;
 
@@ -52,7 +53,7 @@ class Handler<T extends Config> {
   /// - The license of the package
   ///
   /// Other data can be added, but is not required
-  final FutureOr<T?> Function(
+  final FutureOr<T> Function(
           String directory, PrittLocalConfigUnawareController controller)
       onGetConfig;
 
@@ -61,12 +62,12 @@ class Handler<T extends Config> {
   ///
   /// - The configuration file for the workspace
   /// - The directory of the workspace
-  final FutureOr<Workspace<T>?> Function(
+  final FutureOr<Workspace<T>> Function(
       String directory, PrittLocalController controller) onGetWorkspace;
 
   /// A function run to check whether a given workspace is for a given handler
   ///
-  /// Defaults to `return await controller.fileExists(controller.configFileName());`
+  /// Defaults to `return await controller.fileExists(this.configFile);`
   final FutureOr<bool> Function(
           String workspace, PrittLocalConfigUnawareController controller)?
       onCheckWorkspace;
@@ -75,6 +76,10 @@ class Handler<T extends Config> {
   /// This is run to set up a workspace when installing a given package
   final FutureOr Function(PrittContext context, PrittLocalController controller)
       onConfigure;
+
+  /// An enum to represent who should publish a package
+  /// Given that the publisher is [PublishManager.pm], then publish commands must be passed to the [packageManager] in order to perform such publishing
+  final PublishManager publisher;
 
   Handler(
       {required this.id,
@@ -86,7 +91,17 @@ class Handler<T extends Config> {
       required this.onGetConfig,
       required this.onGetWorkspace,
       this.onCheckWorkspace,
-      required this.onConfigure});
+      required this.onConfigure,
+      this.publisher = PublishManager.pritt})
+      : assert(
+            publisher == PublishManager.pritt ||
+                packageManager?.onPublish != null,
+            "For the publisher to be the language's package manager, publishing instructions should be passed");
+}
+
+enum PublishManager {
+  pritt,
+  pm;
 }
 
 class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
@@ -102,6 +117,7 @@ class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
       required super.onGetWorkspace,
       super.onCheckWorkspace,
       required super.onConfigure,
+      super.publisher,
       this.packageManagers = const {}});
 
   @override

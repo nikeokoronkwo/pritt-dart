@@ -37,6 +37,7 @@ class PackageManager {
   /// Fix this to add multiple packages at once
   PackageCmdArgs Function(PackageInformation info) onAdd;
   List<String> Function(PackageInformation info) onRemove;
+  List<String> Function(PackageInformation info)? onPublish;
   List<String> Function() onGet;
 
   PackageManager(
@@ -44,6 +45,7 @@ class PackageManager {
       List<String>? args,
       required this.onAdd,
       required this.onRemove,
+      this.onPublish,
       required this.onGet})
       : args = args ?? [name];
 }

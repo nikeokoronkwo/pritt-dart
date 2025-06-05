@@ -1,17 +1,20 @@
+import 'package:glob/glob.dart';
+
 /// An ignore file is basically a list of paths to ignore
 typedef IgnoreFiles = Iterable<String>;
 
 extension MatchIgnore on IgnoreFiles {
   bool match(String path) {
-    return this.any((ignore) {
+    return any((ignore) {
       // convert path to glob
-      throw UnimplementedError();
+      final p = Glob(ignore, caseSensitive: false, recursive: false);
+      return p.matches(path);
     });
   }
 }
 
 /// Some basic ignored files:
-const List<String> ignoredFiles = [
+const List<String> commonlyIgnoredFiles = [
   '.*.swp',
   '._*',
   '.DS_Store',

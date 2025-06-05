@@ -12,7 +12,12 @@ final dartHandler = Handler<PubspecConfig>(
   name: 'dart',
   language: 'dart',
   config: Loader('pubspec.yaml', load: (contents) => contents),
-  ignore: Loader('.pubignore', load: (contents) => const LineSplitter().convert(contents).skipWhile((c) => c.trim().startsWith('#'))),
+  ignore: Loader('.pubignore',
+      load: (contents) => const LineSplitter()
+          .convert(contents)
+          .skipWhile((c) => c.trim().startsWith('#'))
+          .toList()
+        ..addAll(['.dart_tool', 'pubspec.lock'])),
   packageManager: PackageManager(
       name: 'pub',
       args: ['dart', 'pub'],

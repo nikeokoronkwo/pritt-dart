@@ -174,7 +174,7 @@ class AuthPollResponse {
 
   final PollStatus status;
 
-  final Map<String, dynamic> response;
+  final Map<String, dynamic>? response;
 
   Map<String, dynamic> toJson() => _$AuthPollResponseToJson(this);
 }

@@ -1,0 +1,160 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:http/http.dart';
+import 'package:path/path.dart' as p;
+import 'package:pritt_cli/src/adapters/base.dart';
+import 'package:pritt_cli/src/adapters/base/config.dart';
+
+import 'package:pritt_cli/src/adapters/base/controller.dart';
+import 'package:pritt_cli/src/client.dart';
+import 'package:pritt_cli/src/constants.dart';
+import 'package:pritt_cli/src/loader.dart';
+import 'package:pritt_cli/src/project/exception.dart';
+import 'package:pritt_cli/src/utils/annotations.dart';
+import 'package:pritt_cli/src/utils/typedefs.dart';
+import 'package:pritt_common/interface.dart';
+
+class PrittControllerManager {
+  final PrittClient? apiClient;
+  final String? dir;
+
+  const PrittControllerManager({this.apiClient, this.dir});
+
+  PrittConfigUnawareController makeConfigUnawareController(Handler handler) {
+    return PrittConfigUnawareController(
+        configLoader: handler.config, client: apiClient);
+  }
+
+  PrittController<T> makeController<T extends Config>(
+      Handler<T> handler) {
+    // create first
+    final configUnawareCtrl =
+        PrittConfigUnawareController(configLoader: handler.config);
+
+    Future<T> converter(String contents) async {
+      return await handler.onGetConfig(dir ?? p.current, configUnawareCtrl);
+    }
+
+    return configUnawareCtrl._upgrade(convertConfig: converter);
+  }
+}
+
+class PrittConfigUnawareController
+    implements PrittLocalConfigUnawareController {
+  Loader<String, String> configLoader;
+  PrittClient? client;
+
+  PrittConfigUnawareController({required this.configLoader, this.client});
+
+  PrittController<T> _upgrade<T extends Config>({
+    required FutureOr<T> Function(String) convertConfig,
+  }) {
+    return PrittController(
+        convertConfig: convertConfig,
+        configLoader: configLoader,
+        client: client);
+  }
+
+  @override
+  Future<bool> fileExists(String path, {String? cwd}) {
+    return File(p.join(cwd ?? p.current, path)).exists();
+  }
+
+  @override
+  @localCacheable
+  FutureOr<Author> getCurrentAuthor() async {
+    final user = await getCurrentUser();
+    return Author(name: user.name, email: user.email);
+  }
+
+  @override
+  @localCacheable
+  FutureOr<User> getCurrentUser() async {
+    if (client == null)
+      throw AuthorizationException(
+          'The current adapter needs user credentials, but user not logged in');
+
+    // TODO: implement getCurrentUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<String> listFilesAt(String directory, {bool deep = false}) {
+    return Directory(directory).list().map((a) => a.path);
+  }
+
+  @override
+  List<String> listFilesAtSync(String directory, {bool deep = false}) {
+    return Directory(directory).listSync().map((a) => a.path).toList();
+  }
+
+  @override
+  void log(Object msg) {
+    print(msg);
+  }
+
+  @override
+  FutureOr<String> readConfigFile(String directory) async {
+    final configName = configLoader.name;
+    final configContents =
+        await File(p.join(directory, configName)).readAsString();
+    return configLoader.load(configContents);
+  }
+
+  @override
+  String readConfigFileSync(String directory) {
+    final configName = configLoader.name;
+    final configContents =
+        File(p.join(directory, configName)).readAsStringSync();
+    return configLoader.load(configContents);
+  }
+
+  @override
+  Future<String> readFileAt(String path, {String? cwd}) {
+    return File(p.join(cwd ?? p.current, path)).readAsString();
+  }
+
+  @override
+  String readFileAtSync(String path, {String? cwd}) {
+    return File(p.join(cwd ?? p.current, path)).readAsStringSync();
+  }
+
+  @override
+  String configFileName() => configLoader.name;
+}
+
+class PrittController<T extends Config> extends PrittConfigUnawareController
+    implements PrittLocalController {
+  Loader<FutureOr<T>, String> builtConfigLoader;
+  Loader<FutureOr<T>, String> convertConfigLoader;
+
+  PrittClient? apiClient;
+
+  PrittController({
+    required FutureOr<T> Function(String) convertConfig,
+    required super.configLoader,
+    required PrittClient? client,
+  })  : apiClient = client,
+        builtConfigLoader = configLoader.stack(convertConfig),
+        convertConfigLoader = Loader(configLoader.name, load: convertConfig);
+
+  @override
+  FutureOr<T> getConfiguration(String directory) async {
+    return await convertConfigLoader.load(await readConfigFile(directory));
+  }
+
+  @override
+  String get instanceUri => apiClient?.url ?? mainPrittApiInstance;
+
+  @override
+  useHostedPMCommands() {
+    // TODO: implement useHostedPMCommands
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> writeFileAt(String path, String contents, {String? cwd}) async {
+    await File(p.joinAll([if (cwd != null) cwd, path])).writeAsString(contents);
+  }
+}

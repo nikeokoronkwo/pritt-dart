@@ -72,7 +72,7 @@ Map<String, dynamic> _$AuthErrorToJson(AuthError instance) => <String, dynamic>{
 AuthPollResponse _$AuthPollResponseFromJson(Map<String, dynamic> json) =>
     AuthPollResponse(
       status: $enumDecode(_$PollStatusEnumMap, json['status']),
-      response: json['response'] as Map<String, dynamic>,
+      response: json['response'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$AuthPollResponseToJson(AuthPollResponse instance) =>

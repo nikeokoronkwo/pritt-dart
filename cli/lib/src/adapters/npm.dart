@@ -7,17 +7,23 @@ import 'package:pritt_cli/src/adapters/npm/package_managers.dart';
 import 'package:pritt_cli/src/loader.dart';
 import 'package:pritt_common/interface.dart';
 
-// TODO: How to handle more than just 'npm'?
 final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
     id: 'npm',
     name: 'npm',
     language: 'javascript',
     config: Loader('package.json', load: (contents) => contents),
-    ignore: Loader('.npmignore', load:(contents) => const LineSplitter().convert(contents).skipWhile((line) => line.trim().startsWith('#')).toList()
-    ..addAll(['.npmignore', '.npmrc', 'config.gypi', 'npm-debug.log']),),
+    ignore: Loader(
+      '.npmignore',
+      load: (contents) => const LineSplitter()
+          .convert(contents)
+          .skipWhile((line) => line.trim().startsWith('#'))
+          .toList()
+        ..addAll(['.npmignore', '.npmrc', 'config.gypi', 'npm-debug.log']),
+    ),
     packageManagers: {
       for (final pm in NpmPackageManager.values) pm.toString(): pm.pmObject
     },
+    publisher: PublishManager.pm,
     onGetConfig: (directory, controller) async {
       final configFile = await controller.readConfigFile(directory);
 
@@ -42,7 +48,8 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
       }
 
       final packageManager = pm.pmObject;
-      return null;
+
+      throw UnimplementedError("Unimplemented");
 
       // read config
     },

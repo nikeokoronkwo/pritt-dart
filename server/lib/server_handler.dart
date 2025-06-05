@@ -11,8 +11,10 @@ import 'package:pritt_server/src/routes/api/package/@[scope]/[name]/[version].ge
     as packageScopeNameVersionGet;
 import 'package:pritt_server/src/routes/api/packages.get.dart' as packagesGet;
 import 'package:pritt_server/src/routes/api/auth/new.get.dart' as authNewGet;
-import 'package:pritt_server/src/routes/api/auth/status.post.dart' as authStatusPost;
-import 'package:pritt_server/src/routes/api/auth/validate.post.dart' as authValidatePost;
+import 'package:pritt_server/src/routes/api/auth/status.post.dart'
+    as authStatusPost;
+import 'package:pritt_server/src/routes/api/auth/validate.post.dart'
+    as authValidatePost;
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -24,11 +26,11 @@ Handler serverHandler() {
     ..get('/api/package/:name', packageNameGet.handler)
     ..get('/api/package/:name/:version', packageNameVersionGet.handler)
     ..get('/api/package/@:scope/:name', packageScopeNameGet.handler)
-    ..get('/api/package/@:scope/:name/:version', packageScopeNameVersionGet.handler)
+    ..get('/api/package/@:scope/:name/:version',
+        packageScopeNameVersionGet.handler)
     ..get('/api/auth/new', authNewGet.handler)
     ..post('/api/auth/status', authStatusPost.handler)
-    ..post('/api/auth/validate', authValidatePost.handler)
-  ;
+    ..post('/api/auth/validate', authValidatePost.handler);
 
   return app.call;
 }

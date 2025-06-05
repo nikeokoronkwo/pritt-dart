@@ -155,7 +155,8 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
             valueSchema.getProperty('title'.toJS).dartify() as String? ??
                 "${name}Val",
             componentSpecs: componentSpecs)
-      ]));
+      ])
+      ..isNullable = !(required ?? true));
   }
 
   if (schema.hasProperty('type'.toJS).toDart) {

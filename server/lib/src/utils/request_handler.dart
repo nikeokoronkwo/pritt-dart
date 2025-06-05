@@ -24,8 +24,7 @@ class ResponseBuilder {
   ResponseBuilder();
 
   Response Function(Object? body) build() {
-    return (body) => Response(statusCode,
-        body: body, headers: headers);
+    return (body) => Response(statusCode, body: body, headers: headers);
   }
 }
 

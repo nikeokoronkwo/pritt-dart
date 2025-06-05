@@ -23,16 +23,20 @@ final handler = defineRequestHandler((event) async {
     case TaskStatus.pending:
       final resp = common.AuthPollResponse(
           status: switch (status) {
-            TaskStatus.pending => common.PollStatus.pending,
-            TaskStatus.success => common.PollStatus.success,
-            TaskStatus.fail => common.PollStatus.fail,
-            TaskStatus.expired => common.PollStatus.expired,
-            TaskStatus.error => common.PollStatus.error,
-          });
+        TaskStatus.pending => common.PollStatus.pending,
+        TaskStatus.success => common.PollStatus.success,
+        TaskStatus.fail => common.PollStatus.fail,
+        TaskStatus.expired => common.PollStatus.expired,
+        TaskStatus.error => common.PollStatus.error,
+      });
 
       return resp.toJson();
     case TaskStatus.success:
-      final (session: updatedSession, token: accessToken, tokenExpiration: accessTokenExpiresAt) = await crs.db.updateAuthSessionWithAccessToken(sessionId: id);
+      final (
+        session: updatedSession,
+        token: accessToken,
+        tokenExpiration: accessTokenExpiresAt
+      ) = await crs.db.updateAuthSessionWithAccessToken(sessionId: id);
       final resp = common.AuthPollResponse(
           status: switch (status) {
             TaskStatus.pending => common.PollStatus.pending,

@@ -31,6 +31,10 @@ class Logger {
     io.stdout.writeln(blue.wrap(msg.toString()));
   }
 
+  void warn(Object msg, {bool warnKey = false}) {
+    io.stdout.writeln((warnKey ? 'WARN:' : '') + yellow.wrap(msg.toString())!);
+  }
+
   void verbose(Object msg) {}
 }
 
@@ -38,13 +42,18 @@ class VerboseLogger implements Logger {
   final l.Logger _logger;
 
   @override
-  fine(Object msg) {
+  void fine(Object msg) {
     _logger.fine(green.wrap(msg.toString()));
   }
 
   @override
-  info(Object msg) {
+  void info(Object msg) {
     _logger.info(blue.wrap(msg.toString()));
+  }
+
+  @override
+  void warn(Object msg, {bool warnKey = false}) {
+    _logger.warning(yellow.wrap(msg.toString()));
   }
 
   @override
