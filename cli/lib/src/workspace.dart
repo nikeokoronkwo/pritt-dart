@@ -19,7 +19,7 @@ import 'package:yaml/yaml.dart';
 class Project {
   /// Handlers for the current project
   final Iterable<Handler> handlers;
-  int? _activeHandlerIndex;
+  // int? _activeHandlerIndex;
 
   /// The current directory of the project
   final String directory;
@@ -55,10 +55,40 @@ class Project {
     for (final handler in handlers) {
       final controller = _manager.makeController(handler);
       final workspace = await handler.onGetWorkspace(directory, controller);
-      await handler.onConfigure(
-        PrittContext(workspace: workspace), controller
-      );
+      await handler.onConfigure(PrittContext(workspace: workspace), controller);
     }
+  }
+
+  Stream<File> files() {
+    return Directory(directory)
+        .list(recursive: true)
+        .where((f) {
+          if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else {
+            return false;
+          }
+        })
+        .where((f) => f is File)
+        .map((f) => f as File);
+  }
+
+  List<File> filesSync() {
+    return Directory(directory)
+        .listSync(recursive: true)
+        .where((f) {
+          if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else {
+            return false;
+          }
+        })
+        .whereType<File>()
+        .toList();
   }
 }
 
@@ -101,7 +131,8 @@ Future<Project> getWorkspace(String directory,
       config: prittConfig,
       directory: directory,
       vcs: vcs,
-      ignoreFiles: ignoreFiles, manager: manager.controllerHandler);
+      ignoreFiles: ignoreFiles,
+      manager: manager.controllerHandler);
 }
 
 Future<PrittConfig?> readPrittConfig(String dir, String? config) async {
@@ -129,8 +160,9 @@ Future<VCS> getVersionControlSystem(Directory directory) async {
           continue;
       }
     } else if (entity is File) {
-      if (['.fslckout', '.fossil'].contains(p.extension(entity.path)))
+      if (['.fslckout', '.fossil'].contains(p.extension(entity.path))) {
         return VCS.fossil;
+      }
     }
   }
   return VCS.other;

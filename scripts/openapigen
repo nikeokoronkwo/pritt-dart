@@ -42,6 +42,7 @@ if __name__ == "__main__":
 
     # build dart tool
     print("Building Dart tool...")
+    subprocess.run(['dart', 'pub', 'get'], cwd=openapigen_dir)
     subprocess.run(['dart', 'compile', 'js', '--server-mode', '--enable-asserts', path.join('bin', 'openapigen.dart'), '-o', path.join('dist', 'openapigen_dart.js')], cwd=openapigen_dir)
 
     # copy entrypoint
@@ -66,5 +67,3 @@ if __name__ == "__main__":
     subprocess.run(['dart', 'fix', 'common', '--apply'])
 
     
-
-

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:pritt_cli/src/adapters/base/config.dart';
 import 'package:pritt_cli/src/utils/typedefs.dart';
 
 import 'package:pritt_common/interface.dart' as common;

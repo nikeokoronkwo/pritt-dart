@@ -8,6 +8,7 @@ import 'package:pritt_cli/src/csv.dart';
 import 'package:pritt_cli/src/list.dart';
 import 'package:pritt_cli/src/output.dart';
 import 'package:pritt_cli/src/user_config.dart';
+import 'package:pritt_common/interface.dart';
 
 import '../../cli/base.dart';
 
@@ -54,7 +55,7 @@ class PackageListCommand extends PrittCommand {
           url: userCredentials.uri.toString(),
           accessToken: userCredentials.accessToken);
 
-      var pkgs;
+      GetPackagesResponse pkgs;
 
       if (allPackages) {
         // get packages

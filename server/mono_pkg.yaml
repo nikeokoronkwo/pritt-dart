@@ -1,0 +1,11 @@
+sdk:
+  - pubspec
+
+stages:
+  - analyze_and_format:
+    - analyze
+    - format
+  - unit_test:
+    - test: test/unit/** --test-randomize-ordering-seed=random
+  - integration_test:
+    - test: test/integration/**

@@ -11,10 +11,11 @@ enum TerminalSize {
   static TerminalSize fromSize(int col) {
     if (col > 120) {
       return large;
-    } else if (col >= 100)
+    } else if (col >= 100) {
       return medium;
-    else
+    } else {
       return small;
+    }
   }
 }
 

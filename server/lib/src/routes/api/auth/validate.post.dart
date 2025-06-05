@@ -37,7 +37,7 @@ final handler = defineRequestHandler((event) async {
           'status': session.status.name
         };
     }
-  } on TypeError catch (e) {
+  } on TypeError {
     setResponseCode(event, 400);
     return {'name': 'Invalid Request', 'error': 'Invalid Body for Request'};
   }
