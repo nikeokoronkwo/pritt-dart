@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:args/command_runner.dart';
-import 'package:http/http.dart';
 import 'package:pritt_cli/src/client.dart';
 import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
@@ -92,8 +90,6 @@ class LoginCommand extends PrittCommand {
     } on ApiException catch (e) {
       logger.describe(e);
       exit(1);
-    } on SocketException catch (e) {
-    } on ClientException catch (e) {
     } on Exception catch (e) {
       logger.severe('Error: $e');
       exit(1);
@@ -101,8 +97,8 @@ class LoginCommand extends PrittCommand {
   }
 
   /// Log a user in to the Pritt server
-  Future<UserCredentials> _loginUser(PrittClient client, String clientUrl,
-      {UserCredentials? credentials}) async {
+  Future<UserCredentials> _loginUser(
+      PrittClient client, String clientUrl) async {
     // check the client is real
     if (!(await client.healthCheck())) {
       throw Exception(

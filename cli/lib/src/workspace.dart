@@ -55,9 +55,7 @@ class Project {
     for (final handler in handlers) {
       final controller = _manager.makeController(handler);
       final workspace = await handler.onGetWorkspace(directory, controller);
-      await handler.onConfigure(
-        PrittContext(workspace: workspace), controller
-      );
+      await handler.onConfigure(PrittContext(workspace: workspace), controller);
     }
   }
 }
@@ -101,7 +99,8 @@ Future<Project> getWorkspace(String directory,
       config: prittConfig,
       directory: directory,
       vcs: vcs,
-      ignoreFiles: ignoreFiles, manager: manager.controllerHandler);
+      ignoreFiles: ignoreFiles,
+      manager: manager.controllerHandler);
 }
 
 Future<PrittConfig?> readPrittConfig(String dir, String? config) async {
@@ -129,8 +128,9 @@ Future<VCS> getVersionControlSystem(Directory directory) async {
           continue;
       }
     } else if (entity is File) {
-      if (['.fslckout', '.fossil'].contains(p.extension(entity.path)))
+      if (['.fslckout', '.fossil'].contains(p.extension(entity.path))) {
         return VCS.fossil;
+      }
     }
   }
   return VCS.other;

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart';
 import 'package:pritt_cli/src/client/authentication.dart';
 import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
@@ -292,18 +291,18 @@ final rootClient = PrittClient(url: mainPrittInstance);
 /// Extension for the Logger to handle exceptions
 extension HandleApiException on Logger {
   void describe(ApiException exception) {
-    this.verbose('Error from server: ${exception.statusCode}');
+    verbose('Error from server: ${exception.statusCode}');
     try {
-      this.verbose('Message: ${exception.body.toJson()}');
+      verbose('Message: ${exception.body.toJson()}');
     } catch (_) {
-      this.verbose(switch (exception.body) {
+      verbose(switch (exception.body) {
         String s => 'Message: $s',
         Error err => 'Message: ${err.toJson()}',
         Object o => 'Unknown Message: $o',
         null => 'No Message'
       });
     }
-    this.severe('The Server returned a status code of ${exception.statusCode}');
+    severe('The Server returned a status code of ${exception.statusCode}');
     if (this is! VerboseLogger) {
       this.stdout('Run with --verbose to see verbose logging');
     }

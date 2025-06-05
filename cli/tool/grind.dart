@@ -8,10 +8,8 @@ void main(List<String> args) {
   pkg.humanName.value = "Pritt";
   pkg.executables.value = {"pritt": "bin/pritt.dart"};
 
-
   pkg.githubUser.fn = () => Platform.environment["GH_USER"];
   pkg.githubPassword.fn = () => Platform.environment["GH_TOKEN"];
-
 
   // add tasks and grind
   pkg.addAllTasks();

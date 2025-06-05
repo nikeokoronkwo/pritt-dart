@@ -38,20 +38,26 @@ class ConfigureCommand extends PrittCommand {
       logger.warn('To log in, run: ${styleBold.wrap('pritt login')}');
     }
 
-    var prittClient = (userCredentials == null || userCredentials.isExpired) ? null : PrittClient(url: userCredentials.uri.toString(), accessToken: userCredentials.accessToken);
+    var prittClient = (userCredentials == null || userCredentials.isExpired)
+        ? null
+        : PrittClient(
+            url: userCredentials.uri.toString(),
+            accessToken: userCredentials.accessToken);
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getWorkspace(
-      p.current, config: argResults?['config'], client: prittClient
-    );
-    if (project.handlers.isNotEmpty) logger.info('Found: ${project.handlers.join(', ')}!');
+    var project = await getWorkspace(p.current,
+        config: argResults?['config'], client: prittClient);
+    if (project.handlers.isNotEmpty) {
+      logger.info('Found: ${project.handlers.join(', ')}!');
+    }
 
     // configure project
     logger.info('Configuring Project...');
     await project.configure();
 
     logger.fine('All Done!');
-    logger.fine('You can now use basic commands for installing and uninstalling packages');
+    logger.fine(
+        'You can now use basic commands for installing and uninstalling packages');
   }
 }

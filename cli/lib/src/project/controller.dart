@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_cli/src/adapters/base.dart';
 import 'package:pritt_cli/src/adapters/base/config.dart';
@@ -26,8 +25,7 @@ class PrittControllerManager {
         configLoader: handler.config, client: apiClient);
   }
 
-  PrittController<T> makeController<T extends Config>(
-      Handler<T> handler) {
+  PrittController<T> makeController<T extends Config>(Handler<T> handler) {
     // create first
     final configUnawareCtrl =
         PrittConfigUnawareController(configLoader: handler.config);
@@ -71,9 +69,10 @@ class PrittConfigUnawareController
   @override
   @localCacheable
   FutureOr<User> getCurrentUser() async {
-    if (client == null)
+    if (client == null) {
       throw AuthorizationException(
           'The current adapter needs user credentials, but user not logged in');
+    }
 
     // TODO: implement getCurrentUser
     throw UnimplementedError();
