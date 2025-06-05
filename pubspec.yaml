@@ -6,3 +6,5 @@ workspace:
   - cli
   - common
   - server
+dev_dependencies:
+  lints: ^5.1.1

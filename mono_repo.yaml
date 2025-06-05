@@ -4,17 +4,6 @@ github:
     pull_request:
       branches: ["main", "stable"]
     workflow_dispatch:
-  
-  dependabot:
-    updates:
-      - package-ecosystem: "pub"
-        directories: ["common", "packages/*", "cli", "server"]
-        schedule:
-          interval: "monthly"
-      - package-ecosystem: "npm"
-        directory: "web"
-        schedule:
-          interval: "monthly"
 
   workflows:
     check:
