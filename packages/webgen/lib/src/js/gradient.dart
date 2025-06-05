@@ -1,7 +1,7 @@
-import '../config/style.dart';
-
-import 'js.dart';
 import 'dart:js_interop';
+
+import '../config/style.dart';
+import 'js.dart';
 
 @JS('generateTailwindColorScale')
 external JSRecord<JSNumber, JSString> _generateTailwindColorScale(String scale);

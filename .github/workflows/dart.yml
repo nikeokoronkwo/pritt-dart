@@ -86,6 +86,47 @@ jobs:
     needs:
       - job_001
   job_003:
+    name: "unit_test; PKGS: packages/openapigen, packages/webgen; `dart test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.6.0;packages:packages/openapigen-packages/webgen;commands:test_3"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.6.0;packages:packages/openapigen-packages/webgen
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.6.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: "3.6.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - id: packages_openapigen_pub_upgrade
+        name: packages/openapigen; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: packages/openapigen
+      - name: packages/openapigen; dart test
+        run: dart test
+        if: "always() && steps.packages_openapigen_pub_upgrade.conclusion == 'success'"
+        working-directory: packages/openapigen
+      - id: packages_webgen_pub_upgrade
+        name: packages/webgen; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: packages/webgen
+      - name: packages/webgen; dart test
+        run: dart test
+        if: "always() && steps.packages_webgen_pub_upgrade.conclusion == 'success'"
+        working-directory: packages/webgen
+    needs:
+      - job_001
+  job_004:
     name: "integration_test; PKG: cli; `dart test test/cli/**`"
     runs-on: ubuntu-latest
     steps:
@@ -118,7 +159,8 @@ jobs:
     needs:
       - job_001
       - job_002
-  job_004:
+      - job_003
+  job_005:
     name: "integration_test; PKGS: cli, server; `dart test test/integration/**`"
     runs-on: ubuntu-latest
     steps:
@@ -160,3 +202,4 @@ jobs:
     needs:
       - job_001
       - job_002
+      - job_003

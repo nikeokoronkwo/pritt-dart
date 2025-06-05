@@ -94,17 +94,17 @@ Future<void> generateAuthAndDb(
   // generate config
   final configurationCode = generateAuthConfig(templateOptions.auth).toDart;
 
-  String? authOutPath;
+  // String? authOutPath;
 
   for (final codeMap in configurationCode) {
     final outPath = path.join(outputDir, codeMap.filename);
-    if (codeMap.name == 'auth') authOutPath = outPath;
+    // if (codeMap.name == 'auth') authOutPath = outPath;
     (await File(outPath).create(recursive: true))
         .writeAsStringSync(codeMap.code);
   }
 
   // run generate migrations
-  final v = await Future.sync(() => childProcess.execSync(
+  final _ = await Future.sync(() => childProcess.execSync(
       'pnpx @better-auth/cli generate --config ./server/utils/auth.ts --output ./server/db/schema/auth.ts --y',
       ExecOptions(cwd: outputDir)));
 
@@ -143,6 +143,7 @@ Future<void> generateAuthAndDb(
       .toDart;
 
   // generate drizzle migrations
-  final _ = await Future.sync(() =>
+  // ignore: non_constant_identifier_names
+  final __ = await Future.sync(() =>
       childProcess.execSync('pnpm db:generate', ExecOptions(cwd: outputDir)));
 }

@@ -784,9 +784,9 @@ FROM plugins p
       // validate if expired or not
       final expiresAt = row['expires_at'] as DateTime;
       var status = TaskStatus.fromString(row['status'] as String);
-      if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending)
+      if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending) {
         status = TaskStatus.expired;
-      else if (newStatus != null) status = newStatus;
+      } else if (newStatus != null) status = newStatus;
 
       return await session.execute(r'''
         UPDATE authorization_sessions
@@ -822,7 +822,7 @@ FROM plugins p
     final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
 
     final result = await _pool.runTx((session) async {
-      final hash;
+      final String hash;
       // get current status of session
       final rs = await session.execute(
           r'''SELECT user_id FROM authorization_sessions WHERE session_id = $1''',
@@ -1095,9 +1095,10 @@ WHERE a.hash = @accessToken'''),
       }
     });
 
-    if (result == null)
+    if (result == null) {
       throw UnauthorizedException('Invalid access token',
           type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
+    }
     if (result.isEmpty) {
       throw UnauthorizedException('Invalid access token',
           type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
@@ -1142,7 +1143,7 @@ String generateRandomCode({int length = 8, String? seed}) {
 
   final characters = 'ABCDEFGHJKLMNOPQRSTUVWXYZ234567890';
 
-  final input;
+  final String input;
   if (seed == null) {
     input = characters;
   } else {

@@ -5,9 +5,10 @@ environment:
 dependencies:
   args: ^2.7.0
   json_annotation: ^4.9.0
+  node_interop: any
   node_io: ^2.3.0
   yaml: ^3.1.3
-  node_interop: any
+  
 dev_dependencies:
-  json_serializable: ^6.9.5
   build_runner: ^2.4.15
+  json_serializable: ^6.9.5
