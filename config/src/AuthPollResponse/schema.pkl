@@ -1,19 +1,20 @@
 module AuthPollResponse
 
-typealias PollStatus = "pending" | "success" | "error"
+import "../../lib/poll.pkl"
 
-status: PollStatus
+status: poll.PollStatus
 
-response: PollResponse?((this != null).implies(status != "pending") && (this is PollSuccessResponse).implies(status == "success"))
+response: Mapping<String, Any>?
 
-class PollResponse {
-
+open class PollResponse {
+  message: String
 }
 
 class PollSuccessResponse extends PollResponse {
-
+  user_id: String
+  access_token: String
 }
 
 class PollErrorResponse extends PollResponse {
-    
+  error: String
 }

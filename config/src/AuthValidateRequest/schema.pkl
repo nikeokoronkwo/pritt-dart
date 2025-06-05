@@ -1,0 +1,18 @@
+module AuthValidateRequest
+
+import "../../lib/poll.pkl"
+
+/// The user's id
+user_id: String
+
+/// The session id
+session_id: String
+
+/// The time at which this was validated
+time: String
+
+/// Status
+status: poll.ValidatedPollStatus
+
+/// Error description, if any?
+error: String?

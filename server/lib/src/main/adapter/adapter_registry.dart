@@ -1,9 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:pritt_server/src/main/adapter_service/adapter_service.dart';
+import 'package:path/path.dart' as p;
+import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
+import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/base/db/schema.dart';
+import 'package:pritt_server/src/main/base/storage/interface.dart';
+import 'package:pritt_server/src/main/cas/cas.dart';
+import 'package:pritt_server/src/main/base/db.dart';
+import 'package:pritt_server/src/main/base/db/interface.dart';
+import 'package:pritt_server/src/main/cas/db.dart';
+import 'package:tar/tar.dart';
 
 import 'adapter.dart';
-import 'adapter_base.dart';
 import 'core/dart.dart';
 import 'core/npm.dart';
 
@@ -31,12 +42,112 @@ class AdapterRegistry {
 
   /// Connects the adapter registry to the given external database, containing information about the adapters
   ///
-  /// The registry can connect to a URL, file path, or work on local memory
+  /// The registry can connect to:
+  /// - local memory
+  /// - a URL: [Uri],
+  /// - file path: [Uri.file] or [String],
+  /// - a production DB instance conforming to [PrittAdapterDatabaseInterface], usually being [PrittDatabase],
   ///
   /// If "local" is passed, then the registry uses local memory to handle the registry (this can be used for testing or dev work)
   ///
   /// This function must be called before any other function on this, else an error will be thrown to connect the database first.
-  static Future<AdapterRegistry> connect() async {
+  static Future<AdapterRegistry> connect(
+      {Object? db, PrittStorageInterface? storage, Uri? runnerUri}) async {
+    if (service != null) {
+      return AdapterRegistry._();
+    }
+
+    runnerUri ??= Uri.parse(
+        'http://localhost:${String.fromEnvironment('PRITT_RUNNER_PORT', defaultValue: '8000')}');
+
+    final PrittAdapterDatabaseInterface databaseInterface;
+
+    if (db is! PrittAdapterWithBlobDatabaseInterface && storage != null) {
+      throw Exception(
+          "If db cannot contain storage (i.e db is not PrittAdapterWithBlobDatabaseInterface), storage must not be null");
+    }
+
+    // check type
+    if (db is String) {
+      // sqlite database at path
+      if (db == 'local') {
+        // in memory sqlite db
+        databaseInterface = await CASLocalDatabase.connect(local: true);
+      } else {
+        if (p.extension(db) != '.db') {
+          throw Exception("Cannot connect to non-sqlite3 Registry DB");
+        }
+        databaseInterface = await CASLocalDatabase.connect(url: db);
+      }
+    } else if (db is PrittAdapterDatabaseInterface) {
+      databaseInterface = db;
+    } else if (db is Uri) {
+      // sqlite database at path
+      if (p.extension(db.toFilePath()) != '.db') {
+        throw Exception("Cannot connect to non-sqlite3 Registry DB");
+      }
+
+      databaseInterface = await CASLocalDatabase.connect(url: db.toString());
+    } else {
+      throw AssertionError(
+          'Unsupported type: db must be String, Uri or an implementation of PrittAdapterDatabaseInterface');
+    }
+
+    // before starting...
+    // get all adapters and their code
+    final plugins = (await databaseInterface.getPlugins()).toList();
+
+    final Map<String, Map<String, String>> pluginMap = {};
+
+    for (final plugin in plugins) {
+      if (db is PrittAdapterWithBlobDatabaseInterface) {
+        pluginMap[plugin.id] = await db.getPluginCode(plugin.id);
+      } else {
+        // open tarball
+        final tarballOfPluginResult =
+            await storage!.get(plugin.archive.toFilePath());
+        final tarballOfPlugin = TarReader(
+            Stream.value(tarballOfPluginResult.data.toList())
+                .transform(gzip.decoder));
+
+        // get the files
+        final files = <String, String>{};
+        final List<String> approvedNames = switch (plugin.archiveType) {
+          // multiple files =>
+          //  plugin_meta.[min].js,
+          //  plugin_adapter_on.[min].js,
+          //  plugin_adapter_meta_req.[min].js, plugin_adapter_archive_req.[min].js,
+          //  plugin_handler_on.[min].js
+          PluginArchiveType.multi => [
+              'plugin_meta.js',
+              'plugin_adapter_on.js',
+              'plugin_adapter_meta_req.js',
+              'plugin_adapter_archive_req.js',
+              'plugin_handler_on.js'
+            ],
+          // single file => plugin.[min].js
+          PluginArchiveType.single => ['plugin.js'],
+        };
+
+        while (await tarballOfPlugin.moveNext()) {
+          if (approvedNames.contains(tarballOfPlugin.current.name)) {
+            files[p.basenameWithoutExtension(tarballOfPlugin.current.name)] =
+                (await tarballOfPlugin.current.contents
+                    .transform(utf8.decoder)
+                    .first);
+          }
+          // check if files are complete
+          if (files.length >= approvedNames.length) break;
+        }
+
+        pluginMap[plugin.id] = files;
+      }
+    }
+
+    // load
+    service = await CustomAdapterService.connect(runnerUri,
+        plugins: plugins, pluginCodeMap: pluginMap);
+
     return AdapterRegistry._();
   }
 
@@ -57,6 +168,7 @@ class AdapterRegistry {
 
     // check custom adapters
     final adapter = await cas.findAdapter(obj);
+
     if (adapter.adapter != null) {
       return (adapter: adapter.adapter!, resolve: adapter.type);
     }

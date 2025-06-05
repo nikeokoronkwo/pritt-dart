@@ -1,8 +1,12 @@
 import 'dart:async';
 
-import '../crs/interfaces.dart';
+import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
+import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
+import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 
-import 'adapter_base.dart';
+import '../crs/interfaces.dart';
 
 import 'adapter_registry.dart';
 
@@ -41,7 +45,7 @@ class Adapter implements AdapterInterface {
   final AdapterRequestFn metaRequest;
 
   /// Similar to [Adapter.metaRequest], but used for archive requests
-  final AdapterRetrieveFn metaRetrieve;
+  final AdapterRetrieveFn archiveRequest;
 
   const Adapter({
     required this.id,
@@ -50,7 +54,7 @@ class Adapter implements AdapterInterface {
     required AdapterRequestFn request,
     required AdapterRetrieveFn retrieve,
   })  : metaRequest = request,
-        metaRetrieve = retrieve;
+        archiveRequest = retrieve;
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {
@@ -59,7 +63,7 @@ class Adapter implements AdapterInterface {
       case AdapterResolveType.meta:
         return await metaRequest(options.toRequestObject(), crs);
       case AdapterResolveType.archive:
-        return await metaRetrieve(options.toRequestObject(), crs);
+        return await archiveRequest(options.toRequestObject(), crs);
       default:
         throw AdapterException('Unsupported adapter resolve type');
     }

@@ -1,7 +1,8 @@
 
 import "pkl:semver"
 
-typealias Version = String(semver.isValid(this))
+import "shared.pkl" as s
+
 typealias Privilege = "read"|"write"|"publish"|"ultimate"
 
 /// The base definition of a package
@@ -20,9 +21,11 @@ class GetSchemaPackage extends ImplPackage {
 open class Package extends ImplPackage {
     name: String
 
+    scope: String?
+
     description: String?
     
-    version: Version
+    version: s.Version
 
     author: Author
 
@@ -33,10 +36,10 @@ open class Package extends ImplPackage {
     updated_at: String?
 }
 
-class VerbosePackage extends Package {
+open class VerbosePackage extends Package {
     /// info 
     info: Mapping<String, Any>
-    
+
     /// env
     env: Mapping<String, Any>
 
@@ -51,6 +54,11 @@ class VerbosePackage extends Package {
 
     /// whether the package is yanked
     yanked: Boolean?
+}
+
+class LatestPackage extends VerbosePackage {
+    /// readme info
+    readme: String?
 }
 
 class Signature {

@@ -1,3 +1,3 @@
-library pritt.server.utils;
+library;
 
-export 'src/main/shared/version.dart';
+export 'src/main/utils/version.dart';

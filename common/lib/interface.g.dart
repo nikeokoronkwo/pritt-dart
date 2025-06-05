@@ -30,18 +30,49 @@ AddUserResponse _$AddUserResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AddUserResponseToJson(AddUserResponse instance) =>
     <String, dynamic>{};
 
-PollResponse _$PollResponseFromJson(Map<String, dynamic> json) =>
-    PollResponse();
+AuthDetailsResponse _$AuthDetailsResponseFromJson(Map<String, dynamic> json) =>
+    AuthDetailsResponse(
+      token: json['token'] as String,
+      token_expires: json['token_expires'] as String,
+      device: json['device'] as String,
+      code: json['code'] as String,
+      status: $enumDecode(_$PollStatusEnumMap, json['status']),
+      user_id: json['user_id'] as String?,
+    );
 
-Map<String, dynamic> _$PollResponseToJson(PollResponse instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$AuthDetailsResponseToJson(
+        AuthDetailsResponse instance) =>
+    <String, dynamic>{
+      'token': instance.token,
+      'token_expires': instance.token_expires,
+      'device': instance.device,
+      'code': instance.code,
+      'status': _$PollStatusEnumMap[instance.status]!,
+      'user_id': instance.user_id,
+    };
+
+const _$PollStatusEnumMap = {
+  PollStatus.success: 'success',
+  PollStatus.fail: 'fail',
+  PollStatus.error: 'error',
+  PollStatus.expired: 'expired',
+  PollStatus.pending: 'pending',
+};
+
+AuthError _$AuthErrorFromJson(Map<String, dynamic> json) => AuthError(
+      error: json['error'] as String?,
+      status: $enumDecode(_$PollStatusEnumMap, json['status']),
+    );
+
+Map<String, dynamic> _$AuthErrorToJson(AuthError instance) => <String, dynamic>{
+      'error': instance.error,
+      'status': _$PollStatusEnumMap[instance.status]!,
+    };
 
 AuthPollResponse _$AuthPollResponseFromJson(Map<String, dynamic> json) =>
     AuthPollResponse(
       status: $enumDecode(_$PollStatusEnumMap, json['status']),
-      response: json['response'] == null
-          ? null
-          : PollResponse.fromJson(json['response'] as Map<String, dynamic>),
+      response: json['response'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$AuthPollResponseToJson(AuthPollResponse instance) =>
@@ -50,23 +81,56 @@ Map<String, dynamic> _$AuthPollResponseToJson(AuthPollResponse instance) =>
       'response': instance.response,
     };
 
-const _$PollStatusEnumMap = {
-  PollStatus.pending: 'pending',
-  PollStatus.success: 'success',
-  PollStatus.error: 'error',
-};
-
 AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
       token: json['token'] as String,
-      token_expires: (json['token_expires'] as num).toInt(),
-      id: json['id'] as String,
+      token_expires: json['token_expires'] as String,
+      device: json['device'] as String,
+      code: json['code'] as String,
     );
 
 Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>
     <String, dynamic>{
       'token': instance.token,
       'token_expires': instance.token_expires,
-      'id': instance.id,
+      'device': instance.device,
+      'code': instance.code,
+    };
+
+AuthValidateRequest _$AuthValidateRequestFromJson(Map<String, dynamic> json) =>
+    AuthValidateRequest(
+      user_id: json['user_id'] as String,
+      session_id: json['session_id'] as String,
+      time: json['time'] as String,
+      status: $enumDecode(_$ValidatedPollStatusEnumMap, json['status']),
+      error: json['error'] as String?,
+    );
+
+Map<String, dynamic> _$AuthValidateRequestToJson(
+        AuthValidateRequest instance) =>
+    <String, dynamic>{
+      'user_id': instance.user_id,
+      'session_id': instance.session_id,
+      'time': instance.time,
+      'status': _$ValidatedPollStatusEnumMap[instance.status]!,
+      'error': instance.error,
+    };
+
+const _$ValidatedPollStatusEnumMap = {
+  ValidatedPollStatus.success: 'success',
+  ValidatedPollStatus.fail: 'fail',
+  ValidatedPollStatus.error: 'error',
+};
+
+AuthValidateResponse _$AuthValidateResponseFromJson(
+        Map<String, dynamic> json) =>
+    AuthValidateResponse(
+      validated: json['validated'] as bool,
+    );
+
+Map<String, dynamic> _$AuthValidateResponseToJson(
+        AuthValidateResponse instance) =>
+    <String, dynamic>{
+      'validated': instance.validated,
     };
 
 Error _$ErrorFromJson(Map<String, dynamic> json) => Error(
@@ -89,10 +153,24 @@ Map<String, dynamic> _$ExpiredErrorToJson(ExpiredError instance) =>
     };
 
 GetAdapterResponse _$GetAdapterResponseFromJson(Map<String, dynamic> json) =>
-    GetAdapterResponse();
+    GetAdapterResponse(
+      name: json['name'] as String,
+      version: json['version'] as String,
+      description: json['description'] as String?,
+      language: json['language'] as String?,
+      uploaded_at: json['uploaded_at'] as String,
+      source_url: json['source_url'] as String?,
+    );
 
 Map<String, dynamic> _$GetAdapterResponseToJson(GetAdapterResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'name': instance.name,
+      'version': instance.version,
+      'description': instance.description,
+      'language': instance.language,
+      'uploaded_at': instance.uploaded_at,
+      'source_url': instance.source_url,
+    };
 
 GetAdaptersByLangResponse _$GetAdaptersByLangResponseFromJson(
         Map<String, dynamic> json) =>
@@ -102,20 +180,89 @@ Map<String, dynamic> _$GetAdaptersByLangResponseToJson(
         GetAdaptersByLangResponse instance) =>
     <String, dynamic>{};
 
+Plugin _$PluginFromJson(Map<String, dynamic> json) => Plugin(
+      name: json['name'] as String,
+      version: json['version'] as String,
+      description: json['description'] as String?,
+      language: json['language'] as String?,
+      uploaded_at: json['uploaded_at'] as String,
+      source_url: json['source_url'] as String?,
+    );
+
+Map<String, dynamic> _$PluginToJson(Plugin instance) => <String, dynamic>{
+      'name': instance.name,
+      'version': instance.version,
+      'description': instance.description,
+      'language': instance.language,
+      'uploaded_at': instance.uploaded_at,
+      'source_url': instance.source_url,
+    };
+
 GetAdaptersResponse _$GetAdaptersResponseFromJson(Map<String, dynamic> json) =>
-    GetAdaptersResponse();
+    GetAdaptersResponse(
+      adapters: (json['adapters'] as List<dynamic>?)
+          ?.map((e) => Plugin.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$GetAdaptersResponseToJson(
         GetAdaptersResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'adapters': instance.adapters,
+    };
 
-GetPackageByVersionResponse _$GetPackageByVersionResponseFromJson(
+PackageMap _$PackageMapFromJson(Map<String, dynamic> json) => PackageMap(
+      name: json['name'] as String,
+      type: $enumDecode(_$UserPackageRelationshipEnumMap, json['type']),
+      privileges: (json['privileges'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$PrivilegeEnumMap, e))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$PackageMapToJson(PackageMap instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': _$UserPackageRelationshipEnumMap[instance.type]!,
+      'privileges':
+          instance.privileges?.map((e) => _$PrivilegeEnumMap[e]!).toList(),
+    };
+
+const _$UserPackageRelationshipEnumMap = {
+  UserPackageRelationship.author: 'author',
+  UserPackageRelationship.contributor: 'contributor',
+};
+
+const _$PrivilegeEnumMap = {
+  Privilege.read: 'read',
+  Privilege.write: 'write',
+  Privilege.publish: 'publish',
+  Privilege.ultimate: 'ultimate',
+};
+
+GetCurrentUserResponse _$GetCurrentUserResponseFromJson(
         Map<String, dynamic> json) =>
-    GetPackageByVersionResponse();
+    GetCurrentUserResponse(
+      name: json['name'] as String,
+      email: json['email'] as String,
+      created_at: json['created_at'] as String,
+      updated_at: json['updated_at'] as String,
+      packages: (json['packages'] as List<dynamic>?)
+          ?.map((e) => PackageMap.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      id: json['id'] as String,
+    );
 
-Map<String, dynamic> _$GetPackageByVersionResponseToJson(
-        GetPackageByVersionResponse instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$GetCurrentUserResponseToJson(
+        GetCurrentUserResponse instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'email': instance.email,
+      'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
+      'packages': instance.packages,
+      'id': instance.id,
+    };
 
 Author _$AuthorFromJson(Map<String, dynamic> json) => Author(
       name: json['name'] as String,
@@ -144,13 +291,6 @@ Map<String, dynamic> _$ContributorToJson(Contributor instance) =>
           instance.privileges?.map((e) => _$PrivilegeEnumMap[e]!).toList(),
     };
 
-const _$PrivilegeEnumMap = {
-  Privilege.read: 'read',
-  Privilege.write: 'write',
-  Privilege.publish: 'publish',
-  Privilege.ultimate: 'ultimate',
-};
-
 Signature _$SignatureFromJson(Map<String, dynamic> json) => Signature(
       public_key_id: json['public_key_id'] as String,
       signature: json['signature'] as String,
@@ -163,9 +303,115 @@ Map<String, dynamic> _$SignatureToJson(Signature instance) => <String, dynamic>{
       'created': instance.created,
     };
 
+ConfigFile _$ConfigFileFromJson(Map<String, dynamic> json) => ConfigFile(
+      name: json['name'] as String,
+      data: json['data'] as String,
+    );
+
+Map<String, dynamic> _$ConfigFileToJson(ConfigFile instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'data': instance.data,
+    };
+
+GetPackageByVersionResponse _$GetPackageByVersionResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetPackageByVersionResponse(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      description: json['description'] as String?,
+      version: json['version'] as String,
+      author: Author.fromJson(json['author'] as Map<String, dynamic>),
+      contributors: (json['contributors'] as List<dynamic>?)
+          ?.map((e) => Contributor.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      language: json['language'] as String?,
+      created_at: json['created_at'] as String,
+      info: json['info'] as Map<String, dynamic>,
+      env: json['env'] as Map<String, dynamic>,
+      metadata: json['metadata'] as Map<String, dynamic>,
+      signatures: (json['signatures'] as List<dynamic>?)
+          ?.map((e) => Signature.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      deprecated: json['deprecated'] as bool?,
+      deprecationMessage: json['deprecationMessage'] as String?,
+      yanked: json['yanked'] as bool?,
+      readme: json['readme'] as String?,
+      config: json['config'] == null
+          ? null
+          : ConfigFile.fromJson(json['config'] as Map<String, dynamic>),
+      hash: json['hash'] as String?,
+      integrity: json['integrity'] as String?,
+    );
+
+Map<String, dynamic> _$GetPackageByVersionResponseToJson(
+        GetPackageByVersionResponse instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'description': instance.description,
+      'version': instance.version,
+      'author': instance.author,
+      'contributors': instance.contributors,
+      'language': instance.language,
+      'created_at': instance.created_at,
+      'info': instance.info,
+      'env': instance.env,
+      'metadata': instance.metadata,
+      'signatures': instance.signatures,
+      'deprecated': instance.deprecated,
+      'deprecationMessage': instance.deprecationMessage,
+      'yanked': instance.yanked,
+      'readme': instance.readme,
+      'config': instance.config,
+      'hash': instance.hash,
+      'integrity': instance.integrity,
+    };
+
+LatestPackage _$LatestPackageFromJson(Map<String, dynamic> json) =>
+    LatestPackage(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      description: json['description'] as String?,
+      version: json['version'] as String,
+      author: Author.fromJson(json['author'] as Map<String, dynamic>),
+      language: json['language'] as String?,
+      created_at: json['created_at'] as String,
+      updated_at: json['updated_at'] as String?,
+      info: json['info'] as Map<String, dynamic>,
+      env: json['env'] as Map<String, dynamic>,
+      metadata: json['metadata'] as Map<String, dynamic>,
+      signatures: (json['signatures'] as List<dynamic>?)
+          ?.map((e) => Signature.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      deprecated: json['deprecated'] as bool?,
+      yanked: json['yanked'] as bool?,
+      readme: json['readme'] as String?,
+    );
+
+Map<String, dynamic> _$LatestPackageToJson(LatestPackage instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'description': instance.description,
+      'version': instance.version,
+      'author': instance.author,
+      'language': instance.language,
+      'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
+      'info': instance.info,
+      'env': instance.env,
+      'metadata': instance.metadata,
+      'signatures': instance.signatures,
+      'deprecated': instance.deprecated,
+      'yanked': instance.yanked,
+      'readme': instance.readme,
+    };
+
 VerbosePackage _$VerbosePackageFromJson(Map<String, dynamic> json) =>
     VerbosePackage(
       name: json['name'] as String,
+      scope: json['scope'] as String?,
       description: json['description'] as String?,
       version: json['version'] as String,
       author: Author.fromJson(json['author'] as Map<String, dynamic>),
@@ -185,6 +431,7 @@ VerbosePackage _$VerbosePackageFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$VerbosePackageToJson(VerbosePackage instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'scope': instance.scope,
       'description': instance.description,
       'version': instance.version,
       'author': instance.author,
@@ -209,8 +456,12 @@ GetPackageResponse _$GetPackageResponseFromJson(Map<String, dynamic> json) =>
           ?.map((e) => Contributor.fromJson(e as Map<String, dynamic>))
           .toList(),
       language: json['language'] as String?,
+      license: json['license'] as String,
+      vcs: $enumDecode(_$VCSEnumMap, json['vcs']),
+      vcs_url: json['vcs_url'] as String?,
       created_at: json['created_at'] as String,
-      latest: VerbosePackage.fromJson(json['latest'] as Map<String, dynamic>),
+      updated_at: json['updated_at'] as String,
+      latest: LatestPackage.fromJson(json['latest'] as Map<String, dynamic>),
       versions: (json['versions'] as Map<String, dynamic>).map(
         (k, e) =>
             MapEntry(k, VerbosePackage.fromJson(e as Map<String, dynamic>)),
@@ -225,13 +476,26 @@ Map<String, dynamic> _$GetPackageResponseToJson(GetPackageResponse instance) =>
       'description': instance.description,
       'contributors': instance.contributors,
       'language': instance.language,
+      'license': instance.license,
+      'vcs': _$VCSEnumMap[instance.vcs]!,
+      'vcs_url': instance.vcs_url,
       'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
       'latest': instance.latest,
       'versions': instance.versions,
     };
 
+const _$VCSEnumMap = {
+  VCS.git: 'git',
+  VCS.svn: 'svn',
+  VCS.fossil: 'fossil',
+  VCS.mercurial: 'mercurial',
+  VCS.other: 'other',
+};
+
 Package _$PackageFromJson(Map<String, dynamic> json) => Package(
       name: json['name'] as String,
+      scope: json['scope'] as String?,
       description: json['description'] as String?,
       version: json['version'] as String,
       author: Author.fromJson(json['author'] as Map<String, dynamic>),
@@ -242,6 +506,7 @@ Package _$PackageFromJson(Map<String, dynamic> json) => Package(
 
 Map<String, dynamic> _$PackageToJson(Package instance) => <String, dynamic>{
       'name': instance.name,
+      'scope': instance.scope,
       'description': instance.description,
       'version': instance.version,
       'author': instance.author,
@@ -265,27 +530,17 @@ Map<String, dynamic> _$GetPackagesResponseToJson(
       'packages': instance.packages,
     };
 
-PackageMap _$PackageMapFromJson(Map<String, dynamic> json) => PackageMap(
+GetScopeResponse _$GetScopeResponseFromJson(Map<String, dynamic> json) =>
+    GetScopeResponse(
       name: json['name'] as String,
-      type: $enumDecode(_$UserPackageRelationshipEnumMap, json['type']),
-      privileges: (json['privileges'] as List<dynamic>?)
-              ?.map((e) => $enumDecode(_$PrivilegeEnumMap, e))
-              .toList() ??
-          const [],
+      is_member: json['is_member'] as bool,
     );
 
-Map<String, dynamic> _$PackageMapToJson(PackageMap instance) =>
+Map<String, dynamic> _$GetScopeResponseToJson(GetScopeResponse instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'type': _$UserPackageRelationshipEnumMap[instance.type]!,
-      'privileges':
-          instance.privileges?.map((e) => _$PrivilegeEnumMap[e]!).toList(),
+      'is_member': instance.is_member,
     };
-
-const _$UserPackageRelationshipEnumMap = {
-  UserPackageRelationship.author: 'author',
-  UserPackageRelationship.contributor: 'contributor',
-};
 
 GetUserResponse _$GetUserResponseFromJson(Map<String, dynamic> json) =>
     GetUserResponse(
@@ -407,6 +662,14 @@ YankAdapterResponse _$YankAdapterResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$YankAdapterResponseToJson(
         YankAdapterResponse instance) =>
+    <String, dynamic>{};
+
+YankPackageByVersionRequest _$YankPackageByVersionRequestFromJson(
+        Map<String, dynamic> json) =>
+    YankPackageByVersionRequest();
+
+Map<String, dynamic> _$YankPackageByVersionRequestToJson(
+        YankPackageByVersionRequest instance) =>
     <String, dynamic>{};
 
 YankPackageByVersionResponse _$YankPackageByVersionResponseFromJson(

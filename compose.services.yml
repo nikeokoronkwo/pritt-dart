@@ -1,19 +1,19 @@
-name: pritt
+name: pritt_services_only
 
 services:
-  
   filestorage:
-    image: openio/sds
+    image: quay.io/minio/minio
     ports:
-      - "6007:6007"
+      - "9000:9000"
+      - "9001:9001"
     environment:
-      REGION: ${S3_REGION}
-      SWIFT_CREDENTIALS: "${S3_SECRET_KEY}:${S3_ACCESS_KEY}:.admin"
-      WORKERS: ${S3_WORKERS}
+      MINIO_ROOT_USER: ${MINIO_USERNAME}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
     env_file:
       - .env
     volumes:
-      - adapter-fs-data:/var/lib/oio/sds/OPENIO/rawx-0
+      - fs-data:/data
+    command: server /data --console-address ":9001"
 
   db:
     image: postgres:17
@@ -35,10 +35,11 @@ services:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      - ./server/sql/adapter:/flyway/sql
+      - ./server/sql:/flyway/sql
     depends_on:
       - db
+    restart: "no"
 
 volumes:
-  adapter-fs-data:
-    name: "adapter_fs_data"
+  fs-data:
+    name: "pritt_fs_data"

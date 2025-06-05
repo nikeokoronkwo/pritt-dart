@@ -1,12 +1,13 @@
 module GetPackageResponse
 
 import "../../lib/package.pkl"
+import "../../lib/shared.pkl" as s
 
 /// The name of the package retrieved
 name: String
 
 /// The latest version of the package retrieved
-latest_version: String
+latest_version: s.Version
 
 /// The author of the package
 author: package.Author
@@ -20,11 +21,23 @@ contributors: Listing<package.Contributor>
 /// The language of the package
 language: String?
 
+/// The license for the package
+license: String
+
+/// The version control system used
+vcs: s.VCS
+
+/// The URL to the VCS used
+vcs_url: String?
+
 /// The date the package was created
 created_at: String
 
+/// The date the package was updated
+updated_at: String
+
 /// The latest package 
-latest: package.VerbosePackage
+latest: package.LatestPackage
 
 /// A map of all the versions of the package
 versions: Map<String, package.VerbosePackage>

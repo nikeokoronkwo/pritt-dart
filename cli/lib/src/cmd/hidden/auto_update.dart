@@ -14,7 +14,7 @@ class UpdateCommand extends Command {
   String get description =>
       "Checks for any updates of pritt based on the installation of Pritt present";
 
-  UpdateCommand() {}
+  UpdateCommand();
 
   @override
   FutureOr? run() {

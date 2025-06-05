@@ -26,8 +26,11 @@ final handler = defineRequestHandler((event) async {
 
     final resp = common.GetPackagesResponse(
         packages: (await pkgs.skip(index * 100).take(pkgCap).toList())
+            // TODO: More Package features:
+            // - keywords, - license
             .map((pkg) => common.Package(
                 name: pkg.name,
+                scope: pkg.scope,
                 description: pkg.description,
                 version: pkg.version,
                 author: common.Author(

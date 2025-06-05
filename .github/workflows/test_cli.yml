@@ -7,11 +7,11 @@ name: CLI Testing
 
 on:
   pull_request:
-    branches: [ "main", "stable" ]
+    branches: ["main", "stable"]
     paths:
-      - '.github/workflows/*cli.yml'
-      - 'cli/**'
-      - 'common/**'
+      - ".github/workflows/*cli.yml"
+      - "cli/**"
+      - "common/**"
 
 jobs:
   test:

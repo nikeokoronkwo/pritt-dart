@@ -1,22 +1,22 @@
 /** The main entrypoint for the Dart code, since Dart cannot handle async via Node */
 
-import { createRequire } from 'module';
+import { createRequire } from "module";
 import * as fs from "node:fs";
-import * as path from "node:path"
+import * as path from "node:path";
 
 const require = createRequire(import.meta.url);
 
-globalThis.self = globalThis
-globalThis.require = require
-globalThis.fs = fs
-globalThis.path = path
+globalThis.self = globalThis;
+globalThis.require = require;
+globalThis.fs = fs;
+globalThis.path = path;
 globalThis.dartMainRunner = async function (main, args) {
   const dartArgs = process.argv.slice(2);
   await main(dartArgs);
-}
+};
 
 async function loadMain() {
-    require('./openapigen_dart.js');
+  require("./openapigen_dart.js");
 }
 
 if (require.main === require.module) {

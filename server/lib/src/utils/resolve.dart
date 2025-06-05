@@ -1,7 +1,7 @@
 import 'package:shelf/shelf.dart';
 
-import '../main/adapter/adapter_base.dart';
-import '../main/shared/user_agent.dart';
+import '../main/adapter/adapter/resolve.dart';
+import '../main/utils/user_agent.dart';
 
 AdapterResolveObject getAdapterResolveObject(Request request) {
   return AdapterResolveObject(

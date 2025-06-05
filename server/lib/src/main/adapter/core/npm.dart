@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
+import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'package:pritt_server/src/main/adapter/adapter/result.dart';
 
 import '../../../utils/extensions.dart';
-import '../../crs/db/schema.dart';
+import '../../base/db/schema.dart';
 import '../../crs/response.dart';
-import '../../shared/version.dart';
+import '../../utils/version.dart';
 import '../adapter.dart';
-import '../adapter_base.dart';
 import 'npm/error.dart';
 import 'npm/package_json.dart';
 import 'npm/result.dart';

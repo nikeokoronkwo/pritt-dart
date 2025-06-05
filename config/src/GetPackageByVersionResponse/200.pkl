@@ -1,2 +1,36 @@
 amends "schema.pkl"
 
+name = "pkg"
+
+description = "A starter package"
+
+version = "0.1.0"
+
+author {
+    name = "pritt"
+    email = "pritt@pritt.com"
+}
+
+contributors = new {}
+
+language = "cplusplus"
+
+created_at = ""
+
+info {
+    
+}
+
+env {
+
+}
+
+metadata {}
+
+signatures = new {}
+
+readme = """
+# pkg
+A great starting point for packages
+"""
+

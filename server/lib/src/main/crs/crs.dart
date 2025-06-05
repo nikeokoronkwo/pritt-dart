@@ -2,13 +2,15 @@
 
 import 'dart:async';
 
-import '../shared/version.dart';
-import 'db.dart';
-import 'storage.dart';
-import 'db/interface.dart';
-import 'db/schema.dart';
+import 'package:pritt_common/functions.dart';
+
+import '../utils/version.dart';
+import '../base/db.dart';
+import '../base/storage.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
 import 'exceptions.dart';
-import 'storage/interface.dart';
+import '../base/storage/interface.dart';
 import 'interfaces.dart';
 import 'response.dart';
 
@@ -70,6 +72,12 @@ class CoreRegistryServiceController implements CRSController {
           Map<String, dynamic>? env}) =>
       delegate.getPackageContributors(packageName,
           language: this.language, env: env);
+
+  @override
+  FutureOr setFileServer(String packageName,
+          {String? version, String? language, bool cache = false}) =>
+      delegate.setFileServer(packageName,
+          version: version, language: this.language, cache: cache);
 }
 
 /// The core registry service
@@ -95,25 +103,19 @@ class CoreRegistryService implements CRSController {
 
   /// Creates a new instance of the core registry service
   static Future<CoreRegistryService> connect(
-      {String? dbUrl, required String ofsUrl}) async {
-    final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
-
-    final db = PrittDatabase.connect(
-      host: dbUri?.host ?? String.fromEnvironment('DATABASE_HOST'),
-      port: dbUri?.port ??
-          int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
-      database:
-          dbUri?.pathSegments.first ?? String.fromEnvironment('DATABASE_NAME'),
-      username: dbUri?.userInfo.split(':').first ??
-          String.fromEnvironment('DATABASE_USERNAME'),
-      password: dbUri?.userInfo.split(':').last ??
-          String.fromEnvironment('DATABASE_PASSWORD'),
-      devMode: (dbUri?.host ?? String.fromEnvironment('DATABASE_HOST')) ==
-          'localhost',
+      {PrittDatabase? db, PrittStorage? storage}) async {
+    db ??= await PrittDatabase.connect(
+      host: String.fromEnvironment('DATABASE_HOST'),
+      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
+      database: String.fromEnvironment('DATABASE_NAME'),
+      username: String.fromEnvironment('DATABASE_USERNAME'),
+      password: String.fromEnvironment('DATABASE_PASSWORD'),
+      devMode: String.fromEnvironment('DATABASE_HOST') == 'localhost',
     );
-    final ofs = await PrittStorage.connect(ofsUrl);
 
-    return CoreRegistryService._(db, ofs);
+    storage ??= await PrittStorage.connect(String.fromEnvironment('S3_URL'));
+
+    return CoreRegistryService._(db, storage);
   }
 
   Future<void> disconnect() async {
@@ -125,7 +127,9 @@ class CoreRegistryService implements CRSController {
       String packageName, String version,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      final file = await ofs.get('/$packageName/$version.tgz');
+      final (name, scope: scope) = parsePackageName(packageName);
+      final file = await ofs
+          .get('/${scope == null ? name : '$scope/$name'}/$version.tgz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
         file.contentType ?? 'application/gzip',
@@ -155,7 +159,8 @@ class CoreRegistryService implements CRSController {
   Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      final package = await db.getPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final package = await db.getPackage(name, scope: scope);
       final latestVersion = package.version;
 
       if (language != null && package.language != language) {
@@ -206,7 +211,8 @@ class CoreRegistryService implements CRSController {
   Future<CRSResponse<Package>> getPackageDetails(String packageName,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      final package = await db.getPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final package = await db.getPackage(name, scope: scope);
 
       if (language != null && package.language != language) {
         return CRSResponse.error(
@@ -247,9 +253,9 @@ class CoreRegistryService implements CRSController {
       String packageName, String version,
       {String? language, Map<String, dynamic>? env}) async {
     try {
-      // TODO: Implement [db.getPackageWithVersion] method
-      final pkg =
-          await db.getPackageWithVersion(packageName, Version.parse(version));
+      final (name, scope: scope) = parsePackageName(packageName);
+      final pkg = await db.getPackageWithVersion(name, Version.parse(version),
+          scope: scope);
 
       if (language != null && pkg.package.language != language) {
         return CRSResponse.error(
@@ -291,7 +297,8 @@ class CoreRegistryService implements CRSController {
       {String? language,
       Map<String, dynamic>? env}) async {
     try {
-      final packages = await db.getAllVersionsOfPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final packages = await db.getAllVersionsOfPackage(name, scope: scope);
 
       if (language != null &&
           !packages.every((pkg) => pkg.package.language == language)) {
@@ -327,7 +334,8 @@ class CoreRegistryService implements CRSController {
   CRSResponse<Stream<PackageVersions>> getPackagesStream(String packageName,
       {String? language, Map<String, dynamic>? env}) {
     try {
-      final packages = db.getAllVersionsOfPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final packages = db.getAllVersionsOfPackage(name, scope: scope);
 
       var pkgStream = Stream.fromFuture(packages)
           .asyncExpand((e) => Stream.fromIterable(e));
@@ -356,7 +364,9 @@ class CoreRegistryService implements CRSController {
       {String? language,
       Map<String, dynamic>? env}) async {
     try {
-      final contributors = await db.getContributorsForPackage(packageName);
+      final (name, scope: scope) = parsePackageName(packageName);
+      final contributors =
+          await db.getContributorsForPackage(name, scope: scope);
 
       return CRSResponse.success(
         body: contributors,
@@ -374,6 +384,13 @@ class CoreRegistryService implements CRSController {
         statusCode: 500,
       );
     }
+  }
+
+  @override
+  FutureOr setFileServer(String packageName,
+      {String? version, String? language, bool cache = false}) {
+    // TODO: implement setFileServer
+    throw UnimplementedError();
   }
 }
 

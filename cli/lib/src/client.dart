@@ -1,11 +1,42 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:http/http.dart';
+import 'package:pritt_cli/src/client/authentication.dart';
 import 'package:pritt_cli/src/client/base.dart';
 import 'package:pritt_cli/src/constants.dart';
+import 'package:pritt_cli/src/utils/log.dart';
 import 'package:pritt_common/interface.dart';
+import 'package:retry/retry.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
-  PrittClient({super.url});
+  final retryClient = RetryOptions(maxAttempts: 3);
+  Map<String, String> get _prittHeaders =>
+      {HttpHeaders.userAgentHeader: 'pritt cli'};
+
+  PrittClient({super.url, String? accessToken})
+      : super(
+            authentication: accessToken == null
+                ? null
+                : HttpBearerAuth(accessToken: accessToken));
+
+  Future<bool> healthCheck({bool verbose = false}) async {
+    try {
+      // TODO: Retry
+      int counter = 0;
+      await retryClient.retry(() {
+        if (verbose) {
+          print('Attempt #${++counter}');
+        }
+        return request('/', Method.GET, {}, null, null)
+            .timeout(Duration(seconds: 2));
+      }, retryIf: (e) => e is SocketException || e is TimeoutException);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   @override
   FutureOr<AddAdapterResponse> addAdapterWithId(AddAdapterRequest body,
@@ -21,14 +52,30 @@ class PrittClient extends ApiClient implements PrittInterface {
     throw UnimplementedError();
   }
 
+  // TODO(openapigen): id not nullable
   @override
-  FutureOr<AuthResponse> createNewAuthStatus() {
-    // TODO: implement createNewAuthStatus
-    throw UnimplementedError();
+  FutureOr<AuthResponse> createNewAuthStatus({String? id}) async {
+    final response = await requestBasic(
+        '/api/auth/new', Method.GET, {'id': id!}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return AuthResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: 401);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
-  FutureOr<StreamedContent> getAdapterArchiveWithName() {
+  FutureOr<StreamedContent> getAdapterArchiveWithName({required String name}) {
     // TODO: implement getAdapterArchiveWithName
     throw UnimplementedError();
   }
@@ -52,33 +99,67 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<AuthPollResponse> getAuthStatus() {
+  FutureOr<AuthPollResponse> getAuthStatus({String? id}) {
     // TODO: implement getAuthStatus
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<StreamedContent> getPackageArchiveWithName() {
+  FutureOr<GetPackagesResponse> getOrgPackages({required String scope}) {
+    // TODO: implement getOrgPackages
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetScopeResponse> getOrganization({required String scope}) {
+    // TODO: implement getOrganization
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<StreamedContent> getPackageArchiveWithName(
+      {required String name, String? version}) {
     // TODO: implement getPackageArchiveWithName
     throw UnimplementedError();
   }
 
   @override
   FutureOr<GetPackageResponse> getPackageByName(
-      {required String name, String? lang, bool? all}) {
+      {String? lang, bool? all, required String name}) {
     // TODO: implement getPackageByName
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<GetPackageByVersionResponse> getPackageByNameAndVersion(
-      {required String name, required String version}) {
-    // TODO: implement getPackageByNameAndVersion
+  FutureOr<GetPackageResponse> getPackageByNameWithScope(
+      {String? lang, bool? all, required String scope, required String name}) {
+    // TODO: implement getPackageByNameWithScope
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<GetPackagesResponse> getPackages({String? index}) {
+  FutureOr<GetPackageByVersionResponse> getPackageByNameWithScopeAndVersion(
+      {String? lang,
+      bool? all,
+      required String scope,
+      required String name,
+      required String version}) {
+    // TODO: implement getPackageByNameWithScopeAndVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetPackageByVersionResponse> getPackageByNameWithVersion(
+      {String? lang,
+      bool? all,
+      required String name,
+      required String version}) {
+    // TODO: implement getPackageByNameWithVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetPackagesResponse> getPackages({String? index, String? user}) {
     // TODO: implement getPackages
     throw UnimplementedError();
   }
@@ -97,17 +178,36 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<PublishPackageResponse> publishPackage(PublishPackageRequest body,
-      {required String name, String? lang, bool? all}) {
+      {required String name}) {
     // TODO: implement publishPackage
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<PublishPackageByVersionResponse> publishPackageWithVersion(
+  FutureOr<PublishPackageByVersionResponse> publishPackageVersion(
       PublishPackageByVersionRequest body,
       {required String name,
       required String version}) {
-    // TODO: implement publishPackageWithVersion
+    // TODO: implement publishPackageVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<PublishPackageResponse> publishPackageWithScope(
+      PublishPackageRequest body,
+      {required String scope,
+      required String name}) {
+    // TODO: implement publishPackageWithScope
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<PublishPackageByVersionResponse> publishPackageWithScopeAndVersion(
+      PublishPackageByVersionRequest body,
+      {required String scope,
+      required String name,
+      required String version}) {
+    // TODO: implement publishPackageWithScopeAndVersion
     throw UnimplementedError();
   }
 
@@ -126,7 +226,8 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<AuthPollResponse> validateAuthStatus({String? token}) {
+  FutureOr<AuthValidateResponse> validateAuthStatus(AuthValidateRequest body,
+      {String? token}) {
     // TODO: implement validateAuthStatus
     throw UnimplementedError();
   }
@@ -139,18 +240,72 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<YankPackageResponse> yankPackageByName(YankPackageRequest body,
-      {required String name, String? lang, bool? all}) {
+      {required String name}) {
     // TODO: implement yankPackageByName
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<YankPackageResponse> yankPackageByNameAndVersion(
-      {required String name, required String version}) {
-    // TODO: implement yankPackageByNameAndVersion
+  FutureOr<YankPackageResponse> yankPackageByNameWithScope(
+      YankPackageRequest body,
+      {required String scope,
+      required String name}) {
+    // TODO: implement yankPackageByNameWithScope
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<YankPackageByVersionRequest> yankPackageByNameWithScopeAndVersion(
+      YankPackageByVersionResponse body,
+      {required String scope,
+      required String name,
+      required String version}) {
+    // TODO: implement yankPackageByNameWithScopeAndVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
+      YankPackageByVersionResponse body,
+      {required String name,
+      required String version}) {
+    // TODO: implement yankPackageVersionByName
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<GetUserResponse> getCurrentUser() {
+    // TODO: implement getCurrentUser
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id}) {
+    // TODO: implement getAuthDetailsById
     throw UnimplementedError();
   }
 }
 
 /// A single root client that connects to the main pritt url
 final rootClient = PrittClient(url: mainPrittInstance);
+
+/// Extension for the Logger to handle exceptions
+extension HandleApiException on Logger {
+  void describe(ApiException exception) {
+    this.verbose('Error from server: ${exception.statusCode}');
+    try {
+      this.verbose('Message: ${exception.body.toJson()}');
+    } catch (_) {
+      this.verbose(switch (exception.body) {
+        String s => 'Message: $s',
+        Error err => 'Message: ${err.toJson()}',
+        Object o => 'Unknown Message: $o',
+        null => 'No Message'
+      });
+    }
+    this.severe('The Server returned a status code of ${exception.statusCode}');
+    if (this is! VerboseLogger) {
+      this.stdout('Run with --verbose to see verbose logging');
+    }
+  }
+}

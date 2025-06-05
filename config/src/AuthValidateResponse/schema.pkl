@@ -1,0 +1,3 @@
+module AuthValidateResponse
+
+validated: Boolean = true

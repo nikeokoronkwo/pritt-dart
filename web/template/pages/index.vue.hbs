@@ -1,0 +1,67 @@
+<script setup lang="ts">
+    definePageMeta({
+        layout: 'entry'
+    })
+
+    const text = ref('');
+
+    function handleEnter(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            return navigateTo({
+                path: '/search',
+                query: text.value.length === 0 ? undefined : {
+                    q: text.value
+                }
+            })
+        }
+    }
+</script>
+
+<template>
+    <div class="flex flex-col h-full grow">
+        <!-- TODO: Some Neat Background -->
+        <section class="flex flex-col h-full grow">
+            <div class="flex-1 flex flex-col align-middle items-center justify-center">
+                <!-- body -->
+                <div class="flex flex-col items-center space-y-3">
+                    <div>
+                        <!-- TODO: Logo -->
+                    </div>
+                    <div class="font-semibold text-4xl">{{ name }}</div>
+                    <div class="italic">
+                        {{#if catchline}}
+                            <span>{{{ catchline }}}</span>
+                        {{else}}
+                            <span>The homepage for the package registry for {{ name }}</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="px-4 py-6">
+                    <!-- Search Bar -->
+                    <div
+                            class="transition ease-in-out delay-200 w-full min-w-xl h-full min-h-12 rounded-2xl gap-3 hover:shadow"
+                    >
+                        <!-- {/* Search Icon */} -->
+
+                        <!-- {/* Search Input */} -->
+                        <div class="justify-stretch w-full min-h-10 h-full flex flex-row items-center">
+                            <input
+                                    placeholder="Search for Packages"
+                                    class="w-full h-full pl-3 outline-none"
+                                    v-model="text"
+                                    @keydown="handleEnter"
+                            />
+                            <NuxtLink
+                                    :to="`/search${text.length === 0 ? '' : `?q=${text}`}`"
+                                    class="transition ease-in-out delay-200 hover:bg-primary hover:text-primary-50 h-full min-h-12 flex flex-col min-w-3 justify-center items-center rounded-r-2xl"
+                            >
+                                <Icon name="material-symbols:search-rounded" class="scale-150 px-6" />
+                            </NuxtLink>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</template>
