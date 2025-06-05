@@ -54,6 +54,7 @@ jobs:
           mkdir ./packages/openapigen/dist
           ./scripts/openapigen ./config/out/openapi.yaml -o ./common
           cd common
+          dart pub get
           dart run build_runner build --delete-conflicting-outputs
       - name: Dart Analyze
         run: dart analyze --fatal-infos common
