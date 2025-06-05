@@ -1,0 +1,8 @@
+sdk:
+  - pubspec
+
+# TODO: Gen stage
+stages:
+  - analyze_and_format:
+    - analyze
+    - format
