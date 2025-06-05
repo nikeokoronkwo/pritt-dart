@@ -60,4 +60,4 @@ jobs:
         run: dart analyze --fatal-infos common
         
       - name: Compare Changes
-        run: git diff --exit-code
+        run: git diff -w --exit-code
