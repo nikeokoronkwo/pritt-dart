@@ -194,5 +194,5 @@ String _getTime(DateTime time, {bool verbose = true}) {
   int mins = time.minute;
   String suffix = time.hour >= 12 ? 'pm' : 'am';
 
-  return '${hour > 12 ? hour - 12 : hour}:${mins.toString().padLeft(2, '0')}';
+  return '${hour > 12 ? hour - 12 : hour}:${mins.toString().padLeft(2, '0')} $suffix';
 }

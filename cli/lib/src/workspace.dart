@@ -19,7 +19,7 @@ import 'package:yaml/yaml.dart';
 class Project {
   /// Handlers for the current project
   final Iterable<Handler> handlers;
-  int? _activeHandlerIndex;
+  // int? _activeHandlerIndex;
 
   /// The current directory of the project
   final String directory;
@@ -57,6 +57,38 @@ class Project {
       final workspace = await handler.onGetWorkspace(directory, controller);
       await handler.onConfigure(PrittContext(workspace: workspace), controller);
     }
+  }
+
+  Stream<File> files() {
+    return Directory(directory)
+        .list(recursive: true)
+        .where((f) {
+          if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else {
+            return false;
+          }
+        })
+        .where((f) => f is File)
+        .map((f) => f as File);
+  }
+
+  List<File> filesSync() {
+    return Directory(directory)
+        .listSync(recursive: true)
+        .where((f) {
+          if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else if (f is File) {
+            return _ignoreFiles.match(f.path);
+          } else {
+            return false;
+          }
+        })
+        .whereType<File>()
+        .toList();
   }
 }
 

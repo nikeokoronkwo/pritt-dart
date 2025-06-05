@@ -16,12 +16,11 @@ void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
     late MockCRSArchiveController mockArchiveController;
-    late MockJsonConvertible mockMetaResult;
+    MockJsonConvertible mockMetaResult = MockJsonConvertible();
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-      mockMetaResult = MockJsonConvertible();
     });
 
     // TODO: More Tests

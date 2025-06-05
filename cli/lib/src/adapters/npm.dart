@@ -47,7 +47,7 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
         pm = NpmPackageManager.npm;
       }
 
-      final packageManager = pm.pmObject;
+      final _ = pm.pmObject;
 
       throw UnimplementedError("Unimplemented");
 

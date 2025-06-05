@@ -90,7 +90,7 @@ final dartAdapter = Adapter(
       final [packageName, versionAndExtension] =
           packageNameWithExtension.split('-');
       final version = basenameWithoutExtension(versionAndExtension);
-      final packageExtension = versionAndExtension.replaceFirst(version, '');
+      final _ = versionAndExtension.replaceFirst(version, '');
 
       // get the archive
       final archive = await crs.getArchiveWithVersion(packageName, version);

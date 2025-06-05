@@ -139,13 +139,9 @@ class PrittAuth implements PrittAuthInterface<PrittAuthMetadata> {
     required String email,
     required DateTime expiresAt,
   }) {
-    // Implementation for creating an access token.
-    final meta = PrittAuthMetadata(name: name, email: email);
-
     final key = PrittAccessTokenGenerator.generateAPIKey('pt_', 20);
 
     return (key: key.apiKey, hash: key.keyHash);
-    // todo: implement
   }
 
   @override
