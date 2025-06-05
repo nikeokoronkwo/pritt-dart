@@ -51,6 +51,7 @@ jobs:
 
       - name: Generate API definitions for common
         run: |
+          mkdir ./packages/openapigen/dist
           ./scripts/openapigen ./config/out/openapi.yaml -o ./common
           cd common
           dart run build_runner build --delete-conflicting-outputs
