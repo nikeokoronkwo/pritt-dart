@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:pritt_cli/src/plugins/base.dart';
-import 'package:pritt_cli/src/plugins/base/config.dart';
-import 'package:pritt_cli/src/plugins/base/workspace.dart';
+import 'package:pritt_cli/src/adapters/base.dart';
+import 'package:pritt_cli/src/adapters/base/config.dart';
+import 'package:pritt_cli/src/adapters/base/workspace.dart';
+import 'package:pritt_cli/src/loader.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
@@ -10,7 +11,8 @@ final dartHandler = Handler<PubspecConfig>(
   id: 'dart',
   name: 'dart',
   language: 'dart',
-  configFile: 'pubspec.yaml',
+  config: Loader('pubspec.yaml', load: (contents) => contents),
+  ignore: Loader('.pubignore', load: (contents) => const LineSplitter().convert(contents).skipWhile((c) => c.trim().startsWith('#'))),
   packageManager: PackageManager(
       name: 'pub',
       args: ['dart', 'pub'],

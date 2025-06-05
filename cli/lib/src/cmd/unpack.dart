@@ -8,7 +8,7 @@ import 'package:pritt_cli/src/archive.dart';
 
 import 'package:pritt_cli/src/cli/progress_bar.dart';
 import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/package.dart';
+import 'package:pritt_cli/src/pkg_name.dart';
 import 'package:pritt_cli/src/user_config.dart';
 
 import '../cli/base.dart';

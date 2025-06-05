@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:pritt_cli/src/plugins/base/config.dart';
-import 'package:pritt_cli/src/plugins/base/workspace.dart';
-import 'package:pritt_cli/src/plugins/base/context.dart';
-import 'package:pritt_cli/src/plugins/base/controller.dart';
+import 'package:pritt_cli/src/adapters/base/config.dart';
+import 'package:pritt_cli/src/adapters/base/workspace.dart';
+import 'package:pritt_cli/src/adapters/base/context.dart';
+import 'package:pritt_cli/src/adapters/base/controller.dart';
+import 'package:pritt_cli/src/loader.dart';
 
 typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
 
@@ -29,7 +30,14 @@ class Handler<T extends Config> {
   final PackageManager? packageManager;
 
   /// The name of the file where configuration data is stored
-  final String configFile;
+  final Loader<String> config;
+
+  /// The ignore file
+  final Loader<Iterable<String>>? ignore;
+
+  String get configFile => config.name;
+
+  String? get ignoreFile => ignore?.name;
 
   /// Package manager commands
 
@@ -72,7 +80,8 @@ class Handler<T extends Config> {
       {required this.id,
       required this.name,
       required this.language,
-      required this.configFile,
+      required this.config,
+      this.ignore,
       this.packageManager,
       required this.onGetConfig,
       required this.onGetWorkspace,
@@ -87,7 +96,8 @@ class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
       {required super.id,
       required super.name,
       required super.language,
-      required super.configFile,
+      required super.config,
+      super.ignore,
       required super.onGetConfig,
       required super.onGetWorkspace,
       super.onCheckWorkspace,
