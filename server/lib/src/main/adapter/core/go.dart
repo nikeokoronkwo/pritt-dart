@@ -57,14 +57,18 @@ final goAdapter = Adapter(
             responseType: ResponseType.html);
       } else if (req.env['stage'] == '2') {
         final segments = req.resolveObject.pathSegments;
-        final prevSegment = segments[segments.indexOf('@v') - 1];
+        final moduleParts = segments.sublist(0, segments.indexOf('@v'));
+        final prevSegment = moduleParts.last;
+        final moduleName = moduleParts.join('/');
         final pkgName =
             req.resolveObject.url.contains(prevSegment) ? null : prevSegment;
         final otherSegments = segments.sublist(segments.indexOf('@v'));
         if (pkgName != null) {
           if (req.resolveObject.path.endsWith('@v/list')) {
             // list all versions
-            final pkgVersResult = crs.getPackagesStream(pkgName);
+            final pkgVersResult = crs.getPackagesStream(pkgName, env: {
+              'module_name': moduleName
+            });
             if (!pkgVersResult.isSuccess) {
               return AdapterErrorResult(
                   'bad request: ${(pkgVersResult as CRSErrorResponse).error}',
@@ -126,27 +130,34 @@ final goAdapter = Adapter(
     },
     retrieve: (req, crs) async {
       final segments = req.resolveObject.pathSegments;
-      final prevSegment = segments[segments.indexOf('@v') - 1];
+      final moduleParts = segments.sublist(0, segments.indexOf('@v'));
+      final prevSegment = moduleParts.last;
+      final moduleName = moduleParts.join('/');
       final pkgName =
           req.resolveObject.url.contains(prevSegment) ? null : prevSegment;
+      final otherSegments = segments.sublist(segments.indexOf('@v'));
       if (pkgName == null)
         return AdapterErrorResult(
             'bad request: $prevSegment is a known non-module',
             statusCode: 404,
             responseType: ResponseType.plainText);
 
-      final versionWithExtension = segments.last;
+      final versionWithExtension = otherSegments.last;
       final extension = p.extension(versionWithExtension);
       var version = versionWithExtension.replaceAll(extension, '');
       if (version.startsWith('v')) version = version.substring(1);
 
       // get the archive as a tarball
       List<int> tarBytes;
-      final archiveResult = await crs.getArchiveWithVersion(pkgName, version);
+      
+      final archiveResult = await crs.getArchiveWithVersion(pkgName, version, env: {
+        'module_name': moduleName
+      });
+
       if (!archiveResult.isSuccess) {}
       final archive = TarDecoder().decodeBytes(GZipDecoder()
           .decodeBytes(await ByteStream(archiveResult.body!.data).toBytes()));
       final zipArchive = ZipEncoder().encode(archive);
       return AdapterArchiveResult(ByteStream.fromBytes(zipArchive ?? []),
-          '${req.resolveObject.url}/${req.resolveObject.path}@v$version');
+          '$moduleName@$version');
     });
