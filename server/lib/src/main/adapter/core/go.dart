@@ -66,9 +66,8 @@ final goAdapter = Adapter(
         if (pkgName != null) {
           if (req.resolveObject.path.endsWith('@v/list')) {
             // list all versions
-            final pkgVersResult = crs.getPackagesStream(pkgName, env: {
-              'module_name': moduleName
-            });
+            final pkgVersResult = crs
+                .getPackagesStream(pkgName, env: {'module_name': moduleName});
             if (!pkgVersResult.isSuccess) {
               return AdapterErrorResult(
                   'bad request: ${(pkgVersResult as CRSErrorResponse).error}',
@@ -149,15 +148,14 @@ final goAdapter = Adapter(
 
       // get the archive as a tarball
       List<int> tarBytes;
-      
-      final archiveResult = await crs.getArchiveWithVersion(pkgName, version, env: {
-        'module_name': moduleName
-      });
+
+      final archiveResult = await crs.getArchiveWithVersion(pkgName, version,
+          env: {'module_name': moduleName});
 
       if (!archiveResult.isSuccess) {}
       final archive = TarDecoder().decodeBytes(GZipDecoder()
           .decodeBytes(await ByteStream(archiveResult.body!.data).toBytes()));
       final zipArchive = ZipEncoder().encode(archive);
-      return AdapterArchiveResult(ByteStream.fromBytes(zipArchive ?? []),
-          '$moduleName@$version');
+      return AdapterArchiveResult(
+          ByteStream.fromBytes(zipArchive ?? []), '$moduleName@$version');
     });

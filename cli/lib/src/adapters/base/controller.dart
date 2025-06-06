@@ -44,6 +44,10 @@ abstract interface class PrittLocalConfigUnawareController {
 
   /// The name of the configuration file
   String configFileName();
+
+  /// Runs a command, and passes the value of stdout if successful
+  Future<String> run(String command,
+      {List<String> args = const [], String? directory});
 }
 
 /// TODO: Get more functions for configuring
