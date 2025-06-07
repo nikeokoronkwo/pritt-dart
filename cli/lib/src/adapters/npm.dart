@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:io/ansi.dart';
 import 'package:pritt_cli/src/adapters/base.dart';
 import 'package:pritt_cli/src/adapters/base/config.dart';
+import 'package:pritt_cli/src/adapters/base/workspace.dart';
 import 'package:pritt_cli/src/adapters/npm/package_managers.dart';
 import 'package:pritt_cli/src/loader.dart';
 import 'package:pritt_common/interface.dart';
@@ -47,11 +48,12 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
         pm = NpmPackageManager.npm;
       }
 
-      final _ = pm.pmObject;
-
-      throw UnimplementedError("Unimplemented");
-
       // read config
+      return Workspace(
+          config: await controller.getConfiguration(directory),
+          directory: directory,
+          name: directory,
+          packageManager: pm.pmObject);
     },
     onConfigure: (context, controller) async {
       final pm = context.workspace.packageManager;

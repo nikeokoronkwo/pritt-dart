@@ -40,7 +40,12 @@ final goHandler = Handler<GoModConfig>(
 
       return goMod;
     },
-    onGetWorkspace: (directory, controller) async {},
+    onGetWorkspace: (directory, controller) async {
+      return Workspace(
+          config: await controller.getConfiguration(directory),
+          directory: directory,
+          name: directory);
+    },
     onConfigure: (context, controller) async {});
 
 @JsonSerializable(createFactory: false)
