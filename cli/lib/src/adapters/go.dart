@@ -25,9 +25,6 @@ final goHandler = Handler<GoModConfig>(
         onRemove: (info) => ['go', 'get', '${info.name}@none'],
         onGet: () => ['go', 'get']),
     onGetConfig: (directory, controller) async {
-      // read the configuration file
-      final config = await controller.readConfigFile(directory);
-
       // tricky: to read a go.mod file
       final configJson = await controller.run('go',
           args: ['mod', 'edit', '-json'], directory: directory);
