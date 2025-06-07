@@ -89,9 +89,7 @@ class PrittConfigUnawareController
   }
 
   @override
-  void log(Object msg) {
-    print(msg);
-  }
+  void log(Object msg) => print(msg);
 
   @override
   FutureOr<String> readConfigFile(String directory) async {
@@ -121,6 +119,13 @@ class PrittConfigUnawareController
 
   @override
   String configFileName() => configLoader.name;
+
+  @override
+  Future<String> run(String command,
+      {List<String> args = const [], String? directory}) async {
+    return (await Process.run(command, args, workingDirectory: directory))
+        .stdout;
+  }
 }
 
 class PrittController<T extends Config> extends PrittConfigUnawareController
