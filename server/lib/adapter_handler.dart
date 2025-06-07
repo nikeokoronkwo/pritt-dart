@@ -41,15 +41,21 @@ Handler adapterHandler(CoreRegistryService crs) {
                 _ => result.error.toString(),
               },
               headers: {
-                'Content-Type': switch (result.responseType) {
-                  ResponseType.json => 'application/json',
-                  ResponseType.archive => 'application/octet-stream',
-                  ResponseType.xml => 'application/xml',
-                },
+                'Content-Type': result.responseType.mimeType,
               }),
-        AdapterMetaResult() => Response.ok(result.body.toJson(), headers: {
-            'Content-Type': 'application/json',
-          }),
+        AdapterMetaResult() => Response.ok(
+              result is AdapterMetaJsonResult
+                  ? result.body.toJson()
+                  : switch (result.responseType) {
+                      ResponseType.json => result.body.toJson(),
+                      ResponseType.xml => mapToXml(result.body.toJson()),
+                      _ => result.body.toString()
+                    },
+              headers: {
+                'Content-Type': result is AdapterMetaJsonResult
+                    ? 'application/json'
+                    : result.responseType.contentType,
+              }),
         AdapterArchiveResult() => Response.ok(result.archive, headers: {
             'Content-Type': result.contentType,
             'Content-Disposition': 'attachment; filename=${result.name}',
