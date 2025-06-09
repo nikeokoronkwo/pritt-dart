@@ -37,6 +37,9 @@ open class Package extends ImplPackage {
 }
 
 open class VerbosePackage extends Package {
+    /// readme info
+    readme: String?
+
     /// info 
     info: Mapping<String, Any>
 
@@ -56,10 +59,6 @@ open class VerbosePackage extends Package {
     yanked: Boolean?
 }
 
-class LatestPackage extends VerbosePackage {
-    /// readme info
-    readme: String?
-}
 
 class Signature {
     /// public key id
@@ -75,6 +74,7 @@ class Signature {
 open class Author {
     name: String
     email: String
+    avatar: String?
 }
 
 class Contributor extends Author {

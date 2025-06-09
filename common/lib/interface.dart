@@ -434,6 +434,7 @@ class Author {
   Author({
     required this.name,
     required this.email,
+    this.avatar,
   });
 
   factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
@@ -441,6 +442,8 @@ class Author {
   final String name;
 
   final String email;
+
+  final String? avatar;
 
   Map<String, dynamic> toJson() => _$AuthorToJson(this);
 }
@@ -450,6 +453,7 @@ class Contributor {
   Contributor({
     required this.name,
     required this.email,
+    this.avatar,
     this.privileges = const [],
   });
 
@@ -459,6 +463,8 @@ class Contributor {
   final String name;
 
   final String email;
+
+  final String? avatar;
 
   final List<Privilege>? privileges;
 
@@ -584,62 +590,6 @@ enum VCS {
 }
 
 @JsonSerializable()
-class LatestPackage {
-  LatestPackage({
-    required this.name,
-    this.scope,
-    this.description,
-    required this.version,
-    required this.author,
-    this.language,
-    required this.created_at,
-    this.updated_at,
-    required this.info,
-    required this.env,
-    required this.metadata,
-    required this.signatures,
-    this.deprecated,
-    this.yanked,
-    this.readme,
-  });
-
-  factory LatestPackage.fromJson(Map<String, dynamic> json) =>
-      _$LatestPackageFromJson(json);
-
-  final String name;
-
-  final String? scope;
-
-  final String? description;
-
-  final String version;
-
-  final Author author;
-
-  final String? language;
-
-  final String created_at;
-
-  final String? updated_at;
-
-  final Map<String, dynamic> info;
-
-  final Map<String, dynamic> env;
-
-  final Map<String, dynamic> metadata;
-
-  final List<Signature>? signatures;
-
-  final bool? deprecated;
-
-  final bool? yanked;
-
-  final String? readme;
-
-  Map<String, dynamic> toJson() => _$LatestPackageToJson(this);
-}
-
-@JsonSerializable()
 class VerbosePackage {
   VerbosePackage({
     required this.name,
@@ -650,6 +600,7 @@ class VerbosePackage {
     this.language,
     required this.created_at,
     this.updated_at,
+    this.readme,
     required this.info,
     required this.env,
     required this.metadata,
@@ -676,6 +627,8 @@ class VerbosePackage {
   final String created_at;
 
   final String? updated_at;
+
+  final String? readme;
 
   final Map<String, dynamic> info;
 
@@ -735,7 +688,7 @@ class GetPackageResponse {
 
   final String updated_at;
 
-  final LatestPackage latest;
+  final VerbosePackage latest;
 
   final Map<String, VerbosePackage> versions;
 

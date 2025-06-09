@@ -37,7 +37,7 @@ created_at: String
 updated_at: String
 
 /// The latest package 
-latest: package.LatestPackage
+latest: package.VerbosePackage
 
 /// A map of all the versions of the package
 versions: Map<String, package.VerbosePackage>

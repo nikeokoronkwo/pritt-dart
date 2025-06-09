@@ -14,7 +14,8 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/test-utils",
     "@scalar/nuxt",
-    "@nuxtjs/color-mode"
+    "@nuxtjs/color-mode",
+    "@pinia/nuxt"
   ],
 
   css: ['~/assets/css/main.css'],
