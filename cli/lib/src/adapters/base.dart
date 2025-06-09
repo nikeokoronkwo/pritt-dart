@@ -77,6 +77,9 @@ class Handler<T extends Config> {
   final FutureOr Function(PrittContext context, PrittLocalController controller)
       onConfigure;
 
+  final FutureOr<Map<String, dynamic>> Function(
+      PrittContext context, PrittLocalController controller)? getEnv;
+
   /// An enum to represent who should publish a package
   /// Given that the publisher is [PublishManager.pm], then publish commands must be passed to the [packageManager] in order to perform such publishing
   final PublishManager publisher;
@@ -92,6 +95,7 @@ class Handler<T extends Config> {
       required this.onGetWorkspace,
       this.onCheckWorkspace,
       required this.onConfigure,
+      this.getEnv,
       this.publisher = PublishManager.pritt})
       : assert(
             publisher == PublishManager.pritt ||
@@ -118,6 +122,7 @@ class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
       super.onCheckWorkspace,
       required super.onConfigure,
       super.publisher,
+      super.getEnv,
       this.packageManagers = const {}});
 
   @override

@@ -19,24 +19,51 @@ sealed class AdapterResult extends AdapterBaseResult {
 enum ResponseType {
   json(mimeType: 'application/json'),
   archive(mimeType: 'application/octet-stream'),
-  xml(mimeType: 'application/xml');
+  xml(mimeType: 'application/xml'),
+  plainText(mimeType: 'text/plain'),
+  html(mimeType: 'text/html');
 
   final String mimeType;
   const ResponseType({required this.mimeType});
   String get contentType => mimeType;
 }
 
-class AdapterErrorResult<T extends JsonConvertible> extends AdapterResult {
+class MapConvertible with JsonConvertible {
+  final Map<String, dynamic> map;
+
+  MapConvertible(this.map);
+  @override
+  Map<String, dynamic> toJson() => map;
+}
+
+class AdapterErrorResult<T> extends AdapterResult {
   final T error;
   final int statusCode;
 
   AdapterErrorResult(this.error, {this.statusCode = 500, super.responseType});
+
+  static AdapterErrorResult map(Map<String, dynamic> json,
+      {int statusCode = 500, ResponseType? responseType}) {
+    return AdapterErrorJsonResult(MapConvertible(json),
+        statusCode: statusCode,
+        responseType: responseType ?? ResponseType.json);
+  }
 }
 
-class AdapterMetaResult<T extends JsonConvertible> extends AdapterResult {
+class AdapterErrorJsonResult<T extends JsonConvertible>
+    extends AdapterErrorResult<T> {
+  AdapterErrorJsonResult(super.error, {super.statusCode, super.responseType});
+}
+
+class AdapterMetaResult<T> extends AdapterResult {
   final T body;
 
   AdapterMetaResult(this.body, {super.responseType});
+}
+
+class AdapterMetaJsonResult<T extends JsonConvertible>
+    extends AdapterMetaResult<T> {
+  AdapterMetaJsonResult(super.body, {super.responseType});
 }
 
 class AdapterArchiveResult extends AdapterResult {
