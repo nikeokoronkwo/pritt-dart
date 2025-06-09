@@ -176,7 +176,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
     if (_statements['getPackage'] == null) {
       _statements['getPackage'] = await _pool.prepare(Sql.named('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
+       u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 WHERE p.name = @name AND p.scope = @scope
@@ -204,6 +204,7 @@ WHERE p.name = @name AND p.scope = @scope
           id: columnMap['author_id'] as String,
           name: columnMap['author_name'] as String,
           email: columnMap['author_email'] as String,
+          avatarUrl: columnMap['author_avatar_url'] as String?,
           createdAt: columnMap['author_created_at'] as DateTime,
           updatedAt: columnMap['author_updated_at'] as DateTime,
         ),
@@ -243,7 +244,7 @@ SELECT reltuples::bigint AS estimate FROM pg_class where relname = 'packages';
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
+       u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 ''');
@@ -262,6 +263,7 @@ LEFT JOIN users u ON p.author_id = u.id
             id: columnMap['author_id'] as String,
             name: columnMap['author_name'] as String,
             email: columnMap['author_email'] as String,
+            avatarUrl: columnMap['author_avatar_url'] as String?,
             createdAt: columnMap['author_created_at'] as DateTime,
             updatedAt: columnMap['author_updated_at'] as DateTime,
           ),
@@ -311,7 +313,7 @@ LEFT JOIN users u ON p.author_id = u.id
     // less cacheable
     if (_statements['getUsers'] == null) {
       _statements['getUsers'] = await _pool.prepare('''
-SELECT id, name, email, created_at, updated_at
+SELECT id, name, email, avatar_url, created_at, updated_at
 FROM users
 ''');
     }
@@ -323,6 +325,7 @@ FROM users
         id: columnMap['id'] as String,
         name: columnMap['name'] as String,
         email: columnMap['email'] as String,
+        avatarUrl: columnMap['avatar_url'] as String?,
         createdAt: columnMap['created_at'] as DateTime,
         updatedAt: columnMap['updated_at'] as DateTime,
       );
@@ -341,7 +344,7 @@ SELECT pv.version, pv.version_type, pv.created_at, pv.info, pv.env, pv.metadata,
        p.id as package_id, p.name as package_name, p.scope as package_scope, p.language as package_language, p.created_at as package_created_at, 
        p.updated_at as package_updated_at, p.version as package_latest_version, p.vcs as package_vcs, p.vcs_url as package_vcs_url, 
        p.archive as package_archive, p.description as package_description, p.license as package_license,
-       u.id as author_id, u.name as author_name, u.email as author_email,
+       u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url,
        u.created_at as author_created_at, 
        u.updated_at as author_updated_at
 FROM package_versions pv
@@ -374,6 +377,7 @@ LIMIT 1
             id: columnMap['author_id'] as String,
             name: columnMap['author_name'] as String,
             email: columnMap['author_email'] as String,
+            avatarUrl: columnMap['author_avatar_url'] as String?,
             createdAt: columnMap['author_created_at'] as DateTime,
             updatedAt: columnMap['author_updated_at'] as DateTime,
           ),
@@ -435,7 +439,7 @@ LIMIT 1
     // not cacheable
 
     final result = await _pool.execute(Sql.named('''
-SELECT u.id, u.name, u.email, u.created_at, u.updated_at,
+SELECT u.id, u.name, u.email, u.created_at, u.updated_at, u.avatar_url,
        pc.package_id as package_id, pc.privileges as privileges
 FROM package_contributors pc
 LEFT JOIN users u ON pc.contributor_id = u.id
@@ -452,6 +456,7 @@ WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope = @s
             id: columnMap['id'] as String,
             name: columnMap['name'] as String,
             email: columnMap['email'] as String,
+            avatarUrl: columnMap['avatar_url'] as String?,
             createdAt: columnMap['created_at'] as DateTime,
             updatedAt: columnMap['updated_at'] as DateTime,
           ),
@@ -474,7 +479,7 @@ WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope = @s
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description,
-       u.id as author_id, u.name as author_name, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
+       u.id as author_id, u.name as author_name, u.avatar_url as author_avatar_url, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
 ''');
@@ -492,6 +497,7 @@ LEFT JOIN users u ON p.author_id = u.id
                     id: columnMap['author_id'] as String,
                     name: columnMap['author_name'] as String,
                     email: columnMap['author_email'] as String,
+                    avatarUrl: columnMap['author_avatar_url'] as String?,
                     createdAt: columnMap['author_created_at'] as DateTime,
                     updatedAt: columnMap['author_updated_at'] as DateTime,
                   ),
@@ -510,7 +516,7 @@ LEFT JOIN users u ON p.author_id = u.id
     // less cacheable
     if (_statements['getUsers'] == null) {
       _statements['getUsers'] = await _pool.prepare('''
-SELECT id, name, email, created_at, updated_at
+SELECT id, name, email, avatar_url, created_at, updated_at
 FROM users
 ''');
     }
@@ -523,6 +529,7 @@ FROM users
                 id: columnMap['id'] as String,
                 name: columnMap['name'] as String,
                 email: columnMap['email'] as String,
+                avatarUrl: columnMap['avatar_url'] as String?,
                 createdAt: columnMap['created_at'] as DateTime,
                 updatedAt: columnMap['updated_at'] as DateTime,
               );
@@ -1087,7 +1094,7 @@ extension Authorization on PrittDatabase {
         noToken = false;
       } else {
         return await session.execute(Sql.named('''
-SELECT u.id, u.name, u.email, u.created_at, u.updated_at, a.token_type, a.expires_at as access_token_expires_at
+SELECT u.id, u.name, u.email, u.avatar_url, u.created_at, u.updated_at, a.token_type, a.expires_at as access_token_expires_at
 FROM users u
 INNER JOIN access_tokens a ON a.user_id = u.id
 WHERE a.hash = @accessToken'''),
@@ -1130,6 +1137,7 @@ WHERE a.hash = @accessToken'''),
       id: columnMap['id'] as String,
       name: columnMap['name'] as String,
       email: columnMap['email'] as String,
+      avatarUrl: columnMap['avatar_url'] as String?,
       createdAt: columnMap['created_at'] as DateTime,
       updatedAt: columnMap['updated_at'] as DateTime,
     );

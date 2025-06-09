@@ -223,6 +223,9 @@ class User {
   /// The email address of the user
   String email;
 
+  /// A URL to the image of the user
+  String? avatarUrl;
+
   /// The time the user joined
   DateTime createdAt;
 
@@ -234,7 +237,9 @@ class User {
       required this.name,
       required this.email,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      this.avatarUrl
+      });
 }
 
 // class NewUser extends User {

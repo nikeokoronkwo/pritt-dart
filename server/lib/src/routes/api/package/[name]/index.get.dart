@@ -32,7 +32,7 @@ final handler = defineRequestHandler((event) async {
     // get contributors
     final contributors = await crs.db.getContributorsForPackage(pkgName);
 
-    var author = common.Author(name: pkg.author.name, email: pkg.author.email);
+    var author = common.Author(name: pkg.author.name, email: pkg.author.email, avatar: pkg.author.avatarUrl);
 
     // return
     final resp = common.GetPackageResponse(
@@ -41,7 +41,7 @@ final handler = defineRequestHandler((event) async {
       latest: (() {
         final latestPkg =
             pkgVersions.firstWhere((pv) => pv.version == pkg.version);
-        return common.LatestPackage(
+        return common.VerbosePackage(
             name: pkg.name,
             version: latestPkg.version,
             author: author,
