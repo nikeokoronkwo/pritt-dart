@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
+import 'package:http/http.dart';
 import 'package:pritt_server/src/server_utils/authorization.dart';
 import 'package:pritt_server/src/utils/request_handler.dart';
-import 'package:tar/tar.dart';
 
 final handler = defineRequestHandler((event) async {
   // check authorization
@@ -21,7 +22,9 @@ final handler = defineRequestHandler((event) async {
   final bodyBytes = getStreamedBody(event);
 
   // read the tarball
-  final tarballReader = TarReader(bodyBytes.transform(gzip.decoder));
+  final tarballReader = TarDecoder().decodeBytes(
+    await ByteStream(bodyBytes.transform(gzip.decoder)).toBytes()
+  );
 
   // place tarball in bucket temporarily
 
