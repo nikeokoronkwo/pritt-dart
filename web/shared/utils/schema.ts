@@ -375,7 +375,10 @@ export interface paths {
     };
     "/api/auth/new": {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description The Device ID used to identify the CLI source */
+                id?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -387,6 +390,29 @@ export interface paths {
          * @description Create a new token used for authenticating/creating a new user
          */
         post: operations["createNewAuthStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/details/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The Session ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        /**
+         * Get the details for an auth session
+         * @description Get the details for an auth session
+         */
+        get: operations["getAuthDetailsById"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -407,7 +433,7 @@ export interface paths {
         put?: never;
         /**
          * Validte Authentication Response
-         * @description Validate or authenticate a user, creating a user if needed
+         * @description Validate or authenticate a user
          */
         post: operations["validateAuthStatus"];
         delete?: never;
@@ -491,26 +517,73 @@ export interface components {
         AddUserRequest: Record<string, never>;
         /** AddUserResponse */
         AddUserResponse: Record<string, never>;
+        /** AuthDetailsResponse */
+        AuthDetailsResponse: {
+            /** @description The token used for authentication on the client (CLI) side */
+            token: string;
+            /** @description Time to represent the number of seconds from when the request was made before the request becomes expired
+             *
+             *     Expect some  */
+            token_expires: string;
+            /** @description A unique id used to identify the person requesting for an ID
+             *
+             *     The Device ID */
+            device: string;
+            /** @description The unique 8-character code */
+            code: string;
+            /** PollStatus */
+            status: ("success" | "fail" | "error") | "expired" | "pending";
+            user_id?: string | null;
+        };
+        /** AuthError */
+        AuthError: {
+            error?: string | null;
+            /** PollStatus */
+            status: ("success" | "fail" | "error") | "expired" | "pending";
+        };
         /** AuthPollResponse */
         AuthPollResponse: {
-            /**
-             * PollStatus
-             * @enum {string}
-             */
-            status: "pending" | "success" | "error";
-            /** PollResponse */
-            response?: Record<string, never> | null;
+            /** PollStatus */
+            status: ("success" | "fail" | "error") | "expired" | "pending";
+            response?: {
+                [key: string]: unknown;
+            } | null;
         };
         /** AuthResponse */
         AuthResponse: {
             /** @description The token used for authentication on the client (CLI) side */
             token: string;
-            /** @description A number to represent the number of seconds from when the request was made before the request becomes expired
+            /** @description Time to represent the number of seconds from when the request was made before the request becomes expired
              *
              *     Expect some  */
-            token_expires: number;
-            /** @description A unique id used to identify the person requesting for an ID */
-            id: string;
+            token_expires: string;
+            /** @description A unique id used to identify the person requesting for an ID
+             *
+             *     The Device ID */
+            device: string;
+            /** @description The unique 8-character code */
+            code: string;
+        };
+        /** AuthValidateRequest */
+        AuthValidateRequest: {
+            /** @description The user's id */
+            user_id: string;
+            /** @description The session id */
+            session_id: string;
+            /** @description The time at which this was validated */
+            time: string;
+            /**
+             * ValidatedPollStatus
+             * @description Status
+             * @enum {string}
+             */
+            status: "success" | "fail" | "error";
+            /** @description Error description, if any? */
+            error?: string | null;
+        };
+        /** AuthValidateResponse */
+        AuthValidateResponse: {
+            validated: boolean;
         };
         /**
          * Error
@@ -596,10 +669,12 @@ export interface components {
             author: {
                 name: string;
                 email: string;
+                avatar?: string | null;
             };
             contributors: {
                 name: string;
                 email: string;
+                avatar?: string | null;
                 /** @description The role of the contributor */
                 privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
             }[];
@@ -665,6 +740,7 @@ export interface components {
             author: {
                 name: string;
                 email: string;
+                avatar?: string | null;
             };
             /** @description The description of the package */
             description?: string | null;
@@ -672,19 +748,33 @@ export interface components {
             contributors: {
                 name: string;
                 email: string;
+                avatar?: string | null;
                 /** @description The role of the contributor */
                 privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
             }[];
             /** @description The language of the package */
             language?: string | null;
+            /** @description The license for the package */
+            license: string;
+            /**
+             * VCS
+             * @description The version control system used
+             * @enum {string}
+             */
+            vcs: "git" | "svn" | "fossil" | "mercurial" | "other";
+            /** @description The URL to the VCS used */
+            vcs_url?: string | null;
             /** @description The date the package was created */
             created_at: string;
+            /** @description The date the package was updated */
+            updated_at: string;
             /**
              * VerbosePackage
              * @description The latest package
              */
             latest: {
                 name: string;
+                scope?: string | null;
                 description?: string | null;
                 /** Version */
                 version: string;
@@ -692,10 +782,13 @@ export interface components {
                 author: {
                     name: string;
                     email: string;
+                    avatar?: string | null;
                 };
                 language?: string | null;
                 created_at: string;
                 updated_at?: string | null;
+                /** @description readme info */
+                readme?: string | null;
                 /** @description info  */
                 info: {
                     [key: string]: unknown;
@@ -726,6 +819,7 @@ export interface components {
             versions: {
                 [key: string]: {
                     name: string;
+                    scope?: string | null;
                     description?: string | null;
                     /** Version */
                     version: string;
@@ -733,10 +827,13 @@ export interface components {
                     author: {
                         name: string;
                         email: string;
+                        avatar?: string | null;
                     };
                     language?: string | null;
                     created_at: string;
                     updated_at?: string | null;
+                    /** @description readme info */
+                    readme?: string | null;
                     /** @description info  */
                     info: {
                         [key: string]: unknown;
@@ -772,6 +869,7 @@ export interface components {
             /** @description The packages listed out */
             packages: {
                 name: string;
+                scope?: string | null;
                 description?: string | null;
                 /** Version */
                 version: string;
@@ -779,6 +877,7 @@ export interface components {
                 author: {
                     name: string;
                     email: string;
+                    avatar?: string | null;
                 };
                 language?: string | null;
                 created_at: string;
@@ -1843,7 +1942,10 @@ export interface operations {
     };
     createNewAuthStatus: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description The Device ID used to identify the CLI source */
+                id?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1859,6 +1961,47 @@ export interface operations {
                     "application/json": components["schemas"]["AuthResponse"];
                 };
             };
+            /** @description Server Error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServerError"];
+                };
+            };
+        };
+    };
+    getAuthDetailsById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The Session ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthDetailsResponse"];
+                };
+            };
+            /** @description Not Found Response */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundError"];
+                };
+            };
         };
     };
     validateAuthStatus: {
@@ -1871,7 +2014,12 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        /** @description The request body containing all the information needed to validate a user's status */
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AuthValidateRequest"];
+            };
+        };
         responses: {
             /** @description OK Response */
             200: {
@@ -1879,7 +2027,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuthPollResponse"];
+                    "application/json": components["schemas"]["AuthValidateResponse"];
+                };
+            };
+            /** @description Authorization did not complete or errored out */
+            402: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthError"];
                 };
             };
             /** @description Expired Token Response */
@@ -1895,7 +2052,10 @@ export interface operations {
     };
     getAuthStatus: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description The Session ID */
+                id: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
