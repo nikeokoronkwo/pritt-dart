@@ -9,7 +9,12 @@ class PublishCommand extends PrittCommand {
   @override
   String description = "Publish a package to Pritt";
 
-  PublishCommand();
+  PublishCommand() {
+    argParser
+      ..addOption('config', abbr: 'c', help: 'The Pritt Configuration File (defaults to pritt.yaml file if exists)')
+      ..addOption('project-config', help: 'The Project Configuration file to use (defaults to handler inference)')
+    ;
+  }
 
   @override
   FutureOr? run() {
