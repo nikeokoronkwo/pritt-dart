@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import mdx from "@mdx-js/rollup";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -22,6 +23,9 @@ export default defineNuxtConfig({
   vite: {
     plugins: [
       tailwindcss(),
+      mdx({
+        jsxImportSource: "vue",
+      }),
     ],
   },
 
@@ -35,5 +39,13 @@ export default defineNuxtConfig({
   icon: {
     mode: 'css',
     cssLayer: 'base'
+  },
+
+  content: {
+    build: {
+      transformers: [
+        './transformers/asciidoc'
+      ]
+    }
   }
 });
