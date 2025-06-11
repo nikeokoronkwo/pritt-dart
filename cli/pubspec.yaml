@@ -31,6 +31,6 @@ dev_dependencies:
   cli_pkg: ^2.12.0
   grinder: ^0.9.5
   json_serializable: ^6.9.5
-  lints: ^5.0.0
+  lints: ^6.0.0
   mockito: ^5.4.5
   test: ^1.25.15
