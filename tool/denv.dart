@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+// ignore: non_constant_identifier_names
 final SEPARATOR = Platform.isWindows ? "\\" : "/";
 
 final String usage = """

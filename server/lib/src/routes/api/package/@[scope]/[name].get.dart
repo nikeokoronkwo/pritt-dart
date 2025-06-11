@@ -36,7 +36,10 @@ final handler = defineRequestHandler((event) async {
     final contributors =
         await crs.db.getContributorsForPackage(pkgName, scope: pkgScope);
 
-    var author = common.Author(name: pkg.author.name, email: pkg.author.email, avatar: pkg.author.avatarUrl);
+    var author = common.Author(
+        name: pkg.author.name,
+        email: pkg.author.email,
+        avatar: pkg.author.avatarUrl);
 
     // return
     final resp = common.GetPackageResponse(

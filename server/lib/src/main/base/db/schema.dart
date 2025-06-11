@@ -238,8 +238,7 @@ class User {
       required this.email,
       required this.createdAt,
       required this.updatedAt,
-      this.avatarUrl
-      });
+      this.avatarUrl});
 }
 
 // class NewUser extends User {

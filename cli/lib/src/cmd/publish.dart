@@ -11,9 +11,13 @@ class PublishCommand extends PrittCommand {
 
   PublishCommand() {
     argParser
-      ..addOption('config', abbr: 'c', help: 'The Pritt Configuration File (defaults to pritt.yaml file if exists)')
-      ..addOption('project-config', help: 'The Project Configuration file to use (defaults to handler inference)')
-    ;
+      ..addOption('config',
+          abbr: 'c',
+          help:
+              'The Pritt Configuration File (defaults to pritt.yaml file if exists)')
+      ..addOption('project-config',
+          help:
+              'The Project Configuration file to use (defaults to handler inference)');
   }
 
   @override

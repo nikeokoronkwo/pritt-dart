@@ -23,8 +23,7 @@ final handler = defineRequestHandler((event) async {
 
   // read the tarball
   final tarballReader = TarDecoder().decodeBytes(
-    await ByteStream(bodyBytes.transform(gzip.decoder)).toBytes()
-  );
+      await ByteStream(bodyBytes.transform(gzip.decoder)).toBytes());
 
   // place tarball in bucket temporarily
 

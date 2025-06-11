@@ -42,15 +42,15 @@ typedef WGTColourSpectrum = Map<int, String>;
 
 extension WGTCS on WGTColourSpectrum {
   static WGTColourSpectrum fromJson(dynamic json) {
-    if (json is String)
+    if (json is String) {
       return generateTailwindColorScale(json);
-    else if (json is Map<int, String>)
+    } else if (json is Map<int, String>)
       return json;
     else if (json is Map<dynamic, String>) {
       return json.map((k, v) {
-        if (k is int)
+        if (k is int) {
           return MapEntry(k, v);
-        else if (k is String) {
+        } else if (k is String) {
           if (k.toLowerCase() == 'default') return MapEntry(-1, v);
           if (int.tryParse(k) != null) {
             return MapEntry(int.parse(k), v);
@@ -63,8 +63,7 @@ extension WGTCS on WGTColourSpectrum {
       throw Exception();
   }
 
-  String get defaultColour =>
-      this[-1] ?? this.values.toList()[this.length ~/ 2];
+  String get defaultColour => this[-1] ?? values.toList()[length ~/ 2];
 }
 
 @JsonEnum(valueField: 'value')

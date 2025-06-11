@@ -1,6 +1,8 @@
 /// A base interface for the [AsyncIterator] protocol
 ///
 /// This is based on
+library;
+
 import 'dart:async';
 import 'dart:js_interop';
 

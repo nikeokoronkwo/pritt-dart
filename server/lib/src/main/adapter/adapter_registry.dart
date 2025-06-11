@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:archive/archive_io.dart';
-import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
 import 'package:pritt_server/src/main/adapter/adapter/interface.dart';

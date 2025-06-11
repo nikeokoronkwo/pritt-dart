@@ -143,8 +143,9 @@ void main(List<String> args) async {
         if (filePath.contains('node_modules') ||
             filePath.contains('.nuxt') ||
             filePath.contains('.data') ||
-            filePath.contains('package.json.') /* notice the second dot */)
+            filePath.contains('package.json.') /* notice the second dot */) {
           continue;
+        }
 
         final String destPath;
         final isTemplate = path.dirname(filePath).startsWith('template');

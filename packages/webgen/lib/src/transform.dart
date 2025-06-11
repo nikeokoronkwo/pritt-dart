@@ -77,13 +77,15 @@ Future<TransformationResult> transformTemplates(String inputDir,
   return TransformationResult(templateOptions);
 }
 
-Future<void> generateAssets(WebGenTemplateConfig wgtConfig, String outputDir) async {
+Future<void> generateAssets(
+    WebGenTemplateConfig wgtConfig, String outputDir) async {
   // 1. generate the two svgs
 
   // start with dir
   final assetsDir = 'assets/svg';
 
-  await mkdir(path.join(outputDir, assetsDir), FSMkdirOptions(recursive: true)).toDart;
+  await mkdir(path.join(outputDir, assetsDir), FSMkdirOptions(recursive: true))
+      .toDart;
 
   // get colours
   final accentColour = wgtConfig.style.colours.accent.defaultColour;
@@ -92,8 +94,12 @@ Future<void> generateAssets(WebGenTemplateConfig wgtConfig, String outputDir) as
   final accentSvg = _svgGen(accentColour);
   final primarySvg = _svgGen(primaryColour);
 
-  await writeFileAsString(path.join(outputDir, assetsDir, 'bg-accent.svg'), accentSvg).toDart;
-  await writeFileAsString(path.join(outputDir, assetsDir, 'bg-primary.svg'), primarySvg).toDart;
+  await writeFileAsString(
+          path.join(outputDir, assetsDir, 'bg-accent.svg'), accentSvg)
+      .toDart;
+  await writeFileAsString(
+          path.join(outputDir, assetsDir, 'bg-primary.svg'), primarySvg)
+      .toDart;
 }
 
 String _svgGen(String colour) {

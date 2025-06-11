@@ -2,6 +2,7 @@ include: package:lints/recommended.yaml
 
 linter:
   rules:
+    - flutter_style_todos
     - always_declare_return_types
     - directives_ordering
     - prefer_relative_imports

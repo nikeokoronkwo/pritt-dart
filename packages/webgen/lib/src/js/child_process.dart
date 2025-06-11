@@ -1,5 +1,5 @@
 @JS('child_process')
-library child_process;
+library;
 
 import 'dart:js_interop';
 
