@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "pub"
-    directories: ["common", "cli", "server"]
+    directoriy: '/'
     schedule:
       interval: "monthly"
   - package-ecosystem: "npm"
