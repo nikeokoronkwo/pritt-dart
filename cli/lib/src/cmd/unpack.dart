@@ -31,6 +31,7 @@ class UnpackCommand extends PrittCommand {
         abbr: 'f',
         help: 'Overwrite the target directory if it already exists.',
       )
+      ..addFlag('vcs', help: 'Unpack via VCS (Clone)', hide: true)
       ..addOption('output',
           abbr: 'o', help: 'The output directory to write this to');
   }
