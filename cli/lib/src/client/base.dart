@@ -2,8 +2,9 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:pritt_cli/src/client/authentication.dart';
 import 'package:http/http.dart' as http;
+
+import 'authentication.dart';
 
 class ApiClient {
   final String url;

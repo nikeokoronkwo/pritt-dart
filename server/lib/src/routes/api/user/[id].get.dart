@@ -1,5 +1,5 @@
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/utils/request_handler.dart';
+import '../../../../pritt_server.dart';
+import '../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
   try {

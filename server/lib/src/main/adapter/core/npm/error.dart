@@ -1,4 +1,4 @@
-import 'package:pritt_server/src/main/utils/mixins.dart';
+import '../../../utils/mixins.dart';
 
 class NpmError with JsonConvertible {
   final String? error;

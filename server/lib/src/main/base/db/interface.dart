@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/main/base/db/annotations/cache.dart';
-
 import '../../utils/version.dart';
+import 'annotations/cache.dart';
 import 'schema.dart';
 
 /// Base interface for a SQL database interface

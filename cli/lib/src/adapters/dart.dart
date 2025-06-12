@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:pritt_cli/src/adapters/base.dart';
-import 'package:pritt_cli/src/adapters/base/config.dart';
-import 'package:pritt_cli/src/adapters/base/workspace.dart';
-import 'package:pritt_cli/src/loader.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
+
+import '../loader.dart';
+import 'base.dart';
+import 'base/config.dart';
+import 'base/workspace.dart';
 
 final dartHandler = Handler<PubspecConfig>(
   id: 'dart',

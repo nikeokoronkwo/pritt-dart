@@ -1,4 +1,4 @@
-import 'package:pritt_cli/src/adapters/base/workspace.dart';
+import 'workspace.dart';
 
 class PrittContext {
   final Workspace workspace;

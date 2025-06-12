@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:pritt_cli/src/adapters/base.dart';
-import 'package:pritt_cli/src/adapters/base/config.dart';
-
-import 'package:pritt_cli/src/adapters/base/controller.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/constants.dart';
-import 'package:pritt_cli/src/loader.dart';
-import 'package:pritt_cli/src/project/exception.dart';
-import 'package:pritt_cli/src/utils/annotations.dart';
-import 'package:pritt_cli/src/utils/typedefs.dart';
 import 'package:pritt_common/interface.dart';
+
+import '../adapters/base.dart';
+import '../adapters/base/config.dart';
+import '../adapters/base/controller.dart';
+import '../client.dart';
+import '../constants.dart';
+import '../loader.dart';
+import '../utils/annotations.dart';
+import '../utils/typedefs.dart';
+import 'exception.dart';
 
 class PrittControllerManager {
   final PrittClient? apiClient;
@@ -152,7 +152,7 @@ class PrittController<T extends Config> extends PrittConfigUnawareController
   String get instanceUri => apiClient?.url ?? mainPrittApiInstance;
 
   @override
-  useHostedPMCommands() {
+  void useHostedPMCommands() {
     // TODO: implement useHostedPMCommands
     throw UnimplementedError();
   }

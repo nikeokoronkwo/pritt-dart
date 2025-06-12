@@ -1,14 +1,16 @@
 import 'dart:convert';
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
-import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
-import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/adapter/adapter/result.dart';
-import 'package:pritt_server/src/main/crs/crs.dart';
-import 'package:pritt_server/src/utils/resolve.dart';
-import 'package:pritt_server/src/utils/xml.dart';
+
 import 'package:shelf/shelf.dart';
+
+import 'pritt_server.dart';
+import 'src/main/adapter/adapter/exception.dart';
+import 'src/main/adapter/adapter/interface.dart';
+import 'src/main/adapter/adapter/request_options.dart';
+import 'src/main/adapter/adapter/resolve.dart';
+import 'src/main/adapter/adapter/result.dart';
+import 'src/main/crs/crs.dart';
+import 'src/utils/resolve.dart';
+import 'src/utils/xml.dart';
 
 Handler adapterHandler(CoreRegistryService crs) {
   return (Request req) async {

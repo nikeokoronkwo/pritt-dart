@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_server/src/main/cas/adapter.dart';
-import 'package:pritt_server/src/main/utils/mixins.dart';
+
+import '../utils/mixins.dart';
+import 'adapter.dart';
 
 part 'client.g.dart';
 

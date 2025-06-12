@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_cli/src/device_id.dart';
 
 import 'constants.dart';
+import 'device_id.dart';
 
 part 'user_config.g.dart';
 

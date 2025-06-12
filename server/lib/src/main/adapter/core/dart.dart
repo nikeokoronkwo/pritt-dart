@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/adapter/adapter/result.dart';
-import 'package:pritt_server/src/main/utils/mixins.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../base/db/schema.dart';
 import '../../crs/response.dart';
+import '../../utils/mixins.dart';
 import '../adapter.dart';
+import '../adapter/resolve.dart';
+import '../adapter/result.dart';
 import 'dart/result.dart';
 
 final dartAdapter = Adapter(

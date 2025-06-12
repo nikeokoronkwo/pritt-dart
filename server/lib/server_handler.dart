@@ -1,23 +1,20 @@
 // ignore_for_file: library_prefixes
 
-// TODO: Autogen this file
-import 'package:pritt_server/src/routes/api/package/[name]/index.get.dart'
-    as packageNameGet;
-import 'package:pritt_server/src/routes/api/package/[name]/[version].get.dart'
-    as packageNameVersionGet;
-import 'package:pritt_server/src/routes/api/package/@[scope]/[name].get.dart'
-    as packageScopeNameGet;
-import 'package:pritt_server/src/routes/api/package/@[scope]/[name]/[version].get.dart'
-    as packageScopeNameVersionGet;
-import 'package:pritt_server/src/routes/api/packages.get.dart' as packagesGet;
-import 'package:pritt_server/src/routes/api/auth/new.get.dart' as authNewGet;
-import 'package:pritt_server/src/routes/api/auth/status.post.dart'
-    as authStatusPost;
-import 'package:pritt_server/src/routes/api/auth/validate.post.dart'
-    as authValidatePost;
-
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+
+import 'src/routes/api/auth/new.get.dart' as authNewGet;
+import 'src/routes/api/auth/status.post.dart' as authStatusPost;
+import 'src/routes/api/auth/validate.post.dart' as authValidatePost;
+import 'src/routes/api/package/%5Bname%5D/%5Bversion%5D.get.dart'
+    as packageNameVersionGet;
+// TODO: Autogen this file
+import 'src/routes/api/package/%5Bname%5D/index.get.dart' as packageNameGet;
+import 'src/routes/api/package/@%5Bscope%5D/%5Bname%5D.get.dart'
+    as packageScopeNameGet;
+import 'src/routes/api/package/@%5Bscope%5D/%5Bname%5D/%5Bversion%5D.get.dart'
+    as packageScopeNameVersionGet;
+import 'src/routes/api/packages.get.dart' as packagesGet;
 
 Handler serverHandler() {
   final app = Router()

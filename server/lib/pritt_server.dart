@@ -1,10 +1,10 @@
-import 'package:pritt_server/adapter_handler.dart';
-import 'package:pritt_server/server_handler.dart';
-import 'package:pritt_server/src/main/adapter/adapter_registry.dart';
-import 'package:pritt_server/src/main/base/db.dart';
-import 'package:pritt_server/src/main/base/storage.dart';
 import 'package:shelf/shelf.dart';
 
+import 'adapter_handler.dart';
+import 'server_handler.dart';
+import 'src/main/adapter/adapter_registry.dart';
+import 'src/main/base/db.dart';
+import 'src/main/base/storage.dart';
 import 'src/main/crs/crs.dart';
 
 late CoreRegistryService crs;

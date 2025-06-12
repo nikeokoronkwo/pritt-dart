@@ -3,17 +3,17 @@ import 'dart:convert';
 
 import 'package:archive/archive_io.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
-import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
-import 'package:pritt_server/src/main/base/storage/interface.dart';
-import 'package:pritt_server/src/main/cas/cas.dart';
-import 'package:pritt_server/src/main/base/db.dart';
-import 'package:pritt_server/src/main/base/db/interface.dart';
-import 'package:pritt_server/src/main/cas/db.dart';
 
+import '../base/db.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
+import '../base/storage/interface.dart';
+import '../cas/cas.dart';
+import '../cas/db.dart';
 import 'adapter.dart';
+import 'adapter/exception.dart';
+import 'adapter/interface.dart';
+import 'adapter/resolve.dart';
 import 'core/dart.dart';
 import 'core/npm.dart';
 

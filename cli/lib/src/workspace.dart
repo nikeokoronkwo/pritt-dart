@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:pritt_cli/src/adapters/base.dart';
-import 'package:pritt_cli/src/adapters/base/context.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/config.dart';
-import 'package:pritt_cli/src/ignore.dart';
-import 'package:pritt_cli/src/project/controller.dart';
-
-import 'package:pritt_cli/src/project/handler_manager.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
+
+import 'adapters/base.dart';
+import 'adapters/base/context.dart';
+import 'client.dart';
+import 'config.dart';
+import 'ignore.dart';
+import 'project/controller.dart';
+import 'project/handler_manager.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
 ///
@@ -169,7 +169,7 @@ Future<VCS> getVersionControlSystem(Directory directory) async {
 }
 
 /// Configure the current project to make use of Pritt
-configureWorkspace(String directory) {
+void configureWorkspace(String directory) {
   // get the current project workspace
 
   // get the language of the project

@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
+import 'resolve.dart';
 
 class AdapterOptions {
   final AdapterResolveObject resolveObject;

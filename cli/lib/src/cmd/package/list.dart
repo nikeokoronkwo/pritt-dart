@@ -3,14 +3,14 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:io/ansi.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/csv.dart';
-import 'package:pritt_cli/src/list.dart';
-import 'package:pritt_cli/src/output.dart';
-import 'package:pritt_cli/src/user_config.dart';
 import 'package:pritt_common/interface.dart';
 
 import '../../cli/base.dart';
+import '../../client.dart';
+import '../../csv.dart';
+import '../../list.dart';
+import '../../output.dart';
+import '../../user_config.dart';
 
 class PackageListCommand extends PrittCommand {
   @override

@@ -4,13 +4,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:postgres/postgres.dart';
 import 'package:slugid/slugid.dart';
-import 'package:crypto/crypto.dart';
 
 import '../crs/exceptions.dart';
 import '../utils/version.dart';
-
 import 'auth.dart';
 import 'db/annotations/cache.dart';
 import 'db/interface.dart';
@@ -45,7 +44,7 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
     dbConnections--;
   }
 
-  static _preparePool(Pool pool) {
+  static void _preparePool(Pool pool) {
     // prepare pool with statements
   }
 

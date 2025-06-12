@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/client/base.dart';
-import 'package:pritt_cli/src/constants.dart';
-import 'package:pritt_cli/src/device_id.dart';
-import 'package:pritt_cli/src/user_config.dart';
-import 'package:pritt_cli/src/utils/extensions.dart';
-import 'package:pritt_cli/src/utils/log.dart';
 import 'package:pritt_common/interface.dart';
 
 import '../cli/base.dart';
+import '../client.dart';
+import '../client/base.dart';
+import '../constants.dart';
+import '../device_id.dart';
+import '../user_config.dart';
+import '../utils/extensions.dart';
+import '../utils/log.dart';
 
 class LoginCommand extends PrittCommand {
   @override
