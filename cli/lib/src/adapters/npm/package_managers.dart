@@ -1,4 +1,4 @@
-import 'package:pritt_cli/src/adapters/base/workspace.dart';
+import '../base/workspace.dart';
 
 final npmPM = PackageManager(
     name: 'npm',

@@ -1,6 +1,6 @@
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/crs/exceptions.dart';
-import 'package:pritt_server/src/main/utils/version.dart';
+import '../../../../../pritt_server.dart';
+import '../../../../main/crs/exceptions.dart';
+import '../../../../main/utils/version.dart';
 
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';

@@ -10,7 +10,7 @@ class Logger {
 
   Logger();
 
-  stderr(Object msg) {
+  void stderr(Object msg) {
     io.stderr.writeln(msg);
   }
 
@@ -72,7 +72,7 @@ class VerboseLogger implements Logger {
   }
 
   @override
-  verbose(Object msg) {
+  void verbose(Object msg) {
     _logger.log(VERBOSE, styleDim.wrap(msg.toString()));
   }
 

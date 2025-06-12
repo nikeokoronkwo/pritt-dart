@@ -1,7 +1,7 @@
 import 'package:args/command_runner.dart';
-import 'package:pritt_cli/src/cmd/adapter/list.dart';
-import 'package:pritt_cli/src/cmd/adapter/publish.dart';
-import 'package:pritt_cli/src/cmd/adapter/unpack.dart';
+import 'adapter/list.dart';
+import 'adapter/publish.dart';
+import 'adapter/unpack.dart';
 
 class AdapterCommand extends Command {
   @override

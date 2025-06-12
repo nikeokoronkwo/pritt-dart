@@ -1,5 +1,5 @@
 import 'package:io/ansi.dart';
-import 'package:pritt_cli/src/utils/extensions.dart';
+import '../utils/extensions.dart';
 
 enum Indentation { left, center, right }
 

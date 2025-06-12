@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:pritt_cli/src/adapters/base/config.dart';
-import 'package:pritt_cli/src/adapters/base/workspace.dart';
-import 'package:pritt_cli/src/adapters/base/context.dart';
-import 'package:pritt_cli/src/adapters/base/controller.dart';
-import 'package:pritt_cli/src/ignore.dart';
-import 'package:pritt_cli/src/loader.dart';
+import '../ignore.dart';
+import '../loader.dart';
+import 'base/config.dart';
+import 'base/context.dart';
+import 'base/controller.dart';
+import 'base/workspace.dart';
 
 typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
 

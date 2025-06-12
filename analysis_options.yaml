@@ -11,5 +11,9 @@ linter:
     - no_runtimeType_toString
     - avoid_returning_this
 
+analyzer:
+  errors:
+    todo: ignore
+
 formatter:
   page_width: 80

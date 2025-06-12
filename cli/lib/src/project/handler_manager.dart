@@ -1,8 +1,8 @@
-import 'package:pritt_cli/src/adapters/base.dart';
-import 'package:pritt_cli/src/adapters/dart.dart';
-import 'package:pritt_cli/src/adapters/npm.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/project/controller.dart';
+import '../adapters/base.dart';
+import '../adapters/dart.dart';
+import '../adapters/npm.dart';
+import '../client.dart';
+import 'controller.dart';
 
 /// A manager used for managing handlers (aka client adapters) and perform searching for the needed handler
 ///

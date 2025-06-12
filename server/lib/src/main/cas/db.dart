@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/main/base/db/interface.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
 
 class CASLocalDatabase implements PrittAdapterDatabaseInterface {
   CASLocalDatabase._();

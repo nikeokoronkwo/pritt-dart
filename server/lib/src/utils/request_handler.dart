@@ -42,7 +42,7 @@ Future<Uint8List> getBinaryBody(Event e) async {
       .then((b) => b.toBytes());
 }
 
-setResponseCode(Event e, int statusCode) {
+void setResponseCode(Event e, int statusCode) {
   e._responseBuilder.statusCode = statusCode;
 }
 

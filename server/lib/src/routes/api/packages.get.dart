@@ -1,6 +1,6 @@
 import 'package:pritt_common/interface.dart' as common;
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/utils/request_handler.dart';
+import '../../../pritt_server.dart';
+import '../../utils/request_handler.dart';
 
 final pkgCap = 100;
 

@@ -3,10 +3,10 @@ import 'package:html/dom.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
 
-import 'package:pritt_server/src/main/adapter/adapter.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/adapter/adapter/result.dart';
-import 'package:pritt_server/src/main/crs/response.dart';
+import '../../crs/response.dart';
+import '../adapter.dart';
+import '../adapter/resolve.dart';
+import '../adapter/result.dart';
 
 final goAdapter = Adapter(
     id: 'go',

@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_cli/src/adapters/base.dart';
-import 'package:pritt_cli/src/adapters/base/config.dart';
-import 'package:pritt_cli/src/adapters/base/workspace.dart';
-import 'package:pritt_cli/src/loader.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:pritt_common/version.dart';
+
+import '../loader.dart';
+import 'base.dart';
+import 'base/config.dart';
+import 'base/workspace.dart';
 
 final goHandler = Handler<GoModConfig>(
     id: 'go',

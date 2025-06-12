@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:pritt_cli/src/utils/typedefs.dart';
-
 import 'package:pritt_common/interface.dart' as common;
+
+import '../../utils/typedefs.dart';
 
 /// A minimized version of [PrittLocalController] without awareness of context or config
 abstract interface class PrittLocalConfigUnawareController {

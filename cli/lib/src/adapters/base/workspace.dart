@@ -1,4 +1,4 @@
-import 'package:pritt_cli/src/adapters/base/config.dart';
+import 'config.dart';
 
 class Workspace<T extends Config> {
   final T config;

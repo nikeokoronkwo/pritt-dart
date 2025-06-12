@@ -2,7 +2,7 @@
 
 import 'dart:async';
 import 'package:mime/mime.dart';
-import 'package:pritt_server/src/main/utils/mixins.dart';
+import '../../utils/mixins.dart';
 
 /// shared base result between [AdapterResult] used internally and [CustomAdapterResult]
 abstract class AdapterBaseResult {

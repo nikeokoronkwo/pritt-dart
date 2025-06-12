@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:io/ansi.dart';
-import 'package:pritt_cli/src/adapters/base.dart';
-import 'package:pritt_cli/src/adapters/base/config.dart';
-import 'package:pritt_cli/src/adapters/base/workspace.dart';
-import 'package:pritt_cli/src/adapters/npm/package_managers.dart';
-import 'package:pritt_cli/src/loader.dart';
 import 'package:pritt_common/interface.dart';
+
+import '../loader.dart';
+import 'base.dart';
+import 'base/config.dart';
+import 'base/workspace.dart';
+import 'npm/package_managers.dart';
 
 final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
     id: 'npm',

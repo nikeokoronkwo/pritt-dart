@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:pritt_cli/src/client/authentication.dart';
-import 'package:pritt_cli/src/client/base.dart';
-import 'package:pritt_cli/src/constants.dart';
-import 'package:pritt_cli/src/utils/log.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:retry/retry.dart';
+
+import 'client/authentication.dart';
+import 'client/base.dart';
+import 'constants.dart';
+import 'utils/log.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
   final retryClient = RetryOptions(maxAttempts: 3);
