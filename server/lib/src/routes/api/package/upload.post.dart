@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
+
 import 'package:pritt_server/src/server_utils/authorization.dart';
 import 'package:pritt_server/src/utils/request_handler.dart';
+import 'package:pritt_common/interface.dart' as common;
 
 final handler = defineRequestHandler((event) async {
   // check authorization
@@ -12,10 +14,7 @@ final handler = defineRequestHandler((event) async {
 
   if (auth != null) {
     setResponseCode(event, 401);
-    return {
-      'error': 'Unauthorized',
-      'message': 'You are not authorized to view or use this endpoint'
-    };
+    return common.UnauthorizedError(error: 'You are not authorized to view or use this endpoint').toJson();
   }
 
   // get the tarball from the body
