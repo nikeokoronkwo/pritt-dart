@@ -12,6 +12,10 @@ class ApiClient {
 
   http.Client client = http.Client();
 
+  void close() {
+    client.close();
+  }
+
   final _headers = <String, String>{};
   Map<String, String> get headers => _headers;
 

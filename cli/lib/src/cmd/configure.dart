@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
@@ -46,7 +47,12 @@ class ConfigureCommand extends PrittCommand {
     logger.stdout('Getting Adapter for Project...');
     var project = await getWorkspace(p.current,
         config: argResults?['config'], client: prittClient);
-    if (project.handlers.isNotEmpty) {
+    if (project.handlers.isEmpty) {
+      logger.warn('Could not find a suitable handler for the given project.');
+      // TODO: Links to go to
+      logger.verbose('Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
+      exit(0);
+    } else {
       logger.info('Found: ${project.handlers.join(', ')}!');
     }
 

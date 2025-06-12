@@ -18,8 +18,19 @@ import 'project/handler_manager.dart';
 /// TODO: Monorepo support
 class Project {
   /// Handlers for the current project
-  final Iterable<Handler> handlers;
-  // int? _activeHandlerIndex;
+  final List<Handler> handlers;
+
+  int? _primaryHandlerIndex;
+
+  Handler get primaryHandler {
+    if (_primaryHandlerIndex != null) return handlers[_primaryHandlerIndex!];
+    else throw Exception('No active handler set');
+  }
+
+  set primaryHandler(Handler h) {
+    _primaryHandlerIndex = handlers.indexOf(h);
+  }
+
 
   /// The current directory of the project
   final String directory;
@@ -57,6 +68,18 @@ class Project {
       final workspace = await handler.onGetWorkspace(directory, controller);
       await handler.onConfigure(PrittContext(workspace: workspace), controller);
     }
+  }
+
+  /// get the environment variables.
+  /// Returns a map of env for each handler
+  ///
+  /// NOTE: Primary Handler must be set
+  Future<Map<String, dynamic>> getEnv() async {
+    final controller = _manager.makeController(primaryHandler);
+    final workspace = await primaryHandler.onGetWorkspace(directory, controller);
+    return await primaryHandler.getEnv
+        ?.call(PrittContext(workspace: workspace), controller) ??
+        {};
   }
 
   Stream<File> files() {
@@ -127,7 +150,7 @@ Future<Project> getWorkspace(String directory,
 
   // assemble
   return Project._(
-      handlers: await handlers,
+      handlers: (await handlers).toList(),
       config: prittConfig,
       directory: directory,
       vcs: vcs,
