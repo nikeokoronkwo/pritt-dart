@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_cli/src/client.dart';
 
+import 'package:pritt_cli/src/client.dart';
 import 'package:pritt_cli/src/user_config.dart';
 import 'package:pritt_cli/src/workspace.dart';
 
