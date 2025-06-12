@@ -130,8 +130,8 @@ class PublishCommand extends PrittCommand {
       }
     }
 
-
-
+    // get package config
+    final config = project
     // get package metadata
     final metadata = project.getEnv();
 

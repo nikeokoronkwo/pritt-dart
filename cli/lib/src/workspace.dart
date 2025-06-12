@@ -6,6 +6,7 @@ import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
 import 'adapters/base.dart';
+import 'adapters/base/config.dart';
 import 'adapters/base/context.dart';
 import 'client.dart';
 import 'config.dart';
@@ -82,13 +83,18 @@ class Project {
         {};
   }
 
+  Future<Config> getConfig() async {
+
+  }
+
+  // FIXME: Fix this function
   Stream<File> files() {
     return Directory(directory)
         .list(recursive: true)
         .where((f) {
           if (f is File) {
             return _ignoreFiles.match(f.path);
-          } else if (f is File) {
+          } else if (f is Directory) {
             return _ignoreFiles.match(f.path);
           } else {
             return false;
@@ -98,13 +104,14 @@ class Project {
         .map((f) => f as File);
   }
 
+  // FIXME: Fix this function
   List<File> filesSync() {
     return Directory(directory)
         .listSync(recursive: true)
         .where((f) {
           if (f is File) {
             return _ignoreFiles.match(f.path);
-          } else if (f is File) {
+          } else if (f is Directory) {
             return _ignoreFiles.match(f.path);
           } else {
             return false;
