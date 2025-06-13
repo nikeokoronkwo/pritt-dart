@@ -1,10 +1,12 @@
 // ignore_for_file: directives_ordering, non_constant_identifier_names
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:typed_data' as _i1;
-import 'dart:convert' as _i2;
 import 'dart:async' as _i3;
+import 'dart:convert' as _i2;
+import 'dart:typed_data' as _i1;
+
 import 'package:json_annotation/json_annotation.dart';
+
 part 'interface.g.dart';
 
 class Content {
@@ -818,11 +820,81 @@ class NotFoundError {
 }
 
 @JsonSerializable()
+class Configuration {
+  Configuration({
+    required this.path,
+    this.config,
+    required this.contents,
+  });
+
+  factory Configuration.fromJson(Map<String, dynamic> json) =>
+      _$ConfigurationFromJson(json);
+
+  final String path;
+
+  final Map<String, dynamic>? config;
+
+  final String contents;
+
+  Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
+}
+
+@JsonSerializable()
+class Readme {
+  Readme({
+    required this.name,
+    required this.format,
+    required this.contents,
+  });
+
+  factory Readme.fromJson(Map<String, dynamic> json) => _$ReadmeFromJson(json);
+
+  final String name;
+
+  final String format;
+
+  final String contents;
+
+  Map<String, dynamic> toJson() => _$ReadmeToJson(this);
+}
+
+@JsonSerializable()
 class PublishPackageByVersionRequest {
-  PublishPackageByVersionRequest();
+  PublishPackageByVersionRequest({
+    required this.name,
+    this.scope,
+    required this.version,
+    required this.language,
+    required this.config,
+    this.info,
+    this.env,
+    this.readme,
+    this.changelog,
+    this.license,
+  });
 
   factory PublishPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageByVersionRequestFromJson(json);
+
+  final String name;
+
+  final String? scope;
+
+  final String version;
+
+  final String language;
+
+  final Configuration config;
+
+  final Map<String, dynamic>? info;
+
+  final Map<String, dynamic>? env;
+
+  final Readme? readme;
+
+  final String? changelog;
+
+  final String? license;
 
   Map<String, dynamic> toJson() => _$PublishPackageByVersionRequestToJson(this);
 }
@@ -839,12 +911,36 @@ class PublishPackageByVersionResponse {
 }
 
 @JsonSerializable()
+class VersionControlSystem {
+  VersionControlSystem({
+    required this.name,
+    this.url,
+  });
+
+  factory VersionControlSystem.fromJson(Map<String, dynamic> json) =>
+      _$VersionControlSystemFromJson(json);
+
+  final VCS name;
+
+  final String? url;
+
+  Map<String, dynamic> toJson() => _$VersionControlSystemToJson(this);
+}
+
+@JsonSerializable()
 class PublishPackageRequest {
   PublishPackageRequest({
     required this.name,
+    this.scope,
     required this.version,
+    required this.language,
     required this.config,
-    required this.configFile,
+    this.info,
+    this.env,
+    this.vcs,
+    this.readme,
+    this.changelog,
+    this.license,
   });
 
   factory PublishPackageRequest.fromJson(Map<String, dynamic> json) =>
@@ -852,11 +948,25 @@ class PublishPackageRequest {
 
   final String name;
 
+  final String? scope;
+
   final String version;
 
-  final Map<String, dynamic> config;
+  final String language;
 
-  final String configFile;
+  final Configuration config;
+
+  final Map<String, dynamic>? info;
+
+  final Map<String, dynamic>? env;
+
+  final VersionControlSystem? vcs;
+
+  final Readme? readme;
+
+  final String? changelog;
+
+  final String? license;
 
   Map<String, dynamic> toJson() => _$PublishPackageRequestToJson(this);
 }
@@ -869,6 +979,38 @@ class PublishPackageResponse {
       _$PublishPackageResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$PublishPackageResponseToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum PublishingStatus {
+  pending('pending'),
+  error('error'),
+  success('success'),
+  idle('idle');
+
+  const PublishingStatus(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class PublishPackageStatusResponse {
+  PublishPackageStatusResponse({
+    required this.status,
+    this.error,
+    this.description,
+  });
+
+  factory PublishPackageStatusResponse.fromJson(Map<String, dynamic> json) =>
+      _$PublishPackageStatusResponseFromJson(json);
+
+  final PublishingStatus status;
+
+  final String? error;
+
+  final String? description;
+
+  Map<String, dynamic> toJson() => _$PublishPackageStatusResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -1143,6 +1285,12 @@ abstract interface class PrittInterface {
     String id,
   });
 
+  /// **Get the publishing status for a package**
+  /// GET /api/package/status
+  ///
+  /// Get the publishing status for a package being published, given the status id
+  _i3.FutureOr<PublishPackageStatusResponse> getPackagePubStatus({String id});
+
   /// **List users from the Pritt Server**
   /// GET /api/users
   ///
@@ -1239,7 +1387,7 @@ abstract interface class PrittInterface {
   ///
   /// Get the details for an auth session
   /// Throws:
-  ///   - [null] on status code 404
+  ///   - [NotFoundError] on status code 404
   _i3.FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id});
 
   /// **Validte Authentication Response**

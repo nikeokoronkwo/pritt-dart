@@ -88,7 +88,8 @@ class PackageJsonConfig extends Config {
       required super.description,
       required super.author,
       super.license,
-      super.private});
+      super.private,
+      required this.rawConfig});
 
   factory PackageJsonConfig.fromJson(Map<String, dynamic> json, Author author) {
     return PackageJsonConfig._(
@@ -97,6 +98,14 @@ class PackageJsonConfig extends Config {
         description: json['description'],
         author: author,
         license: json['license'],
-        private: json['private']);
+        private: json['private'],
+        rawConfig: json);
   }
+
+  @override
+  // TODO: implement configMetadata
+  Map<String, dynamic> get configMetadata => {};
+
+  @override
+  final Map<String, dynamic> rawConfig;
 }

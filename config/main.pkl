@@ -746,6 +746,39 @@ paths {
             }
         }
     }
+    ["/api/package/status"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "query"
+                required = true
+                description = "The Package Publishing ID"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get the publishing status for a package"
+            description = "Get the publishing status for a package being published, given the status id"
+            operationId = "getPackagePubStatus"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageStatusResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
     ["/api/users"] {
         get {
             summary = "List users from the Pritt Server"
@@ -916,6 +949,11 @@ paths {
                     }
                 }
             }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
         }
     }
     ["/api/adapters"] {
@@ -1056,6 +1094,11 @@ paths {
                             schema = schemaRef("UploadAdapterResponse")
                         }
                     }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
                 }
             }
         }

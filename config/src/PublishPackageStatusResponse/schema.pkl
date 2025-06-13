@@ -1,0 +1,10 @@
+module PublishPackageStatusResponse
+
+status: PublishingStatus
+
+error: String?
+
+description: String?
+
+/// The publishing status for the package
+typealias PublishingStatus = "pending" | "error" | "success" | "idle"

@@ -8,12 +8,65 @@ import "../../lib/shared.pkl" as s
 /// The name of the package to publish
 name: String
 
+/// The scope of the package, if any
+scope: String?
+
 /// The version of the package to publish
 version: s.Version
 
+/// The language of the package
+language: String
+
 /// The configuration info about the package
-config: Mapping<String, Any>
+config: Configuration
 
-/// The configuration file for the given project
-configFile: Uri
+info: Mapping<String, Any>?
 
+env: Mapping<String, Any>?
+
+/// The version control system
+vcs: VersionControlSystem?
+
+/// The readme file
+readme: Readme?
+
+/// The changelog, if any
+changelog: String?
+
+/// License information, if any
+license: String?
+
+class VersionControlSystem {
+  name: s.VCS
+  url: Uri?
+}
+
+class Configuration {
+  /// The configuration file for the given project
+  path: String
+
+  /// The configuration values for the package
+  config: Mapping<String, Any>?
+
+  /// The contents of the configuration
+  contents: String
+}
+
+
+class Readme {
+  name: String
+  format: String
+  contents: String
+}
+
+class License {
+  contents: String
+  name: String
+}
+
+class Changelog {
+  name: String
+  format: String
+  info: Mapping<s.Version, String>?
+  contents: String
+}

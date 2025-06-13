@@ -546,13 +546,63 @@ Map<String, dynamic> _$NotFoundErrorToJson(NotFoundError instance) =>
       'message': instance.message,
     };
 
+Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
+    Configuration(
+      path: json['path'] as String,
+      config: json['config'] as Map<String, dynamic>?,
+      contents: json['contents'] as String,
+    );
+
+Map<String, dynamic> _$ConfigurationToJson(Configuration instance) =>
+    <String, dynamic>{
+      'path': instance.path,
+      'config': instance.config,
+      'contents': instance.contents,
+    };
+
+Readme _$ReadmeFromJson(Map<String, dynamic> json) => Readme(
+      name: json['name'] as String,
+      format: json['format'] as String,
+      contents: json['contents'] as String,
+    );
+
+Map<String, dynamic> _$ReadmeToJson(Readme instance) => <String, dynamic>{
+      'name': instance.name,
+      'format': instance.format,
+      'contents': instance.contents,
+    };
+
 PublishPackageByVersionRequest _$PublishPackageByVersionRequestFromJson(
         Map<String, dynamic> json) =>
-    PublishPackageByVersionRequest();
+    PublishPackageByVersionRequest(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      version: json['version'] as String,
+      language: json['language'] as String,
+      config: Configuration.fromJson(json['config'] as Map<String, dynamic>),
+      info: json['info'] as Map<String, dynamic>?,
+      env: json['env'] as Map<String, dynamic>?,
+      readme: json['readme'] == null
+          ? null
+          : Readme.fromJson(json['readme'] as Map<String, dynamic>),
+      changelog: json['changelog'] as String?,
+      license: json['license'] as String?,
+    );
 
 Map<String, dynamic> _$PublishPackageByVersionRequestToJson(
         PublishPackageByVersionRequest instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'version': instance.version,
+      'language': instance.language,
+      'config': instance.config,
+      'info': instance.info,
+      'env': instance.env,
+      'readme': instance.readme,
+      'changelog': instance.changelog,
+      'license': instance.license,
+    };
 
 PublishPackageByVersionResponse _$PublishPackageByVersionResponseFromJson(
         Map<String, dynamic> json) =>
@@ -562,22 +612,54 @@ Map<String, dynamic> _$PublishPackageByVersionResponseToJson(
         PublishPackageByVersionResponse instance) =>
     <String, dynamic>{};
 
+VersionControlSystem _$VersionControlSystemFromJson(
+        Map<String, dynamic> json) =>
+    VersionControlSystem(
+      name: $enumDecode(_$VCSEnumMap, json['name']),
+      url: json['url'] as String?,
+    );
+
+Map<String, dynamic> _$VersionControlSystemToJson(
+        VersionControlSystem instance) =>
+    <String, dynamic>{
+      'name': _$VCSEnumMap[instance.name]!,
+      'url': instance.url,
+    };
+
 PublishPackageRequest _$PublishPackageRequestFromJson(
         Map<String, dynamic> json) =>
     PublishPackageRequest(
       name: json['name'] as String,
+      scope: json['scope'] as String?,
       version: json['version'] as String,
-      config: json['config'] as Map<String, dynamic>,
-      configFile: json['configFile'] as String,
+      language: json['language'] as String,
+      config: Configuration.fromJson(json['config'] as Map<String, dynamic>),
+      info: json['info'] as Map<String, dynamic>?,
+      env: json['env'] as Map<String, dynamic>?,
+      vcs: json['vcs'] == null
+          ? null
+          : VersionControlSystem.fromJson(json['vcs'] as Map<String, dynamic>),
+      readme: json['readme'] == null
+          ? null
+          : Readme.fromJson(json['readme'] as Map<String, dynamic>),
+      changelog: json['changelog'] as String?,
+      license: json['license'] as String?,
     );
 
 Map<String, dynamic> _$PublishPackageRequestToJson(
         PublishPackageRequest instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'scope': instance.scope,
       'version': instance.version,
+      'language': instance.language,
       'config': instance.config,
-      'configFile': instance.configFile,
+      'info': instance.info,
+      'env': instance.env,
+      'vcs': instance.vcs,
+      'readme': instance.readme,
+      'changelog': instance.changelog,
+      'license': instance.license,
     };
 
 PublishPackageResponse _$PublishPackageResponseFromJson(
@@ -587,6 +669,29 @@ PublishPackageResponse _$PublishPackageResponseFromJson(
 Map<String, dynamic> _$PublishPackageResponseToJson(
         PublishPackageResponse instance) =>
     <String, dynamic>{};
+
+PublishPackageStatusResponse _$PublishPackageStatusResponseFromJson(
+        Map<String, dynamic> json) =>
+    PublishPackageStatusResponse(
+      status: $enumDecode(_$PublishingStatusEnumMap, json['status']),
+      error: json['error'] as String?,
+      description: json['description'] as String?,
+    );
+
+Map<String, dynamic> _$PublishPackageStatusResponseToJson(
+        PublishPackageStatusResponse instance) =>
+    <String, dynamic>{
+      'status': _$PublishingStatusEnumMap[instance.status]!,
+      'error': instance.error,
+      'description': instance.description,
+    };
+
+const _$PublishingStatusEnumMap = {
+  PublishingStatus.pending: 'pending',
+  PublishingStatus.error: 'error',
+  PublishingStatus.success: 'success',
+  PublishingStatus.idle: 'idle',
+};
 
 ServerError _$ServerErrorFromJson(Map<String, dynamic> json) => ServerError(
       error: json['error'] as String?,

@@ -6,8 +6,8 @@ import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
 import 'adapters/base.dart';
-import 'adapters/base/config.dart';
 import 'adapters/base/context.dart';
+import 'adapters/base/workspace.dart';
 import 'client.dart';
 import 'config.dart';
 import 'ignore.dart';
@@ -24,14 +24,30 @@ class Project {
   int? _primaryHandlerIndex;
 
   Handler get primaryHandler {
-    if (_primaryHandlerIndex != null) return handlers[_primaryHandlerIndex!];
-    else throw Exception('No active handler set');
+    if (_primaryHandlerIndex != null)
+      return handlers[_primaryHandlerIndex!];
+    else
+      throw Exception('No active handler set');
   }
 
   set primaryHandler(Handler h) {
     _primaryHandlerIndex = handlers.indexOf(h);
   }
 
+  /// Get the README for a project, if any
+  (String?, {String? format}) get readme {
+    try {
+      final file = Directory(directory).listSync().whereType<File>().firstWhere(
+          (f) => p.basenameWithoutExtension(f.path).toLowerCase() == 'readme');
+
+      return (
+        file.readAsStringSync(),
+        format: p.extension(file.path).replaceFirst('.', '')
+      );
+    } on StateError catch (_) {
+      return (null, format: null);
+    }
+  }
 
   /// The current directory of the project
   final String directory;
@@ -77,14 +93,23 @@ class Project {
   /// NOTE: Primary Handler must be set
   Future<Map<String, dynamic>> getEnv() async {
     final controller = _manager.makeController(primaryHandler);
-    final workspace = await primaryHandler.onGetWorkspace(directory, controller);
+    final workspace =
+        await primaryHandler.onGetWorkspace(directory, controller);
     return await primaryHandler.getEnv
-        ?.call(PrittContext(workspace: workspace), controller) ??
+            ?.call(PrittContext(workspace: workspace), controller) ??
         {};
   }
 
-  Future<Config> getConfig() async {
+  Future<Workspace> getWorkspace() async {
+    final controller = _manager.makeController(primaryHandler);
+    return await primaryHandler.onGetWorkspace(directory, controller);
+  }
 
+  Future<String> getConfig() async {
+    final controller = _manager.makeController(primaryHandler);
+    return primaryHandler.config.load(
+        await File(p.join(directory, primaryHandler.configFile))
+            .readAsString());
   }
 
   // FIXME: Fix this function

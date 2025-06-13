@@ -50,7 +50,7 @@ final goHandler = Handler<GoModConfig>(
 class GoModConfig extends Config {
   final String goVersion;
 
-  GoModConfig(
+  const GoModConfig(
       {required super.name,
       required super.version,
       required super.author,
@@ -79,4 +79,11 @@ class GoModConfig extends Config {
     return GoModConfig(
         name: name, version: version, author: author, goVersion: goVersion);
   }
+
+  @override
+  // TODO: implement configMetadata
+  Map<String, dynamic> get configMetadata => {'go': goVersion};
+
+  @override
+  Map<String, dynamic>? get rawConfig => null;
 }

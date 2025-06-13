@@ -284,6 +284,13 @@ class PrittClient extends ApiClient implements PrittInterface {
     // TODO: implement getAuthDetailsById
     throw UnimplementedError();
   }
+
+  @override
+  FutureOr<PublishPackageStatusResponse> getPackagePubStatus({String? id}) {
+    assert(id != null, "ID cannot be null");
+    // TODO: implement getPackagePubStatus
+    throw UnimplementedError();
+  }
 }
 
 /// A single root client that connects to the main pritt url
