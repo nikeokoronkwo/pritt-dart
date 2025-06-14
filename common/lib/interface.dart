@@ -265,6 +265,23 @@ class Error {
 }
 
 @JsonSerializable()
+class ExistsError {
+  ExistsError({
+    this.error,
+    required this.name,
+  });
+
+  factory ExistsError.fromJson(Map<String, dynamic> json) =>
+      _$ExistsErrorFromJson(json);
+
+  final String? error;
+
+  final String name;
+
+  Map<String, dynamic> toJson() => _$ExistsErrorToJson(this);
+}
+
+@JsonSerializable()
 class ExpiredError {
   ExpiredError({
     this.error,
@@ -824,7 +841,6 @@ class Configuration {
   Configuration({
     required this.path,
     this.config,
-    required this.contents,
   });
 
   factory Configuration.fromJson(Map<String, dynamic> json) =>
@@ -834,80 +850,7 @@ class Configuration {
 
   final Map<String, dynamic>? config;
 
-  final String contents;
-
   Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
-}
-
-@JsonSerializable()
-class Readme {
-  Readme({
-    required this.name,
-    required this.format,
-    required this.contents,
-  });
-
-  factory Readme.fromJson(Map<String, dynamic> json) => _$ReadmeFromJson(json);
-
-  final String name;
-
-  final String format;
-
-  final String contents;
-
-  Map<String, dynamic> toJson() => _$ReadmeToJson(this);
-}
-
-@JsonSerializable()
-class PublishPackageByVersionRequest {
-  PublishPackageByVersionRequest({
-    required this.name,
-    this.scope,
-    required this.version,
-    required this.language,
-    required this.config,
-    this.info,
-    this.env,
-    this.readme,
-    this.changelog,
-    this.license,
-  });
-
-  factory PublishPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
-      _$PublishPackageByVersionRequestFromJson(json);
-
-  final String name;
-
-  final String? scope;
-
-  final String version;
-
-  final String language;
-
-  final Configuration config;
-
-  final Map<String, dynamic>? info;
-
-  final Map<String, dynamic>? env;
-
-  final Readme? readme;
-
-  final String? changelog;
-
-  final String? license;
-
-  Map<String, dynamic> toJson() => _$PublishPackageByVersionRequestToJson(this);
-}
-
-@JsonSerializable()
-class PublishPackageByVersionResponse {
-  PublishPackageByVersionResponse();
-
-  factory PublishPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
-      _$PublishPackageByVersionResponseFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$PublishPackageByVersionResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -928,6 +871,87 @@ class VersionControlSystem {
 }
 
 @JsonSerializable()
+class PublishPackageByVersionRequest {
+  PublishPackageByVersionRequest({
+    required this.name,
+    this.scope,
+    required this.version,
+    required this.language,
+    required this.config,
+    this.info,
+    this.env,
+    this.vcs,
+  });
+
+  factory PublishPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
+      _$PublishPackageByVersionRequestFromJson(json);
+
+  final String name;
+
+  final String? scope;
+
+  final String version;
+
+  final String language;
+
+  final Configuration config;
+
+  final Map<String, dynamic>? info;
+
+  final Map<String, dynamic>? env;
+
+  final VersionControlSystem? vcs;
+
+  Map<String, dynamic> toJson() => _$PublishPackageByVersionRequestToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum PublishingStatus {
+  pending('pending'),
+  error('error'),
+  success('success'),
+  idle('idle');
+
+  const PublishingStatus(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class Queue {
+  Queue({
+    required this.id,
+    required this.status,
+  });
+
+  factory Queue.fromJson(Map<String, dynamic> json) => _$QueueFromJson(json);
+
+  final String id;
+
+  final PublishingStatus status;
+
+  Map<String, dynamic> toJson() => _$QueueToJson(this);
+}
+
+@JsonSerializable()
+class PublishPackageByVersionResponse {
+  PublishPackageByVersionResponse({
+    this.url,
+    required this.queue,
+  });
+
+  factory PublishPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
+      _$PublishPackageByVersionResponseFromJson(json);
+
+  final String? url;
+
+  final Queue queue;
+
+  Map<String, dynamic> toJson() =>
+      _$PublishPackageByVersionResponseToJson(this);
+}
+
+@JsonSerializable()
 class PublishPackageRequest {
   PublishPackageRequest({
     required this.name,
@@ -938,9 +962,6 @@ class PublishPackageRequest {
     this.info,
     this.env,
     this.vcs,
-    this.readme,
-    this.changelog,
-    this.license,
   });
 
   factory PublishPackageRequest.fromJson(Map<String, dynamic> json) =>
@@ -962,35 +983,24 @@ class PublishPackageRequest {
 
   final VersionControlSystem? vcs;
 
-  final Readme? readme;
-
-  final String? changelog;
-
-  final String? license;
-
   Map<String, dynamic> toJson() => _$PublishPackageRequestToJson(this);
 }
 
 @JsonSerializable()
 class PublishPackageResponse {
-  PublishPackageResponse();
+  PublishPackageResponse({
+    this.url,
+    required this.queue,
+  });
 
   factory PublishPackageResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageResponseFromJson(json);
 
+  final String? url;
+
+  final Queue queue;
+
   Map<String, dynamic> toJson() => _$PublishPackageResponseToJson(this);
-}
-
-@JsonEnum(valueField: 'value')
-enum PublishingStatus {
-  pending('pending'),
-  error('error'),
-  success('success'),
-  idle('idle');
-
-  const PublishingStatus(this.value);
-
-  final String value;
 }
 
 @JsonSerializable()
@@ -1025,14 +1035,31 @@ class ServerError {
   Map<String, dynamic> toJson() => _$ServerErrorToJson(this);
 }
 
+@JsonEnum(valueField: 'value')
+enum UnauthorizedReason {
+  protected('protected'),
+  org('org'),
+  package_access('package_access'),
+  other('other');
+
+  const UnauthorizedReason(this.value);
+
+  final String value;
+}
+
 @JsonSerializable()
 class UnauthorizedError {
-  UnauthorizedError({this.error});
+  UnauthorizedError({
+    this.error,
+    this.reason,
+  });
 
   factory UnauthorizedError.fromJson(Map<String, dynamic> json) =>
       _$UnauthorizedErrorFromJson(json);
 
   final String? error;
+
+  final UnauthorizedReason? reason;
 
   Map<String, dynamic> toJson() => _$UnauthorizedErrorToJson(this);
 }
@@ -1149,6 +1176,7 @@ abstract interface class PrittInterface {
   /// This endpoint is for yanking packages from the pritt registry
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
+  ///   - [ExistsError] on status code 402
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<YankPackageResponse> yankPackageByName(
     YankPackageRequest body, {

@@ -46,7 +46,6 @@ final goHandler = Handler<GoModConfig>(
     },
     onConfigure: (context, controller) async {});
 
-@JsonSerializable(createFactory: false)
 class GoModConfig extends Config {
   final String goVersion;
 

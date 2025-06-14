@@ -141,6 +141,17 @@ Map<String, dynamic> _$ErrorToJson(Error instance) => <String, dynamic>{
       'error': instance.error,
     };
 
+ExistsError _$ExistsErrorFromJson(Map<String, dynamic> json) => ExistsError(
+      error: json['error'] as String?,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$ExistsErrorToJson(ExistsError instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'name': instance.name,
+    };
+
 ExpiredError _$ExpiredErrorFromJson(Map<String, dynamic> json) => ExpiredError(
       error: json['error'] as String?,
       expired_time: json['expired_time'] as String,
@@ -550,67 +561,13 @@ Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
     Configuration(
       path: json['path'] as String,
       config: json['config'] as Map<String, dynamic>?,
-      contents: json['contents'] as String,
     );
 
 Map<String, dynamic> _$ConfigurationToJson(Configuration instance) =>
     <String, dynamic>{
       'path': instance.path,
       'config': instance.config,
-      'contents': instance.contents,
     };
-
-Readme _$ReadmeFromJson(Map<String, dynamic> json) => Readme(
-      name: json['name'] as String,
-      format: json['format'] as String,
-      contents: json['contents'] as String,
-    );
-
-Map<String, dynamic> _$ReadmeToJson(Readme instance) => <String, dynamic>{
-      'name': instance.name,
-      'format': instance.format,
-      'contents': instance.contents,
-    };
-
-PublishPackageByVersionRequest _$PublishPackageByVersionRequestFromJson(
-        Map<String, dynamic> json) =>
-    PublishPackageByVersionRequest(
-      name: json['name'] as String,
-      scope: json['scope'] as String?,
-      version: json['version'] as String,
-      language: json['language'] as String,
-      config: Configuration.fromJson(json['config'] as Map<String, dynamic>),
-      info: json['info'] as Map<String, dynamic>?,
-      env: json['env'] as Map<String, dynamic>?,
-      readme: json['readme'] == null
-          ? null
-          : Readme.fromJson(json['readme'] as Map<String, dynamic>),
-      changelog: json['changelog'] as String?,
-      license: json['license'] as String?,
-    );
-
-Map<String, dynamic> _$PublishPackageByVersionRequestToJson(
-        PublishPackageByVersionRequest instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'scope': instance.scope,
-      'version': instance.version,
-      'language': instance.language,
-      'config': instance.config,
-      'info': instance.info,
-      'env': instance.env,
-      'readme': instance.readme,
-      'changelog': instance.changelog,
-      'license': instance.license,
-    };
-
-PublishPackageByVersionResponse _$PublishPackageByVersionResponseFromJson(
-        Map<String, dynamic> json) =>
-    PublishPackageByVersionResponse();
-
-Map<String, dynamic> _$PublishPackageByVersionResponseToJson(
-        PublishPackageByVersionResponse instance) =>
-    <String, dynamic>{};
 
 VersionControlSystem _$VersionControlSystemFromJson(
         Map<String, dynamic> json) =>
@@ -626,6 +583,65 @@ Map<String, dynamic> _$VersionControlSystemToJson(
       'url': instance.url,
     };
 
+PublishPackageByVersionRequest _$PublishPackageByVersionRequestFromJson(
+        Map<String, dynamic> json) =>
+    PublishPackageByVersionRequest(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      version: json['version'] as String,
+      language: json['language'] as String,
+      config: Configuration.fromJson(json['config'] as Map<String, dynamic>),
+      info: json['info'] as Map<String, dynamic>?,
+      env: json['env'] as Map<String, dynamic>?,
+      vcs: json['vcs'] == null
+          ? null
+          : VersionControlSystem.fromJson(json['vcs'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$PublishPackageByVersionRequestToJson(
+        PublishPackageByVersionRequest instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'version': instance.version,
+      'language': instance.language,
+      'config': instance.config,
+      'info': instance.info,
+      'env': instance.env,
+      'vcs': instance.vcs,
+    };
+
+Queue _$QueueFromJson(Map<String, dynamic> json) => Queue(
+      id: json['id'] as String,
+      status: $enumDecode(_$PublishingStatusEnumMap, json['status']),
+    );
+
+Map<String, dynamic> _$QueueToJson(Queue instance) => <String, dynamic>{
+      'id': instance.id,
+      'status': _$PublishingStatusEnumMap[instance.status]!,
+    };
+
+const _$PublishingStatusEnumMap = {
+  PublishingStatus.pending: 'pending',
+  PublishingStatus.error: 'error',
+  PublishingStatus.success: 'success',
+  PublishingStatus.idle: 'idle',
+};
+
+PublishPackageByVersionResponse _$PublishPackageByVersionResponseFromJson(
+        Map<String, dynamic> json) =>
+    PublishPackageByVersionResponse(
+      url: json['url'] as String?,
+      queue: Queue.fromJson(json['queue'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$PublishPackageByVersionResponseToJson(
+        PublishPackageByVersionResponse instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'queue': instance.queue,
+    };
+
 PublishPackageRequest _$PublishPackageRequestFromJson(
         Map<String, dynamic> json) =>
     PublishPackageRequest(
@@ -639,11 +655,6 @@ PublishPackageRequest _$PublishPackageRequestFromJson(
       vcs: json['vcs'] == null
           ? null
           : VersionControlSystem.fromJson(json['vcs'] as Map<String, dynamic>),
-      readme: json['readme'] == null
-          ? null
-          : Readme.fromJson(json['readme'] as Map<String, dynamic>),
-      changelog: json['changelog'] as String?,
-      license: json['license'] as String?,
     );
 
 Map<String, dynamic> _$PublishPackageRequestToJson(
@@ -657,18 +668,21 @@ Map<String, dynamic> _$PublishPackageRequestToJson(
       'info': instance.info,
       'env': instance.env,
       'vcs': instance.vcs,
-      'readme': instance.readme,
-      'changelog': instance.changelog,
-      'license': instance.license,
     };
 
 PublishPackageResponse _$PublishPackageResponseFromJson(
         Map<String, dynamic> json) =>
-    PublishPackageResponse();
+    PublishPackageResponse(
+      url: json['url'] as String?,
+      queue: Queue.fromJson(json['queue'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PublishPackageResponseToJson(
         PublishPackageResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'url': instance.url,
+      'queue': instance.queue,
+    };
 
 PublishPackageStatusResponse _$PublishPackageStatusResponseFromJson(
         Map<String, dynamic> json) =>
@@ -686,13 +700,6 @@ Map<String, dynamic> _$PublishPackageStatusResponseToJson(
       'description': instance.description,
     };
 
-const _$PublishingStatusEnumMap = {
-  PublishingStatus.pending: 'pending',
-  PublishingStatus.error: 'error',
-  PublishingStatus.success: 'success',
-  PublishingStatus.idle: 'idle',
-};
-
 ServerError _$ServerErrorFromJson(Map<String, dynamic> json) => ServerError(
       error: json['error'] as String?,
     );
@@ -705,12 +712,21 @@ Map<String, dynamic> _$ServerErrorToJson(ServerError instance) =>
 UnauthorizedError _$UnauthorizedErrorFromJson(Map<String, dynamic> json) =>
     UnauthorizedError(
       error: json['error'] as String?,
+      reason: $enumDecodeNullable(_$UnauthorizedReasonEnumMap, json['reason']),
     );
 
 Map<String, dynamic> _$UnauthorizedErrorToJson(UnauthorizedError instance) =>
     <String, dynamic>{
       'error': instance.error,
+      'reason': _$UnauthorizedReasonEnumMap[instance.reason],
     };
+
+const _$UnauthorizedReasonEnumMap = {
+  UnauthorizedReason.protected: 'protected',
+  UnauthorizedReason.org: 'org',
+  UnauthorizedReason.package_access: 'package_access',
+  UnauthorizedReason.other: 'other',
+};
 
 UploadAdapterResponse _$UploadAdapterResponseFromJson(
         Map<String, dynamic> json) =>

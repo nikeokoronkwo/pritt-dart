@@ -208,6 +208,14 @@ paths {
                         }
                     }
                 }
+                ["402"] {
+                    description = "Package Already Exists"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ExistsError")
+                        }
+                    }
+                }
                 ["404"] {
                     description = "Not Found Response"
                     content {

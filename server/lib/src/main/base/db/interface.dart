@@ -299,4 +299,28 @@ abstract interface class PrittDatabaseInterface
         String token,
         DateTime tokenExpiration
       })> updateAuthSessionWithAccessToken({required String sessionId});
+
+  /// Creates a new publishing task
+  FutureOr<PublishingTask> createNewPublishingTask({
+    required String name, String? scope,
+    required User user, required String language,
+    required String config, required Map<String, dynamic> configData,
+    Map<String, dynamic> metadata, Map<String, dynamic> env,
+    VCS vcs, String? vcsUrl
+  });
+
+  /// Updates a publishing task's status
+  FutureOr<PublishingTask> updatePublishingTaskStatus(String id, {
+    required TaskStatus status
+  });
+
+  /// Elevates a publishing task to a new package, plus a new version of a package
+  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(String id, {
+
+  });
+
+  /// Elevates a publishing task to a new version of a package
+  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id, {
+
+  });
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-typedef QueryParams = Map<String, String>;
+typedef QueryParams = Map<String, String?>;
 
 abstract class Authentication {
   Future<void> apply(QueryParams queryParams, Map<String, String> headerParams);

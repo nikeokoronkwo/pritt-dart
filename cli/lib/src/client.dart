@@ -124,38 +124,97 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<GetPackageResponse> getPackageByName(
-      {String? lang, bool? all, required String name}) {
-    // TODO: implement getPackageByName
-    throw UnimplementedError();
+  Future<GetPackageResponse> getPackageByName(
+      {String? lang, bool? all, required String name}) async {
+    final response = await requestBasic('/api/package/$name', Method.GET,
+        {'lang': lang, 'all': all?.toString()}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return GetPackageResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
-  FutureOr<GetPackageResponse> getPackageByNameWithScope(
-      {String? lang, bool? all, required String scope, required String name}) {
-    // TODO: implement getPackageByNameWithScope
-    throw UnimplementedError();
+  Future<GetPackageResponse> getPackageByNameWithScope(
+      {String? lang,
+      bool? all,
+      required String scope,
+      required String name}) async {
+    final response = await requestBasic('/api/package/@$scope/$name',
+        Method.GET, {'lang': lang, 'all': all?.toString()}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return GetPackageResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
-  FutureOr<GetPackageByVersionResponse> getPackageByNameWithScopeAndVersion(
+  Future<GetPackageByVersionResponse> getPackageByNameWithScopeAndVersion(
       {String? lang,
       bool? all,
       required String scope,
       required String name,
-      required String version}) {
-    // TODO: implement getPackageByNameWithScopeAndVersion
-    throw UnimplementedError();
+      required String version}) async {
+    final response = await requestBasic('/api/package/@$scope/$name/$version',
+        Method.GET, {'lang': lang, 'all': all?.toString()}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return GetPackageByVersionResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
-  FutureOr<GetPackageByVersionResponse> getPackageByNameWithVersion(
+  Future<GetPackageByVersionResponse> getPackageByNameWithVersion(
       {String? lang,
       bool? all,
       required String name,
-      required String version}) {
-    // TODO: implement getPackageByNameWithVersion
-    throw UnimplementedError();
+      required String version}) async {
+    final response = await requestBasic('/api/package/$name/$version',
+        Method.GET, {'lang': lang, 'all': all?.toString()}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return GetPackageByVersionResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
@@ -178,27 +237,73 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<PublishPackageResponse> publishPackage(PublishPackageRequest body,
-      {required String name}) {
-    // TODO: implement publishPackage
-    throw UnimplementedError();
+      {required String name}) async {
+    final response = await requestBasic(
+        '/api/package/$name', Method.POST, {}, null, body,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return PublishPackageResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
   FutureOr<PublishPackageByVersionResponse> publishPackageVersion(
       PublishPackageByVersionRequest body,
       {required String name,
-      required String version}) {
-    // TODO: implement publishPackageVersion
-    throw UnimplementedError();
+      required String version}) async {
+    final response = await requestBasic(
+        '/api/package/$name/$version', Method.POST, {}, null, body,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return PublishPackageByVersionResponse.fromJson(
+            json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
   FutureOr<PublishPackageResponse> publishPackageWithScope(
       PublishPackageRequest body,
       {required String scope,
-      required String name}) {
-    // TODO: implement publishPackageWithScope
-    throw UnimplementedError();
+      required String name}) async {
+    final response = await requestBasic(
+        '/api/package/@$scope/$name', Method.POST, {}, null, body,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return PublishPackageResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
@@ -206,9 +311,25 @@ class PrittClient extends ApiClient implements PrittInterface {
       PublishPackageByVersionRequest body,
       {required String scope,
       required String name,
-      required String version}) {
-    // TODO: implement publishPackageWithScopeAndVersion
-    throw UnimplementedError();
+      required String version}) async {
+    final response = await requestBasic(
+        '/api/package/@$scope/$name/$version', Method.POST, {}, null, body,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return PublishPackageByVersionResponse.fromJson(
+            json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
@@ -219,10 +340,60 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<UploadPackageResponse> uploadPackageWithToken(StreamedContent body,
-      {String? id}) {
-    // TODO: implement uploadPackageWithToken
-    throw UnimplementedError();
+  Future<UploadPackageResponse> uploadPackageWithToken(StreamedContent body,
+      {String? id}) async {
+    assert(id != null, "ID must be non-null");
+    final response = await requestBasic(
+        '/api/package/upload', Method.POST, {'id': id}, null, body,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return UploadPackageResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      case 402:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
+  }
+
+  @override
+  FutureOr<PublishPackageStatusResponse> getPackagePubStatus(
+      {String? id}) async {
+    assert(id != null, "ID cannot be null");
+    final response = await requestBasic(
+        '/api/package/status', Method.POST, {'id': id}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return PublishPackageStatusResponse.fromJson(
+            json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(json.decode(response.body)));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
@@ -282,13 +453,6 @@ class PrittClient extends ApiClient implements PrittInterface {
   @override
   FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id}) {
     // TODO: implement getAuthDetailsById
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<PublishPackageStatusResponse> getPackagePubStatus({String? id}) {
-    assert(id != null, "ID cannot be null");
-    // TODO: implement getPackagePubStatus
     throw UnimplementedError();
   }
 }

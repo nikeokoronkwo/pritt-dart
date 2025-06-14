@@ -9,7 +9,7 @@ CREATE TYPE plugin_archive_type AS ENUM ('single', 'multi');
 
 CREATE TYPE access_token_type AS ENUM ('device', 'personal', 'extended', 'pipeline');
 
-CREATE TYPE task_status AS ENUM ('pending', 'success', 'fail', 'expired', 'error');
+CREATE TYPE task_status AS ENUM ('pending', 'success', 'fail', 'expired', 'error', 'idle', 'queue');
 
 CREATE TYPE plugin_source_type AS ENUM ('hosted', 'vcs', 'local', 'other');
 
@@ -95,7 +95,7 @@ CREATE TABLE packages (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     vcs version_control_system NOT NULL DEFAULT 'git',
-    vcs_url TEXT, -- TODO(web): Distinguish between various VCS URLs
+    vcs_url TEXT,
     archive TEXT NOT NULL,
     license TEXT,
     CONSTRAINT valid_name CHECK (name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
@@ -187,13 +187,21 @@ CREATE TABLE authorization_sessions (
 -- TODO: Use index
 CREATE INDEX idx_login_sessions_expiry ON authorization_sessions (expires_at);
 
--- TODO: Complete
 CREATE TABLE package_publishing_tasks (
     id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     status task_status NOT NULL DEFAULT 'pending',
     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE SET NULL,
-    scope text,
-    package text NOT NULL,
+    name TEXT NOT NULL,
+    scope TEXT,
+    version TEXT,
+    language TEXT NOT NULL,
+    config TEXT NOT NULL,
+    config_map JSONB NOT NULL,
+    metadata JSONB NOT NULL DEFAULT '{}',
+    env JSON NOT NULL DEFAULT '{}',
+    vcs version_control_system NOT NULL DEFAULT 'other',
+    vcs_url TEXT,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    expires_at TIMESTAMPTZ NOT NULL
 );

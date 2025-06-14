@@ -51,6 +51,7 @@ class PublishCommand extends PrittCommand {
               'If project contains multiple languages, this specifies the primary language to publish/select handlers for.');
   }
 
+  // TODO: Key Signing from User
   @override
   FutureOr? run() async {
     // get arguments
@@ -84,6 +85,7 @@ class PublishCommand extends PrittCommand {
     var userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
+      logger.stdout('Logging user in...');
       // if user not logged in, log him in
       userCredentials = await loginUser(client, clientUrl, logger);
       await userCredentials.update();

@@ -1,10 +1,10 @@
 module PublishPackageStatusResponse
 
-status: PublishingStatus
+import "../../lib/shared.pkl" as s
+
+status: s.PublishingStatus
 
 error: String?
 
 description: String?
 
-/// The publishing status for the package
-typealias PublishingStatus = "pending" | "error" | "success" | "idle"

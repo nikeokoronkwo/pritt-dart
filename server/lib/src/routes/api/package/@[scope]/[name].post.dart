@@ -1,12 +1,14 @@
 
 import 'package:pritt_common/interface.dart' as common;
 
+import '../../../../../pritt_server.dart';
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
   // parse info
   final pkgName = getParams(event, 'name') as String;
+  final pkgScope = getParams(event, 'scope') as String;
 
   try {
     // check if user is authenticated
@@ -16,6 +18,13 @@ final handler = defineRequestHandler((event) async {
     if (user == null) {
       setResponseCode(event, 401);
       return common.UnauthorizedError(error: 'UnauthorizedError').toJson();
+    }
+
+    // check if user is in scope
+    final members = crs.db.getMembersForOrganizationStream(pkgScope);
+    if (!(await members.contains(user))) {
+      setResponseCode(event, 401);
+      return common.UnauthorizedError(error: 'UnauthorizedError', reason: common.UnauthorizedReason.org).toJson();
     }
 
     // from info...

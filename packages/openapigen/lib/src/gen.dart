@@ -72,13 +72,12 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   if (componentSpecs.containsKey(name)) {
     return TypeReference((t) => t
-        ..symbol = switch (componentSpecs![name]) {
-          Enum e => e.name,
-          Class c => c.name,
-          _ => throw Exception('Unknown')
-        }
-        ..isNullable = !(required ?? true)
-    );
+      ..symbol = switch (componentSpecs![name]) {
+        Enum e => e.name,
+        Class c => c.name,
+        _ => throw Exception('Unknown')
+      }
+      ..isNullable = !(required ?? true));
   }
 
   if (schema.hasProperty('oneOf'.toJS).toDart) {

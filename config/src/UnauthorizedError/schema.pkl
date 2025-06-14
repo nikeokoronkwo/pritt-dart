@@ -1,3 +1,8 @@
 module UnauthorizedError
 
 extends "../Error/schema.pkl"
+
+/// The reason for not being authorized
+reason: UnauthorizedReason?
+
+typealias UnauthorizedReason = "protected" | "org" | "package_access" | "other"
