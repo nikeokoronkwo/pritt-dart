@@ -104,7 +104,7 @@ class AdapterRegistry {
       } else {
         // open tarball
         final tarballOfPluginResult =
-            await storage!.get(plugin.archive.toFilePath());
+            await storage!.getPackage(plugin.archive.toFilePath());
         final tarballOfPlugin = TarDecoder()
             .decodeBytes(GZipDecoder().decodeBytes(tarballOfPluginResult.data));
 

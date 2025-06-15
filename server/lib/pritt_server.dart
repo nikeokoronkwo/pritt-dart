@@ -5,11 +5,14 @@ import 'server_handler.dart';
 import 'src/main/adapter/adapter_registry.dart';
 import 'src/main/base/db.dart';
 import 'src/main/base/storage.dart';
+import 'src/main/base/task_manager.dart';
 import 'src/main/crs/crs.dart';
 
 late CoreRegistryService crs;
 
 late AdapterRegistry registry;
+
+late TaskRunner runner;
 
 Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
   // Load environment variables for the S3 URL and database connection

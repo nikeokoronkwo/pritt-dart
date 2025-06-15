@@ -21,3 +21,7 @@
     return (parts.first, scope: null);
   }
 }
+
+String scopedName(String name, [String? scope, String sep = '/']) {
+  return scope == null ? name : '@$scope$sep$name';
+}

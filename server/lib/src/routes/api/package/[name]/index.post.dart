@@ -1,4 +1,3 @@
-
 import 'package:pritt_common/interface.dart' as common;
 
 import '../../../../server_utils/authorization.dart';
@@ -33,8 +32,5 @@ final handler = defineRequestHandler((event) async {
     // get queue details
 
     // send details down
-  } catch (e) {
-
-  }
-
+  } catch (e) {}
 });

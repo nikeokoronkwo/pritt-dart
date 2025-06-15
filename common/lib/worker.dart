@@ -34,18 +34,17 @@ class Worker<P, R> {
   ///
   /// If [onCleanup] is passed, once all tasks are complete, [onCleanup] is called on the tasks.
   /// It is recommended to only pass [onCleanup] if working on single task mode.
-  static Future<Worker<P, R>> spawn<P, R>({
-    required FutureOr<R> Function(P) work,
-    void Function()? onCleanup
-  }) async {
+  static Future<Worker<P, R>> spawn<P, R>(
+      {required FutureOr<R> Function(P) work,
+      void Function()? onCleanup}) async {
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
     final connection = Completer<(ReceivePort, SendPort)>.sync();
     initPort.handler = (initialMessage) {
       final commandPort = initialMessage as SendPort;
       connection.complete((
-      ReceivePort.fromRawReceivePort(initPort),
-      commandPort,
+        ReceivePort.fromRawReceivePort(initPort),
+        commandPort,
       ));
     };
 
@@ -58,12 +57,13 @@ class Worker<P, R> {
     }
 
     final (ReceivePort receivePort, SendPort sendPort) =
-    await connection.future;
+        await connection.future;
 
     return Worker._(receivePort, sendPort, onCleanup: onCleanup);
   }
 
-  Worker._(this._responses, this._commands, {void Function()? onCleanup}) : _onCleanup = onCleanup {
+  Worker._(this._responses, this._commands, {void Function()? onCleanup})
+      : _onCleanup = onCleanup {
     _responses.listen(_handleResponsesFromIsolate);
   }
 
@@ -78,19 +78,17 @@ class Worker<P, R> {
       if (_activeRequests.isEmpty) {
         _onCleanup?.call();
       }
-      completer.complete(
-          value
-      );
+      completer.complete(value);
     }
 
     if (_closed && _activeRequests.isEmpty) _responses.close();
   }
 
   static void _handleCommandsToIsolate<P, R>(
-      ReceivePort receivePort,
-      SendPort sendPort,
-      FutureOr<R> Function(P) work,
-      ) {
+    ReceivePort receivePort,
+    SendPort sendPort,
+    FutureOr<R> Function(P) work,
+  ) {
     receivePort.listen((message) async {
       if (message is WorkerTask) {
         switch (message) {
@@ -98,7 +96,6 @@ class Worker<P, R> {
             receivePort.close();
             return;
         }
-
       }
       final (int id, P param) = message as (int, P);
       try {
@@ -110,7 +107,8 @@ class Worker<P, R> {
     });
   }
 
-  static void Function(SendPort) _startRemoteIsolate<P, R>(FutureOr<R> Function(P) work) {
+  static void Function(SendPort) _startRemoteIsolate<P, R>(
+      FutureOr<R> Function(P) work) {
     return (sendPort) {
       final receivePort = ReceivePort();
       sendPort.send(receivePort.sendPort);
@@ -142,7 +140,6 @@ class Worker<P, R> {
     }
   }
 }
-
 
 enum WorkerTask {
   shutdown;

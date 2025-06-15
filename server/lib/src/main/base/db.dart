@@ -1067,6 +1067,36 @@ WHERE session_id = @sessionId
         code: columnMap['code'] as String,
         accessToken: columnMap['access_token'] as String);
   }
+
+  @override
+  FutureOr<PublishingTask> createNewPublishingTask({required String name, String? scope, required String version, required User user, required String language, bool newPkg = false, required String config, required Map<String, dynamic> configData, Map<String, dynamic> metadata, Map<String, dynamic> env, VCS vcs, String? vcsUrl}) {
+    // TODO: implement createNewPublishingTask
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(String id, {String? description, String? license, VersionType? versionType, String? readme, required String rawConfig, Map<String, dynamic>? info, required Uri archive, required String hash, List<Signature> signatures = const [], required String integrity}) {
+    // TODO: implement createPackageFromPublishingTask
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id, {VersionType? versionType, String? readme, required String rawConfig, Map<String, dynamic>? info, required Uri archive, required String hash, List<Signature> signatures = const [], required String integrity}) {
+    // TODO: implement createPackageVersionFromPublishingTask
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<PublishingTask> getPublishingTaskById(String id) {
+    // TODO: implement getPublishingTaskById
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<PublishingTask> updatePublishingTaskStatus(String id, {required TaskStatus status}) {
+    // TODO: implement updatePublishingTaskStatus
+    throw UnimplementedError();
+  }
 }
 
 extension Authorization on PrittDatabase {

@@ -483,7 +483,11 @@ class PublishingTask {
   User user;
 
   /// The version of the package to be published
-  String? version;
+  String version;
+
+  /// Whether this is a new package or not
+  @Key(name: 'new')
+  bool $new;
 
   /// The name of the package
   String name;
@@ -525,25 +529,29 @@ class PublishingTask {
   /// Expires at
   DateTime expiresAt;
 
-  PublishingTask({
-    required this.id,
-    required this.name,
-    required this.status,
-    required this.user,
-    this.scope, this.version,
-    this.language = 'unknown',
-    required this.config,
-    required this.configMap,
-    this.metadata = const {},
-    this.env = const {},
-    this.vcs = VCS.other,
-    this.vcsUrl,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.expiresAt
-  }) : assert(expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
+  /// If a URL was specified, get the tarball associated with this request from there
+  Uri? tarball;
 
-  bool get newPackage => version != null;
+  PublishingTask(
+      {required this.id,
+      required this.name,
+      required this.status,
+      required this.user,
+      this.scope,
+      required this.version,
+      required this.$new,
+      this.language = 'unknown',
+      required this.config,
+      required this.configMap,
+      this.metadata = const {},
+      this.env = const {},
+      this.vcs = VCS.other,
+      this.vcsUrl,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.expiresAt})
+      : assert(
+            expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
 }
 
 enum TaskStatus {

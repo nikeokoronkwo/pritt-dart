@@ -52,7 +52,7 @@ final handler = defineRequestHandler((event) async {
       };
     }
 
-    final archive = await crs.ofs.get(package.body!.archive.path);
+    final archive = await crs.ofs.getPackage(package.body!.archive.path);
 
     return archive.data;
   } on CRSException {

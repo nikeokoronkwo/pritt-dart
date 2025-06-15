@@ -1,4 +1,3 @@
-
 import 'package:pritt_common/interface.dart' as common;
 
 import '../../../../../pritt_server.dart';
@@ -24,7 +23,9 @@ final handler = defineRequestHandler((event) async {
     final members = crs.db.getMembersForOrganizationStream(pkgScope);
     if (!(await members.contains(user))) {
       setResponseCode(event, 401);
-      return common.UnauthorizedError(error: 'UnauthorizedError', reason: common.UnauthorizedReason.org).toJson();
+      return common.UnauthorizedError(
+              error: 'UnauthorizedError', reason: common.UnauthorizedReason.org)
+          .toJson();
     }
 
     // from info...
@@ -42,8 +43,5 @@ final handler = defineRequestHandler((event) async {
     // get queue details
 
     // send details down
-  } catch (e) {
-
-  }
-
+  } catch (e) {}
 });

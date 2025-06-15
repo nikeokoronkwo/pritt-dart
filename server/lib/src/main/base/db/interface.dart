@@ -301,26 +301,52 @@ abstract interface class PrittDatabaseInterface
       })> updateAuthSessionWithAccessToken({required String sessionId});
 
   /// Creates a new publishing task
-  FutureOr<PublishingTask> createNewPublishingTask({
-    required String name, String? scope,
-    required User user, required String language,
-    required String config, required Map<String, dynamic> configData,
-    Map<String, dynamic> metadata, Map<String, dynamic> env,
-    VCS vcs, String? vcsUrl
-  });
+  @Cacheable()
+  FutureOr<PublishingTask> createNewPublishingTask(
+      {required String name,
+      String? scope,
+      required String version,
+      required User user,
+      required String language,
+      bool newPkg = false,
+      required String config,
+      required Map<String, dynamic> configData,
+      Map<String, dynamic> metadata,
+      Map<String, dynamic> env,
+      VCS vcs,
+      String? vcsUrl});
+
+  /// Gets the given publishing task given its [id]
+  @Cacheable()
+  FutureOr<PublishingTask> getPublishingTaskById(String id);
 
   /// Updates a publishing task's status
-  FutureOr<PublishingTask> updatePublishingTaskStatus(String id, {
-    required TaskStatus status
-  });
+  @Cacheable()
+  FutureOr<PublishingTask> updatePublishingTaskStatus(String id,
+      {required TaskStatus status});
 
   /// Elevates a publishing task to a new package, plus a new version of a package
-  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(String id, {
-
-  });
+  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(
+      String id,
+      {String? description,
+      String? license,
+      VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity});
 
   /// Elevates a publishing task to a new version of a package
-  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id, {
-
-  });
+  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id,
+      {VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity});
 }
