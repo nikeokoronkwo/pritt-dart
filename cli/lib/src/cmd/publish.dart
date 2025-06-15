@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:archive/archive_io.dart';
 import 'package:args/command_runner.dart';
+import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/interface.dart' as common;
@@ -10,6 +13,7 @@ import 'package:pritt_common/interface.dart' as common;
 import '../adapters/base.dart';
 import '../adapters/base/config.dart';
 import '../cli/base.dart';
+import '../cli/progress_bar.dart';
 import '../client.dart';
 import '../constants.dart';
 import '../login.dart';
@@ -79,7 +83,7 @@ class PublishCommand extends PrittCommand {
       clientUrl = mainPrittInstance;
     }
 
-    final client = PrittClient(url: url);
+    var client = PrittClient(url: url);
 
     // check if user is logged in
     var userCredentials = await UserCredentials.fetch();
@@ -95,14 +99,14 @@ class PublishCommand extends PrittCommand {
     client.close();
 
     // set up new client client
-    var prittClient = PrittClient(
+    client = PrittClient(
         url: userCredentials.uri.toString(),
         accessToken: userCredentials.accessToken);
 
     // 0. PROJECT SETUP
     logger.info('Going through project...');
     var project = await getWorkspace(p.current,
-        config: argResults?['config'], client: prittClient);
+        config: argResults?['config'], client: client);
 
     // check for a handler to use
     if (project.handlers.isEmpty) {
@@ -154,13 +158,6 @@ class PublishCommand extends PrittCommand {
     // get package metadata
     final metadata = await project.getEnv();
 
-    // get README, if available
-    final (readme, format: readmeFormat) = project.readme;
-
-    // get CHANGELOG, if available
-
-    // get LICENSE info, if possible
-
     // assemble data
     final (name, scope: scope) = parsePackageName(config.name);
     final version = config.version;
@@ -197,61 +194,110 @@ class PublishCommand extends PrittCommand {
       return;
     }
 
+    String? uploadUrl;
+    String pubId;
+
     // send publish initiate request to endpoint
     if (basePackage != null) {
       // create package with version
       final pkgRequest = assemblePubRequest(
-          name: name,
-          scope: scope,
-          config: config,
-          configContents: configContents,
-          configFile: project.primaryHandler.configFile,
-          language: project.primaryHandler.language,
-          env: metadata,
-          vcs: project.vcs != common.VCS.other ? project.vcs : null,
-          vcsUrl: project.vcs != common.VCS.other
-              ? await getVcsRemoteUrl(project.vcs)
-              : null,
-          readme: readme,
-          readmeFormat: readmeFormat);
+        name: name,
+        scope: scope,
+        config: config,
+        configContents: configContents,
+        configFile: project.primaryHandler.configFile,
+        language: project.primaryHandler.language,
+        env: metadata,
+        vcs: project.vcs != common.VCS.other ? project.vcs : null,
+        vcsUrl: project.vcs != common.VCS.other
+            ? await getVcsRemoteUrl(project.vcs)
+            : null,
+      );
 
       final pubInitResponse = await (scope == null
           ? client.publishPackage(pkgRequest, name: name)
           : client.publishPackageWithScope(pkgRequest,
               scope: scope, name: name));
+
+      uploadUrl = pubInitResponse.url;
+      pubId = pubInitResponse.queue.id;
     } else {
       // create new package, with new version
       final pkgRequest = assemblePubVerRequest(
-          name: name,
-          scope: scope,
-          config: config,
-          configContents: configContents,
-          configFile: project.primaryHandler.configFile,
-          language: project.primaryHandler.language,
-          env: metadata,
-          readme: readme,
-          readmeFormat: readmeFormat);
+        name: name,
+        scope: scope,
+        config: config,
+        configContents: configContents,
+        configFile: project.primaryHandler.configFile,
+        language: project.primaryHandler.language,
+        env: metadata,
+      );
 
       final pubInitResponse = await (scope == null
           ? client.publishPackageVersion(pkgRequest,
               name: name, version: version)
           : client.publishPackageWithScopeAndVersion(pkgRequest,
               scope: scope, name: name, version: version));
+
+      uploadUrl = pubInitResponse.url;
+      pubId = pubInitResponse.queue.id;
     }
+
+    // given url and stuff, lets zip up and upload
+    logger.info('Zipping Up Package...');
+    final archive = createArchiveFromDirectory(Directory(
+        p.isAbsolute(project.directory)
+            ? project.directory
+            : p.join(p.current, project.directory)));
+    final tarball = GZipEncoder().encode(TarEncoder().encode(archive))!;
+    logger.fine('Completed Zipping Package!');
+
+    final ProgressBar progressBar =
+        ProgressBar('Uploading Package', completeMessage: 'Package Uploaded');
+
+    int contentLength = tarball.length;
+    int bytesUploaded = 0;
+
+    final uploadCompleter = Completer<void>();
+
+    final Stream<Uint8List> tarballStream = ByteStream.fromBytes(tarball)
+        .transform(StreamTransformer.fromHandlers(handleData: (chunk, sink) {
+      sink.add(Uint8List.fromList(chunk));
+      bytesUploaded += chunk.length;
+      progressBar.tick(bytesUploaded, contentLength);
+    }, handleDone: (sink) async {
+      sink.close();
+      progressBar.end();
+      uploadCompleter.complete();
+    }, handleError: (e, st, sink) {
+      sink.close();
+      uploadCompleter.completeError(e, st);
+    }));
+
+    // upload
+    if (uploadUrl != null) {
+      // PUT
+      await client.client.put(Uri.parse(uploadUrl), headers: {
+        HttpHeaders.contentTypeHeader: 'application/gzip',
+        HttpHeaders.authorizationHeader: 'Bearer ${userCredentials.accessToken}'
+      });
+    } else {
+      final uploadResult = await client.uploadPackageWithToken(
+          common.StreamedContent(
+              archivePath(name, version: version, scope: scope),
+              tarballStream,
+              contentLength
+          ),
+          id: pubId);
+    }
+
+    await uploadCompleter.future;
 
     // receive and write endpoint pub request
 
     // while endpoint is being listened to: wait
 
     // receive package id and other stuff
-
-    // validate that user wants to publish package
-
-    // once completed auth,
-
-    // zip package
-
-    // publish user package with id
   }
 
   Future<String?> getVcsRemoteUrl(common.VCS vcs, {String? directory}) async {
@@ -308,18 +354,11 @@ common.PublishPackageRequest assemblePubRequest({
       scope: scope,
       version: config.version,
       language: language,
-      config: common.Configuration(
-          path: configFile, config: config.rawConfig, contents: configContents),
+      config: common.Configuration(path: configFile, config: config.rawConfig),
       env: env,
       info: config.configMetadata,
       vcs: vcs != null
           ? common.VersionControlSystem(name: vcs, url: vcsUrl)
-          : null,
-      readme: readme != null
-          ? common.Readme(
-              name: 'README${'.${readmeFormat ?? ''}'}',
-              format: readmeFormat ?? 'md',
-              contents: readme)
           : null);
 }
 
@@ -339,14 +378,7 @@ common.PublishPackageByVersionRequest assemblePubVerRequest({
       scope: scope,
       version: config.version,
       language: language,
-      config: common.Configuration(
-          path: configFile, config: config.rawConfig, contents: configContents),
+      config: common.Configuration(path: configFile, config: config.rawConfig),
       env: env,
-      info: config.configMetadata,
-      readme: readme != null
-          ? common.Readme(
-              name: 'README${'.${readmeFormat ?? ''}'}',
-              format: readmeFormat ?? 'md',
-              contents: readme)
-          : null);
+      info: config.configMetadata);
 }

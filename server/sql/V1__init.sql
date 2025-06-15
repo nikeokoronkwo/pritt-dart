@@ -189,7 +189,7 @@ CREATE INDEX idx_login_sessions_expiry ON authorization_sessions (expires_at);
 
 CREATE TABLE package_publishing_tasks (
     id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-    status task_status NOT NULL DEFAULT 'pending',
+    status task_status NOT NULL DEFAULT 'queue',
     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     scope TEXT,

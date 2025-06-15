@@ -10,6 +10,7 @@ import 'client/base.dart';
 import 'constants.dart';
 import 'utils/log.dart';
 
+/// TODO: Add support for streamed content monitoring
 class PrittClient extends ApiClient implements PrittInterface {
   final retryClient = RetryOptions(maxAttempts: 3);
   Map<String, String> get _prittHeaders =>
@@ -344,7 +345,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       {String? id}) async {
     assert(id != null, "ID must be non-null");
     final response = await requestBasic(
-        '/api/package/upload', Method.POST, {'id': id}, null, body,
+        '/api/package/upload', Method.PUT, {'id': id}, null, body,
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {

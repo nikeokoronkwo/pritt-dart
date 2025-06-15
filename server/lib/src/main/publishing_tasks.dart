@@ -133,11 +133,13 @@ FutureOr<void> processTarball(WorkerItem<PubTaskItem, Archive> item) async {
   // check tarball size is on limits (double check)
   // TODO: such check should be done on upload side
   ArchiveFile? readme;
-  ArchiveFile configFile = archive.firstWhere((f) => f.isFile && p.basenameWithoutExtension(f.name.toLowerCase()) == configName);
+  ArchiveFile configFile = archive.firstWhere((f) =>
+      f.isFile &&
+      p.basenameWithoutExtension(f.name.toLowerCase()) == configName);
   ArchiveFile? changelog;
   ArchiveFile? license;
   ArchiveFile? prittConfig;
-  
+
   for (final file in archive) {
     if (!file.isFile) break;
 
@@ -183,7 +185,6 @@ FutureOr<void> processTarball(WorkerItem<PubTaskItem, Archive> item) async {
 
   final tarballPath = '${archiveParts.join('/')}.tar.gz';
 
-
   final tarballDigest = sha256.convert(tarballData);
 
   // create hash
@@ -196,10 +197,13 @@ FutureOr<void> processTarball(WorkerItem<PubTaskItem, Archive> item) async {
 
   if (taskInfo.$new) {
     // create new package, if not exists
-    final (Package pkg, PackageVersions pkgVer) = await crs.db
-        .createPackageFromPublishingTask(item.task.id,
+    final (Package pkg, PackageVersions pkgVer) =
+        await crs.db.createPackageFromPublishingTask(
+      item.task.id,
       license: 'not detected',
-      readme: readme?.content == null ? null : base64.encode(utf8.encode(readme?.content)),
+      readme: readme?.content == null
+          ? null
+          : base64.encode(utf8.encode(readme?.content)),
       rawConfig: configFile.content,
       archive: Uri.file(tarballPath, windows: false),
       hash: tarballHash,
@@ -207,8 +211,11 @@ FutureOr<void> processTarball(WorkerItem<PubTaskItem, Archive> item) async {
     );
   } else {
     // create new package version
-    final pkgVer = await crs.db.createPackageVersionFromPublishingTask(item.task.id,
-      readme: readme?.content == null ? null : base64.encode(utf8.encode(readme?.content)),
+    final pkgVer = await crs.db.createPackageVersionFromPublishingTask(
+      item.task.id,
+      readme: readme?.content == null
+          ? null
+          : base64.encode(utf8.encode(readme?.content)),
       rawConfig: configFile.content,
       archive: Uri.file(tarballPath, windows: false),
       hash: tarballHash,
@@ -217,10 +224,14 @@ FutureOr<void> processTarball(WorkerItem<PubTaskItem, Archive> item) async {
   }
 
   // prepare for upload
-  
 
   // add to storage
-  await crs.ofs.createPackage(tarballPath, Uint8List.fromList(tarballData), tarballHash, contentType: 'application/gzip').then((_) async {
+  await crs.ofs.createPackage(
+      tarballPath, Uint8List.fromList(tarballData), tarballHash,
+      contentType: 'application/gzip',
+      metadata: {
+        'integrity': tarballIntegrity,
+      }).then((_) async {
     // remove pub tarball afterwards
     await crs.ofs.removePubArchive('${archiveParts.join('-')}.tar.gz');
   });

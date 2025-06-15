@@ -480,7 +480,7 @@ class PublishingTask {
   TaskStatus status;
 
   /// The user responsible for this publishing task
-  User user;
+  String user;
 
   /// The version of the package to be published
   String version;

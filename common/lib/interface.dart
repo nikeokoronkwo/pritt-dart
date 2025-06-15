@@ -1301,7 +1301,7 @@ abstract interface class PrittInterface {
   });
 
   /// **Upload a package to the Pritt Server**
-  /// POST /api/package/upload
+  /// PUT /api/package/upload
   ///
   /// This API Endpoint is used to upload the tarball for the package
   /// Throws:
@@ -1388,7 +1388,7 @@ abstract interface class PrittInterface {
   _i3.FutureOr<YankAdapterResponse> yankAdapterWithId({required String id});
 
   /// **Upload an adapter to the Pritt Server**
-  /// POST /api/adapter/upload
+  /// PUT /api/adapter/upload
   ///
   /// This API Endpoint is used to upload the tarball for the processed adapter
   _i3.FutureOr<UploadAdapterResponse> uploadAdapterWithToken(

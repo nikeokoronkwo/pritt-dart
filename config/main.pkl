@@ -695,7 +695,7 @@ paths {
           }
         }
         description = "Upload a package to the Pritt Server: This API Endpoint is called after a subsequent call to /api/package/{name}(/{version})"
-        post {
+        put {
             summary = "Upload a package to the Pritt Server"
             description = "This API Endpoint is used to upload the tarball for the package"
             operationId = "uploadPackageWithToken"
@@ -1079,7 +1079,7 @@ paths {
             }
           }
         }
-        post {
+        put {
             summary = "Upload an adapter to the Pritt Server"
             description = "This API Endpoint is used to upload the tarball for the processed adapter"
             operationId = "uploadAdapterWithToken"

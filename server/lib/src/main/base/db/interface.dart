@@ -67,6 +67,7 @@ abstract interface class PrittDatabaseInterface
     required String name,
     String? scope,
     required String version,
+    VersionType? versionType,
     String? description,
     required String hash,
     required String signature,
@@ -81,7 +82,7 @@ abstract interface class PrittDatabaseInterface
     required String language,
     required VCS vcs,
     Uri? archive,
-    Iterable<User>? contributors,
+    Iterable<String>? contributors,
   });
 
   /// Add a user as a contributor to a package
@@ -312,7 +313,7 @@ abstract interface class PrittDatabaseInterface
       required String config,
       required Map<String, dynamic> configData,
       Map<String, dynamic> metadata,
-      Map<String, dynamic> env,
+      Map<String, String> env,
       VCS vcs,
       String? vcsUrl});
 
@@ -337,7 +338,9 @@ abstract interface class PrittDatabaseInterface
       required Uri archive,
       required String hash,
       List<Signature> signatures = const [],
-      required String integrity});
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []});
 
   /// Elevates a publishing task to a new version of a package
   FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id,
@@ -348,5 +351,7 @@ abstract interface class PrittDatabaseInterface
       required Uri archive,
       required String hash,
       List<Signature> signatures = const [],
-      required String integrity});
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []});
 }
