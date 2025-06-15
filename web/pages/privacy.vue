@@ -1,90 +1,111 @@
 <script setup lang="ts">
-const { data: privacyDoc, status, refresh } = await useAsyncData('blog', () => queryCollection('legal').path('/legal/privacy').first())
+const {
+  data: privacyDoc,
+  status,
+  refresh,
+} = await useAsyncData("blog", () =>
+  queryCollection("legal").path("/legal/privacy").first(),
+);
 
 onMounted(() => {
-    console.log(privacyDoc.value)
-})
+  console.log(privacyDoc.value);
+});
 </script>
 
 <template>
-    <div class="w-full max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div v-if="status === 'success'" v-html="privacyDoc?.body" class="adoc"></div>
-    </div>
+  <div class="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div
+      v-if="status === 'success'"
+      v-html="privacyDoc?.body"
+      class="adoc"
+    ></div>
+  </div>
 </template>
 
 <style lang="css">
 @reference "~/assets/css/main.css";
 
 .adoc * {
-    font-family: 'Inter', sans-serif;
-    @apply print:text-[11pt] print:mx-0 print:px-0 print:pt-0;
+  font-family: "Inter", sans-serif;
+  @apply print:mx-0 print:px-0 print:pt-0 print:text-[11pt];
 }
 
-.adoc h1, h2, h3, h4, h5, h6, .sect1 > h2 {
-    @apply font-sans leading-tight;
+.adoc h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.sect1 > h2 {
+  @apply font-sans leading-tight;
 }
 
-.adoc h1, h2 {
-    @apply py-2;
+.adoc h1,
+h2 {
+  @apply py-2;
 }
 
 .adoc h1 {
-    @apply font-bold text-3xl mb-8 text-center border-b
+  @apply mb-8 border-b text-center text-3xl font-bold;
 }
 
 .adoc h2 {
-    @apply font-semibold text-slate-800 text-2xl mb-1
+  @apply mb-1 text-2xl font-semibold text-slate-800;
 }
 
 .adoc h3 {
-    @apply text-xl font-semibold;
+  @apply text-xl font-semibold;
 }
 
-.adoc h4, h5, h6 {
-    @apply text-lg italic text-gray-600 capitalize;
+.adoc h4,
+h5,
+h6 {
+  @apply text-lg text-gray-600 capitalize italic;
 }
 
-.adoc #toc, .toc {
-    @apply border border-gray-300 bg-gray-50 p-4 mb-6 rounded;
+.adoc #toc,
+.toc {
+  @apply mb-6 rounded border border-gray-300 bg-gray-50 p-4;
 }
 
 .adoc #toctitle {
-    @apply font-bold text-lg mb-2;
+  @apply mb-2 text-lg font-bold;
 }
 
-.adoc ul, ol {
-    @apply pl-6 my-4 list-disc;
+.adoc ul,
+ol {
+  @apply my-4 list-disc pl-6;
 }
 
 .adoc {
-    .toc ul {
-        @apply list-none pl-0 space-y-1 text-sm;
-    }
+  .toc ul {
+    @apply list-none space-y-1 pl-0 text-sm;
+  }
 
-    .toc ul ul {
-        @apply pl-4 border-l border-gray-200 ml-2 mt-1 space-y-0.5;
-    }
+  .toc ul ul {
+    @apply mt-1 ml-2 space-y-0.5 border-l border-gray-200 pl-4;
+  }
 
-    .toc li {
-        @apply text-gray-700;
-    }
+  .toc li {
+    @apply text-gray-700;
+  }
 
-    .toc a {
-        @apply text-blue-700 hover:underline;
-    }
+  .toc a {
+    @apply text-blue-700 hover:underline;
+  }
 }
 
 .adoc .paragraph {
-    @apply py-2
+  @apply py-2;
 }
 
 .adoc p {
-    @apply py-1
+  @apply py-1;
 }
 
 @media print {
   body {
-    @apply bg-white text-black text-[11pt];
+    @apply bg-white text-[11pt] text-black;
   }
 
   a[href]::after {
@@ -92,12 +113,13 @@ onMounted(() => {
     font-size: 0.9em;
   }
 
-  nav, .no-print {
+  nav,
+  .no-print {
     display: none !important;
   }
 
   .adoc .toc {
-    @apply bg-white border-black;
+    @apply border-black bg-white;
   }
 
   .adoc .toc a {
@@ -105,7 +127,7 @@ onMounted(() => {
   }
 
   .adoc .toctitle {
-    @apply text-base font-bold border-black;
+    @apply border-black text-base font-bold;
   }
 }
 </style>

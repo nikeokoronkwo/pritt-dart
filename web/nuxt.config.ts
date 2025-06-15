@@ -16,10 +16,10 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "@scalar/nuxt",
     "@nuxtjs/color-mode",
-    "@pinia/nuxt"
+    "@pinia/nuxt",
   ],
 
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   vite: {
     plugins: [
       tailwindcss(),
@@ -30,22 +30,20 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    databaseUrl: '',
+    databaseUrl: "",
     public: {
-      apiUrl: ''
-    }
+      apiUrl: "",
+    },
   },
 
   icon: {
-    mode: 'css',
-    cssLayer: 'base'
+    mode: "css",
+    cssLayer: "base",
   },
 
   content: {
     build: {
-      transformers: [
-        './transformers/asciidoc'
-      ]
-    }
-  }
+      transformers: ["./transformers/asciidoc"],
+    },
+  },
 });

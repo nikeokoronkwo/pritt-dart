@@ -184,9 +184,7 @@ function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
     ),
   ];
 
-  const otherImports = [
-
-  ];
+  const otherImports = [];
   //
   const betterAuthPluginSpecifiers = [];
   if (options.magicLink)
@@ -391,7 +389,6 @@ function generateAuthExport(
     ),
   );
 
-  
   betterAuthOpts.push(
     // drizzle
     t.objectProperty(
@@ -408,23 +405,52 @@ function generateAuthExport(
       ]),
     ),
     // user
-    t.objectProperty(t.identifier('user'), t.objectExpression([
-      t.objectProperty(t.identifier('modelName'), t.stringLiteral('auth_user')),
-      t.objectProperty(t.identifier('additionalFields'), t.objectExpression([
-        t.objectProperty(t.identifier('user_id'), t.objectExpression([
-          t.objectProperty(t.identifier('required'), t.booleanLiteral(true)),
-          t.objectProperty(t.identifier('type'), t.stringLiteral('string')),
-          t.objectProperty(t.identifier('references'), t.objectExpression([
-            t.objectProperty(t.identifier('model'), t.stringLiteral('users')),
-            t.objectProperty(t.identifier('field'), t.stringLiteral('id')),
-            t.objectProperty(t.identifier('onDelete'), t.stringLiteral('cascade'))
-          ]))
-        ]))
-      ]))
-    ])),
+    t.objectProperty(
+      t.identifier("user"),
+      t.objectExpression([
+        t.objectProperty(
+          t.identifier("modelName"),
+          t.stringLiteral("auth_user"),
+        ),
+        t.objectProperty(
+          t.identifier("additionalFields"),
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier("user_id"),
+              t.objectExpression([
+                t.objectProperty(
+                  t.identifier("required"),
+                  t.booleanLiteral(true),
+                ),
+                t.objectProperty(
+                  t.identifier("type"),
+                  t.stringLiteral("string"),
+                ),
+                t.objectProperty(
+                  t.identifier("references"),
+                  t.objectExpression([
+                    t.objectProperty(
+                      t.identifier("model"),
+                      t.stringLiteral("users"),
+                    ),
+                    t.objectProperty(
+                      t.identifier("field"),
+                      t.stringLiteral("id"),
+                    ),
+                    t.objectProperty(
+                      t.identifier("onDelete"),
+                      t.stringLiteral("cascade"),
+                    ),
+                  ]),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
     // plugins
     t.objectProperty(t.identifier("plugins"), t.arrayExpression(authPlugins)),
-
   );
 
   return t.exportNamedDeclaration(

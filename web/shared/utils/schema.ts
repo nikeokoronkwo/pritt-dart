@@ -4,2140 +4,2140 @@
  */
 
 export interface paths {
-    "/api/packages": {
-        parameters: {
-            query?: {
-                /** @description The index of the paginated result */
-                index?: string;
-                /** @description Pass a user id to show */
-                user?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get all packages from the Pritt Server
-         * @description This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
-         */
-        get: operations["getPackages"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  "/api/packages": {
+    parameters: {
+      query?: {
+        /** @description The index of the paginated result */
+        index?: string;
+        /** @description Pass a user id to show */
+        user?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/package/{name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
-        };
-        /** Get a package from the Pritt Server with the given name */
-        get: operations["getPackageByName"];
-        put?: never;
-        /**
-         * Publish a package to the Pritt Server
-         * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
-         */
-        post: operations["publishPackage"];
-        /**
-         * Yank an empty package
-         * @description This endpoint is for yanking packages from the pritt registry
-         */
-        delete: operations["yankPackageByName"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get all packages from the Pritt Server
+     * @description This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
+     */
+    get: operations["getPackages"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/package/{name}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    "/api/package/@{scope}/{name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
-        };
-        /** Get a package from the Pritt Server with the given name */
-        get: operations["getPackageByNameWithScope"];
-        put?: never;
-        /**
-         * Publish a package to the Pritt Server
-         * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
-         */
-        post: operations["publishPackageWithScope"];
-        /**
-         * Yank an empty package
-         * @description This endpoint is for yanking packages from the pritt registry
-         */
-        delete: operations["yankPackageByNameWithScope"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get a package from the Pritt Server with the given name */
+    get: operations["getPackageByName"];
+    put?: never;
+    /**
+     * Publish a package to the Pritt Server
+     * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+     */
+    post: operations["publishPackage"];
+    /**
+     * Yank an empty package
+     * @description This endpoint is for yanking packages from the pritt registry
+     */
+    delete: operations["yankPackageByName"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/package/@{scope}/{name}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    "/api/package/{name}/{version}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
-        };
-        /** Get a package from the Pritt Server with the given name */
-        get: operations["getPackageByNameWithVersion"];
-        put?: never;
-        /**
-         * Publish a package to the Pritt Server
-         * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
-         */
-        post: operations["publishPackageVersion"];
-        /**
-         * Yank an empty package
-         * @description This endpoint is for yanking packages from the pritt registry
-         */
-        delete: operations["yankPackageVersionByName"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get a package from the Pritt Server with the given name */
+    get: operations["getPackageByNameWithScope"];
+    put?: never;
+    /**
+     * Publish a package to the Pritt Server
+     * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+     */
+    post: operations["publishPackageWithScope"];
+    /**
+     * Yank an empty package
+     * @description This endpoint is for yanking packages from the pritt registry
+     */
+    delete: operations["yankPackageByNameWithScope"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/package/{name}/{version}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    "/api/package/@{scope}/{name}/{version}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
-        };
-        /** Get a package from the Pritt Server with the given name */
-        get: operations["getPackageByNameWithScopeAndVersion"];
-        put?: never;
-        /**
-         * Publish a package to the Pritt Server
-         * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
-         */
-        post: operations["publishPackageWithScopeAndVersion"];
-        /**
-         * Yank an empty package
-         * @description This endpoint is for yanking packages from the pritt registry
-         */
-        delete: operations["yankPackageByNameWithScopeAndVersion"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get a package from the Pritt Server with the given name */
+    get: operations["getPackageByNameWithVersion"];
+    put?: never;
+    /**
+     * Publish a package to the Pritt Server
+     * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+     */
+    post: operations["publishPackageVersion"];
+    /**
+     * Yank an empty package
+     * @description This endpoint is for yanking packages from the pritt registry
+     */
+    delete: operations["yankPackageVersionByName"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/package/@{scope}/{name}/{version}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    "/api/package/upload": {
-        parameters: {
-            query: {
-                /** @description The token id of the package used to identify the package */
-                id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload a package to the Pritt Server
-         * @description This API Endpoint is used to upload the tarball for the package
-         */
-        post: operations["uploadPackageWithToken"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Get a package from the Pritt Server with the given name */
+    get: operations["getPackageByNameWithScopeAndVersion"];
+    put?: never;
+    /**
+     * Publish a package to the Pritt Server
+     * @description This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+     */
+    post: operations["publishPackageWithScopeAndVersion"];
+    /**
+     * Yank an empty package
+     * @description This endpoint is for yanking packages from the pritt registry
+     */
+    delete: operations["yankPackageByNameWithScopeAndVersion"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/package/upload": {
+    parameters: {
+      query: {
+        /** @description The token id of the package used to identify the package */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List users from the Pritt Server */
-        get: operations["getUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Upload a package to the Pritt Server
+     * @description This API Endpoint is used to upload the tarball for the package
+     */
+    post: operations["uploadPackageWithToken"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/users": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/user/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the user */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * Get a user from Pritt
-         * @description Get user information from Pritt about a particular user given the user's id
-         */
-        get: operations["getUserById"];
-        /** Add a new user to Pritt */
-        put: operations["addUserById"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** List users from the Pritt Server */
+    get: operations["getUsers"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/user/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the user */
+        id: string;
+      };
+      cookie?: never;
     };
-    "/api/user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get the current user from Pritt
-         * @description Get user information from Pritt about a particular user via auth
-         */
-        get: operations["getCurrentUser"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get a user from Pritt
+     * @description Get user information from Pritt about a particular user given the user's id
+     */
+    get: operations["getUserById"];
+    /** Add a new user to Pritt */
+    put: operations["addUserById"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/user": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/scope/@{scope}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope name */
-                scope: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * Get information about a scope/organization
-         * @description This GET Request retrieves information about a given scope/organization
-         */
-        get: operations["getOrganization"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get the current user from Pritt
+     * @description Get user information from Pritt about a particular user via auth
+     */
+    get: operations["getCurrentUser"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/scope/@{scope}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope name */
+        scope: string;
+      };
+      cookie?: never;
     };
-    "/api/scope/@{scope}/packages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope name */
-                scope: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * Get all packages from the Pritt Server for a given scope
-         * @description This GET Request retrieves metadata about all the packages in the registry for a given scope. To get more information on a specific package use /api/package/@{scope}/{name}
-         */
-        get: operations["getOrgPackages"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get information about a scope/organization
+     * @description This GET Request retrieves information about a given scope/organization
+     */
+    get: operations["getOrganization"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/scope/@{scope}/packages": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope name */
+        scope: string;
+      };
+      cookie?: never;
     };
-    "/api/adapters": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get all custom adapters
-         * @description Get an adapter with the given id
-         */
-        get: operations["getAdapters"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get all packages from the Pritt Server for a given scope
+     * @description This GET Request retrieves metadata about all the packages in the registry for a given scope. To get more information on a specific package use /api/package/@{scope}/{name}
+     */
+    get: operations["getOrgPackages"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/adapters": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/adapter/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the adapter */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * Get an adapter with the given id
-         * @description Get an adapter with the given id
-         */
-        get: operations["getAdapterById"];
-        put?: never;
-        /**
-         * Create or update an adapter with the given id
-         * @description Create or update an adapter with the given id
-         */
-        post: operations["addAdapterWithId"];
-        /**
-         * Yank an adapter with the given id
-         * @description Yank an adapter with the given id
-         */
-        delete: operations["yankAdapterWithId"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get all custom adapters
+     * @description Get an adapter with the given id
+     */
+    get: operations["getAdapters"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/adapter/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the adapter */
+        id: string;
+      };
+      cookie?: never;
     };
-    "/api/adapter/upload": {
-        parameters: {
-            query: {
-                /** @description The token id of the adapter used to identify the adapter */
-                id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload an adapter to the Pritt Server
-         * @description This API Endpoint is used to upload the tarball for the processed adapter
-         */
-        post: operations["uploadAdapterWithToken"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get an adapter with the given id
+     * @description Get an adapter with the given id
+     */
+    get: operations["getAdapterById"];
+    put?: never;
+    /**
+     * Create or update an adapter with the given id
+     * @description Create or update an adapter with the given id
+     */
+    post: operations["addAdapterWithId"];
+    /**
+     * Yank an adapter with the given id
+     * @description Yank an adapter with the given id
+     */
+    delete: operations["yankAdapterWithId"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/adapter/upload": {
+    parameters: {
+      query: {
+        /** @description The token id of the adapter used to identify the adapter */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/adapter/{lang}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get adapters by language
-         * @description Get the adapters for a particular language
-         */
-        get: operations["getAdaptersByLang"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Upload an adapter to the Pritt Server
+     * @description This API Endpoint is used to upload the tarball for the processed adapter
+     */
+    post: operations["uploadAdapterWithToken"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/adapter/{lang}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/auth/new": {
-        parameters: {
-            query?: {
-                /** @description The Device ID used to identify the CLI source */
-                id?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create token for a user
-         * @description Create a new token used for authenticating/creating a new user
-         */
-        post: operations["createNewAuthStatus"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get adapters by language
+     * @description Get the adapters for a particular language
+     */
+    get: operations["getAdaptersByLang"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/auth/new": {
+    parameters: {
+      query?: {
+        /** @description The Device ID used to identify the CLI source */
+        id?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/auth/details/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The Session ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * Get the details for an auth session
-         * @description Get the details for an auth session
-         */
-        get: operations["getAuthDetailsById"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Create token for a user
+     * @description Create a new token used for authenticating/creating a new user
+     */
+    post: operations["createNewAuthStatus"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/auth/details/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The Session ID */
+        id: string;
+      };
+      cookie?: never;
     };
-    "/api/auth/validate": {
-        parameters: {
-            query: {
-                /** @description The token created from the `/api/auth` */
-                token: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Validte Authentication Response
-         * @description Validate or authenticate a user
-         */
-        post: operations["validateAuthStatus"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /**
+     * Get the details for an auth session
+     * @description Get the details for an auth session
+     */
+    get: operations["getAuthDetailsById"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/auth/validate": {
+    parameters: {
+      query: {
+        /** @description The token created from the `/api/auth` */
+        token: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/auth/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get Authentication Status */
-        post: operations["getAuthStatus"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /**
+     * Validte Authentication Response
+     * @description Validate or authenticate a user
+     */
+    post: operations["validateAuthStatus"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/auth/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/archive/package/{name}": {
-        parameters: {
-            query?: {
-                /** @description The version of the package to unpack */
-                version?: string;
-            };
-            header?: never;
-            path: {
-                /** @description The name of the adapter, or an identifier associated with it */
-                name: string;
-            };
-            cookie?: never;
-        };
-        get: operations["getPackageArchiveWithName"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Get Authentication Status */
+    post: operations["getAuthStatus"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/archive/package/{name}": {
+    parameters: {
+      query?: {
+        /** @description The version of the package to unpack */
+        version?: string;
+      };
+      header?: never;
+      path: {
+        /** @description The name of the adapter, or an identifier associated with it */
+        name: string;
+      };
+      cookie?: never;
     };
-    "/api/archive/adapter/{name}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the adapter, or an identifier associated with it */
-                name: string;
-            };
-            cookie?: never;
-        };
-        get: operations["getAdapterArchiveWithName"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get: operations["getPackageArchiveWithName"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/archive/adapter/{name}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the adapter, or an identifier associated with it */
+        name: string;
+      };
+      cookie?: never;
     };
+    get: operations["getAdapterArchiveWithName"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** AddAdapterRequest */
-        AddAdapterRequest: Record<string, never>;
-        /** AddAdapterResponse */
-        AddAdapterResponse: Record<string, never>;
-        /**
-         * AddUserRequest
-         * @description The schema of the request object for the add user endpoint `api/user/{id}`
-         *
-         *     The object gets important information such as necessary information for registering the user
-         */
-        AddUserRequest: Record<string, never>;
-        /** AddUserResponse */
-        AddUserResponse: Record<string, never>;
-        /** AuthDetailsResponse */
-        AuthDetailsResponse: {
-            /** @description The token used for authentication on the client (CLI) side */
-            token: string;
-            /** @description Time to represent the number of seconds from when the request was made before the request becomes expired
-             *
-             *     Expect some  */
-            token_expires: string;
-            /** @description A unique id used to identify the person requesting for an ID
-             *
-             *     The Device ID */
-            device: string;
-            /** @description The unique 8-character code */
-            code: string;
-            /** PollStatus */
-            status: ("success" | "fail" | "error") | "expired" | "pending";
-            user_id?: string | null;
-        };
-        /** AuthError */
-        AuthError: {
-            error?: string | null;
-            /** PollStatus */
-            status: ("success" | "fail" | "error") | "expired" | "pending";
-        };
-        /** AuthPollResponse */
-        AuthPollResponse: {
-            /** PollStatus */
-            status: ("success" | "fail" | "error") | "expired" | "pending";
-            response?: {
-                [key: string]: unknown;
-            } | null;
-        };
-        /** AuthResponse */
-        AuthResponse: {
-            /** @description The token used for authentication on the client (CLI) side */
-            token: string;
-            /** @description Time to represent the number of seconds from when the request was made before the request becomes expired
-             *
-             *     Expect some  */
-            token_expires: string;
-            /** @description A unique id used to identify the person requesting for an ID
-             *
-             *     The Device ID */
-            device: string;
-            /** @description The unique 8-character code */
-            code: string;
-        };
-        /** AuthValidateRequest */
-        AuthValidateRequest: {
-            /** @description The user's id */
-            user_id: string;
-            /** @description The session id */
-            session_id: string;
-            /** @description The time at which this was validated */
-            time: string;
-            /**
-             * ValidatedPollStatus
-             * @description Status
-             * @enum {string}
-             */
-            status: "success" | "fail" | "error";
-            /** @description Error description, if any? */
-            error?: string | null;
-        };
-        /** AuthValidateResponse */
-        AuthValidateResponse: {
-            validated: boolean;
-        };
-        /**
-         * Error
-         * @description The generic error type returned from an invalid request
-         *
-         *     Most of the time, this module may be used as is, but for special cases it is extended to provide more information or context in such applications
-         */
-        Error: {
-            error?: string | null;
-        };
-        /** ExpiredError */
-        ExpiredError: {
-            error?: string | null;
-            /** @description The time that the resource expired */
-            expired_time: string;
-        };
-        /** GetAdapterResponse */
-        GetAdapterResponse: {
-            /** @description The name of the adapter */
-            name: string;
-            /**
-             * Version
-             * @description The current version of the adapter in system
-             */
-            version: string;
-            /** @description The description of the adapter */
-            description?: string | null;
-            /** @description The language the adapter is associated with */
-            language?: string | null;
-            /** @description The date the adapter was uploaded */
-            uploaded_at: string;
-            /** @description The url link to the source code of the adapter, if any */
-            source_url?: string | null;
-        };
-        /** GetAdaptersByLangResponse */
-        GetAdaptersByLangResponse: Record<string, never>;
-        /** GetAdaptersResponse */
-        GetAdaptersResponse: {
-            /** @description The adapters */
-            adapters: {
-                name: string;
-                /** Version */
-                version: string;
-                /** @description The description of the adapter */
-                description?: string | null;
-                /** @description The language the adapter is associated with */
-                language?: string | null;
-                /** @description The date the adapter was uploaded */
-                uploaded_at: string;
-                /** @description The url link to the source code of the adapter, if any */
-                source_url?: string | null;
-            }[];
-        };
-        /** GetCurrentUserResponse */
-        GetCurrentUserResponse: {
-            name: string;
-            email: string;
-            /** @description The time the user was created */
-            created_at: string;
-            /** @description The last time the user was updated */
-            updated_at: string;
-            /** @description Packages the user has worked on */
-            packages: {
-                name: string;
-                /**
-                 * UserPackageRelationship
-                 * @enum {string}
-                 */
-                type: "author" | "contributor";
-                privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
-            }[];
-            /** @description The ID of the user */
-            id: string;
-        };
-        /** GetPackageByVersionResponse */
-        GetPackageByVersionResponse: {
-            name: string;
-            scope?: string | null;
-            description?: string | null;
-            /** Version */
-            version: string;
-            /** Author */
-            author: {
-                name: string;
-                email: string;
-                avatar?: string | null;
-            };
-            contributors: {
-                name: string;
-                email: string;
-                avatar?: string | null;
-                /** @description The role of the contributor */
-                privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
-            }[];
-            language?: string | null;
-            created_at: string;
-            /** @description info  */
-            info: {
-                [key: string]: unknown;
-            };
-            /** @description env */
-            env: {
-                [key: string]: unknown;
-            };
-            /** @description metadata */
-            metadata: {
-                [key: string]: unknown;
-            };
-            /** @description signatures */
-            signatures: {
-                /** @description public key id */
-                public_key_id: string;
-                /** @description The signature itself */
-                signature: string;
-                /** @description The time the date was created */
-                created: string;
-            }[];
-            /** @description whether the package is deprecated */
-            deprecated?: boolean | null;
-            /** @description deprecation message */
-            deprecationMessage?: string | null;
-            /** @description whether the package is yanked */
-            yanked?: boolean | null;
-            /** @description The readme info */
-            readme?: string | null;
-            /**
-             * ConfigFile
-             * @description The configuration file information
-             */
-            config?: {
-                /** @description The name of the config file */
-                name: string;
-                /** @description The data in the file */
-                data: string;
-            } | null;
-            /** @description The file hash */
-            hash?: string | null;
-            /** @description The integrity hash */
-            integrity?: string | null;
-        };
-        /** GetPackageResponse */
-        GetPackageResponse: {
-            /** @description The name of the package retrieved */
-            name: string;
-            /**
-             * Version
-             * @description The latest version of the package retrieved
-             */
-            latest_version: string;
-            /**
-             * Author
-             * @description The author of the package
-             */
-            author: {
-                name: string;
-                email: string;
-                avatar?: string | null;
-            };
-            /** @description The description of the package */
-            description?: string | null;
-            /** @description Contributors to the package */
-            contributors: {
-                name: string;
-                email: string;
-                avatar?: string | null;
-                /** @description The role of the contributor */
-                privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
-            }[];
-            /** @description The language of the package */
-            language?: string | null;
-            /** @description The license for the package */
-            license: string;
-            /**
-             * VCS
-             * @description The version control system used
-             * @enum {string}
-             */
-            vcs: "git" | "svn" | "fossil" | "mercurial" | "other";
-            /** @description The URL to the VCS used */
-            vcs_url?: string | null;
-            /** @description The date the package was created */
-            created_at: string;
-            /** @description The date the package was updated */
-            updated_at: string;
-            /**
-             * VerbosePackage
-             * @description The latest package
-             */
-            latest: {
-                name: string;
-                scope?: string | null;
-                description?: string | null;
-                /** Version */
-                version: string;
-                /** Author */
-                author: {
-                    name: string;
-                    email: string;
-                    avatar?: string | null;
-                };
-                language?: string | null;
-                created_at: string;
-                updated_at?: string | null;
-                /** @description readme info */
-                readme?: string | null;
-                /** @description info  */
-                info: {
-                    [key: string]: unknown;
-                };
-                /** @description env */
-                env: {
-                    [key: string]: unknown;
-                };
-                /** @description metadata */
-                metadata: {
-                    [key: string]: unknown;
-                };
-                /** @description signatures */
-                signatures: {
-                    /** @description public key id */
-                    public_key_id: string;
-                    /** @description The signature itself */
-                    signature: string;
-                    /** @description The time the date was created */
-                    created: string;
-                }[];
-                /** @description whether the package is deprecated */
-                deprecated?: boolean | null;
-                /** @description whether the package is yanked */
-                yanked?: boolean | null;
-            };
-            /** @description A map of all the versions of the package */
-            versions: {
-                [key: string]: {
-                    name: string;
-                    scope?: string | null;
-                    description?: string | null;
-                    /** Version */
-                    version: string;
-                    /** Author */
-                    author: {
-                        name: string;
-                        email: string;
-                        avatar?: string | null;
-                    };
-                    language?: string | null;
-                    created_at: string;
-                    updated_at?: string | null;
-                    /** @description readme info */
-                    readme?: string | null;
-                    /** @description info  */
-                    info: {
-                        [key: string]: unknown;
-                    };
-                    /** @description env */
-                    env: {
-                        [key: string]: unknown;
-                    };
-                    /** @description metadata */
-                    metadata: {
-                        [key: string]: unknown;
-                    };
-                    /** @description signatures */
-                    signatures: {
-                        /** @description public key id */
-                        public_key_id: string;
-                        /** @description The signature itself */
-                        signature: string;
-                        /** @description The time the date was created */
-                        created: string;
-                    }[];
-                    /** @description whether the package is deprecated */
-                    deprecated?: boolean | null;
-                    /** @description whether the package is yanked */
-                    yanked?: boolean | null;
-                };
-            };
-        };
-        /** GetPackagesResponse */
-        GetPackagesResponse: {
-            /** @description The next url for the next list of the packages */
-            next_url?: string | null;
-            /** @description The packages listed out */
-            packages: {
-                name: string;
-                scope?: string | null;
-                description?: string | null;
-                /** Version */
-                version: string;
-                /** Author */
-                author: {
-                    name: string;
-                    email: string;
-                    avatar?: string | null;
-                };
-                language?: string | null;
-                created_at: string;
-                updated_at?: string | null;
-            }[];
-        };
-        /** GetScopeResponse */
-        GetScopeResponse: {
-            /** @description The name of the organization */
-            name: string;
-            /** @description Whether the person requesting is a member */
-            is_member: boolean;
-        };
-        /** GetUserResponse */
-        GetUserResponse: {
-            name: string;
-            email: string;
-            /** @description The time the user was created */
-            created_at: string;
-            /** @description The last time the user was updated */
-            updated_at: string;
-            /** @description Packages the user has worked on */
-            packages: {
-                name: string;
-                /**
-                 * UserPackageRelationship
-                 * @enum {string}
-                 */
-                type: "author" | "contributor";
-                privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
-            }[];
-        };
-        /** GetUsersResponse */
-        GetUsersResponse: Record<string, never>;
-        /** NotFoundError */
-        NotFoundError: {
-            error?: string | null;
-            message?: string | null;
-        };
-        /** PublishPackageByVersionRequest */
-        PublishPackageByVersionRequest: Record<string, never>;
-        /** PublishPackageByVersionResponse */
-        PublishPackageByVersionResponse: Record<string, never>;
-        /**
-         * PublishPackageRequest
-         * @description A request object to publish a given package
-         */
-        PublishPackageRequest: {
-            /** @description The name of the package to publish */
-            name: string;
-            /**
-             * Version
-             * @description The version of the package to publish
-             */
-            version: string;
-            /** @description The configuration info about the package */
-            config: {
-                [key: string]: unknown;
-            };
-            /**
-             * Uri
-             * @description The configuration file for the given project
-             */
-            configFile: string;
-        };
-        /** PublishPackageResponse */
-        PublishPackageResponse: Record<string, never>;
-        /**
-         * ServerError
-         * @description A server error, returned in the case of a 500 Server Error
-         *
-         *     Most of the time this is not what we want, but it is here for the sake of completeness
-         */
-        ServerError: {
-            error?: string | null;
-        };
-        /** UnauthorizedError */
-        UnauthorizedError: {
-            error?: string | null;
-        };
-        /** UploadAdapterResponse */
-        UploadAdapterResponse: Record<string, never>;
-        /** UploadPackageResponse */
-        UploadPackageResponse: Record<string, never>;
-        /** YankAdapterResponse */
-        YankAdapterResponse: Record<string, never>;
-        /** YankPackageByVersionResponse */
-        YankPackageByVersionRequest: Record<string, never>;
-        /** YankPackageByVersionRequest */
-        YankPackageByVersionResponse: Record<string, never>;
-        /**
-         * YankPackageRequest
-         * @description The schema of the request object for the add user endpoint `api/user/{id}`
-         *
-         *     The object gets important information such as necessary information for registering the user
-         */
-        YankPackageRequest: {
-            /** @description The version of the package */
-            version: string;
-        };
-        /**
-         * YankPackageResponse
-         * @description The schema of the request object for the add user endpoint ``
-         *
-         *     Returns the info about the yanked package
-         */
-        YankPackageResponse: Record<string, never>;
+  schemas: {
+    /** AddAdapterRequest */
+    AddAdapterRequest: Record<string, never>;
+    /** AddAdapterResponse */
+    AddAdapterResponse: Record<string, never>;
+    /**
+     * AddUserRequest
+     * @description The schema of the request object for the add user endpoint `api/user/{id}`
+     *
+     *     The object gets important information such as necessary information for registering the user
+     */
+    AddUserRequest: Record<string, never>;
+    /** AddUserResponse */
+    AddUserResponse: Record<string, never>;
+    /** AuthDetailsResponse */
+    AuthDetailsResponse: {
+      /** @description The token used for authentication on the client (CLI) side */
+      token: string;
+      /** @description Time to represent the number of seconds from when the request was made before the request becomes expired
+       *
+       *     Expect some  */
+      token_expires: string;
+      /** @description A unique id used to identify the person requesting for an ID
+       *
+       *     The Device ID */
+      device: string;
+      /** @description The unique 8-character code */
+      code: string;
+      /** PollStatus */
+      status: ("success" | "fail" | "error") | "expired" | "pending";
+      user_id?: string | null;
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    /** AuthError */
+    AuthError: {
+      error?: string | null;
+      /** PollStatus */
+      status: ("success" | "fail" | "error") | "expired" | "pending";
+    };
+    /** AuthPollResponse */
+    AuthPollResponse: {
+      /** PollStatus */
+      status: ("success" | "fail" | "error") | "expired" | "pending";
+      response?: {
+        [key: string]: unknown;
+      } | null;
+    };
+    /** AuthResponse */
+    AuthResponse: {
+      /** @description The token used for authentication on the client (CLI) side */
+      token: string;
+      /** @description Time to represent the number of seconds from when the request was made before the request becomes expired
+       *
+       *     Expect some  */
+      token_expires: string;
+      /** @description A unique id used to identify the person requesting for an ID
+       *
+       *     The Device ID */
+      device: string;
+      /** @description The unique 8-character code */
+      code: string;
+    };
+    /** AuthValidateRequest */
+    AuthValidateRequest: {
+      /** @description The user's id */
+      user_id: string;
+      /** @description The session id */
+      session_id: string;
+      /** @description The time at which this was validated */
+      time: string;
+      /**
+       * ValidatedPollStatus
+       * @description Status
+       * @enum {string}
+       */
+      status: "success" | "fail" | "error";
+      /** @description Error description, if any? */
+      error?: string | null;
+    };
+    /** AuthValidateResponse */
+    AuthValidateResponse: {
+      validated: boolean;
+    };
+    /**
+     * Error
+     * @description The generic error type returned from an invalid request
+     *
+     *     Most of the time, this module may be used as is, but for special cases it is extended to provide more information or context in such applications
+     */
+    Error: {
+      error?: string | null;
+    };
+    /** ExpiredError */
+    ExpiredError: {
+      error?: string | null;
+      /** @description The time that the resource expired */
+      expired_time: string;
+    };
+    /** GetAdapterResponse */
+    GetAdapterResponse: {
+      /** @description The name of the adapter */
+      name: string;
+      /**
+       * Version
+       * @description The current version of the adapter in system
+       */
+      version: string;
+      /** @description The description of the adapter */
+      description?: string | null;
+      /** @description The language the adapter is associated with */
+      language?: string | null;
+      /** @description The date the adapter was uploaded */
+      uploaded_at: string;
+      /** @description The url link to the source code of the adapter, if any */
+      source_url?: string | null;
+    };
+    /** GetAdaptersByLangResponse */
+    GetAdaptersByLangResponse: Record<string, never>;
+    /** GetAdaptersResponse */
+    GetAdaptersResponse: {
+      /** @description The adapters */
+      adapters: {
+        name: string;
+        /** Version */
+        version: string;
+        /** @description The description of the adapter */
+        description?: string | null;
+        /** @description The language the adapter is associated with */
+        language?: string | null;
+        /** @description The date the adapter was uploaded */
+        uploaded_at: string;
+        /** @description The url link to the source code of the adapter, if any */
+        source_url?: string | null;
+      }[];
+    };
+    /** GetCurrentUserResponse */
+    GetCurrentUserResponse: {
+      name: string;
+      email: string;
+      /** @description The time the user was created */
+      created_at: string;
+      /** @description The last time the user was updated */
+      updated_at: string;
+      /** @description Packages the user has worked on */
+      packages: {
+        name: string;
+        /**
+         * UserPackageRelationship
+         * @enum {string}
+         */
+        type: "author" | "contributor";
+        privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
+      }[];
+      /** @description The ID of the user */
+      id: string;
+    };
+    /** GetPackageByVersionResponse */
+    GetPackageByVersionResponse: {
+      name: string;
+      scope?: string | null;
+      description?: string | null;
+      /** Version */
+      version: string;
+      /** Author */
+      author: {
+        name: string;
+        email: string;
+        avatar?: string | null;
+      };
+      contributors: {
+        name: string;
+        email: string;
+        avatar?: string | null;
+        /** @description The role of the contributor */
+        privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
+      }[];
+      language?: string | null;
+      created_at: string;
+      /** @description info  */
+      info: {
+        [key: string]: unknown;
+      };
+      /** @description env */
+      env: {
+        [key: string]: unknown;
+      };
+      /** @description metadata */
+      metadata: {
+        [key: string]: unknown;
+      };
+      /** @description signatures */
+      signatures: {
+        /** @description public key id */
+        public_key_id: string;
+        /** @description The signature itself */
+        signature: string;
+        /** @description The time the date was created */
+        created: string;
+      }[];
+      /** @description whether the package is deprecated */
+      deprecated?: boolean | null;
+      /** @description deprecation message */
+      deprecationMessage?: string | null;
+      /** @description whether the package is yanked */
+      yanked?: boolean | null;
+      /** @description The readme info */
+      readme?: string | null;
+      /**
+       * ConfigFile
+       * @description The configuration file information
+       */
+      config?: {
+        /** @description The name of the config file */
+        name: string;
+        /** @description The data in the file */
+        data: string;
+      } | null;
+      /** @description The file hash */
+      hash?: string | null;
+      /** @description The integrity hash */
+      integrity?: string | null;
+    };
+    /** GetPackageResponse */
+    GetPackageResponse: {
+      /** @description The name of the package retrieved */
+      name: string;
+      /**
+       * Version
+       * @description The latest version of the package retrieved
+       */
+      latest_version: string;
+      /**
+       * Author
+       * @description The author of the package
+       */
+      author: {
+        name: string;
+        email: string;
+        avatar?: string | null;
+      };
+      /** @description The description of the package */
+      description?: string | null;
+      /** @description Contributors to the package */
+      contributors: {
+        name: string;
+        email: string;
+        avatar?: string | null;
+        /** @description The role of the contributor */
+        privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
+      }[];
+      /** @description The language of the package */
+      language?: string | null;
+      /** @description The license for the package */
+      license: string;
+      /**
+       * VCS
+       * @description The version control system used
+       * @enum {string}
+       */
+      vcs: "git" | "svn" | "fossil" | "mercurial" | "other";
+      /** @description The URL to the VCS used */
+      vcs_url?: string | null;
+      /** @description The date the package was created */
+      created_at: string;
+      /** @description The date the package was updated */
+      updated_at: string;
+      /**
+       * VerbosePackage
+       * @description The latest package
+       */
+      latest: {
+        name: string;
+        scope?: string | null;
+        description?: string | null;
+        /** Version */
+        version: string;
+        /** Author */
+        author: {
+          name: string;
+          email: string;
+          avatar?: string | null;
+        };
+        language?: string | null;
+        created_at: string;
+        updated_at?: string | null;
+        /** @description readme info */
+        readme?: string | null;
+        /** @description info  */
+        info: {
+          [key: string]: unknown;
+        };
+        /** @description env */
+        env: {
+          [key: string]: unknown;
+        };
+        /** @description metadata */
+        metadata: {
+          [key: string]: unknown;
+        };
+        /** @description signatures */
+        signatures: {
+          /** @description public key id */
+          public_key_id: string;
+          /** @description The signature itself */
+          signature: string;
+          /** @description The time the date was created */
+          created: string;
+        }[];
+        /** @description whether the package is deprecated */
+        deprecated?: boolean | null;
+        /** @description whether the package is yanked */
+        yanked?: boolean | null;
+      };
+      /** @description A map of all the versions of the package */
+      versions: {
+        [key: string]: {
+          name: string;
+          scope?: string | null;
+          description?: string | null;
+          /** Version */
+          version: string;
+          /** Author */
+          author: {
+            name: string;
+            email: string;
+            avatar?: string | null;
+          };
+          language?: string | null;
+          created_at: string;
+          updated_at?: string | null;
+          /** @description readme info */
+          readme?: string | null;
+          /** @description info  */
+          info: {
+            [key: string]: unknown;
+          };
+          /** @description env */
+          env: {
+            [key: string]: unknown;
+          };
+          /** @description metadata */
+          metadata: {
+            [key: string]: unknown;
+          };
+          /** @description signatures */
+          signatures: {
+            /** @description public key id */
+            public_key_id: string;
+            /** @description The signature itself */
+            signature: string;
+            /** @description The time the date was created */
+            created: string;
+          }[];
+          /** @description whether the package is deprecated */
+          deprecated?: boolean | null;
+          /** @description whether the package is yanked */
+          yanked?: boolean | null;
+        };
+      };
+    };
+    /** GetPackagesResponse */
+    GetPackagesResponse: {
+      /** @description The next url for the next list of the packages */
+      next_url?: string | null;
+      /** @description The packages listed out */
+      packages: {
+        name: string;
+        scope?: string | null;
+        description?: string | null;
+        /** Version */
+        version: string;
+        /** Author */
+        author: {
+          name: string;
+          email: string;
+          avatar?: string | null;
+        };
+        language?: string | null;
+        created_at: string;
+        updated_at?: string | null;
+      }[];
+    };
+    /** GetScopeResponse */
+    GetScopeResponse: {
+      /** @description The name of the organization */
+      name: string;
+      /** @description Whether the person requesting is a member */
+      is_member: boolean;
+    };
+    /** GetUserResponse */
+    GetUserResponse: {
+      name: string;
+      email: string;
+      /** @description The time the user was created */
+      created_at: string;
+      /** @description The last time the user was updated */
+      updated_at: string;
+      /** @description Packages the user has worked on */
+      packages: {
+        name: string;
+        /**
+         * UserPackageRelationship
+         * @enum {string}
+         */
+        type: "author" | "contributor";
+        privileges?: ("read" | "write" | "publish" | "ultimate")[] | null;
+      }[];
+    };
+    /** GetUsersResponse */
+    GetUsersResponse: Record<string, never>;
+    /** NotFoundError */
+    NotFoundError: {
+      error?: string | null;
+      message?: string | null;
+    };
+    /** PublishPackageByVersionRequest */
+    PublishPackageByVersionRequest: Record<string, never>;
+    /** PublishPackageByVersionResponse */
+    PublishPackageByVersionResponse: Record<string, never>;
+    /**
+     * PublishPackageRequest
+     * @description A request object to publish a given package
+     */
+    PublishPackageRequest: {
+      /** @description The name of the package to publish */
+      name: string;
+      /**
+       * Version
+       * @description The version of the package to publish
+       */
+      version: string;
+      /** @description The configuration info about the package */
+      config: {
+        [key: string]: unknown;
+      };
+      /**
+       * Uri
+       * @description The configuration file for the given project
+       */
+      configFile: string;
+    };
+    /** PublishPackageResponse */
+    PublishPackageResponse: Record<string, never>;
+    /**
+     * ServerError
+     * @description A server error, returned in the case of a 500 Server Error
+     *
+     *     Most of the time this is not what we want, but it is here for the sake of completeness
+     */
+    ServerError: {
+      error?: string | null;
+    };
+    /** UnauthorizedError */
+    UnauthorizedError: {
+      error?: string | null;
+    };
+    /** UploadAdapterResponse */
+    UploadAdapterResponse: Record<string, never>;
+    /** UploadPackageResponse */
+    UploadPackageResponse: Record<string, never>;
+    /** YankAdapterResponse */
+    YankAdapterResponse: Record<string, never>;
+    /** YankPackageByVersionResponse */
+    YankPackageByVersionRequest: Record<string, never>;
+    /** YankPackageByVersionRequest */
+    YankPackageByVersionResponse: Record<string, never>;
+    /**
+     * YankPackageRequest
+     * @description The schema of the request object for the add user endpoint `api/user/{id}`
+     *
+     *     The object gets important information such as necessary information for registering the user
+     */
+    YankPackageRequest: {
+      /** @description The version of the package */
+      version: string;
+    };
+    /**
+     * YankPackageResponse
+     * @description The schema of the request object for the add user endpoint ``
+     *
+     *     Returns the info about the yanked package
+     */
+    YankPackageResponse: Record<string, never>;
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getPackages: {
-        parameters: {
-            query?: {
-                /** @description The index of the paginated result */
-                index?: string;
-                /** @description Pass a user id to show */
-                user?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {
-                     *       "next_url": "https://example.com/foo",
-                     *       "packages": [
-                     *         {
-                     *           "name": "pritt",
-                     *           "description": "The Pritt Package itself!",
-                     *           "version": "0.1.0",
-                     *           "author": {
-                     *             "name": "Pritt",
-                     *             "email": "pritt@pritt.com"
-                     *           },
-                     *           "created_at": "2023-10-01T00:00:00Z"
-                     *         }
-                     *       ]
-                     *     } */
-                    "application/json": components["schemas"]["GetPackagesResponse"];
-                };
-            };
-        };
+  getPackages: {
+    parameters: {
+      query?: {
+        /** @description The index of the paginated result */
+        index?: string;
+        /** @description Pass a user id to show */
+        user?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getPackageByName: {
-        parameters: {
-            query?: {
-                /** @description The language associated with the package */
-                lang?: string;
-                /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
-                all?: boolean;
-            };
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["GetPackageResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
+        content: {
+          /** @example {
+           *       "next_url": "https://example.com/foo",
+           *       "packages": [
+           *         {
+           *           "name": "pritt",
+           *           "description": "The Pritt Package itself!",
+           *           "version": "0.1.0",
+           *           "author": {
+           *             "name": "Pritt",
+           *             "email": "pritt@pritt.com"
+           *           },
+           *           "created_at": "2023-10-01T00:00:00Z"
+           *         }
+           *       ]
+           *     } */
+          "application/json": components["schemas"]["GetPackagesResponse"];
         };
+      };
     };
-    publishPackage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublishPackageRequest"];
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublishPackageResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-        };
+  };
+  getPackageByName: {
+    parameters: {
+      query?: {
+        /** @description The language associated with the package */
+        lang?: string;
+        /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
+        all?: boolean;
+      };
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    yankPackageByName: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["YankPackageRequest"];
-            };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["GetPackageResponse"];
         };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YankPackageResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    getPackageByNameWithScope: {
-        parameters: {
-            query?: {
-                /** @description The language associated with the package */
-                lang?: string;
-                /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
-                all?: boolean;
-            };
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["GetPackageResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-        };
+  };
+  publishPackage: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    publishPackageWithScope: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublishPackageRequest"];
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublishPackageResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PublishPackageRequest"];
+      };
     };
-    yankPackageByNameWithScope: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["YankPackageRequest"];
-            };
+        content: {
+          "application/json": components["schemas"]["PublishPackageResponse"];
         };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YankPackageResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
     };
-    getPackageByNameWithVersion: {
-        parameters: {
-            query?: {
-                /** @description The language associated with the package */
-                lang?: string;
-                /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
-                all?: boolean;
-            };
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {
-                     *       "name": "pkg",
-                     *       "description": "A starter package",
-                     *       "version": "0.1.0",
-                     *       "author": {
-                     *         "name": "pritt",
-                     *         "email": "pritt@pritt.com"
-                     *       },
-                     *       "contributors": [],
-                     *       "language": "cplusplus",
-                     *       "created_at": "",
-                     *       "info": {},
-                     *       "env": {},
-                     *       "metadata": {},
-                     *       "signatures": [],
-                     *       "readme": "# pkg\nA great starting point for packages"
-                     *     } */
-                    "application/json": components["schemas"]["GetPackageByVersionResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-        };
+  };
+  yankPackageByName: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    publishPackageVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublishPackageByVersionRequest"];
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublishPackageByVersionResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-        };
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["YankPackageRequest"];
+      };
     };
-    yankPackageVersionByName: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["YankPackageByVersionRequest"];
-            };
+        content: {
+          "application/json": components["schemas"]["YankPackageResponse"];
         };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YankPackageByVersionResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    getPackageByNameWithScopeAndVersion: {
-        parameters: {
-            query?: {
-                /** @description The language associated with the package */
-                lang?: string;
-                /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
-                all?: boolean;
-            };
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {
-                     *       "name": "pkg",
-                     *       "description": "A starter package",
-                     *       "version": "0.1.0",
-                     *       "author": {
-                     *         "name": "pritt",
-                     *         "email": "pritt@pritt.com"
-                     *       },
-                     *       "contributors": [],
-                     *       "language": "cplusplus",
-                     *       "created_at": "",
-                     *       "info": {},
-                     *       "env": {},
-                     *       "metadata": {},
-                     *       "signatures": [],
-                     *       "readme": "# pkg\nA great starting point for packages"
-                     *     } */
-                    "application/json": components["schemas"]["GetPackageByVersionResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-        };
+  };
+  getPackageByNameWithScope: {
+    parameters: {
+      query?: {
+        /** @description The language associated with the package */
+        lang?: string;
+        /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
+        all?: boolean;
+      };
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    publishPackageWithScopeAndVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublishPackageByVersionRequest"];
-            };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["GetPackageResponse"];
         };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PublishPackageByVersionResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    yankPackageByNameWithScopeAndVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope for the given package */
-                scope: string;
-                /** @description The name of the package */
-                name: string;
-                /** @description The version of the package */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["YankPackageByVersionRequest"];
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YankPackageByVersionResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-        };
+  };
+  publishPackageWithScope: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    uploadPackageWithToken: {
-        parameters: {
-            query: {
-                /** @description The token id of the package used to identify the package */
-                id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/gzip": string;
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UploadPackageResponse"];
-                };
-            };
-            /** @description Unauthorized Response */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-            /** @description Token Expired */
-            402: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["UnauthorizedError"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {} */
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PublishPackageRequest"];
+      };
     };
-    getUsers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Normal response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetUsersResponse"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["PublishPackageResponse"];
         };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
     };
-    getUserById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the user */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetUserResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-        };
+  };
+  yankPackageByNameWithScope: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+      };
+      cookie?: never;
     };
-    addUserById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the user */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddUserRequest"];
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AddUserResponse"];
-                };
-            };
-        };
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["YankPackageRequest"];
+      };
     };
-    getCurrentUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetUserResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["YankPackageResponse"];
         };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    getOrganization: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope name */
-                scope: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {
-                     *       "name": "ramen",
-                     *       "is_member": true
-                     *     } */
-                    "application/json": components["schemas"]["GetScopeResponse"];
-                };
-            };
-        };
+  };
+  getPackageByNameWithVersion: {
+    parameters: {
+      query?: {
+        /** @description The language associated with the package */
+        lang?: string;
+        /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
+        all?: boolean;
+      };
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    getOrgPackages: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The scope name */
-                scope: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /** @example {
-                     *       "next_url": "https://example.com/foo",
-                     *       "packages": [
-                     *         {
-                     *           "name": "pritt",
-                     *           "description": "The Pritt Package itself!",
-                     *           "version": "0.1.0",
-                     *           "author": {
-                     *             "name": "Pritt",
-                     *             "email": "pritt@pritt.com"
-                     *           },
-                     *           "created_at": "2023-10-01T00:00:00Z"
-                     *         }
-                     *       ]
-                     *     } */
-                    "application/json": components["schemas"]["GetPackagesResponse"];
-                };
-            };
+        content: {
+          /** @example {
+           *       "name": "pkg",
+           *       "description": "A starter package",
+           *       "version": "0.1.0",
+           *       "author": {
+           *         "name": "pritt",
+           *         "email": "pritt@pritt.com"
+           *       },
+           *       "contributors": [],
+           *       "language": "cplusplus",
+           *       "created_at": "",
+           *       "info": {},
+           *       "env": {},
+           *       "metadata": {},
+           *       "signatures": [],
+           *       "readme": "# pkg\nA great starting point for packages"
+           *     } */
+          "application/json": components["schemas"]["GetPackageByVersionResponse"];
         };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    getAdapters: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetAdaptersResponse"];
-                };
-            };
-        };
+  };
+  publishPackageVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    getAdapterById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the adapter */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetAdapterResponse"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PublishPackageByVersionRequest"];
+      };
     };
-    addAdapterWithId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the adapter */
-                id: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddAdapterRequest"];
-            };
+        content: {
+          "application/json": components["schemas"]["PublishPackageByVersionResponse"];
         };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AddAdapterResponse"];
-                };
-            };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
         };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
     };
-    yankAdapterWithId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the adapter */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YankAdapterResponse"];
-                };
-            };
-        };
+  };
+  yankPackageVersionByName: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    uploadAdapterWithToken: {
-        parameters: {
-            query: {
-                /** @description The token id of the adapter used to identify the adapter */
-                id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/gzip": string;
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UploadAdapterResponse"];
-                };
-            };
-        };
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["YankPackageByVersionRequest"];
+      };
     };
-    getAdaptersByLang: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GetAdaptersByLangResponse"];
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["YankPackageByVersionResponse"];
         };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    createNewAuthStatus: {
-        parameters: {
-            query?: {
-                /** @description The Device ID used to identify the CLI source */
-                id?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthResponse"];
-                };
-            };
-            /** @description Server Error */
-            "5XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ServerError"];
-                };
-            };
-        };
+  };
+  getPackageByNameWithScopeAndVersion: {
+    parameters: {
+      query?: {
+        /** @description The language associated with the package */
+        lang?: string;
+        /** @description Whether to get all the versions of the package, including yanked and deprecated versions */
+        all?: boolean;
+      };
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    getAuthDetailsById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The Session ID */
-                id: string;
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthDetailsResponse"];
-                };
-            };
-            /** @description Not Found Response */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
+        content: {
+          /** @example {
+           *       "name": "pkg",
+           *       "description": "A starter package",
+           *       "version": "0.1.0",
+           *       "author": {
+           *         "name": "pritt",
+           *         "email": "pritt@pritt.com"
+           *       },
+           *       "contributors": [],
+           *       "language": "cplusplus",
+           *       "created_at": "",
+           *       "info": {},
+           *       "env": {},
+           *       "metadata": {},
+           *       "signatures": [],
+           *       "readme": "# pkg\nA great starting point for packages"
+           *     } */
+          "application/json": components["schemas"]["GetPackageByVersionResponse"];
         };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
-    validateAuthStatus: {
-        parameters: {
-            query: {
-                /** @description The token created from the `/api/auth` */
-                token: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The request body containing all the information needed to validate a user's status */
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["AuthValidateRequest"];
-            };
-        };
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthValidateResponse"];
-                };
-            };
-            /** @description Authorization did not complete or errored out */
-            402: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthError"];
-                };
-            };
-            /** @description Expired Token Response */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExpiredError"];
-                };
-            };
-        };
+  };
+  publishPackageWithScopeAndVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
-    getAuthStatus: {
-        parameters: {
-            query: {
-                /** @description The Session ID */
-                id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AuthPollResponse"];
-                };
-            };
-            /** @description Could not find the token specified */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundError"];
-                };
-            };
-            /** @description Expired Token Response */
-            405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExpiredError"];
-                };
-            };
-        };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PublishPackageByVersionRequest"];
+      };
     };
-    getPackageArchiveWithName: {
-        parameters: {
-            query?: {
-                /** @description The version of the package to unpack */
-                version?: string;
-            };
-            header?: never;
-            path: {
-                /** @description The name of the adapter, or an identifier associated with it */
-                name: string;
-            };
-            cookie?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/gzip": string;
-                };
-            };
+        content: {
+          "application/json": components["schemas"]["PublishPackageByVersionResponse"];
         };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
     };
-    getAdapterArchiveWithName: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the adapter, or an identifier associated with it */
-                name: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/gzip": string;
-                };
-            };
-        };
+  };
+  yankPackageByNameWithScopeAndVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope for the given package */
+        scope: string;
+        /** @description The name of the package */
+        name: string;
+        /** @description The version of the package */
+        version: string;
+      };
+      cookie?: never;
     };
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["YankPackageByVersionRequest"];
+      };
+    };
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["YankPackageByVersionResponse"];
+        };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+    };
+  };
+  uploadPackageWithToken: {
+    parameters: {
+      query: {
+        /** @description The token id of the package used to identify the package */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/gzip": string;
+      };
+    };
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadPackageResponse"];
+        };
+      };
+      /** @description Unauthorized Response */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Token Expired */
+      402: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {} */
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+    };
+  };
+  getUsers: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Normal response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetUsersResponse"];
+        };
+      };
+    };
+  };
+  getUserById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the user */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetUserResponse"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+    };
+  };
+  addUserById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the user */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddUserRequest"];
+      };
+    };
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AddUserResponse"];
+        };
+      };
+    };
+  };
+  getCurrentUser: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetUserResponse"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+    };
+  };
+  getOrganization: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope name */
+        scope: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "name": "ramen",
+           *       "is_member": true
+           *     } */
+          "application/json": components["schemas"]["GetScopeResponse"];
+        };
+      };
+    };
+  };
+  getOrgPackages: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The scope name */
+        scope: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /** @example {
+           *       "next_url": "https://example.com/foo",
+           *       "packages": [
+           *         {
+           *           "name": "pritt",
+           *           "description": "The Pritt Package itself!",
+           *           "version": "0.1.0",
+           *           "author": {
+           *             "name": "Pritt",
+           *             "email": "pritt@pritt.com"
+           *           },
+           *           "created_at": "2023-10-01T00:00:00Z"
+           *         }
+           *       ]
+           *     } */
+          "application/json": components["schemas"]["GetPackagesResponse"];
+        };
+      };
+    };
+  };
+  getAdapters: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetAdaptersResponse"];
+        };
+      };
+    };
+  };
+  getAdapterById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the adapter */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetAdapterResponse"];
+        };
+      };
+    };
+  };
+  addAdapterWithId: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the adapter */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddAdapterRequest"];
+      };
+    };
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AddAdapterResponse"];
+        };
+      };
+    };
+  };
+  yankAdapterWithId: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The id of the adapter */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["YankAdapterResponse"];
+        };
+      };
+    };
+  };
+  uploadAdapterWithToken: {
+    parameters: {
+      query: {
+        /** @description The token id of the adapter used to identify the adapter */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/gzip": string;
+      };
+    };
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadAdapterResponse"];
+        };
+      };
+    };
+  };
+  getAdaptersByLang: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["GetAdaptersByLangResponse"];
+        };
+      };
+    };
+  };
+  createNewAuthStatus: {
+    parameters: {
+      query?: {
+        /** @description The Device ID used to identify the CLI source */
+        id?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuthResponse"];
+        };
+      };
+      /** @description Server Error */
+      "5XX": {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ServerError"];
+        };
+      };
+    };
+  };
+  getAuthDetailsById: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The Session ID */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuthDetailsResponse"];
+        };
+      };
+      /** @description Not Found Response */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+    };
+  };
+  validateAuthStatus: {
+    parameters: {
+      query: {
+        /** @description The token created from the `/api/auth` */
+        token: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description The request body containing all the information needed to validate a user's status */
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["AuthValidateRequest"];
+      };
+    };
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuthValidateResponse"];
+        };
+      };
+      /** @description Authorization did not complete or errored out */
+      402: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuthError"];
+        };
+      };
+      /** @description Expired Token Response */
+      405: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExpiredError"];
+        };
+      };
+    };
+  };
+  getAuthStatus: {
+    parameters: {
+      query: {
+        /** @description The Session ID */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AuthPollResponse"];
+        };
+      };
+      /** @description Could not find the token specified */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+      /** @description Expired Token Response */
+      405: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExpiredError"];
+        };
+      };
+    };
+  };
+  getPackageArchiveWithName: {
+    parameters: {
+      query?: {
+        /** @description The version of the package to unpack */
+        version?: string;
+      };
+      header?: never;
+      path: {
+        /** @description The name of the adapter, or an identifier associated with it */
+        name: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/gzip": string;
+        };
+      };
+    };
+  };
+  getAdapterArchiveWithName: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description The name of the adapter, or an identifier associated with it */
+        name: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/gzip": string;
+        };
+      };
+    };
+  };
 }

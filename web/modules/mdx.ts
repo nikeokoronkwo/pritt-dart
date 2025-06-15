@@ -1,8 +1,7 @@
 import { createResolver, defineNuxtModule, extendPages } from "@nuxt/kit";
 import { readdir } from "node:fs/promises";
 import { join, extname, sep } from "node:path";
-import createNuxtPath from "~/lib/createNuxtPath"
-
+import createNuxtPath from "~/lib/createNuxtPath";
 
 /** dw I wrote the rest... */
 export default defineNuxtModule({
