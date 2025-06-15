@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import '../../utils/version.dart';
+import 'package:pritt_common/version.dart';
+
 import 'annotations/cache.dart';
 import 'schema.dart';
 

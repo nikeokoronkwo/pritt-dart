@@ -6,4 +6,4 @@ typealias Version = String(semver.isValid(this))
 typealias VCS = "git"|"svn"|"fossil"|"mercurial"|"other"
 
 /// The publishing status for the package
-typealias PublishingStatus = "pending" | "error" | "success" | "idle"
+typealias PublishingStatus = "pending" | "error" | "success" | "idle" | "queue"

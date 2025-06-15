@@ -163,6 +163,14 @@ paths {
                         }
                     }
                 }
+                ["400"] {
+                    description = "Bad Request"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("Error")
+                        }
+                    }
+                }
                 ["401"] {
                     description = "Unauthorized Response"
                     content {
@@ -737,6 +745,14 @@ paths {
                   }
                 }
               }
+                ["403"] {
+                    description = "Invalid Tarball"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("InvalidTarballError")
+                        }
+                    }
+                }
               ["404"] {
                 description = "Not Found Response"
                 content {

@@ -274,6 +274,7 @@ class PublishCommand extends PrittCommand {
       uploadCompleter.completeError(e, st);
     }));
 
+    // receive and write endpoint pub request
     // upload
     if (uploadUrl != null) {
       // PUT
@@ -286,18 +287,20 @@ class PublishCommand extends PrittCommand {
           common.StreamedContent(
               archivePath(name, version: version, scope: scope),
               tarballStream,
-              contentLength
-          ),
+              contentLength),
           id: pubId);
     }
 
     await uploadCompleter.future;
 
-    // receive and write endpoint pub request
-
     // while endpoint is being listened to: wait
+    logger.stdout('Waiting for publishing to finish...');
+    await waitForPublishingQueueToComplete(client, pubId);
 
-    // receive package id and other stuff
+    // complete pub
+    logger.fine(
+        'Completed publishing package: ${scopedName(name, scope)}@$version');
+    return;
   }
 
   Future<String?> getVcsRemoteUrl(common.VCS vcs, {String? directory}) async {
@@ -331,6 +334,32 @@ class PublishCommand extends PrittCommand {
       common.VCS.mercurial => await getvcsurl('hg', ['paths', 'default']),
       _ => null
     };
+  }
+
+  Future waitForPublishingQueueToComplete(PrittClient client, String pubID,
+      {Duration? pollInterval}) async {
+    var response = await client.getPackagePubStatus(id: pubID);
+    logger.stdout('Publishing Status: ${response.status.value}\r');
+    while (response.status != common.PublishingStatus.success &&
+        response.status != common.PublishingStatus.error) {
+      await Future.delayed(pollInterval ?? Duration(milliseconds: 600),
+          () async {
+        response = await client.getPackagePubStatus(id: pubID);
+        logger.stdout('Publishing Status: ${response.status.value}\r');
+      });
+    }
+
+    switch (response.status) {
+      case common.PublishingStatus.success:
+        // pub complete
+        return;
+      default:
+        // error
+        logger.severe('Oh no! The package publishing process did not succeed');
+        logger.severe('Error: ${response.error ?? 'unknown error occurred'}');
+        logger.verbose(response.description ?? 'no description');
+        exit(1);
+    }
   }
 }
 

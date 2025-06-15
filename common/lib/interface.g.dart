@@ -545,6 +545,36 @@ GetUsersResponse _$GetUsersResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$GetUsersResponseToJson(GetUsersResponse instance) =>
     <String, dynamic>{};
 
+InvalidError _$InvalidErrorFromJson(Map<String, dynamic> json) => InvalidError(
+      error: json['error'] as String?,
+      description: json['description'] as String?,
+      redirect: json['redirect'] as String?,
+    );
+
+Map<String, dynamic> _$InvalidErrorToJson(InvalidError instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'description': instance.description,
+      'redirect': instance.redirect,
+    };
+
+InvalidTarballError _$InvalidTarballErrorFromJson(Map<String, dynamic> json) =>
+    InvalidTarballError(
+      error: json['error'] as String?,
+      description: json['description'] as String,
+      sanction: json['sanction'] as bool,
+      violations_remaining: (json['violations_remaining'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$InvalidTarballErrorToJson(
+        InvalidTarballError instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'description': instance.description,
+      'sanction': instance.sanction,
+      'violations_remaining': instance.violations_remaining,
+    };
+
 NotFoundError _$NotFoundErrorFromJson(Map<String, dynamic> json) =>
     NotFoundError(
       error: json['error'] as String?,
@@ -626,6 +656,7 @@ const _$PublishingStatusEnumMap = {
   PublishingStatus.error: 'error',
   PublishingStatus.success: 'success',
   PublishingStatus.idle: 'idle',
+  PublishingStatus.queue: 'queue',
 };
 
 PublishPackageByVersionResponse _$PublishPackageByVersionResponseFromJson(
@@ -713,12 +744,14 @@ UnauthorizedError _$UnauthorizedErrorFromJson(Map<String, dynamic> json) =>
     UnauthorizedError(
       error: json['error'] as String?,
       reason: $enumDecodeNullable(_$UnauthorizedReasonEnumMap, json['reason']),
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$UnauthorizedErrorToJson(UnauthorizedError instance) =>
     <String, dynamic>{
       'error': instance.error,
       'reason': _$UnauthorizedReasonEnumMap[instance.reason],
+      'description': instance.description,
     };
 
 const _$UnauthorizedReasonEnumMap = {

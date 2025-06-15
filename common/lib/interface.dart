@@ -820,6 +820,49 @@ class GetUsersResponse {
 }
 
 @JsonSerializable()
+class InvalidError {
+  InvalidError({
+    this.error,
+    this.description,
+    this.redirect,
+  });
+
+  factory InvalidError.fromJson(Map<String, dynamic> json) =>
+      _$InvalidErrorFromJson(json);
+
+  final String? error;
+
+  final String? description;
+
+  final String? redirect;
+
+  Map<String, dynamic> toJson() => _$InvalidErrorToJson(this);
+}
+
+@JsonSerializable()
+class InvalidTarballError {
+  InvalidTarballError({
+    this.error,
+    required this.description,
+    required this.sanction,
+    this.violations_remaining,
+  });
+
+  factory InvalidTarballError.fromJson(Map<String, dynamic> json) =>
+      _$InvalidTarballErrorFromJson(json);
+
+  final String? error;
+
+  final String description;
+
+  final bool sanction;
+
+  final int? violations_remaining;
+
+  Map<String, dynamic> toJson() => _$InvalidTarballErrorToJson(this);
+}
+
+@JsonSerializable()
 class NotFoundError {
   NotFoundError({
     this.error,
@@ -910,7 +953,8 @@ enum PublishingStatus {
   pending('pending'),
   error('error'),
   success('success'),
-  idle('idle');
+  idle('idle'),
+  queue('queue');
 
   const PublishingStatus(this.value);
 
@@ -1052,6 +1096,7 @@ class UnauthorizedError {
   UnauthorizedError({
     this.error,
     this.reason,
+    this.description,
   });
 
   factory UnauthorizedError.fromJson(Map<String, dynamic> json) =>
@@ -1060,6 +1105,8 @@ class UnauthorizedError {
   final String? error;
 
   final UnauthorizedReason? reason;
+
+  final String? description;
 
   Map<String, dynamic> toJson() => _$UnauthorizedErrorToJson(this);
 }
@@ -1164,6 +1211,7 @@ abstract interface class PrittInterface {
   ///
   /// This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
   /// Throws:
+  ///   - [Error] on status code 400
   ///   - [UnauthorizedError] on status code 401
   _i3.FutureOr<PublishPackageResponse> publishPackage(
     PublishPackageRequest body, {
@@ -1307,6 +1355,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [UnauthorizedError] on status code 402
+  ///   - [InvalidTarballError] on status code 403
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<UploadPackageResponse> uploadPackageWithToken(
     StreamedContent body, {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/interface.dart' as common;
+import 'package:pritt_common/version.dart';
 
 import '../../../../../pritt_server.dart';
 import '../../../../main/base/db/schema.dart';
@@ -12,6 +13,7 @@ import '../../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   // parse info
   final pkgName = getParams(event, 'name') as String;
+  final pkgVer = Version.parse(getParams(event, 'version') as String);
 
   try {
     // check if user is authenticated
@@ -23,10 +25,22 @@ final handler = defineRequestHandler((event) async {
       return common.UnauthorizedError(error: 'UnauthorizedError').toJson();
     }
 
-    final body = await getBody(
-        event, (s) => common.PublishPackageRequest.fromJson(json.decode(s)));
+    // get pkg
+    final pkg = await crs.db.getPackage(pkgName);
+    if (pkg.author.id != user.id) {
+      // check if user is contrib to the package
+      final contributors = await crs.db.getContributorsForPackage(pkgName);
+      if (!(contributors.keys.any((k) => k.id == user.id))) {
+        // unauthorized
+        setResponseCode(event, 401);
+        return common.UnauthorizedError(error: 'UnauthorizedError', reason: common.UnauthorizedReason.package_access).toJson();
+      }
+    }
 
-    assert(body.scope == null, "Use /api/package/@:scope/:name for scoped packages");
+    final body = await getBody(
+        event, (s) => common.PublishPackageByVersionRequest.fromJson(json.decode(s)));
+
+    assert(body.scope == null, "Use /api/package/@:scope/:name/:version for scoped packages");
 
     // from info...
     // get pkg name, pkg version
@@ -37,7 +51,7 @@ final handler = defineRequestHandler((event) async {
     // check if package exists
     try {
       final pkg = await crs.db
-          .getPackage(pkgName, language: body.language);
+          .getPackageWithVersion(pkgName, pkgVer);
 
       // package exists
       // if it does, throw error
@@ -52,27 +66,27 @@ final handler = defineRequestHandler((event) async {
     // TODO: Contributors
     final pubTask = await crs.db.createNewPublishingTask(
         name: pkgName,
-        version: body.version,
+        version: pkgVer.toString(),
         user: user,
         language: body.language,
         newPkg: true,
         config: body.config.path,
         configData: body.config.config ?? {},
-      metadata: body.info,
-      env: body.env?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
-      vcs: body.vcs == null ? null : switch (body.vcs!.name) {
-        common.VCS.git => VCS.git,
-        common.VCS.svn => VCS.svn,
-        common.VCS.fossil => VCS.fossil,
-        common.VCS.mercurial => VCS.mercurial,
-        common.VCS.other => VCS.other,
-      },
-      vcsUrl: body.vcs?.url
+        metadata: body.info,
+        env: body.env?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
+        vcs: body.vcs == null ? null : switch (body.vcs!.name) {
+          common.VCS.git => VCS.git,
+          common.VCS.svn => VCS.svn,
+          common.VCS.fossil => VCS.fossil,
+          common.VCS.mercurial => VCS.mercurial,
+          common.VCS.other => VCS.other,
+        },
+        vcsUrl: body.vcs?.url
     );
 
     // add package queue task
     publishingTaskRunner.addTask(PubTaskItem(
-      pubTask.id
+        pubTask.id
     ));
 
     // TODO: Create upload URL for S3

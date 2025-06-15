@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pritt_common/version.dart';
 
-import '../../utils/version.dart';
 import 'annotations/schema.dart';
 
 part 'schema.g.dart';

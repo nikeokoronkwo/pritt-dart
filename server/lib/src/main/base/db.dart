@@ -6,10 +6,10 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:postgres/postgres.dart';
+import 'package:pritt_common/version.dart';
 import 'package:slugid/slugid.dart';
 
 import '../crs/exceptions.dart';
-import '../utils/version.dart';
 import 'auth.dart';
 import 'db/annotations/cache.dart';
 import 'db/interface.dart';
@@ -167,11 +167,6 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
   Future<Package> getPackage(String name,
       {String? language, String? scope}) async {
     // cacheable
-    if (language != null) {
-      throw CRSException(CRSExceptionType.UNSUPPORTED_FEATURE,
-          'Language filtering is not supported in this implementation');
-    }
-
     if (_statements['getPackage'] == null) {
       _statements['getPackage'] = await _pool.prepare(Sql.named('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
@@ -1236,27 +1231,32 @@ WHERE id = @id
 
     final result = await _statements['getPublishingTaskById']!.run({'id': id});
 
-    final columnMap = result.first.toColumnMap();
-    final vcsUrl = columnMap['vcs_url'] as String?;
+    try {
+      final columnMap = result.first.toColumnMap();
+      final vcsUrl = columnMap['vcs_url'] as String?;
 
-    return PublishingTask(
-        id: columnMap['id'] as String,
-        name: columnMap['name'] as String,
-        scope: columnMap['scope'] as String?,
-        status: TaskStatus.fromString(columnMap['status'] as String),
-        user: columnMap['user_id'] as String,
-        version: columnMap['version'] as String,
-        $new: columnMap['new'] as bool,
-        language: columnMap['language'] as String,
-        config: columnMap['config'] as String,
-        configMap: columnMap['config_map'],
-        metadata: columnMap['metadata'],
-        env: columnMap['env'],
-        vcs: VCS.fromString(columnMap['vcs'] as String),
-        vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
-        createdAt: columnMap['created_at'] as DateTime,
-        updatedAt: columnMap['updated_at'] as DateTime,
-        expiresAt: columnMap['expires_at'] as DateTime);
+      return PublishingTask(
+          id: columnMap['id'] as String,
+          name: columnMap['name'] as String,
+          scope: columnMap['scope'] as String?,
+          status: TaskStatus.fromString(columnMap['status'] as String),
+          user: columnMap['user_id'] as String,
+          version: columnMap['version'] as String,
+          $new: columnMap['new'] as bool,
+          language: columnMap['language'] as String,
+          config: columnMap['config'] as String,
+          configMap: columnMap['config_map'],
+          metadata: columnMap['metadata'],
+          env: columnMap['env'],
+          vcs: VCS.fromString(columnMap['vcs'] as String),
+          vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
+          createdAt: columnMap['created_at'] as DateTime,
+          updatedAt: columnMap['updated_at'] as DateTime,
+          expiresAt: columnMap['expires_at'] as DateTime);
+    } on StateError catch (e, st) {
+      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND,
+          'No publishing task found for id: $id', e, st);
+    }
   }
 
   @override

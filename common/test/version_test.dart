@@ -1,4 +1,4 @@
-import 'package:pritt_server/pritt_utils.dart'; // Adjust the import path as needed
+import 'package:pritt_common/version.dart';
 import 'package:test/test.dart';
 
 final versionTestMap = {

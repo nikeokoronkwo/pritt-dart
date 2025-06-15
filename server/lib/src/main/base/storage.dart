@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
+import 'package:aws_signer_api/signer-2017-08-25.dart';
 import '../crs/exceptions.dart';
 import 'storage/interface.dart';
 
@@ -18,7 +19,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   PrittStorage._(
       {required this.pkgBucket,
       required this.publishingBucket,
-      required this.adapterBucket});
+      required this.adapterBucket, required this.url, required this.signer});
 
   @override
   Bucket pkgBucket;
@@ -28,6 +29,10 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
   @override
   Bucket adapterBucket;
+
+  String url;
+
+  Signer signer;
 
   S3 get s3Instance {
     if (PrittStorage.s3 != null) return PrittStorage.s3!;
@@ -93,15 +98,23 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     s3secretKey ??= String.fromEnvironment('S3_SECRET_KEY');
     s3accessKey ??= String.fromEnvironment('S3_ACCESS_KEY');
 
+    final signer = Signer(
+        region: s3region,
+      credentials: AwsClientCredentials(accessKey: s3accessKey, secretKey: s3secretKey),
+      endpointUrl: url
+    );
+
+
     if (s3 == null) {
       final (pkg: pkgBucket, pub: pubBucket, adapter: adapterBucket) =
           await initialiseS3(url,
               region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
 
+
       return PrittStorage._(
           pkgBucket: pkgBucket,
           publishingBucket: pubBucket,
-          adapterBucket: adapterBucket);
+          adapterBucket: adapterBucket, url: url, signer: signer);
     } else {
       var s3Buckets = (await s3!.listBuckets()).buckets ?? [];
       final s3PkgBucket =
@@ -114,7 +127,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       return PrittStorage._(
           pkgBucket: s3PkgBucket,
           publishingBucket: s3PubBucket,
-          adapterBucket: s3AdapterBucket);
+          adapterBucket: s3AdapterBucket, url: url, signer: signer);
     }
   }
 
@@ -259,7 +272,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   }
 
   @override
-  FutureOr createPubArchive(String path, Uint8List data, String sha,
+  FutureOr createPubArchive(String path, Uint8List data,
       {String? contentType, Map<String, String>? metadata}) async {
     // Create the object in the bucket
     final upload = await s3Instance.putObject(
@@ -267,9 +280,6 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       key: path,
       body: data,
       contentType: contentType,
-      metadata: {
-        'sha256': sha,
-      }..addAll(metadata ?? {}),
     );
 
     return true;
@@ -333,5 +343,11 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       bucket: publishingBucket.name ?? 'pritt-publishing-archives',
       key: path,
     );
+  }
+
+  @override
+  FutureOr<Uri> createPubEndpointUrl(String path, {required String pubId}) {
+    // TODO: implement createPubEndpointUrl
+    throw UnimplementedError();
   }
 }
