@@ -1,10 +1,7 @@
 ---
 name: Infra Issue
 about: Infrastructural Issues and/or changes
-title: ''
+title: ""
 labels: infra
-assignees: ''
-
+assignees: ""
 ---
-
-

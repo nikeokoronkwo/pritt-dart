@@ -3,7 +3,7 @@ sdk:
 
 stages:
   - analyze_and_format:
-    - analyze
-    - format
+      - analyze
+      - format
   - test:
-    - test
+      - test

@@ -34,7 +34,9 @@ const props = defineProps({
           class="max-h-96 overflow-auto rounded-md bg-gray-100 p-4 text-left font-mono text-sm text-gray-800"
         >
           <details>
-            <summary class="mb-2 font-bold text-accent-400">Stack Trace:</summary>
+            <summary class="text-accent-400 mb-2 font-bold">
+              Stack Trace:
+            </summary>
             <pre class="break-words whitespace-pre-wrap">{{
               error?.stack || "[no stack trace]"
             }}</pre>

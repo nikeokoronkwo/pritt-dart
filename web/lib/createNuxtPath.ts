@@ -1,4 +1,4 @@
-import * as path from "node:path"
+import * as path from "node:path";
 
 /**
  * Convert a file path in the Nuxt pages directory to a Nuxt route.

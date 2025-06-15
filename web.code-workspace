@@ -1,16 +1,16 @@
 {
-	"folders": [
-		{
-			"path": "web"
-		},
-		{
-			"path": "web-ref"
-		},
-		{
-			"path": "packages/webgen"
-		},
-		{
-			"path": "config"
-		}
-	]
+  "folders": [
+    {
+      "path": "web",
+    },
+    {
+      "path": "web-ref",
+    },
+    {
+      "path": "packages/webgen",
+    },
+    {
+      "path": "config",
+    },
+  ],
 }
