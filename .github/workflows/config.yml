@@ -41,6 +41,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.1.0
+        with:
+          run_install: true
 
       - name: Generate Configurations
         run: pkl eval config/main.pkl --project-dir config -f yaml -o config/out/openapi.yaml
@@ -51,7 +53,8 @@ jobs:
 
       - name: Generate API definitions for common
         run: |
-          mkdir ./packages/openapigen/dist
+          mkdir ./packages/openapigen/dist 
+          mkdir ./packages/openapigen/dist/out
           ./scripts/openapigen ./config/out/openapi.yaml -o ./common
           cd common
           dart pub get
