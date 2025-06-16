@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:pritt_common/interface.dart' hide Queue;
 import 'package:pritt_common/retry_map.dart';
 import 'package:pritt_common/worker.dart';
 import 'package:slugid/slugid.dart';
@@ -75,7 +74,7 @@ enum TaskRunnerMode {
 /// TODO: Testing
 /// TODO: Handling running outside the main loop
 class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
-  static int _maximumWorkers = 2;
+  static final int _maximumWorkers = 2;
 
   /// The queue for worker/task items
   final Queue<Task> queue = Queue();
@@ -87,7 +86,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
   final Map<String, Res> eagerWorkerAssets = {};
 
   /// A map of active workers
-  final Map<String, Worker<WorkerItem<Task, Res>, Ret>> workers = Map();
+  final Map<String, Worker<WorkerItem<Task, Res>, Ret>> workers = {};
   final Duration pollInterval;
   final Duration retryInterval;
   late final RetryMap<String, Task> idleTasks;

@@ -19,7 +19,9 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   PrittStorage._(
       {required this.pkgBucket,
       required this.publishingBucket,
-      required this.adapterBucket, required this.url, required this.signer});
+      required this.adapterBucket,
+      required this.url,
+      required this.signer});
 
   @override
   Bucket pkgBucket;
@@ -100,21 +102,21 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
     final signer = Signer(
         region: s3region,
-      credentials: AwsClientCredentials(accessKey: s3accessKey, secretKey: s3secretKey),
-      endpointUrl: url
-    );
-
+        credentials: AwsClientCredentials(
+            accessKey: s3accessKey, secretKey: s3secretKey),
+        endpointUrl: url);
 
     if (s3 == null) {
       final (pkg: pkgBucket, pub: pubBucket, adapter: adapterBucket) =
           await initialiseS3(url,
               region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
 
-
       return PrittStorage._(
           pkgBucket: pkgBucket,
           publishingBucket: pubBucket,
-          adapterBucket: adapterBucket, url: url, signer: signer);
+          adapterBucket: adapterBucket,
+          url: url,
+          signer: signer);
     } else {
       var s3Buckets = (await s3!.listBuckets()).buckets ?? [];
       final s3PkgBucket =
@@ -127,7 +129,9 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       return PrittStorage._(
           pkgBucket: s3PkgBucket,
           publishingBucket: s3PubBucket,
-          adapterBucket: s3AdapterBucket, url: url, signer: signer);
+          adapterBucket: s3AdapterBucket,
+          url: url,
+          signer: signer);
     }
   }
 

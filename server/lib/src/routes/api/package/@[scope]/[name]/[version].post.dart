@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/interface.dart' as common;
 import 'package:pritt_common/version.dart';
 
@@ -9,7 +8,6 @@ import '../../../../../main/base/db/schema.dart';
 import '../../../../../main/publishing_tasks.dart';
 import '../../../../../server_utils/authorization.dart';
 import '../../../../../utils/request_handler.dart';
-
 
 final handler = defineRequestHandler((event) async {
   // parse info
@@ -35,13 +33,15 @@ final handler = defineRequestHandler((event) async {
       if (!(contributors.keys.any((k) => k.id == user.id))) {
         // unauthorized
         setResponseCode(event, 401);
-        return common.UnauthorizedError(error: 'UnauthorizedError', reason: common.UnauthorizedReason.package_access).toJson();
+        return common.UnauthorizedError(
+                error: 'UnauthorizedError',
+                reason: common.UnauthorizedReason.package_access)
+            .toJson();
       }
     }
 
-    final body = await getBody(
-        event, (s) => common.PublishPackageByVersionRequest.fromJson(json.decode(s)));
-
+    final body = await getBody(event,
+        (s) => common.PublishPackageByVersionRequest.fromJson(json.decode(s)));
 
     // from info...
     // get pkg name, pkg version
@@ -51,18 +51,16 @@ final handler = defineRequestHandler((event) async {
 
     // check if package exists
     try {
-      final pkg = await crs.db
-          .getPackageWithVersion(pkgName, pkgVer, scope: pkgScope);
+      final pkg =
+          await crs.db.getPackageWithVersion(pkgName, pkgVer, scope: pkgScope);
 
       // package exists
       // if it does, throw error
       setResponseCode(event, 400);
-      return common.ExistsError(name: body.name)
-          .toJson();
+      return common.ExistsError(name: body.name).toJson();
     } catch (_) {
       // continue
     }
-
 
     // TODO: Contributors
     final pubTask = await crs.db.createNewPublishingTask(
@@ -75,30 +73,36 @@ final handler = defineRequestHandler((event) async {
         config: body.config.path,
         configData: body.config.config ?? {},
         metadata: body.info,
-        env: body.env?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
-        vcs: body.vcs == null ? null : switch (body.vcs!.name) {
-          common.VCS.git => VCS.git,
-          common.VCS.svn => VCS.svn,
-          common.VCS.fossil => VCS.fossil,
-          common.VCS.mercurial => VCS.mercurial,
-          common.VCS.other => VCS.other,
-        },
-        vcsUrl: body.vcs?.url
-    );
+        env: body.env
+            ?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
+        vcs: body.vcs == null
+            ? null
+            : switch (body.vcs!.name) {
+                common.VCS.git => VCS.git,
+                common.VCS.svn => VCS.svn,
+                common.VCS.fossil => VCS.fossil,
+                common.VCS.mercurial => VCS.mercurial,
+                common.VCS.other => VCS.other,
+              },
+        vcsUrl: body.vcs?.url);
 
     // add package queue task
-    publishingTaskRunner.addTask(PubTaskItem(
-        pubTask.id
-    ));
+    publishingTaskRunner.addTask(PubTaskItem(pubTask.id));
 
     // TODO: Create upload URL for S3
 
     // send details down
-    return common.PublishPackageResponse(queue: common.Queue(id: pubTask.id, status: common.PublishingStatus.queue)).toJson();
+    return common.PublishPackageResponse(
+            queue: common.Queue(
+                id: pubTask.id, status: common.PublishingStatus.queue))
+        .toJson();
   } on AssertionError catch (e) {
     setResponseCode(event, 400);
-    return common.UnauthorizedError(error: e.message.toString() ?? 'InvalidRequest', reason: common.UnauthorizedReason.org).toJson();
-  } on TypeError catch (e) {
+    return common.UnauthorizedError(
+            error: e.message.toString() ?? 'InvalidRequest',
+            reason: common.UnauthorizedReason.org)
+        .toJson();
+  } on TypeError {
     setResponseCode(event, 400);
     return common.Error(error: 'InvalidBody').toJson();
   } catch (e) {

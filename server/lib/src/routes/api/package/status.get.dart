@@ -19,7 +19,8 @@ final handler = defineRequestHandler((event) async {
   try {
     final pubTask = await crs.db.getPublishingTaskById(id);
 
-    return common.PublishPackageStatusResponse(status: switch (pubTask.status) {
+    return common.PublishPackageStatusResponse(
+            status: switch (pubTask.status) {
       TaskStatus.pending => common.PublishingStatus.pending,
       TaskStatus.success => common.PublishingStatus.success,
       TaskStatus.fail => common.PublishingStatus.error,
@@ -27,7 +28,8 @@ final handler = defineRequestHandler((event) async {
       TaskStatus.idle => common.PublishingStatus.idle,
       TaskStatus.queue => common.PublishingStatus.queue,
       TaskStatus.error => common.PublishingStatus.error,
-    }).toJson();
+    })
+        .toJson();
   } catch (e) {
     setResponseCode(event, 500);
     return common.ServerError(error: 'Server Error').toJson();

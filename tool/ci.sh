@@ -76,18 +76,14 @@ for PKG in ${PKGS}; do
         dart test test/unit/** --test-randomize-ordering-seed=random || EXIT_CODE=$?
         ;;
       test_1)
-        echo 'dart test test/cli/**'
-        dart test test/cli/** || EXIT_CODE=$?
-        ;;
-      test_2)
         echo 'dart test test/integration/**'
         dart test test/integration/** || EXIT_CODE=$?
         ;;
-      test_3)
+      test_2)
         echo 'dart test'
         dart test || EXIT_CODE=$?
         ;;
-      test_4)
+      test_3)
         echo 'dart test test/unit --test-randomize-ordering-seed=random'
         dart test test/unit --test-randomize-ordering-seed=random || EXIT_CODE=$?
         ;;
