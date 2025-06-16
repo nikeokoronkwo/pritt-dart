@@ -2,10 +2,11 @@
 
 import 'dart:async';
 
+import 'package:pritt_common/version.dart';
+
 import '../base/db/interface.dart';
 import '../base/db/schema.dart';
 import '../base/storage/interface.dart';
-import '../utils/version.dart';
 import 'response.dart';
 
 class CRSArchive {

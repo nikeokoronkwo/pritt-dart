@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pritt_common/version.dart';
 
-import '../../utils/version.dart';
 import 'annotations/schema.dart';
 
 part 'schema.g.dart';
@@ -472,11 +472,95 @@ class AuthorizationSession {
   }
 }
 
+@Table('package_publishing_tasks')
+class PublishingTask {
+  String id;
+
+  /// The task status
+  TaskStatus status;
+
+  /// The user responsible for this publishing task
+  String user;
+
+  /// The version of the package to be published
+  String version;
+
+  /// Whether this is a new package or not
+  @Key(name: 'new')
+  bool $new;
+
+  /// The name of the package
+  String name;
+
+  /// The scope of the package
+  String? scope;
+
+  /// The language of the package
+  String language;
+
+  /// The configuration file path
+  String config;
+
+  /// The configuration file code as a map
+  Map<String, dynamic> configMap;
+
+  /// Environment information (runtime, package manager versions, etc)
+  /// e.g npm, node
+  Map<String, String> env;
+
+  /// Metadata about the package
+  ///
+  /// This varies between programming languages based on schema
+  /// e.g npmUser
+  Map<String, dynamic> metadata;
+
+  /// The VCS of the project
+  VCS vcs;
+
+  /// The VCS Url, if any
+  Uri? vcsUrl;
+
+  /// Created at
+  DateTime createdAt;
+
+  /// Updated at
+  DateTime updatedAt;
+
+  /// Expires at
+  DateTime expiresAt;
+
+  /// If a URL was specified, get the tarball associated with this request from there
+  Uri? tarball;
+
+  PublishingTask(
+      {required this.id,
+      required this.name,
+      required this.status,
+      required this.user,
+      this.scope,
+      required this.version,
+      required this.$new,
+      this.language = 'unknown',
+      required this.config,
+      required this.configMap,
+      this.metadata = const {},
+      this.env = const {},
+      this.vcs = VCS.other,
+      this.vcsUrl,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.expiresAt})
+      : assert(
+            expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
+}
+
 enum TaskStatus {
   pending,
   success,
   fail,
   expired,
+  idle,
+  queue,
   error;
 
   static TaskStatus fromString(String name) =>

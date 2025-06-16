@@ -1,6 +1,7 @@
+import 'package:pritt_common/version.dart';
+
 import '../../../../../pritt_server.dart';
 import '../../../../main/crs/exceptions.dart';
-import '../../../../main/utils/version.dart';
 
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';
@@ -52,7 +53,7 @@ final handler = defineRequestHandler((event) async {
       };
     }
 
-    final archive = await crs.ofs.get(package.body!.archive.path);
+    final archive = await crs.ofs.getPackage(package.body!.archive.path);
 
     return archive.data;
   } on CRSException {

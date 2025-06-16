@@ -1,2 +1,4 @@
+/// A request object to publish a given package
 module PublishPackageByVersionRequest
 
+extends "../PublishPackageRequest/schema.pkl"

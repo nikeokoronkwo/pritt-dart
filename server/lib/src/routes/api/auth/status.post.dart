@@ -21,14 +21,7 @@ final handler = defineRequestHandler((event) async {
 
   switch (status) {
     case TaskStatus.pending:
-      final resp = common.AuthPollResponse(
-          status: switch (status) {
-        TaskStatus.pending => common.PollStatus.pending,
-        TaskStatus.success => common.PollStatus.success,
-        TaskStatus.fail => common.PollStatus.fail,
-        TaskStatus.expired => common.PollStatus.expired,
-        TaskStatus.error => common.PollStatus.error,
-      });
+      final resp = common.AuthPollResponse(status: common.PollStatus.pending);
 
       return resp.toJson();
     case TaskStatus.success:
@@ -37,19 +30,12 @@ final handler = defineRequestHandler((event) async {
         token: accessToken,
         tokenExpiration: accessTokenExpiresAt
       ) = await crs.db.updateAuthSessionWithAccessToken(sessionId: id);
-      final resp = common.AuthPollResponse(
-          status: switch (status) {
-            TaskStatus.pending => common.PollStatus.pending,
-            TaskStatus.success => common.PollStatus.success,
-            TaskStatus.fail => common.PollStatus.fail,
-            TaskStatus.expired => common.PollStatus.expired,
-            TaskStatus.error => common.PollStatus.error,
-          },
-          response: {
-            'id': userId,
-            'access_token': accessToken,
-            'access_token_expires_at': accessTokenExpiresAt
-          });
+      final resp =
+          common.AuthPollResponse(status: common.PollStatus.success, response: {
+        'id': userId,
+        'access_token': accessToken,
+        'access_token_expires_at': accessTokenExpiresAt
+      });
 
       return resp.toJson();
     case TaskStatus.fail:
@@ -59,6 +45,9 @@ final handler = defineRequestHandler((event) async {
       // TODO: Handle this case.
       throw UnimplementedError();
     case TaskStatus.error:
+      // TODO: Handle this case.
+      throw UnimplementedError();
+    default:
       // TODO: Handle this case.
       throw UnimplementedError();
   }

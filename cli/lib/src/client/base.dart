@@ -12,6 +12,10 @@ class ApiClient {
 
   http.Client client = http.Client();
 
+  void close() {
+    client.close();
+  }
+
   final _headers = <String, String>{};
   Map<String, String> get headers => _headers;
 
@@ -72,15 +76,13 @@ class ApiClient {
 
     // handle request
     final stringifiedQueryParams = queryParams.isNotEmpty
-        ? '?${queryParams.entries.map((e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}').join('&')}'
+        ? '?${queryParams.entries.where((e) => e.value != null).map((e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value!)}').join('&')}'
         : '';
     final stringifiedHash = hash == null ? '' : '#${Uri.encodeComponent(hash)}';
     final uri = Uri.parse(
         '$url${path.startsWith('/') ? path.substring(1) : path}$stringifiedQueryParams$stringifiedHash');
 
     try {
-      // TODO: Handle stream requests
-      // TODO: Handle binary requests
       if (body is Stream<Uint8List> || body is Stream<List<int>>) {
         final req = http.StreamedRequest(method.name, uri)
           ..sink.addStream(

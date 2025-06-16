@@ -146,7 +146,3 @@ class UserCredentials {
 
   bool get isExpired => accessTokenExpires.isBefore(DateTime.now());
 }
-
-UserCredentials loginUser() {
-  throw UnimplementedError('UserCredentials not implemented');
-}

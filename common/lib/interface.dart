@@ -1,10 +1,12 @@
 // ignore_for_file: directives_ordering, non_constant_identifier_names
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:typed_data' as _i1;
-import 'dart:convert' as _i2;
 import 'dart:async' as _i3;
+import 'dart:convert' as _i2;
+import 'dart:typed_data' as _i1;
+
 import 'package:json_annotation/json_annotation.dart';
+
 part 'interface.g.dart';
 
 class Content {
@@ -260,6 +262,23 @@ class Error {
   final String? error;
 
   Map<String, dynamic> toJson() => _$ErrorToJson(this);
+}
+
+@JsonSerializable()
+class ExistsError {
+  ExistsError({
+    this.error,
+    required this.name,
+  });
+
+  factory ExistsError.fromJson(Map<String, dynamic> json) =>
+      _$ExistsErrorFromJson(json);
+
+  final String? error;
+
+  final String name;
+
+  Map<String, dynamic> toJson() => _$ExistsErrorToJson(this);
 }
 
 @JsonSerializable()
@@ -801,6 +820,49 @@ class GetUsersResponse {
 }
 
 @JsonSerializable()
+class InvalidError {
+  InvalidError({
+    this.error,
+    this.description,
+    this.redirect,
+  });
+
+  factory InvalidError.fromJson(Map<String, dynamic> json) =>
+      _$InvalidErrorFromJson(json);
+
+  final String? error;
+
+  final String? description;
+
+  final String? redirect;
+
+  Map<String, dynamic> toJson() => _$InvalidErrorToJson(this);
+}
+
+@JsonSerializable()
+class InvalidTarballError {
+  InvalidTarballError({
+    this.error,
+    required this.description,
+    required this.sanction,
+    this.violations_remaining,
+  });
+
+  factory InvalidTarballError.fromJson(Map<String, dynamic> json) =>
+      _$InvalidTarballErrorFromJson(json);
+
+  final String? error;
+
+  final String description;
+
+  final bool sanction;
+
+  final int? violations_remaining;
+
+  Map<String, dynamic> toJson() => _$InvalidTarballErrorToJson(this);
+}
+
+@JsonSerializable()
 class NotFoundError {
   NotFoundError({
     this.error,
@@ -818,21 +880,116 @@ class NotFoundError {
 }
 
 @JsonSerializable()
+class Configuration {
+  Configuration({
+    required this.path,
+    this.config,
+  });
+
+  factory Configuration.fromJson(Map<String, dynamic> json) =>
+      _$ConfigurationFromJson(json);
+
+  final String path;
+
+  final Map<String, dynamic>? config;
+
+  Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
+}
+
+@JsonSerializable()
+class VersionControlSystem {
+  VersionControlSystem({
+    required this.name,
+    this.url,
+  });
+
+  factory VersionControlSystem.fromJson(Map<String, dynamic> json) =>
+      _$VersionControlSystemFromJson(json);
+
+  final VCS name;
+
+  final String? url;
+
+  Map<String, dynamic> toJson() => _$VersionControlSystemToJson(this);
+}
+
+@JsonSerializable()
 class PublishPackageByVersionRequest {
-  PublishPackageByVersionRequest();
+  PublishPackageByVersionRequest({
+    required this.name,
+    this.scope,
+    required this.version,
+    required this.language,
+    required this.config,
+    this.info,
+    this.env,
+    this.vcs,
+  });
 
   factory PublishPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageByVersionRequestFromJson(json);
 
+  final String name;
+
+  final String? scope;
+
+  final String version;
+
+  final String language;
+
+  final Configuration config;
+
+  final Map<String, dynamic>? info;
+
+  final Map<String, dynamic>? env;
+
+  final VersionControlSystem? vcs;
+
   Map<String, dynamic> toJson() => _$PublishPackageByVersionRequestToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum PublishingStatus {
+  pending('pending'),
+  error('error'),
+  success('success'),
+  idle('idle'),
+  queue('queue');
+
+  const PublishingStatus(this.value);
+
+  final String value;
+}
+
+@JsonSerializable()
+class Queue {
+  Queue({
+    required this.id,
+    required this.status,
+  });
+
+  factory Queue.fromJson(Map<String, dynamic> json) => _$QueueFromJson(json);
+
+  final String id;
+
+  final PublishingStatus status;
+
+  Map<String, dynamic> toJson() => _$QueueToJson(this);
 }
 
 @JsonSerializable()
 class PublishPackageByVersionResponse {
-  PublishPackageByVersionResponse();
+  PublishPackageByVersionResponse({
+    this.url,
+    required this.queue,
+  });
 
   factory PublishPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageByVersionResponseFromJson(json);
+
+  final String? url;
+
+  final Queue queue;
 
   Map<String, dynamic> toJson() =>
       _$PublishPackageByVersionResponseToJson(this);
@@ -842,9 +999,13 @@ class PublishPackageByVersionResponse {
 class PublishPackageRequest {
   PublishPackageRequest({
     required this.name,
+    this.scope,
     required this.version,
+    required this.language,
     required this.config,
-    required this.configFile,
+    this.info,
+    this.env,
+    this.vcs,
   });
 
   factory PublishPackageRequest.fromJson(Map<String, dynamic> json) =>
@@ -852,23 +1013,58 @@ class PublishPackageRequest {
 
   final String name;
 
+  final String? scope;
+
   final String version;
 
-  final Map<String, dynamic> config;
+  final String language;
 
-  final String configFile;
+  final Configuration config;
+
+  final Map<String, dynamic>? info;
+
+  final Map<String, dynamic>? env;
+
+  final VersionControlSystem? vcs;
 
   Map<String, dynamic> toJson() => _$PublishPackageRequestToJson(this);
 }
 
 @JsonSerializable()
 class PublishPackageResponse {
-  PublishPackageResponse();
+  PublishPackageResponse({
+    this.url,
+    required this.queue,
+  });
 
   factory PublishPackageResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageResponseFromJson(json);
 
+  final String? url;
+
+  final Queue queue;
+
   Map<String, dynamic> toJson() => _$PublishPackageResponseToJson(this);
+}
+
+@JsonSerializable()
+class PublishPackageStatusResponse {
+  PublishPackageStatusResponse({
+    required this.status,
+    this.error,
+    this.description,
+  });
+
+  factory PublishPackageStatusResponse.fromJson(Map<String, dynamic> json) =>
+      _$PublishPackageStatusResponseFromJson(json);
+
+  final PublishingStatus status;
+
+  final String? error;
+
+  final String? description;
+
+  Map<String, dynamic> toJson() => _$PublishPackageStatusResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -883,14 +1079,34 @@ class ServerError {
   Map<String, dynamic> toJson() => _$ServerErrorToJson(this);
 }
 
+@JsonEnum(valueField: 'value')
+enum UnauthorizedReason {
+  protected('protected'),
+  org('org'),
+  package_access('package_access'),
+  other('other');
+
+  const UnauthorizedReason(this.value);
+
+  final String value;
+}
+
 @JsonSerializable()
 class UnauthorizedError {
-  UnauthorizedError({this.error});
+  UnauthorizedError({
+    this.error,
+    this.reason,
+    this.description,
+  });
 
   factory UnauthorizedError.fromJson(Map<String, dynamic> json) =>
       _$UnauthorizedErrorFromJson(json);
 
   final String? error;
+
+  final UnauthorizedReason? reason;
+
+  final String? description;
 
   Map<String, dynamic> toJson() => _$UnauthorizedErrorToJson(this);
 }
@@ -995,6 +1211,7 @@ abstract interface class PrittInterface {
   ///
   /// This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
   /// Throws:
+  ///   - [Error] on status code 400
   ///   - [UnauthorizedError] on status code 401
   _i3.FutureOr<PublishPackageResponse> publishPackage(
     PublishPackageRequest body, {
@@ -1007,6 +1224,7 @@ abstract interface class PrittInterface {
   /// This endpoint is for yanking packages from the pritt registry
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
+  ///   - [ExistsError] on status code 402
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<YankPackageResponse> yankPackageByName(
     YankPackageRequest body, {
@@ -1131,17 +1349,24 @@ abstract interface class PrittInterface {
   });
 
   /// **Upload a package to the Pritt Server**
-  /// POST /api/package/upload
+  /// PUT /api/package/upload
   ///
   /// This API Endpoint is used to upload the tarball for the package
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [UnauthorizedError] on status code 402
+  ///   - [InvalidTarballError] on status code 403
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<UploadPackageResponse> uploadPackageWithToken(
     StreamedContent body, {
     String id,
   });
+
+  /// **Get the publishing status for a package**
+  /// GET /api/package/status
+  ///
+  /// Get the publishing status for a package being published, given the status id
+  _i3.FutureOr<PublishPackageStatusResponse> getPackagePubStatus({String id});
 
   /// **List users from the Pritt Server**
   /// GET /api/users
@@ -1212,7 +1437,7 @@ abstract interface class PrittInterface {
   _i3.FutureOr<YankAdapterResponse> yankAdapterWithId({required String id});
 
   /// **Upload an adapter to the Pritt Server**
-  /// POST /api/adapter/upload
+  /// PUT /api/adapter/upload
   ///
   /// This API Endpoint is used to upload the tarball for the processed adapter
   _i3.FutureOr<UploadAdapterResponse> uploadAdapterWithToken(
@@ -1239,7 +1464,7 @@ abstract interface class PrittInterface {
   ///
   /// Get the details for an auth session
   /// Throws:
-  ///   - [null] on status code 404
+  ///   - [NotFoundError] on status code 404
   _i3.FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id});
 
   /// **Validte Authentication Response**

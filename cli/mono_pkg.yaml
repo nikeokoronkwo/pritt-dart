@@ -8,5 +8,4 @@ stages:
   - unit_test:
       - test: test/unit/** --test-randomize-ordering-seed=random
   - integration_test:
-      - test: test/cli/**
       - test: test/integration/**

@@ -6,10 +6,10 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:postgres/postgres.dart';
+import 'package:pritt_common/version.dart';
 import 'package:slugid/slugid.dart';
 
 import '../crs/exceptions.dart';
-import '../utils/version.dart';
 import 'auth.dart';
 import 'db/annotations/cache.dart';
 import 'db/interface.dart';
@@ -167,11 +167,6 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
   Future<Package> getPackage(String name,
       {String? language, String? scope}) async {
     // cacheable
-    if (language != null) {
-      throw CRSException(CRSExceptionType.UNSUPPORTED_FEATURE,
-          'Language filtering is not supported in this implementation');
-    }
-
     if (_statements['getPackage'] == null) {
       _statements['getPackage'] = await _pool.prepare(Sql.named('''
 SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
@@ -714,6 +709,7 @@ FROM plugins p
       {required String name,
       String? scope,
       required String version,
+      VersionType? versionType,
       String? description,
       required String hash,
       required String signature,
@@ -728,7 +724,7 @@ FROM plugins p
       required String language,
       required VCS vcs,
       Uri? archive,
-      Iterable<User>? contributors}) {
+      Iterable<String>? contributors}) {
     // TODO: implement addNewVersionOfPackage
     throw UnimplementedError();
   }
@@ -1066,6 +1062,239 @@ WHERE session_id = @sessionId
         deviceId: columnMap['device_id'] as String,
         code: columnMap['code'] as String,
         accessToken: columnMap['access_token'] as String);
+  }
+
+  @override
+  FutureOr<PublishingTask> createNewPublishingTask(
+      {required String name,
+      String? scope,
+      required String version,
+      required User user,
+      required String language,
+      bool newPkg = false,
+      required String config,
+      required Map<String, dynamic> configData,
+      Map<String, dynamic>? metadata,
+      Map<String, String>? env,
+      VCS? vcs,
+      String? vcsUrl}) async {
+    // create an expires-at time
+    final currentDate = DateTime.now();
+    final expiresAtDate = currentDate.add(Duration(days: 3));
+
+    final result = await _pool.execute(r'''
+INSERT INTO package_publishing_tasks (user_id, name, scope, version, new, language, config, config_map, metadata, env, vcs, vcs_url, expires_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+RETURNING *
+''', parameters: [
+      user.id,
+      name,
+      scope,
+      version,
+      newPkg,
+      language,
+      config,
+      configData,
+      metadata ?? {},
+      env ?? {},
+      vcs?.name,
+      vcsUrl,
+      expiresAtDate
+    ]);
+
+    final columnMap = result.first.toColumnMap();
+
+    return PublishingTask(
+        id: columnMap['id'] as String,
+        status: TaskStatus.fromString(columnMap['status'] as String),
+        name: name,
+        scope: scope,
+        user: user.id,
+        version: version,
+        $new: columnMap['new'] as bool,
+        language: language,
+        config: config,
+        configMap: configData,
+        metadata: metadata ?? {},
+        env: env ?? {},
+        vcs: vcs ?? VCS.fromString(columnMap['vcs'] as String),
+        vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
+        createdAt: columnMap['created_at'] as DateTime,
+        updatedAt: columnMap['updated_at'] as DateTime,
+        expiresAt: expiresAtDate);
+  }
+
+  @override
+  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(
+      String id,
+      {String? description,
+      String? license,
+      VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []}) async {
+    // get publishing task from db
+    task ??= await getPublishingTaskById(id);
+
+    final author = await getUser(task.user);
+    final pkg = await addNewPackage(
+      name: task.name,
+      scope: task.scope,
+      version: task.version,
+      description: description,
+      author: author,
+      language: task.language,
+      vcs: task.vcs,
+      archive: archive,
+    );
+
+    final pkgVer = await addNewVersionOfPackage(
+        name: task.name,
+        scope: task.scope,
+        version: task.version,
+        description: description,
+        hash: hash,
+        signature: signatures.firstOrNull?.signature ?? '',
+        integrity: integrity,
+        readme: readme,
+        config: rawConfig,
+        configName: task.config,
+        info: info ?? {},
+        env: task.env,
+        contributors: contributorIds,
+        metadata: task.configMap,
+        author: author,
+        language: task.language,
+        vcs: task.vcs,
+        archive: archive);
+
+    return (pkg, pkgVer);
+  }
+
+  @override
+  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id,
+      {VersionType? versionType,
+      String? readme,
+      String? description,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []}) async {
+    task ??= await getPublishingTaskById(id);
+
+    final pkg =
+        await getPackage(task.name, scope: task.scope, language: task.language);
+    final author = await getUser(task.user);
+
+    final pkgVer = await addNewVersionOfPackage(
+        name: task.name,
+        scope: task.scope,
+        version: task.version,
+        description: description,
+        hash: hash,
+        signature: signatures.firstOrNull?.signature ?? '',
+        integrity: integrity,
+        readme: readme,
+        config: rawConfig,
+        configName: task.config,
+        info: info ?? {},
+        env: task.env,
+        contributors: contributorIds,
+        metadata: task.configMap,
+        author: author,
+        language: task.language,
+        vcs: task.vcs,
+        archive: archive);
+
+    return pkgVer;
+  }
+
+  @override
+  FutureOr<PublishingTask> getPublishingTaskById(String id) async {
+    if (_statements['getPublishingTaskById'] == null) {
+      _statements['getPublishingTaskById'] = await _pool.prepare('''
+SELECT id, status, user_id, name, scope, version, new, language, config, config_map, metadata, env, vcs, vcs_url, updated_at, created_at, expires_at
+FROM package_publishing_tasks
+WHERE id = @id
+''');
+    }
+
+    final result = await _statements['getPublishingTaskById']!.run({'id': id});
+
+    try {
+      final columnMap = result.first.toColumnMap();
+      final vcsUrl = columnMap['vcs_url'] as String?;
+
+      return PublishingTask(
+          id: columnMap['id'] as String,
+          name: columnMap['name'] as String,
+          scope: columnMap['scope'] as String?,
+          status: TaskStatus.fromString(columnMap['status'] as String),
+          user: columnMap['user_id'] as String,
+          version: columnMap['version'] as String,
+          $new: columnMap['new'] as bool,
+          language: columnMap['language'] as String,
+          config: columnMap['config'] as String,
+          configMap: columnMap['config_map'],
+          metadata: columnMap['metadata'],
+          env: columnMap['env'],
+          vcs: VCS.fromString(columnMap['vcs'] as String),
+          vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
+          createdAt: columnMap['created_at'] as DateTime,
+          updatedAt: columnMap['updated_at'] as DateTime,
+          expiresAt: columnMap['expires_at'] as DateTime);
+    } on StateError catch (e, st) {
+      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND,
+          'No publishing task found for id: $id', e, st);
+    }
+  }
+
+  @override
+  FutureOr<PublishingTask> updatePublishingTaskStatus(String id,
+      {required TaskStatus status}) async {
+    if (_statements['updatePublishingTaskStatus'] == null) {
+      _statements['updatePublishingTaskStatus'] = await _pool.prepare('''
+UPDATE package_publishing_tasks
+SET status = @status
+WHERE id = @id
+RETURNING *
+''');
+    }
+
+    final result = await _statements['updatePublishingTaskStatus']!
+        .run({'status': status.name, 'id': id});
+
+    final columnMap = result.first.toColumnMap();
+    final vcsUrl = columnMap['vcs_url'] as String?;
+
+    return PublishingTask(
+        id: columnMap['id'] as String,
+        name: columnMap['name'] as String,
+        scope: columnMap['scope'] as String?,
+        status: TaskStatus.fromString(columnMap['status'] as String),
+        user: columnMap['user_id'] as String,
+        version: columnMap['version'] as String,
+        $new: columnMap['new'] as bool,
+        language: columnMap['language'] as String,
+        config: columnMap['config'] as String,
+        configMap: columnMap['config_map'],
+        metadata: columnMap['metadata'],
+        env: columnMap['env'],
+        vcs: VCS.fromString(columnMap['vcs'] as String),
+        vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
+        createdAt: columnMap['created_at'] as DateTime,
+        updatedAt: columnMap['updated_at'] as DateTime,
+        expiresAt: columnMap['expires_at'] as DateTime);
   }
 }
 

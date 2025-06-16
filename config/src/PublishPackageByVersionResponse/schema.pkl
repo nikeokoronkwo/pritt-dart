@@ -1,2 +1,3 @@
 module PublishPackageByVersionResponse
 
+extends "../PublishPackageResponse/schema.pkl"

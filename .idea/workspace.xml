@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="[web] Updated Layouts and Views, and added Tailwind Theme Generator">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/lib/src/config.schema.json" beforeDir="false" afterPath="$PROJECT_DIR$/cli/lib/src/config.schema.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/lib/interface.dart" beforeDir="false" afterPath="$PROJECT_DIR$/common/lib/interface.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/lib/interface.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/common/lib/interface.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/lib/package.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/config/lib/package.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/src/GetPackageResponse/schema.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/config/src/GetPackageResponse/schema.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/routes/api/package/@[scope]/[name].get.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/routes/api/package/@[scope]/[name].get.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/routes/api/package/[name]/index.get.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/routes/api/package/[name]/index.get.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/routes/api/packages.get.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/routes/api/packages.get.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/pages/search.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/pages/search.vue" afterDir="false" />
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/storage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/storage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/publishing_tasks.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/publishing_tasks.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/sql/V1__init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/server/sql/V1__init.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,31 +68,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Dart Command Line App.CLI.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Command Line App.Server.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Command Line App.house.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.CSV Encoding Testing in csv_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.Client Testing in list_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.Table Testing in table_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.Tests in progress_bar_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Compose (services only).executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Shell Script.PKL Testing.executor&quot;: &quot;Run&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Dart Command Line App.CLI.executor": "Run",
+    "Dart Command Line App.Server.executor": "Run",
+    "Dart Command Line App.house.dart.executor": "Run",
+    "Dart Test.CSV Encoding Testing in csv_test.dart.executor": "Run",
+    "Dart Test.Client Testing in list_test.dart.executor": "Run",
+    "Dart Test.Table Testing in table_test.dart.executor": "Run",
+    "Dart Test.Tests in progress_bar_test.dart.executor": "Run",
+    "Docker.Compose (services only).executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Shell Script.PKL Testing.executor": "Run",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "feature/publish",
+    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/config/src/AuthValidateResponse" />
@@ -147,9 +141,10 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
-        <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+        <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
         <item itemvalue="Dart Test.Table Testing in table_test.dart" />
+        <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+        <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
         <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
       </list>
     </recent_temporary>
@@ -322,7 +317,87 @@
       <option name="project" value="LOCAL" />
       <updated>1748842718404</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="[server] Minor Change">
+      <option name="closed" value="true" />
+      <created>1749708140012</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1749708140012</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Working on publish command @ publish.dart">
+      <option name="closed" value="true" />
+      <created>1749755785152</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1749755785153</updated>
+    </task>
+    <task id="LOCAL-00024" summary="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well">
+      <option name="closed" value="true" />
+      <created>1749756491247</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1749756491247</updated>
+    </task>
+    <task id="LOCAL-00025" summary="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well">
+      <option name="closed" value="true" />
+      <created>1749756699513</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1749756699513</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Added logging in and handler validation to the publish command">
+      <option name="closed" value="true" />
+      <created>1749759350949</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1749759350949</updated>
+    </task>
+    <task id="LOCAL-00027" summary="wip: get config">
+      <option name="closed" value="true" />
+      <created>1749759639093</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1749759639093</updated>
+    </task>
+    <task id="LOCAL-00028" summary="[cli] Publishing System in CLI">
+      <option name="closed" value="true" />
+      <created>1749846632289</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1749846632289</updated>
+    </task>
+    <task id="LOCAL-00029" summary="wip: [server] Working on publishing pipeline and added task worker and runnners">
+      <option name="closed" value="true" />
+      <created>1749923729896</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1749923729896</updated>
+    </task>
+    <task id="LOCAL-00030" summary="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)">
+      <option name="closed" value="true" />
+      <created>1749959859285</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1749959859285</updated>
+    </task>
+    <task id="LOCAL-00031" summary="[infra] Formatting">
+      <option name="closed" value="true" />
+      <created>1749959921354</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1749959921354</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -337,12 +412,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Idea" />
-    <MESSAGE value="redoing this" />
-    <MESSAGE value="added Idea" />
-    <MESSAGE value="CLI: Implement Mock Testing and Table Functionality" />
-    <MESSAGE value="CLI Updtes (with some server ones as well)&#10;&#10;CLI:&#10;- Completed Table Listing&#10;&#10;Others:&#10;- Updated schema.pkl for various schemas&#10;- Added pkl testing to IntelliJ&#10;- Formatting" />
-    <MESSAGE value="CLI: Implement `adapter list` and `package list`" />
     <MESSAGE value="CLI: Implemented `info`" />
     <MESSAGE value="CLI: Implement `info`" />
     <MESSAGE value="CLI: Migrated Command Implementations" />
@@ -359,6 +428,15 @@
     <MESSAGE value="[web] Added index page code (index.vue.hbs)" />
     <MESSAGE value="[web] Added entry layout code (entry.vue.hbs)" />
     <MESSAGE value="[web] Updated Layouts and Views, and added Tailwind Theme Generator" />
-    <option name="LAST_COMMIT_MESSAGE" value="[web] Updated Layouts and Views, and added Tailwind Theme Generator" />
+    <MESSAGE value="[server] Minor Change" />
+    <MESSAGE value="Working on publish command @ publish.dart" />
+    <MESSAGE value="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well" />
+    <MESSAGE value="Added logging in and handler validation to the publish command" />
+    <MESSAGE value="wip: get config" />
+    <MESSAGE value="[cli] Publishing System in CLI" />
+    <MESSAGE value="wip: [server] Working on publishing pipeline and added task worker and runnners" />
+    <MESSAGE value="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)" />
+    <MESSAGE value="[infra] Formatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="[infra] Formatting" />
   </component>
 </project>
