@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
+import 'package:pritt_common/version.dart';
 
 import '../../../utils/extensions.dart';
 import '../../base/db/schema.dart';
 import '../../crs/response.dart';
-import '../../utils/version.dart';
 import '../adapter.dart';
 import '../adapter/resolve.dart';
 import '../adapter/result.dart';

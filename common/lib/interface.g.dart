@@ -141,6 +141,17 @@ Map<String, dynamic> _$ErrorToJson(Error instance) => <String, dynamic>{
       'error': instance.error,
     };
 
+ExistsError _$ExistsErrorFromJson(Map<String, dynamic> json) => ExistsError(
+      error: json['error'] as String?,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$ExistsErrorToJson(ExistsError instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'name': instance.name,
+    };
+
 ExpiredError _$ExpiredErrorFromJson(Map<String, dynamic> json) => ExpiredError(
       error: json['error'] as String?,
       expired_time: json['expired_time'] as String,
@@ -534,6 +545,36 @@ GetUsersResponse _$GetUsersResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$GetUsersResponseToJson(GetUsersResponse instance) =>
     <String, dynamic>{};
 
+InvalidError _$InvalidErrorFromJson(Map<String, dynamic> json) => InvalidError(
+      error: json['error'] as String?,
+      description: json['description'] as String?,
+      redirect: json['redirect'] as String?,
+    );
+
+Map<String, dynamic> _$InvalidErrorToJson(InvalidError instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'description': instance.description,
+      'redirect': instance.redirect,
+    };
+
+InvalidTarballError _$InvalidTarballErrorFromJson(Map<String, dynamic> json) =>
+    InvalidTarballError(
+      error: json['error'] as String?,
+      description: json['description'] as String,
+      sanction: json['sanction'] as bool,
+      violations_remaining: (json['violations_remaining'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$InvalidTarballErrorToJson(
+        InvalidTarballError instance) =>
+    <String, dynamic>{
+      'error': instance.error,
+      'description': instance.description,
+      'sanction': instance.sanction,
+      'violations_remaining': instance.violations_remaining,
+    };
+
 NotFoundError _$NotFoundErrorFromJson(Map<String, dynamic> json) =>
     NotFoundError(
       error: json['error'] as String?,
@@ -546,47 +587,149 @@ Map<String, dynamic> _$NotFoundErrorToJson(NotFoundError instance) =>
       'message': instance.message,
     };
 
+Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
+    Configuration(
+      path: json['path'] as String,
+      config: json['config'] as Map<String, dynamic>?,
+    );
+
+Map<String, dynamic> _$ConfigurationToJson(Configuration instance) =>
+    <String, dynamic>{
+      'path': instance.path,
+      'config': instance.config,
+    };
+
+VersionControlSystem _$VersionControlSystemFromJson(
+        Map<String, dynamic> json) =>
+    VersionControlSystem(
+      name: $enumDecode(_$VCSEnumMap, json['name']),
+      url: json['url'] as String?,
+    );
+
+Map<String, dynamic> _$VersionControlSystemToJson(
+        VersionControlSystem instance) =>
+    <String, dynamic>{
+      'name': _$VCSEnumMap[instance.name]!,
+      'url': instance.url,
+    };
+
 PublishPackageByVersionRequest _$PublishPackageByVersionRequestFromJson(
         Map<String, dynamic> json) =>
-    PublishPackageByVersionRequest();
+    PublishPackageByVersionRequest(
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      version: json['version'] as String,
+      language: json['language'] as String,
+      config: Configuration.fromJson(json['config'] as Map<String, dynamic>),
+      info: json['info'] as Map<String, dynamic>?,
+      env: json['env'] as Map<String, dynamic>?,
+      vcs: json['vcs'] == null
+          ? null
+          : VersionControlSystem.fromJson(json['vcs'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PublishPackageByVersionRequestToJson(
         PublishPackageByVersionRequest instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'name': instance.name,
+      'scope': instance.scope,
+      'version': instance.version,
+      'language': instance.language,
+      'config': instance.config,
+      'info': instance.info,
+      'env': instance.env,
+      'vcs': instance.vcs,
+    };
+
+Queue _$QueueFromJson(Map<String, dynamic> json) => Queue(
+      id: json['id'] as String,
+      status: $enumDecode(_$PublishingStatusEnumMap, json['status']),
+    );
+
+Map<String, dynamic> _$QueueToJson(Queue instance) => <String, dynamic>{
+      'id': instance.id,
+      'status': _$PublishingStatusEnumMap[instance.status]!,
+    };
+
+const _$PublishingStatusEnumMap = {
+  PublishingStatus.pending: 'pending',
+  PublishingStatus.error: 'error',
+  PublishingStatus.success: 'success',
+  PublishingStatus.idle: 'idle',
+  PublishingStatus.queue: 'queue',
+};
 
 PublishPackageByVersionResponse _$PublishPackageByVersionResponseFromJson(
         Map<String, dynamic> json) =>
-    PublishPackageByVersionResponse();
+    PublishPackageByVersionResponse(
+      url: json['url'] as String?,
+      queue: Queue.fromJson(json['queue'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PublishPackageByVersionResponseToJson(
         PublishPackageByVersionResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'url': instance.url,
+      'queue': instance.queue,
+    };
 
 PublishPackageRequest _$PublishPackageRequestFromJson(
         Map<String, dynamic> json) =>
     PublishPackageRequest(
       name: json['name'] as String,
+      scope: json['scope'] as String?,
       version: json['version'] as String,
-      config: json['config'] as Map<String, dynamic>,
-      configFile: json['configFile'] as String,
+      language: json['language'] as String,
+      config: Configuration.fromJson(json['config'] as Map<String, dynamic>),
+      info: json['info'] as Map<String, dynamic>?,
+      env: json['env'] as Map<String, dynamic>?,
+      vcs: json['vcs'] == null
+          ? null
+          : VersionControlSystem.fromJson(json['vcs'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PublishPackageRequestToJson(
         PublishPackageRequest instance) =>
     <String, dynamic>{
       'name': instance.name,
+      'scope': instance.scope,
       'version': instance.version,
+      'language': instance.language,
       'config': instance.config,
-      'configFile': instance.configFile,
+      'info': instance.info,
+      'env': instance.env,
+      'vcs': instance.vcs,
     };
 
 PublishPackageResponse _$PublishPackageResponseFromJson(
         Map<String, dynamic> json) =>
-    PublishPackageResponse();
+    PublishPackageResponse(
+      url: json['url'] as String?,
+      queue: Queue.fromJson(json['queue'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PublishPackageResponseToJson(
         PublishPackageResponse instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'url': instance.url,
+      'queue': instance.queue,
+    };
+
+PublishPackageStatusResponse _$PublishPackageStatusResponseFromJson(
+        Map<String, dynamic> json) =>
+    PublishPackageStatusResponse(
+      status: $enumDecode(_$PublishingStatusEnumMap, json['status']),
+      error: json['error'] as String?,
+      description: json['description'] as String?,
+    );
+
+Map<String, dynamic> _$PublishPackageStatusResponseToJson(
+        PublishPackageStatusResponse instance) =>
+    <String, dynamic>{
+      'status': _$PublishingStatusEnumMap[instance.status]!,
+      'error': instance.error,
+      'description': instance.description,
+    };
 
 ServerError _$ServerErrorFromJson(Map<String, dynamic> json) => ServerError(
       error: json['error'] as String?,
@@ -600,12 +743,23 @@ Map<String, dynamic> _$ServerErrorToJson(ServerError instance) =>
 UnauthorizedError _$UnauthorizedErrorFromJson(Map<String, dynamic> json) =>
     UnauthorizedError(
       error: json['error'] as String?,
+      reason: $enumDecodeNullable(_$UnauthorizedReasonEnumMap, json['reason']),
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$UnauthorizedErrorToJson(UnauthorizedError instance) =>
     <String, dynamic>{
       'error': instance.error,
+      'reason': _$UnauthorizedReasonEnumMap[instance.reason],
+      'description': instance.description,
     };
+
+const _$UnauthorizedReasonEnumMap = {
+  UnauthorizedReason.protected: 'protected',
+  UnauthorizedReason.org: 'org',
+  UnauthorizedReason.package_access: 'package_access',
+  UnauthorizedReason.other: 'other',
+};
 
 UploadAdapterResponse _$UploadAdapterResponseFromJson(
         Map<String, dynamic> json) =>

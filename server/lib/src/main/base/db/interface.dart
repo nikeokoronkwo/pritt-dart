@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import '../../utils/version.dart';
+import 'package:pritt_common/version.dart';
+
 import 'annotations/cache.dart';
 import 'schema.dart';
 
@@ -67,6 +68,7 @@ abstract interface class PrittDatabaseInterface
     required String name,
     String? scope,
     required String version,
+    VersionType? versionType,
     String? description,
     required String hash,
     required String signature,
@@ -81,7 +83,7 @@ abstract interface class PrittDatabaseInterface
     required String language,
     required VCS vcs,
     Uri? archive,
-    Iterable<User>? contributors,
+    Iterable<String>? contributors,
   });
 
   /// Add a user as a contributor to a package
@@ -299,4 +301,58 @@ abstract interface class PrittDatabaseInterface
         String token,
         DateTime tokenExpiration
       })> updateAuthSessionWithAccessToken({required String sessionId});
+
+  /// Creates a new publishing task
+  @Cacheable()
+  FutureOr<PublishingTask> createNewPublishingTask(
+      {required String name,
+      String? scope,
+      required String version,
+      required User user,
+      required String language,
+      bool newPkg = false,
+      required String config,
+      required Map<String, dynamic> configData,
+      Map<String, dynamic> metadata,
+      Map<String, String> env,
+      VCS vcs,
+      String? vcsUrl});
+
+  /// Gets the given publishing task given its [id]
+  @Cacheable()
+  FutureOr<PublishingTask> getPublishingTaskById(String id);
+
+  /// Updates a publishing task's status
+  @Cacheable()
+  FutureOr<PublishingTask> updatePublishingTaskStatus(String id,
+      {required TaskStatus status});
+
+  /// Elevates a publishing task to a new package, plus a new version of a package
+  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(
+      String id,
+      {String? description,
+      String? license,
+      VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []});
+
+  /// Elevates a publishing task to a new version of a package
+  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id,
+      {VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []});
 }

@@ -21,3 +21,12 @@
     return (parts.first, scope: null);
   }
 }
+
+String scopedName(String name, [String? scope, String sep = '/']) {
+  return scope == null ? name : '@$scope$sep$name';
+}
+
+String archivePath(String name,
+    {required String version, String? scope, String sep = '-'}) {
+  return '${[if (scope != null) '@$scope', name, version].join(sep)}.tar.gz';
+}

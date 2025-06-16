@@ -1,0 +1,5 @@
+amends "../ExistsError/schema.pkl"
+
+error = "ExistsError"
+
+name = "demo"

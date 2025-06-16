@@ -22,6 +22,7 @@ final handler = defineRequestHandler((event) async {
         TaskStatus.fail => common.PollStatus.fail,
         TaskStatus.expired => common.PollStatus.expired,
         TaskStatus.error => common.PollStatus.error,
+        _ => common.PollStatus.pending,
       },
       user_id: details.userId);
 

@@ -3,13 +3,13 @@
 import 'dart:async';
 
 import 'package:pritt_common/functions.dart';
+import 'package:pritt_common/version.dart';
 
 import '../base/db.dart';
 import '../base/db/interface.dart';
 import '../base/db/schema.dart';
 import '../base/storage.dart';
 import '../base/storage/interface.dart';
-import '../utils/version.dart';
 import 'exceptions.dart';
 import 'interfaces.dart';
 import 'response.dart';
@@ -129,7 +129,7 @@ class CoreRegistryService implements CRSController {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       final file = await ofs
-          .get('/${scope == null ? name : '$scope/$name'}/$version.tgz');
+          .getPackage('/${scope == null ? name : '$scope/$name'}/$version.tgz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
         file.contentType ?? 'application/gzip',

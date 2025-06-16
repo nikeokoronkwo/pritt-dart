@@ -71,7 +71,8 @@ class PubspecConfig extends Config {
       required super.version,
       required super.description,
       required super.author,
-      super.private});
+      super.private,
+      required this.rawConfig});
 
   factory PubspecConfig.fromJson(Map<String, dynamic> json, Author author) {
     return PubspecConfig._(
@@ -79,6 +80,13 @@ class PubspecConfig extends Config {
         version: json['version'] as String,
         description: json['description'] as String,
         author: author,
-        private: json['publish_to'] == 'none');
+        private: json['publish_to'] == 'none',
+        rawConfig: json);
   }
+
+  @override
+  Map<String, dynamic> get configMetadata => {};
+
+  @override
+  final Map<String, dynamic> rawConfig;
 }

@@ -25,7 +25,7 @@
     "@nuxt/icon": "1.13.0",
     "@nuxt/image": "1.10.0",
     "@nuxt/kit": "^3.17.5",
-    "@nuxt/scripts": "0.11.7",
+    "@nuxt/scripts": "0.11.8",
     "@nuxt/test-utils": "3.19.1",
     "@nuxtjs/color-mode": "3.5.2",
     "@pinia/nuxt": "0.11.1",
@@ -56,8 +56,8 @@
     "happy-dom": "^17.4.7",
     "openapi-typescript": "^7.8.0",
     "prettier": "3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
     "tsx": "^4.20.3",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "vitest": "^3.2.3"
   }
 }
