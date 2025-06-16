@@ -56,8 +56,8 @@
     "happy-dom": "^17.4.7",
     "openapi-typescript": "^7.8.0",
     "prettier": "3.5.3",
+    "tsx": "^4.20.3",
     "prettier-plugin-tailwindcss": "^0.6.12",
-    "tsx": "^4.20.1",
     "vitest": "^3.2.3"
   }
 }
