@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/db.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/storage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/base/storage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/lib/src/main/publishing_tasks.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/src/main/publishing_tasks.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/sql/V1__init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/server/sql/V1__init.sql" afterDir="false" />
-    </list>
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="feature/publish" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -84,7 +79,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Shell Script.PKL Testing.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feature/publish",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -95,6 +90,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/common/test" />
       <recent name="$PROJECT_DIR$/config/src/AuthValidateResponse" />
       <recent name="$PROJECT_DIR$/cli/lib/src/cmd/adapter" />
     </key>
