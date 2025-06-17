@@ -35,9 +35,9 @@ class PackageManager {
 
   /// TODO: For now, packages are added one-by-one unless packages are only passed with name and version
   /// Fix this to add multiple packages at once
-  PackageCmdArgs Function(PackageInformation info) onAdd;
-  List<String> Function(PackageInformation info) onRemove;
-  List<String> Function(PackageInformation info)? onPublish;
+  PackageCmdArgs Function() onAdd;
+  List<String> Function(String name) onRemove;
+  List<String> Function(String name)? onPublish;
   List<String> Function() onGet;
 
   PackageManager(
@@ -57,7 +57,7 @@ class PackageCmdArgs {
   final List<String> args;
 
   /// used to resolve args when given a package name and type
-  final List<String> Function(String name, PackageType type) resolveType;
+  final (List<String>, {bool? collate}) Function(String name, PackageType type) resolveType;
 
   /// used to resolve args when given a package name and version
   final String Function(String name, String? version) resolveVersion;

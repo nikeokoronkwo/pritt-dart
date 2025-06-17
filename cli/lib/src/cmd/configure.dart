@@ -52,7 +52,7 @@ class ConfigureCommand extends PrittCommand {
       // TODO: Links to go to
       logger.verbose(
           'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
-      exit(0);
+      exit(1);
     } else {
       logger.info('Found: ${project.handlers.join(', ')}!');
     }

@@ -16,14 +16,14 @@ final goHandler = Handler<GoModConfig>(
     config: Loader('go.mod', load: (contents) => contents),
     packageManager: PackageManager(
         name: 'go',
-        onAdd: (info) {
+        onAdd: () {
           return PackageCmdArgs(
             args: ['go', 'get'],
-            resolveType: (String name, PackageType type) => [name],
+            resolveType: (String name, PackageType type) => ([name], collate: false),
             resolveVersion: (String name, String? version) => '$name/v$version',
           );
         },
-        onRemove: (info) => ['go', 'get', '${info.name}@none'],
+        onRemove: (name) => ['go', 'get', '$name@none'],
         onGet: () => ['go', 'get']),
     onGetConfig: (directory, controller) async {
       // tricky: to read a go.mod file
@@ -44,7 +44,7 @@ final goHandler = Handler<GoModConfig>(
           directory: directory,
           name: directory);
     },
-    onConfigure: (context, controller) async {});
+    onConfigure: (context, controller) async => []);
 
 class GoModConfig extends Config {
   final String goVersion;

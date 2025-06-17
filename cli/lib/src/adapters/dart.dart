@@ -23,12 +23,12 @@ final dartHandler = Handler<PubspecConfig>(
       name: 'pub',
       args: ['dart', 'pub'],
       onGet: () => ['dart', 'pub', 'get'],
-      onAdd: (info) {
+      onAdd: () {
         return PackageCmdArgs(
           args: ['dart', 'pub', 'add'],
-          resolveType: (name, type) => [
+          resolveType: (name, type) => ([
             type == PackageType.dev ? 'dev:$name' : name,
-          ],
+          ], collate: false),
           resolveVersion: (name, version) => '$name:^$version',
           resolveUrl: (name, url) => (
             [
@@ -62,6 +62,8 @@ final dartHandler = Handler<PubspecConfig>(
   onConfigure: (context, controller) {
     // use package manager hosted commands
     controller.useHostedPMCommands();
+
+    return [];
   },
 );
 

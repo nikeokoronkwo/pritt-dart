@@ -13,6 +13,9 @@ class RemoveCommand extends PrittCommand {
   List<String> aliases = ["uninstall"];
 
   @override
+  bool get hidden => true;
+
+  @override
   FutureOr? run() {
     // basically run everything in configure if not already there
 

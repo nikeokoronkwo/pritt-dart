@@ -13,7 +13,7 @@ Future<UserCredentials> loginUser(
   // check the client is real
   if (!(await client.healthCheck())) {
     throw Exception(
-        'The client did not pass healthcheck: confirm this client exists');
+        'The client did not pass healthcheck: does the client exist?');
   }
 
   // get device ID
