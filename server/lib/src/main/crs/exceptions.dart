@@ -7,10 +7,12 @@ class CRSException implements Exception {
   /// The message of the exception
   final String message;
 
+  final Object? cause;
+
   /// The stack trace of the exception
   final StackTrace? stackTrace;
 
-  const CRSException(this.type, this.message, [this.stackTrace]);
+  const CRSException(this.type, this.message, [this.cause, this.stackTrace]);
 
   @override
   String toString() {
@@ -42,13 +44,20 @@ enum CRSExceptionType {
 
   /// Unsupported feature
   UNSUPPORTED_FEATURE,
+
+  /// The item is not found (something other than a package or tarball)
+  ITEM_NOT_FOUND
 }
 
 class UnauthorizedException implements Exception {
   final String message;
   final String? token;
-  UnauthorizedException(this.message, {this.token});
+  final Object? source;
+  final UnauthorizedExceptionType? type;
+  UnauthorizedException(this.message, {this.token, this.type, this.source});
 }
+
+enum UnauthorizedExceptionType { INVALID_TOKEN, UNAUTHORIZED_DEVICE }
 
 class ExpiredTokenException implements Exception {
   final String message;

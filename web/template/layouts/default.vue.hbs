@@ -1,0 +1,87 @@
+<script setup lang="ts">
+    // TODO: Links from templates
+    const navLinks = [];
+
+    const bottomNavLinks = []
+
+    // color mode
+    const route = useRoute()
+
+    const colorMode = useColorMode()
+
+    function switchColorMode() {
+      const currentMode = colorMode.value;
+      if (currentMode === 'dark') {
+        colorMode.preference = 'light'
+      } else {
+        colorMode.preference = 'dark'
+      }
+    }
+
+    function changeColorModeToSystem() {
+
+    }
+</script>
+
+
+<template>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="flex flex-row justify-between items-center p-2 sticky top-0">
+            <!-- Name -->
+            <div class=" min-w-4 min-h-10 flex flex-col items-center">
+                <span class="font-bold text-2xl">{{ name }}</span>
+            </div>
+
+            <!-- Search Bar -->
+            <div
+                    class="transition ease-in-out delay-200 w-full max-w-lg h-full min-h-12 rounded-2xl gap-3"
+            >
+                <!-- {/* Search Icon */} -->
+
+                <!-- {/* Search Input */} -->
+                <div class="justify-stretch w-full min-h-10 h-full flex flex-row items-center">
+                    <input
+                            placeholder="Search for Packages"
+                            class="w-full h-full pl-3 outline-none"
+                            v-model="text"
+                            @keydown="handleEnter"
+                    />
+                    <NuxtLink
+                            :to="`/search${text.length === 0 ? '' : `?q=${text}`}`"
+                            class="transition ease-in-out delay-200 hover:bg-primary hover:text-primary-50 h-full min-h-10 flex flex-col min-w-3 justify-center items-center rounded-r-2xl"
+                    >
+                        <Icon name="material-symbols:search-rounded" class=" scale-150 px-6" />
+                    </NuxtLink>
+                </div>
+
+            </div>
+
+            <!-- Other nav items -->
+            <div class="flex flex-row items-center justify-center space-x-6">
+                <nav>
+                    <NuxtLink v-for="link in navLinks" :key="link.name" :to="link.route">{{ link.name }}</NuxtLink>
+                </nav>
+                <NuxtLink to="/login">Login</NuxtLink>
+                <button class="flex flex-col items-center scale-150" @click.prevent="switchColorMode()">
+                    <Icon v-if="colorMode.preference === 'dark'" name="material-symbols:sunny-outline-rounded" />
+                    <Icon v-else-if="colorMode.preference === 'light'" name="material-symbols:dark-mode-outline-rounded" />
+                    <Icon v-else name="material-symbols:sunny-outline-rounded" />
+                </button>
+            </div>
+        </header>
+        <main class="grow p-4 overflow-auto flex flex-col">
+            <slot />
+        </main>
+        <footer class="flex flex-none flex-col p-2 text-gray-400 min-h-4">
+            <div class="flex flex-row justify-between items-center gap-2 px-4 py-1 pb-1">
+                <NuxtLink v-for="link in bottomNavLinks" :key="link.name" :to="link.route" :target="link.external ? '_blank' : '_self'" :external="link.external" class="text-sm">
+                    {{ link.name }}
+                </NuxtLink>
+            </div>
+            <small class="text-xs">
+                {{ name }} (C) Copyright {{ time.year }}
+            </small>
+        </footer>
+    </div>
+</template>

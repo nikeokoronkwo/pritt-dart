@@ -1,6 +1,6 @@
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/base/db.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
+import '../../pritt_server.dart';
+import '../main/base/db.dart';
+import '../main/base/db/schema.dart';
 
 Future<User?> checkAuthorization(String authHeader,
     {bool throwExceptions = false}) async {
@@ -8,11 +8,12 @@ Future<User?> checkAuthorization(String authHeader,
       authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
   // check if the token is valid
   try {
-    final user = await crs.db.checkAuthorization(token);
-    if (user == null) {
+    final authResults = await crs.db.checkAuthorization(token);
+    if (authResults == null) {
       return null;
     }
-    return user;
+
+    return authResults;
   } catch (e) {
     if (throwExceptions) rethrow;
     return null;

@@ -1,0 +1,26 @@
+# Template Configuration for Website
+# This is used to set up the website configuration, styling, and more!
+
+name: Pritt
+
+description: Pritt is a package registry in today's time
+
+catchline: |
+  The 
+  <span>P</span>ackage
+  <span>R</span>egistry
+  <span>I</span>n
+  <span>T</span>oday's
+  <span>T</span>ime
+
+version: 0.1.0
+
+style: default
+
+meta:
+  title: "Pritt Package Registry"
+  description: The Package Registry In Today's Time!
+
+auth:
+  magic_link: true
+  passkey: true

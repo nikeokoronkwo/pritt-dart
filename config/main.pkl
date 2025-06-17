@@ -59,6 +59,15 @@ paths {
                     type = "string"
                 }
             }
+            new {
+                name = "user"
+                `in` = "query"
+                required = false
+                description = "Pass a user id to show"
+                schema {
+                    type = "string"
+                }
+            }
         }
         get {
             summary = "Get all packages from the Pritt Server"
@@ -88,28 +97,30 @@ paths {
                     type = "string"
                 }
             }
-            new {
-                name = "lang"
-                `in` = "query"
-                required = false
-                description = "The language associated with the package"
-                schema {
-                    type = "string"
-                }
-            }
-            new {
-                name = "all"
-                `in` = "query"
-                required = false
-                description = "Whether to get all the versions of the package, including yanked and deprecated versions" 
-                schema {
-                    type = "boolean"
-                }
-            }
         }
         get {
             operationId = "getPackageByName"
             summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -152,6 +163,14 @@ paths {
                         }
                     }
                 }
+                ["400"] {
+                    description = "Bad Request"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("Error")
+                        }
+                    }
+                }
                 ["401"] {
                     description = "Unauthorized Response"
                     content {
@@ -171,6 +190,161 @@ paths {
         `delete` {
             summary = "Yank an empty package"
             operationId = "yankPackageByName"
+            description = "This endpoint is for yanking packages from the pritt registry"
+            requestBody {
+                required = false
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("YankPackageRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("YankPackageResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                        }
+                    }
+                }
+                ["402"] {
+                    description = "Package Already Exists"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ExistsError")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/package/@{scope}/{name}"] {
+        parameters {
+            new {
+                name = "scope"
+                `in` = "path"
+                required = true
+                description = "The scope for the given package"
+                schema {
+                    type = "string"
+                }
+            }
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the package"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            operationId = "getPackageByNameWithScope"
+            summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackageResponse")
+                            example = oks["GetPackageResponse"]
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+
+            }
+        }
+        post {
+            summary = "Publish a package to the Pritt Server"
+            operationId = "publishPackageWithScope"
+            description = "This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed"
+            requestBody {
+                required = true
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("PublishPackageRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                            example = unauthorizeds["PublishPackageResponse"]
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+        `delete` {
+            summary = "Yank an empty package"
+            operationId = "yankPackageByNameWithScope"
             description = "This endpoint is for yanking packages from the pritt registry"
             requestBody {
                 required = false
@@ -235,8 +409,28 @@ paths {
             }
         }
         get {
-            operationId = "getPackageByNameAndVersion"
-            summary = "Get a package from the Pritt Server with the given name and specified version"
+            operationId = "getPackageByNameWithVersion"
+            summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
@@ -255,12 +449,13 @@ paths {
                         }
                     }
                 }
+
             }
         }
         post {
-            summary = "Publish a package to the Pritt Server with a specified version"
-            operationId = "publishPackageWithVersion"
-            description = "This endpoint is used for publishing new versions of existing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed. To publish a new package, use the `/api/package/{name}` POST"
+            summary = "Publish a package to the Pritt Server"
+            operationId = "publishPackageVersion"
+            description = "This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed"
             requestBody {
                 required = true
                 content {
@@ -295,28 +490,184 @@ paths {
             }
         }
         `delete` {
-            summary = "Yank a version of a package "
-            operationId = "yankPackageByNameAndVersion"
-            description = "This endpoint is for yanking a published version of a package from the pritt registry"
+            summary = "Yank an empty package"
+            operationId = "yankPackageVersionByName"
+            description = "This endpoint is for yanking packages from the pritt registry"
+            requestBody {
+                required = false
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("YankPackageByVersionRequest")
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("YankPackageResponse")
+                            schema = schemaRef("YankPackageByVersionResponse")
                         }
                     }
                 }
                 ["401"] {
-                    description = "Could not yank package as it is in use"
+                    description = "Unauthorized Response"
                     content {
                         ["application/json"] {
                             schema = schemaRef("UnauthorizedError")
                         }
                     }
                 }
-                ["403"] {
-                    description = "Could not yank package as it is in use"
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/package/@{scope}/{name}/{version}"] {
+        parameters {
+            new {
+                name = "scope"
+                `in` = "path"
+                required = true
+                description = "The scope for the given package"
+                schema {
+                    type = "string"
+                }
+            }
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the package"
+                schema {
+                    type = "string"
+                }
+            }
+            new {
+                name = "version"
+                `in` = "path"
+                required = true
+                description = "The version of the package"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            operationId = "getPackageByNameWithScopeAndVersion"
+            summary = "Get a package from the Pritt Server with the given name"
+            parameters {
+                new {
+                    name = "lang"
+                    `in` = "query"
+                    required = false
+                    description = "The language associated with the package"
+                    schema {
+                        type = "string"
+                    }
+                }
+                new {
+                    name = "all"
+                    `in` = "query"
+                    required = false
+                    description = "Whether to get all the versions of the package, including yanked and deprecated versions"
+                    schema {
+                        type = "boolean"
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackageByVersionResponse")
+                            example = oks["GetPackageByVersionResponse"]
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+
+            }
+        }
+        post {
+            summary = "Publish a package to the Pritt Server"
+            operationId = "publishPackageWithScopeAndVersion"
+            description = "This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed"
+            requestBody {
+                required = true
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("PublishPackageByVersionRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageByVersionResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("UnauthorizedError")
+                            example = unauthorizeds["PublishPackageByVersionResponse"]
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+        `delete` {
+            summary = "Yank an empty package"
+            operationId = "yankPackageByNameWithScopeAndVersion"
+            description = "This endpoint is for yanking packages from the pritt registry"
+            requestBody {
+                required = false
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("YankPackageByVersionRequest")
+                    }
+                }
+            }
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("YankPackageByVersionResponse")
+                        }
+                    }
+                }
+                ["401"] {
+                    description = "Unauthorized Response"
                     content {
                         ["application/json"] {
                             schema = schemaRef("UnauthorizedError")
@@ -352,7 +703,7 @@ paths {
           }
         }
         description = "Upload a package to the Pritt Server: This API Endpoint is called after a subsequent call to /api/package/{name}(/{version})"
-        post {
+        put {
             summary = "Upload a package to the Pritt Server"
             description = "This API Endpoint is used to upload the tarball for the package"
             operationId = "uploadPackageWithToken"
@@ -394,6 +745,14 @@ paths {
                   }
                 }
               }
+                ["403"] {
+                    description = "Invalid Tarball"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("InvalidTarballError")
+                        }
+                    }
+                }
               ["404"] {
                 description = "Not Found Response"
                 content {
@@ -408,6 +767,39 @@ paths {
               new {
                 ["bearerAuth"] {}
               }
+            }
+        }
+    }
+    ["/api/package/status"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "query"
+                required = true
+                description = "The Package Publishing ID"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get the publishing status for a package"
+            description = "Get the publishing status for a package being published, given the status id"
+            operationId = "getPackagePubStatus"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageStatusResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
             }
         }
     }
@@ -487,6 +879,99 @@ paths {
                   }
                 }
               }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/user"] {
+        get {
+            summary = "Get the current user from Pritt"
+            description = "Get user information from Pritt about a particular user via auth"
+            operationId = "getCurrentUser"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetUserResponse")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
+        }
+    }
+    ["/api/scope/@{scope}"] {
+        parameters {
+            new {
+                name = "scope"
+                `in` = "path"
+                required = true
+                description = "The scope name"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get information about a scope/organization"
+            operationId = "getOrganization"
+            description = "This GET Request retrieves information about a given scope/organization"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetScopeResponse")
+                            example = oks["GetScopeResponse"]
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/scope/@{scope}/packages"] {
+        parameters {
+            new {
+                name = "scope"
+                `in` = "path"
+                required = true
+                description = "The scope name"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get all packages from the Pritt Server for a given scope"
+            operationId = "getOrgPackages"
+            description = "This GET Request retrieves metadata about all the packages in the registry for a given scope. To get more information on a specific package use /api/package/@{scope}/{name}"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("GetPackagesResponse")
+                            example = oks["GetPackagesResponse"]
+                        }
+                    }
+                }
             }
             security {
                 new {
@@ -610,7 +1095,7 @@ paths {
             }
           }
         }
-        post {
+        put {
             summary = "Upload an adapter to the Pritt Server"
             description = "This API Endpoint is used to upload the tarball for the processed adapter"
             operationId = "uploadAdapterWithToken"
@@ -633,6 +1118,11 @@ paths {
                             schema = schemaRef("UploadAdapterResponse")
                         }
                     }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
                 }
             }
         }
@@ -660,6 +1150,17 @@ paths {
         }
     }
     ["/api/auth/new"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "query"
+                required = false
+                description = "The Device ID used to identify the CLI source"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         description = "Create a new token used for authenticating/creating a new user"
         post {
             summary = "Create token for a user"
@@ -671,6 +1172,52 @@ paths {
                     content {
                         ["application/json"] {
                             schema = schemaRef("AuthResponse")
+                        }
+                    }
+                }
+                ["5XX"] {
+                    description = "Server Error"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ServerError")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ["/api/auth/details/{id}"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "path"
+                required = true
+                description = "The Session ID"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        summary = "Get the details for an auth session"
+        description = "Get the details for an authorization session given its session id"
+        get {
+            summary = "Get the details for an auth session"
+            description = "Get the details for an auth session"
+            operationId = "getAuthDetailsById"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthDetailsResponse")
+                        }
+                    }
+                }
+                ["404"] {
+                    description = "Not Found Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("NotFoundError")
                         }
                     }
                 }
@@ -690,16 +1237,33 @@ paths {
             }
           }
         }
+        // TODO: What if we authenticate the website itself?
         post {
             summary = "Validte Authentication Response"
             operationId = "validateAuthStatus"
-            description = "Validate or authenticate a user, creating a user if needed"
+            description = "Validate or authenticate a user"
+            requestBody {
+                description = "The request body containing all the information needed to validate a user's status"
+                content {
+                    ["application/json"] {
+                        schema = schemaRef("AuthValidateRequest")
+                    }
+                }
+            }
             responses {
                 ["200"] {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("AuthPollResponse")
+                            schema = schemaRef("AuthValidateResponse")
+                        }
+                    }
+                }
+                ["402"] {
+                    description = "Authorization did not complete or errored out"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("AuthError")
                         }
                     }
                 }
@@ -717,6 +1281,17 @@ paths {
     ["/api/auth/status"] {
         description = "Get the status of authentication for a user, usually used by the command line to poll"
         post {
+            parameters {
+                new {
+                    name = "id"
+                    `in` = "query"
+                    required = true
+                    description = "The Session ID"
+                    schema {
+                        type = "string"
+                    }
+                }
+            }
             summary = "Get Authentication Status"
             operationId = "getAuthStatus"
             responses {
@@ -748,6 +1323,26 @@ paths {
         }
     }
     ["/api/archive/package/{name}"] {
+        parameters {
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the adapter, or an identifier associated with it"
+                schema {
+                    type = "string"
+                }
+            }
+            new {
+                name = "version"
+                `in` = "query"
+                required = false
+                description = "The version of the package to unpack"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         get {
             operationId = "getPackageArchiveWithName"
             responses {
@@ -770,7 +1365,18 @@ paths {
             }
         }
     }
-    ["/api/archive/adapter/{id}"] {
+    ["/api/archive/adapter/{name}"] {
+        parameters {
+            new {
+                name = "name"
+                `in` = "path"
+                required = true
+                description = "The name of the adapter, or an identifier associated with it"
+                schema {
+                    type = "string"
+                }
+            }
+        }
         get {
             operationId = "getAdapterArchiveWithName"
             responses {

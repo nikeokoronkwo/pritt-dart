@@ -44,7 +44,7 @@ extension SchemaGen on OpenAPIGenResult {
 
     return {
       'interface.dart':
-          '${lib.accept(DartEmitter.scoped(useNullSafetySyntax: true))}'
+          '${lib.accept(DartEmitter.scoped(useNullSafetySyntax: true, orderDirectives: true))}'
     };
   }
 }
@@ -71,11 +71,49 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
   }
 
   if (componentSpecs.containsKey(name)) {
-    return refer(switch (componentSpecs[name]!) {
-      Enum e => e.name,
-      Class c => c.name,
-      _ => throw Exception('Unknown')
-    });
+    return TypeReference((t) => t
+      ..symbol = switch (componentSpecs![name]) {
+        Enum e => e.name,
+        Class c => c.name,
+        _ => throw Exception('Unknown')
+      }
+      ..isNullable = !(required ?? true));
+  }
+
+  if (schema.hasProperty('oneOf'.toJS).toDart) {
+    final obj = schema.getProperty('oneOf'.toJS) as JSArray<JSObject>;
+
+    // nested enums
+    if (obj.toDart.any((o) => o.hasProperty('enum'.toJS).toDart)) {
+      // enum
+      final basicEnumValues = obj.toDart
+          .where((o) => o.hasProperty('enum'.toJS).toDart)
+          .map((o) => (o.getProperty('enum'.toJS) as JSArray<JSString>)
+              .toDart
+              .map((v) => v.toDart))
+          .reduce((previous, current) => [...previous, ...current]);
+
+      final enumeration = Enum((e) => e
+        ..annotations.add(
+            refer('JsonEnum').call([], {'valueField': literalString('value')}))
+        ..constructors.add(Constructor((c) => c
+          ..requiredParameters.add(Parameter((p) => p
+            ..name = 'value'
+            ..toThis = true))))
+        ..fields.add(Field((f) => f
+          ..name = 'value'
+          ..type = refer('String')))
+        ..name = schema.getProperty('title'.toJS).dartify() as String? ?? name
+        ..values.addAll(basicEnumValues.map((ev) {
+          return EnumValue((val) => val
+            ..name = ev
+            ..arguments.add(literalString(ev)));
+        })));
+
+      componentSpecs.putIfAbsent(name, () => enumeration);
+
+      return refer(enumeration.name + (required ? '' : '?'));
+    }
   }
 
   if (schema.hasProperty('enum'.toJS).toDart) {
@@ -119,7 +157,8 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
             valueSchema.getProperty('title'.toJS).dartify() as String? ??
                 "${name}Val",
             componentSpecs: componentSpecs)
-      ]));
+      ])
+      ..isNullable = !(required ?? true));
   }
 
   if (schema.hasProperty('type'.toJS).toDart) {
@@ -184,6 +223,7 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
     var type = _generateSpecFromSchema(
         obj, obj.getProperty('title'.toJS).dartify() as String? ?? name,
         componentSpecs: componentSpecs, required: propIsRequired);
+
     fields.add(Field((f) => f
       ..name = name
       ..modifier = FieldModifier.final$

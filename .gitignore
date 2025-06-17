@@ -27,3 +27,6 @@ out
 
 # Nuxt
 .nuxt
+web-ref
+
+*.pem

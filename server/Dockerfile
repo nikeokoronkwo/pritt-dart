@@ -23,7 +23,7 @@ RUN dart pub get --offline
 WORKDIR /app
 
 # RUN dart pub get
-RUN ./tools/denv.dart --cwd server -- dart compile exe bin/server.dart -o bin/server
+RUN ./tool/denv.dart --cwd server -- dart compile exe bin/server.dart -o bin/server
 
 
 # Build minimal serving image from AOT-compiled `/server`

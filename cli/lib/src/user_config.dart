@@ -5,6 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as p;
 
 import 'constants.dart';
+import 'device_id.dart';
 
 part 'user_config.g.dart';
 
@@ -20,9 +21,16 @@ class UserCredentials {
   /// The URL logged into, to access the Pritt instance
   Uri uri;
 
+  /// The device ID
+  @JsonKey(name: 'device_id')
+  String deviceId;
+
   /// The access token for the current user
   @JsonKey(name: 'access_token')
   String accessToken;
+
+  @JsonKey(name: 'user_id')
+  String userId;
 
   /// When the access token expires
   @JsonKey(name: 'access_token_expires')
@@ -33,19 +41,31 @@ class UserCredentials {
   String get path => _file.path;
 
   UserCredentials(
-      {Uri? uri, required this.accessToken, required this.accessTokenExpires})
+      {Uri? uri,
+      required this.accessToken,
+      required this.accessTokenExpires,
+      required this.userId,
+      required this.deviceId})
       : uri = uri ?? Uri.parse(mainPrittInstance);
 
   /// [duration] in seconds
   factory UserCredentials.fromExpirationDuration(
-      {required String accessToken, required int duration, Uri? uri}) {
+      {required String accessToken,
+      required int duration,
+      Uri? uri,
+      required String id,
+      required String deviceId}) {
     uri ??= Uri.parse(mainPrittInstance);
 
     final timeNow = DateTime.now();
     final timeExpiration = timeNow.add(Duration(seconds: duration));
 
     return UserCredentials(
-        uri: uri, accessToken: accessToken, accessTokenExpires: timeExpiration);
+        uri: uri,
+        userId: id,
+        accessToken: accessToken,
+        accessTokenExpires: timeExpiration,
+        deviceId: deviceId);
   }
 
   factory UserCredentials.fromJson(Map<String, dynamic> json) =>
@@ -64,14 +84,21 @@ class UserCredentials {
   }
 
   static Future<UserCredentials> create(String accessToken,
-      {Uri? uri, int? accessTokenDuration}) async {
-    // give default duration of
+      {Uri? uri,
+      int? accessTokenDuration,
+      required String id,
+      String? deviceId}) async {
+    // give default duration of 3 months, in secs
     accessTokenDuration ??= (7 * 4 * 3) * (24 * 3600);
 
     // create or overwrite configuration file
     try {
       final credentialsObject = UserCredentials.fromExpirationDuration(
-          accessToken: accessToken, duration: accessTokenDuration, uri: uri);
+          accessToken: accessToken,
+          duration: accessTokenDuration,
+          uri: uri,
+          id: id,
+          deviceId: deviceId ?? await getDeviceId());
 
       await _file.writeAsString(json.encode(credentialsObject.toJson()));
 
@@ -116,8 +143,6 @@ class UserCredentials {
 
     return this;
   }
-}
 
-UserCredentials loginUser() {
-  throw UnimplementedError('UserCredentials not implemented');
+  bool get isExpired => accessTokenExpires.isBefore(DateTime.now());
 }

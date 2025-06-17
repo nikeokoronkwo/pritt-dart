@@ -3,15 +3,38 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
+import 'package:aws_signer_api/signer-2017-08-25.dart';
 import '../crs/exceptions.dart';
 import 'storage/interface.dart';
 
-/// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends, but basically make use of the [S3 API]().
-/// During development, or docker compose deployments, we use [OpenIO]().
+/// The current implementation of the CRS Object File Storage, used for storing package archives makes use of multiple backends,
+/// but basically make use of the [S3 API](https://docs.aws.amazon.com/AmazonS3/latest/API/Type_API_Reference.html).
+/// During development, docker compose deployments, or on-prem if desired, we use [MinIO](https://min.io).
 ///
 /// During live production deployments (usually not on prem), we make use of &lt;insert cloud provider S3 compatible OFS here&gt;
-class PrittStorage implements PrittStorageInterface {
-  PrittStorage._();
+///
+/// TODO: In the future, we should make our own `PrittBucket` type that can wrap different buckets.
+/// That way it is easier to use various other types of buckets if needed
+class PrittStorage implements PrittStorageInterface<Bucket> {
+  PrittStorage._(
+      {required this.pkgBucket,
+      required this.publishingBucket,
+      required this.adapterBucket,
+      required this.url,
+      required this.signer});
+
+  @override
+  Bucket pkgBucket;
+
+  @override
+  Bucket publishingBucket;
+
+  @override
+  Bucket adapterBucket;
+
+  String url;
+
+  Signer signer;
 
   S3 get s3Instance {
     if (PrittStorage.s3 != null) return PrittStorage.s3!;
@@ -20,31 +43,55 @@ class PrittStorage implements PrittStorageInterface {
 
   static S3? s3;
 
-  static Future<S3> initialiseS3(String url,
+  static Future<({Bucket pkg, Bucket pub, Bucket adapter})> initialiseS3(
+      String url,
       {required String region,
       required String accessKey,
       required String secretKey}) async {
     s3 = S3(
       region: region,
       credentials:
-          AwsClientCredentials(
-            accessKey: accessKey, 
-            secretKey: secretKey
-          ),
+          AwsClientCredentials(accessKey: accessKey, secretKey: secretKey),
       endpointUrl: url,
     );
 
-    final s3PkgBucket = (await s3!.listBuckets())
-            .buckets
-            ?.where((b) => b.name == 'pritt-packages') ??
-        [];
-    if (s3PkgBucket.isEmpty) {
+    var s3Buckets = (await s3!.listBuckets()).buckets ?? [];
+
+    // check if needed buckets already exist
+    // TODO: Might be lighter work to do HEAD work instead
+    bool recallListBuckets = false;
+    if (s3Buckets.any((b) => b.name == 'pritt-packages')) {
+      recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-packages',
       );
     }
+    if (s3Buckets.any((b) => b.name == 'pritt-publishing-archives')) {
+      recallListBuckets = true;
+      await s3!.createBucket(
+        bucket: 'pritt-publishing-archives',
+      );
+    }
+    if (s3Buckets.any((b) => b.name == 'pritt-adapters')) {
+      recallListBuckets = true;
+      await s3!.createBucket(
+        bucket: 'pritt-adapters',
+      );
+    }
 
-    return s3!;
+    // lets not call this whenever, only when needed
+    s3Buckets = recallListBuckets
+        ? ((await s3!.listBuckets()).buckets ?? s3Buckets)
+        : s3Buckets;
+
+    // get buckets
+    final s3PkgBucket = s3Buckets.firstWhere((b) => b.name == 'pritt-packages');
+    final s3PubBucket =
+        s3Buckets.firstWhere((b) => b.name == 'pritt-publishing-archives');
+    final s3AdapterBucket =
+        s3Buckets.firstWhere((b) => b.name == 'pritt-adapters');
+
+    return (pkg: s3PkgBucket, pub: s3PubBucket, adapter: s3AdapterBucket);
   }
 
   static Future<PrittStorage> connect(String url,
@@ -53,16 +100,43 @@ class PrittStorage implements PrittStorageInterface {
     s3secretKey ??= String.fromEnvironment('S3_SECRET_KEY');
     s3accessKey ??= String.fromEnvironment('S3_ACCESS_KEY');
 
-    if (s3 == null) {
-      await initialiseS3(url,
-          region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
-    }
+    final signer = Signer(
+        region: s3region,
+        credentials: AwsClientCredentials(
+            accessKey: s3accessKey, secretKey: s3secretKey),
+        endpointUrl: url);
 
-    return PrittStorage._();
+    if (s3 == null) {
+      final (pkg: pkgBucket, pub: pubBucket, adapter: adapterBucket) =
+          await initialiseS3(url,
+              region: s3region, accessKey: s3accessKey, secretKey: s3secretKey);
+
+      return PrittStorage._(
+          pkgBucket: pkgBucket,
+          publishingBucket: pubBucket,
+          adapterBucket: adapterBucket,
+          url: url,
+          signer: signer);
+    } else {
+      var s3Buckets = (await s3!.listBuckets()).buckets ?? [];
+      final s3PkgBucket =
+          s3Buckets.firstWhere((b) => b.name == 'pritt-packages');
+      final s3PubBucket =
+          s3Buckets.firstWhere((b) => b.name == 'pritt-publishing-archives');
+      final s3AdapterBucket =
+          s3Buckets.firstWhere((b) => b.name == 'pritt-adapters');
+
+      return PrittStorage._(
+          pkgBucket: s3PkgBucket,
+          publishingBucket: s3PubBucket,
+          adapterBucket: s3AdapterBucket,
+          url: url,
+          signer: signer);
+    }
   }
 
   @override
-  FutureOr copy(String from, String to) async {
+  FutureOr copyPackage(String from, String to) async {
     // copy the object from one path to another
     if (from == to) {
       return;
@@ -70,31 +144,30 @@ class PrittStorage implements PrittStorageInterface {
 
     // Get the object from the bucket
     final object = await s3Instance.getObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: from,
     );
 
     // Create the object in the bucket
     final upload = await s3Instance.putObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: to,
       body: object.body,
       contentType: object.contentType,
       metadata: object.metadata,
     );
 
-    // TODO: implement copy
-    throw UnimplementedError();
+    return;
   }
 
   @override
-  Future<bool> create(String path, Uint8List data, String sha,
+  Future<bool> createPackage(String path, Uint8List data, String sha,
       {String? contentType, Map<String, String>? metadata}) async {
     // upload the file to the S3 bucket
 
     // Create the object in the bucket
     final upload = await s3Instance.putObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: path,
       body: data,
       contentType: contentType,
@@ -107,10 +180,10 @@ class PrittStorage implements PrittStorageInterface {
   }
 
   @override
-  Future<CRSFile?> find(String path) async {
+  Future<CRSFile?> findPackage(String path) async {
     // list all objects in the bucket at a directory
     final list = await s3Instance.listObjectsV2(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       prefix: path,
     );
 
@@ -119,13 +192,12 @@ class PrittStorage implements PrittStorageInterface {
         ? null
         : CRSFile(
             path: path, lastModified: file.lastModified, size: file.size ?? 0);
-    // TODO: implement list
   }
 
   @override
-  Future<List<CRSFile>> listAll() async {
+  Future<List<CRSFile>> listAllPackages() async {
     final list = await s3Instance.listObjectsV2(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
     );
 
     return list.contents
@@ -136,9 +208,10 @@ class PrittStorage implements PrittStorageInterface {
   }
 
   @override
-  Future<List<CRSFile>> listWhere(bool Function(String path) where) async {
+  Future<List<CRSFile>> listPackagesWhere(
+      bool Function(String path) where) async {
     final list = await s3Instance.listObjectsV2(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
     );
 
     return list.contents
@@ -150,26 +223,23 @@ class PrittStorage implements PrittStorageInterface {
   }
 
   @override
-  FutureOr remove(String path) async {
+  FutureOr removePackage(String path) async {
     // remove the object from the bucket
     final deletion = await s3Instance.deleteObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: path,
     );
-
-    // TODO: implement remove
-    throw UnimplementedError();
   }
 
   @override
-  FutureOr update(String path, Uint8List data) async {
+  FutureOr updatePackage(String path, Uint8List data) async {
     final original = await s3Instance.getObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: path,
     );
 
     final upload = await s3Instance.putObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: path,
       body: data,
       contentType: original.contentType,
@@ -180,10 +250,10 @@ class PrittStorage implements PrittStorageInterface {
   }
 
   @override
-  Future<CRSFileOutputStream> get(String path) async {
+  Future<CRSFileOutputStream> getPackage(String path) async {
     // get the object from the bucket
     final object = await s3Instance.getObject(
-      bucket: "pritt-packages",
+      bucket: pkgBucket.name ?? "pritt-packages",
       key: path,
     );
 
@@ -203,5 +273,85 @@ class PrittStorage implements PrittStorageInterface {
       signature: object.metadata?['signature'] ?? '',
       integrity: object.metadata?['integrity'] ?? '',
     );
+  }
+
+  @override
+  FutureOr createPubArchive(String path, Uint8List data,
+      {String? contentType, Map<String, String>? metadata}) async {
+    // Create the object in the bucket
+    final upload = await s3Instance.putObject(
+      bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+      key: path,
+      body: data,
+      contentType: contentType,
+    );
+
+    return true;
+  }
+
+  @override
+  FutureOr<CRSFileOutputStream> getPubArchive(String path) async {
+    final object = await s3Instance.getObject(
+      bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+      key: path,
+    );
+
+    if (object.body == null) {
+      throw CRSException(
+          CRSExceptionType.OBJECT_NOT_FOUND, 'Could not find archive at $path');
+    }
+
+    // return the object as a CRSFileOutputStream
+    return CRSFileOutputStream(
+      path: path,
+      data: object.body!,
+      metadata: object.metadata ?? {},
+      contentType: object.contentType,
+      size: object.contentLength ?? 0,
+      hash: object.metadata?['sha256'] ?? '',
+      signature: object.metadata?['signature'] ?? '',
+      integrity: object.metadata?['integrity'] ?? '',
+    );
+  }
+
+  @override
+  FutureOr movePubArchiveToPackage(String from, String to) async {
+    // Get the object from the bucket
+    final object = await s3Instance.getObject(
+      bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+      key: from,
+    );
+
+    // Create the object in the bucket
+    final upload = await s3Instance.putObject(
+      bucket: pkgBucket.name ?? "pritt-packages",
+      key: to,
+      body: object.body,
+      contentType: object.contentType,
+      metadata: object.metadata,
+    );
+  }
+
+  @override
+  FutureOr<bool> pubArchiveExists(String path) async {
+    final pkgStatus = await s3Instance.headObject(
+        bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+        key: path);
+
+    return pkgStatus.metadata != null;
+  }
+
+  @override
+  FutureOr removePubArchive(String path) async {
+    final deletion = await s3Instance.deleteObject(
+      bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+      key: path,
+    );
+  }
+
+  @override
+  FutureOr<Uri> createPubEndpointUrl(String path, {required String pubId}) {
+    // TODO: implement createPubEndpointUrl
+    throw UnimplementedError();
   }
 }

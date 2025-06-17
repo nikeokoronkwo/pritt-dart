@@ -1,0 +1,79 @@
+<script setup lang="ts">
+definePageMeta({
+  layout: "entry",
+});
+
+const text = ref("");
+
+function handleEnter(event: KeyboardEvent) {
+  if (event.key === "Enter") {
+    return navigateTo({
+      path: "/search",
+      query:
+        text.value.length === 0
+          ? undefined
+          : {
+              q: text.value,
+            },
+    });
+  }
+}
+</script>
+
+<template>
+    <div class="flex h-full grow flex-col">
+    <!-- TODO: Some Neat Background -->
+    <section class="flex h-full grow flex-col">
+      <div
+        class="flex flex-1 flex-col items-center justify-center align-middle"
+      >
+        <!-- body -->
+        <div class="flex flex-col items-center space-y-3">
+          {{#if logo}}
+            {{{ logo }}}
+          {{else}}
+            <div class="text-4xl font-semibold">Pritt</div>
+          {{/if}}
+          <div class="italic">
+            {{#if catchline}}
+                <span>{{{ catchline }}}</span>
+            {{else}}
+                <span>The homepage for the package registry for {{ name }}</span>
+            {{/if}}
+          </div>
+        </div>
+        <div class="px-4 py-6">
+          <!-- Search Bar -->
+          <!-- class="flex flex-row transition ease-in-out delay-200 hover:shadow space-x-3 w-full h-full items-center align-middle rounded-2xl border-2 border-transparent focus-within:border-primary min-w-xl" -->
+          <div
+            class="focus-within:border-primary-50 h-full min-h-12 w-full min-w-xl gap-3 rounded-2xl border border-transparent transition delay-200 ease-in-out focus-within:backdrop-blur-[2px] hover:shadow hover:backdrop-blur-[2px]"
+          >
+            <!-- {/* Search Icon */} -->
+
+            <!-- {/* Search Input */} -->
+            <div
+              class="flex h-full min-h-12 w-full flex-row items-center justify-stretch"
+            >
+              <input
+                placeholder="Search for Packages"
+                class="h-full w-full pl-3 outline-none"
+                v-model="text"
+                @keydown="handleEnter"
+              />
+              <!-- //> -->
+              <NuxtLink
+                :to="`/search${text.length === 0 ? '' : `?q=${text}`}`"
+                class="hover:bg-primary hover:text-primary-50 flex h-full min-h-12 min-w-3 flex-col items-center justify-center rounded-r-2xl transition delay-200 ease-in-out"
+              >
+                <Icon
+                  name="material-symbols:search-rounded"
+                  class="scale-150 px-6"
+                />
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>

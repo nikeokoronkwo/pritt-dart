@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_server/src/main/utils/mixins.dart';
+import '../../../utils/mixins.dart';
 import 'pubspec.dart';
 
 part 'result.g.dart';

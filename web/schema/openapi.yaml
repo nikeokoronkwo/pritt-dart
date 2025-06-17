@@ -1,0 +1,1731 @@
+openapi: 3.0.3
+info:
+  title: Pritt OpenAPI Specification
+  version: 0.1.0
+  description: |-
+    The Pritt OpenAPI specification used for integrating Pritt with its internal tools (i.e generating schemas for endpoints on the Rust Server and Frontends (CLI and Web)), 
+    as well as integrating with other tools.
+paths:
+  /api/packages:
+    get:
+      summary: Get all packages from the Pritt Server
+      description: This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
+      operationId: getPackages
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetPackagesResponse"
+              example:
+                next_url: https://example.com/foo
+                packages:
+                  - name: pritt
+                    description: The Pritt Package itself!
+                    version: 0.1.0
+                    author:
+                      name: Pritt
+                      email: pritt@pritt.com
+                    created_at: 2023-10-01T00:00:00Z
+    parameters:
+      - description: The index of the paginated result
+        name: index
+        in: query
+        required: false
+        schema:
+          type: string
+      - description: Pass a user id to show
+        name: user
+        in: query
+        required: false
+        schema:
+          type: string
+  "/api/package/{name}":
+    get:
+      summary: Get a package from the Pritt Server with the given name
+      operationId: getPackageByName
+      parameters:
+        - description: The language associated with the package
+          name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+        - description: Whether to get all the versions of the package, including yanked and deprecated versions
+          name: all
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetPackageResponse"
+              example: {}
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    post:
+      summary: Publish a package to the Pritt Server
+      description: This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+      operationId: publishPackage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishPackageRequest"
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishPackageResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+              example: {}
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Yank an empty package
+      description: This endpoint is for yanking packages from the pritt registry
+      operationId: yankPackageByName
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/YankPackageRequest"
+        required: false
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YankPackageResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The name of the package
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+  "/api/package/@{scope}/{name}":
+    get:
+      summary: Get a package from the Pritt Server with the given name
+      operationId: getPackageByNameWithScope
+      parameters:
+        - description: The language associated with the package
+          name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+        - description: Whether to get all the versions of the package, including yanked and deprecated versions
+          name: all
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetPackageResponse"
+              example: {}
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    post:
+      summary: Publish a package to the Pritt Server
+      description: This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+      operationId: publishPackageWithScope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishPackageRequest"
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishPackageResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+              example: {}
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Yank an empty package
+      description: This endpoint is for yanking packages from the pritt registry
+      operationId: yankPackageByNameWithScope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/YankPackageRequest"
+        required: false
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YankPackageResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The scope for the given package
+        name: scope
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: The name of the package
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+  "/api/package/{name}/{version}":
+    get:
+      summary: Get a package from the Pritt Server with the given name
+      operationId: getPackageByNameWithVersion
+      parameters:
+        - description: The language associated with the package
+          name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+        - description: Whether to get all the versions of the package, including yanked and deprecated versions
+          name: all
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetPackageByVersionResponse"
+              example:
+                name: pkg
+                description: A starter package
+                version: 0.1.0
+                author:
+                  name: pritt
+                  email: pritt@pritt.com
+                contributors: []
+                language: cplusplus
+                created_at: ""
+                info: {}
+                env: {}
+                metadata: {}
+                signatures: []
+                readme: |-
+                  # pkg
+                  A great starting point for packages
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    post:
+      summary: Publish a package to the Pritt Server
+      description: This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+      operationId: publishPackageVersion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishPackageByVersionRequest"
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishPackageByVersionResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+              example: {}
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Yank an empty package
+      description: This endpoint is for yanking packages from the pritt registry
+      operationId: yankPackageVersionByName
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/YankPackageByVersionRequest"
+        required: false
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YankPackageByVersionResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The name of the package
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: The version of the package
+        name: version
+        in: path
+        required: true
+        schema:
+          type: string
+  "/api/package/@{scope}/{name}/{version}":
+    get:
+      summary: Get a package from the Pritt Server with the given name
+      operationId: getPackageByNameWithScopeAndVersion
+      parameters:
+        - description: The language associated with the package
+          name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+        - description: Whether to get all the versions of the package, including yanked and deprecated versions
+          name: all
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetPackageByVersionResponse"
+              example:
+                name: pkg
+                description: A starter package
+                version: 0.1.0
+                author:
+                  name: pritt
+                  email: pritt@pritt.com
+                contributors: []
+                language: cplusplus
+                created_at: ""
+                info: {}
+                env: {}
+                metadata: {}
+                signatures: []
+                readme: |-
+                  # pkg
+                  A great starting point for packages
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    post:
+      summary: Publish a package to the Pritt Server
+      description: This endpoint is used for publishing packages to Pritt, usually done via the Pritt CLI. Publishing is permanent and cannot be removed
+      operationId: publishPackageWithScopeAndVersion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublishPackageByVersionRequest"
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishPackageByVersionResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+              example: {}
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Yank an empty package
+      description: This endpoint is for yanking packages from the pritt registry
+      operationId: yankPackageByNameWithScopeAndVersion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/YankPackageByVersionRequest"
+        required: false
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YankPackageByVersionResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The scope for the given package
+        name: scope
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: The name of the package
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: The version of the package
+        name: version
+        in: path
+        required: true
+        schema:
+          type: string
+  /api/package/upload:
+    description: "Upload a package to the Pritt Server: This API Endpoint is called after a subsequent call to /api/package/{name}(/{version})"
+    post:
+      summary: Upload a package to the Pritt Server
+      description: This API Endpoint is used to upload the tarball for the package
+      operationId: uploadPackageWithToken
+      requestBody:
+        content:
+          application/gzip:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadPackageResponse"
+        "401":
+          description: Unauthorized Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+              example: {}
+        "402":
+          description: Token Expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+              example: {}
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+              example: {}
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The token id of the package used to identify the package
+        name: id
+        in: query
+        required: true
+        schema:
+          type: string
+  /api/users:
+    get:
+      summary: List users from the Pritt Server
+      operationId: getUsers
+      responses:
+        "200":
+          description: Normal response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetUsersResponse"
+      security:
+        - bearerAuth: []
+  "/api/user/{id}":
+    get:
+      summary: Get a user from Pritt
+      description: Get user information from Pritt about a particular user given the user's id
+      operationId: getUserById
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetUserResponse"
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+    put:
+      summary: Add a new user to Pritt
+      operationId: addUserById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddUserRequest"
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddUserResponse"
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The id of the user
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /api/user:
+    get:
+      summary: Get the current user from Pritt
+      description: Get user information from Pritt about a particular user via auth
+      operationId: getCurrentUser
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetUserResponse"
+        "404":
+          description: Not Found Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      security:
+        - bearerAuth: []
+  "/api/scope/@{scope}":
+    get:
+      summary: Get information about a scope/organization
+      description: This GET Request retrieves information about a given scope/organization
+      operationId: getOrganization
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetScopeResponse"
+              example:
+                name: ramen
+                is_member: true
+    parameters:
+      - description: The scope name
+        name: scope
+        in: path
+        required: true
+        schema:
+          type: string
+  "/api/scope/@{scope}/packages":
+    get:
+      summary: Get all packages from the Pritt Server for a given scope
+      description: This GET Request retrieves metadata about all the packages in the registry for a given scope. To get more information on a specific package use /api/package/@{scope}/{name}
+      operationId: getOrgPackages
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetPackagesResponse"
+              example:
+                next_url: https://example.com/foo
+                packages:
+                  - name: pritt
+                    description: The Pritt Package itself!
+                    version: 0.1.0
+                    author:
+                      name: Pritt
+                      email: pritt@pritt.com
+                    created_at: 2023-10-01T00:00:00Z
+    parameters:
+      - description: The scope name
+        name: scope
+        in: path
+        required: true
+        schema:
+          type: string
+  /api/adapters:
+    get:
+      summary: Get all custom adapters
+      description: Get an adapter with the given id
+      operationId: getAdapters
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAdaptersResponse"
+      security:
+        - bearerAuth: []
+  "/api/adapter/{id}":
+    get:
+      summary: Get an adapter with the given id
+      description: Get an adapter with the given id
+      operationId: getAdapterById
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAdapterResponse"
+      security:
+        - bearerAuth: []
+    post:
+      summary: Create or update an adapter with the given id
+      description: Create or update an adapter with the given id
+      operationId: addAdapterWithId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddAdapterRequest"
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddAdapterResponse"
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Yank an adapter with the given id
+      description: Yank an adapter with the given id
+      operationId: yankAdapterWithId
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YankAdapterResponse"
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The id of the adapter
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /api/adapter/upload:
+    post:
+      summary: Upload an adapter to the Pritt Server
+      description: This API Endpoint is used to upload the tarball for the processed adapter
+      operationId: uploadAdapterWithToken
+      requestBody:
+        content:
+          application/gzip:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadAdapterResponse"
+    parameters:
+      - description: The token id of the adapter used to identify the adapter
+        name: id
+        in: query
+        required: true
+        schema:
+          type: string
+  "/api/adapter/{lang}":
+    get:
+      summary: Get adapters by language
+      description: Get the adapters for a particular language
+      operationId: getAdaptersByLang
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAdaptersByLangResponse"
+      security:
+        - bearerAuth: []
+  /api/auth/new:
+    description: Create a new token used for authenticating/creating a new user
+    post:
+      summary: Create token for a user
+      description: Create a new token used for authenticating/creating a new user
+      operationId: createNewAuthStatus
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+  /api/auth/validate:
+    description: Validate or authenticate a user, creating a user if needed
+    post:
+      summary: Validte Authentication Response
+      description: Validate or authenticate a user, creating a user if needed
+      operationId: validateAuthStatus
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthPollResponse"
+        "405":
+          description: Expired Token Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpiredError"
+    parameters:
+      - description: The token created from the `/api/auth`
+        name: token
+        in: query
+        required: true
+        schema:
+          type: string
+  /api/auth/status:
+    description: Get the status of authentication for a user, usually used by the command line to poll
+    post:
+      summary: Get Authentication Status
+      operationId: getAuthStatus
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthPollResponse"
+        "405":
+          description: Expired Token Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpiredError"
+        "404":
+          description: Could not find the token specified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+  "/api/archive/package/{name}":
+    get:
+      operationId: getPackageArchiveWithName
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The name of the adapter, or an identifier associated with it
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: The version of the package to unpack
+        name: version
+        in: query
+        required: false
+        schema:
+          type: string
+  "/api/archive/adapter/{name}":
+    get:
+      operationId: getAdapterArchiveWithName
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+      security:
+        - bearerAuth: []
+    parameters:
+      - description: The name of the adapter, or an identifier associated with it
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+components:
+  schemas:
+    AddAdapterRequest:
+      type: object
+      title: AddAdapterRequest
+      properties: {}
+      additionalProperties: false
+    AddAdapterResponse:
+      type: object
+      title: AddAdapterResponse
+      properties: {}
+      additionalProperties: false
+    AddUserRequest:
+      type: object
+      title: AddUserRequest
+      description: |-
+        The schema of the request object for the add user endpoint `api/user/{id}`
+
+        The object gets important information such as necessary information for registering the user
+      properties: {}
+      additionalProperties: false
+    AddUserResponse:
+      type: object
+      title: AddUserResponse
+      properties: {}
+      additionalProperties: false
+    AuthPollResponse:
+      type: object
+      title: AuthPollResponse
+      properties:
+        status:
+          type: string
+          title: PollStatus
+          enum:
+            - pending
+            - success
+            - error
+        response:
+          type: object
+          title: PollResponse
+          properties: {}
+          additionalProperties: false
+          nullable: true
+      additionalProperties: false
+      required:
+        - status
+    AuthResponse:
+      type: object
+      title: AuthResponse
+      properties:
+        token:
+          type: string
+          description: The token used for authentication on the client (CLI) side
+        token_expires:
+          type: integer
+          description: |-
+            A number to represent the number of seconds from when the request was made before the request becomes expired
+
+            Expect some
+        id:
+          type: string
+          description: A unique id used to identify the person requesting for an ID
+      additionalProperties: false
+      required:
+        - token
+        - token_expires
+        - id
+    Error:
+      type: object
+      title: Error
+      description: |-
+        The generic error type returned from an invalid request
+
+        Most of the time, this module may be used as is, but for special cases it is extended to provide more information or context in such applications
+      properties:
+        error:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ExpiredError:
+      type: object
+      title: ExpiredError
+      properties:
+        error:
+          type: string
+          nullable: true
+        expired_time:
+          type: string
+          description: The time that the resource expired
+      additionalProperties: false
+      required:
+        - expired_time
+    GetAdapterResponse:
+      type: object
+      title: GetAdapterResponse
+      properties:
+        name:
+          type: string
+          description: The name of the adapter
+        version:
+          type: string
+          title: Version
+          description: The current version of the adapter in system
+        description:
+          type: string
+          description: The description of the adapter
+          nullable: true
+        language:
+          type: string
+          description: The language the adapter is associated with
+          nullable: true
+        uploaded_at:
+          type: string
+          description: The date the adapter was uploaded
+        source_url:
+          type: string
+          description: The url link to the source code of the adapter, if any
+          nullable: true
+      additionalProperties: false
+      required:
+        - name
+        - version
+        - uploaded_at
+    GetAdaptersByLangResponse:
+      type: object
+      title: GetAdaptersByLangResponse
+      properties: {}
+      additionalProperties: false
+    GetAdaptersResponse:
+      type: object
+      title: GetAdaptersResponse
+      properties:
+        adapters:
+          type: array
+          description: The adapters
+          items:
+            type: object
+            title: Plugin
+            properties:
+              name:
+                type: string
+              version:
+                type: string
+                title: Version
+              description:
+                type: string
+                description: The description of the adapter
+                nullable: true
+              language:
+                type: string
+                description: The language the adapter is associated with
+                nullable: true
+              uploaded_at:
+                type: string
+                description: The date the adapter was uploaded
+              source_url:
+                type: string
+                description: The url link to the source code of the adapter, if any
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - version
+              - uploaded_at
+      additionalProperties: false
+      required:
+        - adapters
+    GetCurrentUserResponse:
+      type: object
+      title: GetCurrentUserResponse
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          description: The time the user was created
+        updated_at:
+          type: string
+          description: The last time the user was updated
+        packages:
+          type: array
+          description: Packages the user has worked on
+          items:
+            type: object
+            title: PackageMap
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                title: UserPackageRelationship
+                enum:
+                  - author
+                  - contributor
+              privileges:
+                type: array
+                items:
+                  type: string
+                  title: Privilege
+                  enum:
+                    - read
+                    - write
+                    - publish
+                    - ultimate
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - type
+        id:
+          type: string
+          description: The ID of the user
+      additionalProperties: false
+      required:
+        - name
+        - email
+        - created_at
+        - updated_at
+        - packages
+        - id
+    GetPackageByVersionResponse:
+      type: object
+      title: GetPackageByVersionResponse
+      properties:
+        name:
+          type: string
+        scope:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        version:
+          type: string
+          title: Version
+        author:
+          type: object
+          title: Author
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+          additionalProperties: false
+          required:
+            - name
+            - email
+        contributors:
+          type: array
+          items:
+            type: object
+            title: Contributor
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              privileges:
+                type: array
+                description: The role of the contributor
+                items:
+                  type: string
+                  title: Privilege
+                  enum:
+                    - read
+                    - write
+                    - publish
+                    - ultimate
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - email
+        language:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+        info:
+          type: object
+          description: "info "
+          additionalProperties: {}
+        env:
+          type: object
+          description: env
+          additionalProperties: {}
+        metadata:
+          type: object
+          description: metadata
+          additionalProperties: {}
+        signatures:
+          type: array
+          description: signatures
+          items:
+            type: object
+            title: Signature
+            properties:
+              public_key_id:
+                type: string
+                description: public key id
+              signature:
+                type: string
+                description: The signature itself
+              created:
+                type: string
+                description: The time the date was created
+            additionalProperties: false
+            required:
+              - public_key_id
+              - signature
+              - created
+        deprecated:
+          type: boolean
+          description: whether the package is deprecated
+          nullable: true
+        deprecationMessage:
+          type: string
+          description: deprecation message
+          nullable: true
+        yanked:
+          type: boolean
+          description: whether the package is yanked
+          nullable: true
+        readme:
+          type: string
+          description: The readme info
+          nullable: true
+        config:
+          type: object
+          title: ConfigFile
+          description: The configuration file information
+          properties:
+            name:
+              type: string
+              description: The name of the config file
+            data:
+              type: string
+              description: The data in the file
+          additionalProperties: false
+          required:
+            - name
+            - data
+          nullable: true
+        hash:
+          type: string
+          description: The file hash
+          nullable: true
+        integrity:
+          type: string
+          description: The integrity hash
+          nullable: true
+      additionalProperties: false
+      required:
+        - name
+        - version
+        - author
+        - contributors
+        - created_at
+        - info
+        - env
+        - metadata
+        - signatures
+    GetPackageResponse:
+      type: object
+      title: GetPackageResponse
+      properties:
+        name:
+          type: string
+          description: The name of the package retrieved
+        latest_version:
+          type: string
+          title: Version
+          description: The latest version of the package retrieved
+        author:
+          type: object
+          title: Author
+          description: The author of the package
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+          additionalProperties: false
+          required:
+            - name
+            - email
+        description:
+          type: string
+          description: The description of the package
+          nullable: true
+        contributors:
+          type: array
+          description: Contributors to the package
+          items:
+            type: object
+            title: Contributor
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              privileges:
+                type: array
+                description: The role of the contributor
+                items:
+                  type: string
+                  title: Privilege
+                  enum:
+                    - read
+                    - write
+                    - publish
+                    - ultimate
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - email
+        language:
+          type: string
+          description: The language of the package
+          nullable: true
+        created_at:
+          type: string
+          description: The date the package was created
+        latest:
+          type: object
+          title: VerbosePackage
+          description: "The latest package "
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+              nullable: true
+            version:
+              type: string
+              title: Version
+            author:
+              type: object
+              title: Author
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+              additionalProperties: false
+              required:
+                - name
+                - email
+            language:
+              type: string
+              nullable: true
+            created_at:
+              type: string
+            updated_at:
+              type: string
+              nullable: true
+            info:
+              type: object
+              description: "info "
+              additionalProperties: {}
+            env:
+              type: object
+              description: env
+              additionalProperties: {}
+            metadata:
+              type: object
+              description: metadata
+              additionalProperties: {}
+            signatures:
+              type: array
+              description: signatures
+              items:
+                type: object
+                title: Signature
+                properties:
+                  public_key_id:
+                    type: string
+                    description: public key id
+                  signature:
+                    type: string
+                    description: The signature itself
+                  created:
+                    type: string
+                    description: The time the date was created
+                additionalProperties: false
+                required:
+                  - public_key_id
+                  - signature
+                  - created
+            deprecated:
+              type: boolean
+              description: whether the package is deprecated
+              nullable: true
+            yanked:
+              type: boolean
+              description: whether the package is yanked
+              nullable: true
+          additionalProperties: false
+          required:
+            - name
+            - version
+            - author
+            - created_at
+            - info
+            - env
+            - metadata
+            - signatures
+        versions:
+          type: object
+          description: A map of all the versions of the package
+          additionalProperties:
+            type: object
+            title: VerbosePackage
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+                nullable: true
+              version:
+                type: string
+                title: Version
+              author:
+                type: object
+                title: Author
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                additionalProperties: false
+                required:
+                  - name
+                  - email
+              language:
+                type: string
+                nullable: true
+              created_at:
+                type: string
+              updated_at:
+                type: string
+                nullable: true
+              info:
+                type: object
+                description: "info "
+                additionalProperties: {}
+              env:
+                type: object
+                description: env
+                additionalProperties: {}
+              metadata:
+                type: object
+                description: metadata
+                additionalProperties: {}
+              signatures:
+                type: array
+                description: signatures
+                items:
+                  type: object
+                  title: Signature
+                  properties:
+                    public_key_id:
+                      type: string
+                      description: public key id
+                    signature:
+                      type: string
+                      description: The signature itself
+                    created:
+                      type: string
+                      description: The time the date was created
+                  additionalProperties: false
+                  required:
+                    - public_key_id
+                    - signature
+                    - created
+              deprecated:
+                type: boolean
+                description: whether the package is deprecated
+                nullable: true
+              yanked:
+                type: boolean
+                description: whether the package is yanked
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - version
+              - author
+              - created_at
+              - info
+              - env
+              - metadata
+              - signatures
+      additionalProperties: false
+      required:
+        - name
+        - latest_version
+        - author
+        - contributors
+        - created_at
+        - latest
+        - versions
+    GetPackagesResponse:
+      type: object
+      title: GetPackagesResponse
+      properties:
+        next_url:
+          type: string
+          description: The next url for the next list of the packages
+          nullable: true
+        packages:
+          type: array
+          description: The packages listed out
+          items:
+            type: object
+            title: Package
+            description: The major extension of this class
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+                nullable: true
+              version:
+                type: string
+                title: Version
+              author:
+                type: object
+                title: Author
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                additionalProperties: false
+                required:
+                  - name
+                  - email
+              language:
+                type: string
+                nullable: true
+              created_at:
+                type: string
+              updated_at:
+                type: string
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - version
+              - author
+              - created_at
+      additionalProperties: false
+      required:
+        - packages
+    GetScopeResponse:
+      type: object
+      title: GetScopeResponse
+      properties:
+        name:
+          type: string
+          description: The name of the organization
+        is_member:
+          type: boolean
+          description: Whether the person requesting is a member
+      additionalProperties: false
+      required:
+        - name
+        - is_member
+    GetUserResponse:
+      type: object
+      title: GetUserResponse
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          description: The time the user was created
+        updated_at:
+          type: string
+          description: The last time the user was updated
+        packages:
+          type: array
+          description: Packages the user has worked on
+          items:
+            type: object
+            title: PackageMap
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                title: UserPackageRelationship
+                enum:
+                  - author
+                  - contributor
+              privileges:
+                type: array
+                items:
+                  type: string
+                  title: Privilege
+                  enum:
+                    - read
+                    - write
+                    - publish
+                    - ultimate
+                nullable: true
+            additionalProperties: false
+            required:
+              - name
+              - type
+      additionalProperties: false
+      required:
+        - name
+        - email
+        - created_at
+        - updated_at
+        - packages
+    GetUsersResponse:
+      type: object
+      title: GetUsersResponse
+      properties: {}
+      additionalProperties: false
+    NotFoundError:
+      type: object
+      title: NotFoundError
+      properties:
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    PublishPackageByVersionRequest:
+      type: object
+      title: PublishPackageByVersionRequest
+      properties: {}
+      additionalProperties: false
+    PublishPackageByVersionResponse:
+      type: object
+      title: PublishPackageByVersionResponse
+      properties: {}
+      additionalProperties: false
+    PublishPackageRequest:
+      type: object
+      title: PublishPackageRequest
+      description: A request object to publish a given package
+      properties:
+        name:
+          type: string
+          description: The name of the package to publish
+        version:
+          type: string
+          title: Version
+          description: The version of the package to publish
+        config:
+          type: object
+          description: The configuration info about the package
+          additionalProperties: {}
+        configFile:
+          type: string
+          title: Uri
+          description: The configuration file for the given project
+      additionalProperties: false
+      required:
+        - name
+        - version
+        - config
+        - configFile
+    PublishPackageResponse:
+      type: object
+      title: PublishPackageResponse
+      properties: {}
+      additionalProperties: false
+    ServerError:
+      type: object
+      title: ServerError
+      description: |-
+        A server error, returned in the case of a 500 Server Error
+
+        Most of the time this is not what we want, but it is here for the sake of completeness
+      properties:
+        error:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UnauthorizedError:
+      type: object
+      title: UnauthorizedError
+      properties:
+        error:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UploadAdapterResponse:
+      type: object
+      title: UploadAdapterResponse
+      properties: {}
+      additionalProperties: false
+    UploadPackageResponse:
+      type: object
+      title: UploadPackageResponse
+      properties: {}
+      additionalProperties: false
+    YankAdapterResponse:
+      type: object
+      title: YankAdapterResponse
+      properties: {}
+      additionalProperties: false
+    YankPackageByVersionRequest:
+      type: object
+      title: YankPackageByVersionResponse
+      properties: {}
+      additionalProperties: false
+    YankPackageByVersionResponse:
+      type: object
+      title: YankPackageByVersionRequest
+      properties: {}
+      additionalProperties: false
+    YankPackageRequest:
+      type: object
+      title: YankPackageRequest
+      description: |-
+        The schema of the request object for the add user endpoint `api/user/{id}`
+
+        The object gets important information such as necessary information for registering the user
+      properties:
+        version:
+          type: string
+          description: The version of the package
+      additionalProperties: false
+      required:
+        - version
+    YankPackageResponse:
+      type: object
+      title: YankPackageResponse
+      description: |-
+        The schema of the request object for the add user endpoint ``
+
+        Returns the info about the yanked package
+      properties: {}
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      description: |-
+        The request sent is authorized by a bearer issued to the user. 
+        The token is sent in a header in the following format: `Authorization: Bearer {token}`
+      name: Authorization
+      in: header
+      scheme: Bearer
+security:
+  - bearerAuth: []

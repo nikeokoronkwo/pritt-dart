@@ -2,7 +2,19 @@ include: package:lints/recommended.yaml
 
 linter:
   rules:
+    - flutter_style_todos
     - always_declare_return_types
     - directives_ordering
     - prefer_relative_imports
     - sort_pub_dependencies
+    - use_string_buffers
+    - no_runtimeType_toString
+    - avoid_returning_this
+    - annotate_redeclares
+
+analyzer:
+  errors:
+    todo: ignore
+
+formatter:
+  page_width: 80

@@ -1,15 +1,16 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/main/base/db/interface.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
 
 class CASLocalDatabase implements PrittAdapterDatabaseInterface {
   CASLocalDatabase._();
 
-  static Future<CASLocalDatabase> connect({String? url, bool local = false}) async {
+  static Future<CASLocalDatabase> connect(
+      {String? url, bool local = false}) async {
     assert(local || url != null,
         "Either sqlite db is local or uri must be passed");
-    
+
     return CASLocalDatabase._();
   }
 

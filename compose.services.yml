@@ -1,4 +1,4 @@
-name: pritt
+name: pritt_services_only
 
 services:
   filestorage:

@@ -1,0 +1,10 @@
+on:
+  workflow_call:
+  workflow_dispatch:
+
+# TODO: pub
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4

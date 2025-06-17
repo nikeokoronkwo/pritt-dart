@@ -2,7 +2,8 @@
 
 import 'dart:async';
 
-import '../utils/version.dart';
+import 'package:pritt_common/version.dart';
+
 import '../base/db/interface.dart';
 import '../base/db/schema.dart';
 import '../base/storage/interface.dart';
@@ -50,29 +51,41 @@ abstract interface class CRSDBController {
   PrittDatabaseInterface get db;
 
   /// get the latest version of a package
+  ///
+  /// The package name [packageName] can be a plain package name or a scoped package name (e.g. `@scope/package`)
   Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
       {String? language, Map<String, dynamic>? env});
 
   /// get a specific version of a package
+  ///
+  /// The package name [packageName] can be a plain package name or a scoped package name (e.g. `@scope/package`)
   Future<CRSResponse<PackageVersions>> getPackageWithVersion(
       String packageName, String version,
       {String? language, Map<String, dynamic>? env});
 
   /// get all versions of a package from the registry
+  ///
+  /// The package name [packageName] can be a plain package name or a scoped package name (e.g. `@scope/package`)
   Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
       String packageName,
       {String? language,
       Map<String, dynamic>? env});
 
   /// get all versions of a package from the registry streamed
+  ///
+  /// The package name [packageName] can be a plain package name or a scoped package name (e.g. `@scope/package`)
   CRSResponse<Stream<PackageVersions>> getPackagesStream(String packageName,
       {String? language, Map<String, dynamic>? env});
 
   /// get the package details from the registry
+  ///
+  /// The package name [packageName] can be a plain package name or a scoped package name (e.g. `@scope/package`)
   Future<CRSResponse<Package>> getPackageDetails(String packageName,
       {String? language, Map<String, dynamic>? env});
 
   /// get package contributors and authors
+  ///
+  /// The package name [packageName] can be a plain package name or a scoped package name (e.g. `@scope/package`)
   Future<CRSResponse<Map<User, Iterable<Privileges>>>> getPackageContributors(
       String packageName,
       {String? language,

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:args/command_runner.dart';
-import 'package:pritt_cli/src/utils/log.dart';
-import 'package:pritt_cli/src/utils/run.dart';
+import '../utils/log.dart';
+import '../utils/run.dart';
 
 abstract class PrittCommand<U> extends Command<U> {
   /// Whether the given command is verbose or not
-  bool get verbose => (runner as PrittCommandRunner).verbose;
+  bool get verbose => runner is PrittCommandRunner
+      ? (runner as PrittCommandRunner).verbose
+      : globalResults?.wasParsed('verbose') ?? false;
 
   /// A generic logger for logging to stdout
   Logger get logger => verbose ? Logger.verbose() : Logger();

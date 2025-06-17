@@ -1,0 +1,5 @@
+module ExistsError
+
+extends "../Error/schema.pkl"
+
+name: String

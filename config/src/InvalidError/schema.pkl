@@ -1,0 +1,8 @@
+module InvalidError
+
+extends "../Error/schema.pkl"
+
+description: String?
+
+redirect: String?
+

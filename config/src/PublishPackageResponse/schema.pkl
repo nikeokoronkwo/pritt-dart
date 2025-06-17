@@ -1,2 +1,15 @@
-module PublishPackageResponse
+open module PublishPackageResponse
 
+import "../../lib/shared.pkl" as s
+
+/// The URL to upload the API to, if any
+url: String?
+
+/// The details
+queue: Queue
+
+/// Publishing queue information
+class Queue {
+  id: String
+  status: s.PublishingStatus
+}

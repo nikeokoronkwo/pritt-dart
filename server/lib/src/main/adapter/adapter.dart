@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
-import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
-import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/adapter/adapter/result.dart';
-
 import '../crs/interfaces.dart';
-
+import 'adapter/exception.dart';
+import 'adapter/interface.dart';
+import 'adapter/request_options.dart';
+import 'adapter/resolve.dart';
+import 'adapter/result.dart';
 import 'adapter_registry.dart';
 
 typedef AdapterResolveFn = AdapterResolveType Function(AdapterResolveObject);

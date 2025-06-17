@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import '../../utils/version.dart';
+import 'package:pritt_common/version.dart';
+
+import 'annotations/cache.dart';
 import 'schema.dart';
 
 /// Base interface for a SQL database interface
@@ -48,6 +50,8 @@ abstract interface class PrittDatabaseInterface
   /// add a new package to the database
   FutureOr<Package> addNewPackage({
     required String name,
+    String? scope,
+    String? description,
     required String version,
     required User author,
     required String language,
@@ -62,13 +66,30 @@ abstract interface class PrittDatabaseInterface
   /// (i.e [Package.version])
   FutureOr<PackageVersions> addNewVersionOfPackage({
     required String name,
+    String? scope,
     required String version,
+    VersionType? versionType,
+    String? description,
+    required String hash,
+    required String signature,
+    required String integrity,
+    String? readme,
+    String? config,
+    String? configName,
+    Map<String, dynamic> info = const {},
+    Map<String, String> env = const {},
+    Map<String, dynamic> metadata = const {},
     required User author,
     required String language,
     required VCS vcs,
     Uri? archive,
-    Iterable<User>? contributors,
+    Iterable<String>? contributors,
   });
+
+  /// Add a user as a contributor to a package
+  FutureOr<Package> addContributorToPackage(
+      String name, User user, Privileges privileges,
+      {String? scope});
 
   /// Updates a new version of a package with archive details such as hash, signature, integrity, etc
   FutureOr<PackageVersions> updateNewPackageWithArchiveDetails({
@@ -81,31 +102,37 @@ abstract interface class PrittDatabaseInterface
 
   /// update a package with new information
   FutureOr<Package> updatePackage(
-      String name, Package Function(Package) updates);
+      String name, Package Function(Package) updates,
+      {String? scope});
 
   /// update a version of a package with new information
   FutureOr<Package> updateVersionOfPackage(String name, Version version,
-      PackageVersions Function(PackageVersions) updates);
+      PackageVersions Function(PackageVersions) updates,
+      {String? scope});
 
   /// Yanks a given version of a package
-  FutureOr<PackageVersions> yankVersionOfPackage(String name, Version version);
+  FutureOr<PackageVersions> yankVersionOfPackage(String name, Version version,
+      {String? scope});
 
   /// Deprecates a given version of a package
   FutureOr<PackageVersions> deprecateVersionOfPackage(
-      String name, Version version);
+      String name, Version version,
+      {String? scope});
 
   /// Get a package
-  FutureOr<Package> getPackage(String name, {String? language});
+  FutureOr<Package> getPackage(String name, {String? language, String? scope});
 
   /// Get a specific version of a package
-  FutureOr<PackageVersions> getPackageWithVersion(String name, Version version);
+  FutureOr<PackageVersions> getPackageWithVersion(String name, Version version,
+      {String? scope});
 
   /// Get all versions of a package
   FutureOr<Iterable<PackageVersions>> getAllVersionsOfPackage(String name,
-      {Package? package});
+      {Package? package, String? scope});
 
   /// Get all versions of a package via [Stream]
-  Stream<PackageVersions> getAllVersionsOfPackageStream(String name);
+  Stream<PackageVersions> getAllVersionsOfPackageStream(String name,
+      {String? scope});
 
   /// Get packages
   FutureOr<Iterable<Package>> getPackages();
@@ -129,7 +156,8 @@ abstract interface class PrittDatabaseInterface
 
   /// Get contributors for a specific package
   FutureOr<Map<User, Iterable<Privileges>>> getContributorsForPackage(
-      String name);
+      String name,
+      {String? scope});
 
   /// Get contributors for a specific package via [Stream]
   Stream<User> getContributorsForPackageStream(String name);
@@ -147,6 +175,14 @@ abstract interface class PrittDatabaseInterface
     User Function(User)? updates,
   });
 
+  /// Create a new access token for a user
+  FutureOr<(AccessToken, {String token})> createAccessTokenForUser(
+      {required String id,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo});
+
   /// Get a user
   FutureOr<User> getUser(String id);
 
@@ -160,12 +196,163 @@ abstract interface class PrittDatabaseInterface
   Stream<User> getUsersStream();
 
   /// Set the access token for a user
-  FutureOr<User> setAccessTokenForUser({
-    required String id,
-    required String accessToken,
-    required DateTime expiresAt,
-  });
+  FutureOr<(AccessToken, {String token})> setAccessTokenForUser(
+      {required String id,
+      required String accessToken,
+      required DateTime expiresAt,
+      AccessTokenType tokenType = AccessTokenType.device,
+      String? description,
+      String? deviceId,
+      Map<String, dynamic>? deviceInfo});
 
   /// Get a user by access token
   FutureOr<User> getUserByAccessToken(String accessToken);
+
+  /// Get the organizations a user is part of
+  FutureOr<Iterable<Scope>> getOrganizationsForUser(String id);
+
+  /// Get the organizations a user is part of via [Stream]
+  Stream<Scope> getOrganizationsForUserStream(String id);
+
+  /// Get organization information given the name of the organization
+  FutureOr<Scope> getOrganizationByName(String name);
+
+  /// Get all organizations
+  FutureOr<Iterable<Scope>> getOrganizations();
+
+  /// Get all organizations via [Stream]
+  Stream<Scope> getOrganizationsStream();
+
+  /// Create a new organization
+  FutureOr<Scope> createOrganization({
+    required String name,
+    String? description,
+    required User owner,
+  });
+
+  /// Update an organization
+  FutureOr<Scope> updateOrganization({
+    required String name,
+    Scope Function(Scope)? updates,
+  });
+
+  /// Get packages for a specific organization by its [name]
+  FutureOr<Iterable<Package>> getPackagesForOrganization(String name);
+
+  /// Get packages for a specific organization via [Stream]
+  Stream<Package> getPackagesForOrganizationStream(String name);
+
+  /// Get all members of an organization
+  FutureOr<Map<User, Iterable<Privileges>>> getMembersForOrganization(
+      String name);
+
+  /// Get all members of an organization via [Stream]
+  Stream<User> getMembersForOrganizationStream(String name);
+
+  /// Add a user to an organization
+  FutureOr<ScopeUsers> addUserToOrganization({
+    required String organizationName,
+    required User user,
+    Iterable<Privileges> privileges = const [],
+  });
+
+  /// Remove a user from an organization
+  FutureOr<ScopeUsers> removeUserFromOrganization({
+    required String organizationName,
+    required User user,
+  });
+
+  /// Update a user's privileges in an organization
+  FutureOr<ScopeUsers> updateUserPrivilegesInOrganization({
+    required String organizationName,
+    required User user,
+    Iterable<Privileges> privileges = const [],
+  });
+
+  /// Add a new authorization request and generate an auth token to use
+  @Cacheable()
+  Future<AuthorizationSession> createNewAuthSession({
+    required String deviceId,
+  });
+
+  /// Gets the status of a current auth sessions
+  @Cacheable()
+  Future<({TaskStatus status, String? id})> getAuthSessionStatus({
+    required String sessionId,
+  });
+
+  /// Gets current auth session details
+  @Cacheable()
+  Future<AuthorizationSession> getAuthSessionDetails({
+    required String sessionId,
+  });
+
+  /// Updates an auth session with a user's credentials
+  @Cacheable()
+  Future<AuthorizationSession> completeAuthSession(
+      {required String sessionId,
+      required String userId,
+      TaskStatus? newStatus});
+
+  /// Update an auth session, and get the access token for the session
+  Future<
+      ({
+        AuthorizationSession session,
+        String token,
+        DateTime tokenExpiration
+      })> updateAuthSessionWithAccessToken({required String sessionId});
+
+  /// Creates a new publishing task
+  @Cacheable()
+  FutureOr<PublishingTask> createNewPublishingTask(
+      {required String name,
+      String? scope,
+      required String version,
+      required User user,
+      required String language,
+      bool newPkg = false,
+      required String config,
+      required Map<String, dynamic> configData,
+      Map<String, dynamic> metadata,
+      Map<String, String> env,
+      VCS vcs,
+      String? vcsUrl});
+
+  /// Gets the given publishing task given its [id]
+  @Cacheable()
+  FutureOr<PublishingTask> getPublishingTaskById(String id);
+
+  /// Updates a publishing task's status
+  @Cacheable()
+  FutureOr<PublishingTask> updatePublishingTaskStatus(String id,
+      {required TaskStatus status});
+
+  /// Elevates a publishing task to a new package, plus a new version of a package
+  FutureOr<(Package, PackageVersions)> createPackageFromPublishingTask(
+      String id,
+      {String? description,
+      String? license,
+      VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []});
+
+  /// Elevates a publishing task to a new version of a package
+  FutureOr<PackageVersions> createPackageVersionFromPublishingTask(String id,
+      {VersionType? versionType,
+      String? readme,
+      required String rawConfig,
+      Map<String, dynamic>? info,
+      required Uri archive,
+      required String hash,
+      List<Signature> signatures = const [],
+      required String integrity,
+      PublishingTask? task,
+      List<String> contributorIds = const []});
 }

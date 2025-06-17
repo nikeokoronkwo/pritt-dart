@@ -1,0 +1,9 @@
+module AuthDetailsResponse
+
+extends "../AuthResponse/schema.pkl"
+
+import "../../lib/poll.pkl"
+
+status: poll.PollStatus
+
+user_id: String?

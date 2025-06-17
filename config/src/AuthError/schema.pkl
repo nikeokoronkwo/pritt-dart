@@ -1,0 +1,7 @@
+module AuthError
+
+extends "../Error/schema.pkl"
+
+import "../../lib/poll.pkl"
+
+status: poll.PollStatus(this == "error" || this == "pending")

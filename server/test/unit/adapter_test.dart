@@ -16,14 +16,14 @@ void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
     late MockCRSArchiveController mockArchiveController;
-    late MockJsonable mockMetaResult;
+    MockJsonConvertible mockMetaResult = MockJsonConvertible();
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-      mockMetaResult = MockJsonable();
     });
 
+    // TODO: More Tests
     group('Meta Adapter Result', () {
       when(mockMetaResult.toJson()).thenReturn({'name': 1, 'age': 2});
 
@@ -34,7 +34,7 @@ void main() {
           return AdapterMetaResult(mockMetaResult);
         },
         retrieve: (requestObject, controller) async {
-          return AdapterResult();
+          return AdapterArchiveResult(Stream.empty(), 'test.tar.gz');
         },
       );
 

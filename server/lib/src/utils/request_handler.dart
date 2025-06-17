@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
@@ -7,7 +8,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 class Event {
   Request request;
-  ResponseBuilder _responseBuilder = ResponseBuilder();
+  final ResponseBuilder _responseBuilder = ResponseBuilder();
   Response? _response;
 
   Event.fromRequest(this.request);
@@ -23,8 +24,7 @@ class ResponseBuilder {
   ResponseBuilder();
 
   Response Function(Object? body) build() {
-    return (body) => Response(statusCode == 200 ? 204 : statusCode,
-        body: body, headers: headers);
+    return (body) => Response(statusCode, body: body, headers: headers);
   }
 }
 
@@ -42,7 +42,7 @@ Future<Uint8List> getBinaryBody(Event e) async {
       .then((b) => b.toBytes());
 }
 
-setResponseCode(Event e, int statusCode) {
+void setResponseCode(Event e, int statusCode) {
   e._responseBuilder.statusCode = statusCode;
 }
 
@@ -63,6 +63,8 @@ String getHeader(Event e, String name) {
   }
 }
 
+Map<String, String> getHeaders(Event e) => e.request.headers;
+
 Object getParams(Event e, String name) {
   var paramValue = e.request.params[name];
   if (paramValue != null) {
@@ -73,6 +75,19 @@ Object getParams(Event e, String name) {
   } else {
     throw Exception('Could not find a value for the parameter $name');
   }
+}
+
+Future<T> getBody<T extends Object>(Event e, T Function(String) toBody) async {
+  final body = await e.request.readAsString();
+  return toBody(body);
+}
+
+Future<Map<String, dynamic>> getJsonBody(Event e) async {
+  return json.decode(await e.request.readAsString());
+}
+
+String? getUserAgent(Event e) {
+  return e.request.headers[HttpHeaders.userAgentHeader];
 }
 
 void setResponse(Event e, Response res) {

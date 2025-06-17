@@ -1,7 +1,12 @@
-# Add files here to ignore them from prettier formatting
+
 /dist
 /coverage
+build
+pnpm-lock.yaml
 
 .github
 
-pnpm-lock.yaml
+# already have prettier config there
+web
+web-ref
+

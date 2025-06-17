@@ -1,7 +1,5 @@
-import 'package:pritt_cli/src/cmd/adapter.dart';
-
 import 'cli/base.dart';
-
+import 'cmd/adapter.dart';
 import 'cmd/add.dart';
 import 'cmd/configure.dart';
 import 'cmd/info.dart';

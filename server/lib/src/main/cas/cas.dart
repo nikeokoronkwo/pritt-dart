@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
-import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/adapter/adapter/result.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
-import 'package:pritt_server/src/main/cas/client.dart';
-import 'package:pritt_server/src/main/cas/services/sorter.dart';
-import 'package:pritt_server/src/main/crs/interfaces.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../adapter/adapter/interface.dart';
+import '../adapter/adapter/request_options.dart';
+import '../adapter/adapter/resolve.dart';
+import '../adapter/adapter/result.dart';
 import '../adapter/adapter_registry.dart';
+import '../base/db/schema.dart';
+import '../crs/interfaces.dart';
+import 'client.dart';
+import 'services/sorter.dart';
 
 /// The Custom Adapter Service
 ///
@@ -74,10 +74,9 @@ class CustomAdapterService {
       }
     }
 
-    final response = await _client
-        .post(url.replace(path: 'start'), body: json.encode({'adapters': pluginBodyMap}), headers: {
-          HttpHeaders.contentTypeHeader: 'application/json'
-        });
+    final response = await _client.post(url.replace(path: 'start'),
+        body: json.encode({'adapters': pluginBodyMap}),
+        headers: {HttpHeaders.contentTypeHeader: 'application/json'});
 
     if (response.statusCode != 200) {
       throw ClientException('Failed to load adapters: ${response.body}');
@@ -88,13 +87,15 @@ class CustomAdapterService {
   Future<({CustomAdapter? adapter, AdapterResolveType type})> findAdapter(
       AdapterResolveObject obj) async {
     // send request to sorter to find adapter
-    final response = await _client.post(
-      url.replace(path: 'find'),
-      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-      body: json.encode({ 'resolveObject': obj.toJson() })
-    );
+    final response = await _client.post(url.replace(path: 'find'),
+        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+        body: json.encode({'resolveObject': obj.toJson()}));
 
-    if (response.statusCode != 200) throw ClientException('Failed to find adapter: ${response.body}',);
+    if (response.statusCode != 200) {
+      throw ClientException(
+        'Failed to find adapter: ${response.body}',
+      );
+    }
 
     print(response.body);
 
@@ -106,7 +107,8 @@ class CustomAdapterService {
     }
 
     // send request to start worker for adapter
-    final wsConn = WebSocketChannel.connect(url.replace(path: '/load/${body.workerId}'));
+    final wsConn =
+        WebSocketChannel.connect(url.replace(path: '/load/${body.workerId}'));
 
     await wsConn.ready;
 
@@ -132,14 +134,12 @@ class CustomAdapter implements AdapterInterface {
           // prcess cas request
         } else if (message == null) {
           // complete completer
-        } 
+        }
       }
     });
   }
 
-  sendRequest() {
-
-  }
+  void sendRequest() {}
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {

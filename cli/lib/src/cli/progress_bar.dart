@@ -9,8 +9,6 @@ String generateProgressBar(int current, int total,
   final progress = current / total;
   final progressValue = (progress * 100).toInt();
 
-  // - 4: Account for the two square brckets, space and percentage
-  // - (...): Account for the length of the number
   width ??= (stdout.terminalColumns -
       4 -
       widthPadding -

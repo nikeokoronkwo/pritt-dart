@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Pkl Template" />
+        <option value="Pkl File" />
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/publish" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;nikeokoronkwo&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/nikeokoronkwo/pritt-dart.git&quot;,
+    &quot;accountId&quot;: &quot;3e8c0017-6a9d-4997-9fdb-bb907bd756f8&quot;
+  }
+}</component>
+  <component name="PklProject">
+    <pkl-project project-file-uri="file://$PROJECT_DIR$/config/PklProject" package-uri="&lt;UNKNOWN&gt;">
+      <declared-dependency name="openapi-contrib" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1.0.3" />
+      <declared-dependency name="openapi" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2.1.3" />
+      <declared-dependency name="toml" uri="package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0" />
+      <declared-dependency name="go" uri="package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.8.0" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1" type="remote" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3.contrib@1.0.3" checksum-sha256="da5191e7b92645424915695d3292aa9d11367e7e476e07d3e7515d6f070cae74" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2" type="remote" uri="package://pkg.pkl-lang.org/pkl-pantry/org.openapis.v3@2.1.3" checksum-sha256="84b9669c5bf54f9de43acd4183f8fabbe05258a728e6117182bc2cc94bd63692" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-go/pkl.golang@0" type="remote" uri="package://pkg.pkl-lang.org/pkl-go/pkl.golang@0.8.0" checksum-sha256="75c7687642f5a2177c94ffa9546c2f1a00810c426698dcc7b4dc63d6c89c27f7" />
+      <resolved-dependency canonical-name="package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1" type="remote" uri="package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0" checksum-sha256="ab5ec52c453bda3db3b4cb7302a8700ddb4565febc532d5173c0b97e317785d1" />
+      <evaluator-settings />
+    </pkl-project>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2xhLzMKYmO5IIHKYzG81IjiBXqr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Dart Command Line App.CLI.executor": "Run",
+    "Dart Command Line App.Server.executor": "Run",
+    "Dart Command Line App.house.dart.executor": "Run",
+    "Dart Test.CSV Encoding Testing in csv_test.dart.executor": "Run",
+    "Dart Test.Client Testing in list_test.dart.executor": "Run",
+    "Dart Test.Table Testing in table_test.dart.executor": "Run",
+    "Dart Test.Tests in progress_bar_test.dart.executor": "Run",
+    "Docker.Compose (services only).executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Shell Script.PKL Testing.executor": "Run",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/common/test" />
+      <recent name="$PROJECT_DIR$/config/src/AuthValidateResponse" />
+      <recent name="$PROJECT_DIR$/cli/lib/src/cmd/adapter" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server/lib/src/routes/api/auth/details" />
+      <recent name="$PROJECT_DIR$/config/src" />
+      <recent name="$PROJECT_DIR$/cli/lib/src/cli" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Docker.Compose (services only)">
+    <configuration name="CSV Encoding Testing in csv_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/csv_test.dart" />
+      <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
+      <option name="testName" value="CSV Encoding Testing" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Client Testing in list_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/list_test.dart" />
+      <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
+      <option name="testName" value="Client Testing" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Table Testing in table_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/table_test.dart" />
+      <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
+      <option name="testName" value="Table Testing" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in progress_bar_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/progress_bar_test.dart" />
+      <option name="testName" value="progress_bar_test.dart" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Compound.Full Stack" />
+      <item itemvalue="Dart Command Line App.CLI" />
+      <item itemvalue="Dart Command Line App.Server" />
+      <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
+      <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+      <item itemvalue="Dart Test.Table Testing in table_test.dart" />
+      <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
+      <item itemvalue="Docker.Compose (services only)" />
+      <item itemvalue="Shell Script.PKL Testing" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
+        <item itemvalue="Dart Test.Table Testing in table_test.dart" />
+        <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+        <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
+        <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="" />
+      <created>1748385619379</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1748385619379</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added Idea">
+      <option name="closed" value="true" />
+      <created>1748386133597</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748386133597</updated>
+    </task>
+    <task id="LOCAL-00003" summary="CLI: Implement Mock Testing and Table Functionality">
+      <option name="closed" value="true" />
+      <created>1748410162712</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1748410162712</updated>
+    </task>
+    <task id="LOCAL-00004" summary="CLI Updtes (with some server ones as well)&#10;&#10;CLI:&#10;- Completed Table Listing&#10;&#10;Others:&#10;- Updated schema.pkl for various schemas&#10;- Added pkl testing to IntelliJ&#10;- Formatting">
+      <option name="closed" value="true" />
+      <created>1748446848923</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1748446848923</updated>
+    </task>
+    <task id="LOCAL-00005" summary="CLI: Implement `adapter list` and `package list`">
+      <option name="closed" value="true" />
+      <created>1748453271422</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1748453271422</updated>
+    </task>
+    <task id="LOCAL-00006" summary="CLI: Implement `info`">
+      <option name="closed" value="true" />
+      <created>1748455624843</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1748455624843</updated>
+    </task>
+    <task id="LOCAL-00007" summary="CLI: Implement `info`">
+      <option name="closed" value="true" />
+      <created>1748470179157</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1748470179157</updated>
+    </task>
+    <task id="LOCAL-00008" summary="CLI: Migrated Command Implementations">
+      <option name="closed" value="true" />
+      <created>1748583251973</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1748583251973</updated>
+    </task>
+    <task id="LOCAL-00009" summary="WIP: [cli] Implementing `unpack` command">
+      <option name="closed" value="true" />
+      <created>1748584981300</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1748584981300</updated>
+    </task>
+    <task id="LOCAL-00010" summary="[cli] Implemented `unpack` and `adapter unpack` command at unpack.dart&#10;&#10;Looking towards how I can redirect `package unpack` to `unpack`">
+      <option name="closed" value="true" />
+      <created>1748645239962</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1748645239962</updated>
+    </task>
+    <task id="LOCAL-00011" summary="added .gitattributes for generated files">
+      <option name="closed" value="true" />
+      <created>1748645476420</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1748645476421</updated>
+    </task>
+    <task id="LOCAL-00012" summary="added new SQL table">
+      <option name="closed" value="true" />
+      <created>1748657495653</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1748657495653</updated>
+    </task>
+    <task id="LOCAL-00013" summary="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql">
+      <option name="closed" value="true" />
+      <created>1748660628562</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1748660628562</updated>
+    </task>
+    <task id="LOCAL-00014" summary="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT">
+      <option name="closed" value="true" />
+      <created>1748669447191</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1748669447191</updated>
+    </task>
+    <task id="LOCAL-00015" summary="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT">
+      <option name="closed" value="true" />
+      <created>1748752084026</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1748752084026</updated>
+    </task>
+    <task id="LOCAL-00016" summary="[server] Access Token and Auth Session Implementation">
+      <option name="closed" value="true" />
+      <created>1748754986856</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1748754986856</updated>
+    </task>
+    <task id="LOCAL-00017" summary="[cli] Implemented `login`: awaiting testing">
+      <option name="closed" value="true" />
+      <created>1748758464890</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1748758464890</updated>
+    </task>
+    <task id="LOCAL-00018" summary="[cli] Completed `login` command flow&#10;&#10;- added `ApiException` for handling exceptions to API&#10;- added functionality for describing `ApiException`s&#10;- added first client request">
+      <option name="closed" value="true" />
+      <created>1748808569190</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1748808569190</updated>
+    </task>
+    <task id="LOCAL-00019" summary="[web] Added index page code (index.vue.hbs)">
+      <option name="closed" value="true" />
+      <created>1748836849467</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1748836849467</updated>
+    </task>
+    <task id="LOCAL-00020" summary="[web] Added entry layout code (entry.vue.hbs)">
+      <option name="closed" value="true" />
+      <created>1748837335972</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1748837335972</updated>
+    </task>
+    <task id="LOCAL-00021" summary="[web] Updated Layouts and Views, and added Tailwind Theme Generator">
+      <option name="closed" value="true" />
+      <created>1748842718404</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1748842718404</updated>
+    </task>
+    <task id="LOCAL-00022" summary="[server] Minor Change">
+      <option name="closed" value="true" />
+      <created>1749708140012</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1749708140012</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Working on publish command @ publish.dart">
+      <option name="closed" value="true" />
+      <created>1749755785152</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1749755785153</updated>
+    </task>
+    <task id="LOCAL-00024" summary="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well">
+      <option name="closed" value="true" />
+      <created>1749756491247</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1749756491247</updated>
+    </task>
+    <task id="LOCAL-00025" summary="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well">
+      <option name="closed" value="true" />
+      <created>1749756699513</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1749756699513</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Added logging in and handler validation to the publish command">
+      <option name="closed" value="true" />
+      <created>1749759350949</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1749759350949</updated>
+    </task>
+    <task id="LOCAL-00027" summary="wip: get config">
+      <option name="closed" value="true" />
+      <created>1749759639093</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1749759639093</updated>
+    </task>
+    <task id="LOCAL-00028" summary="[cli] Publishing System in CLI">
+      <option name="closed" value="true" />
+      <created>1749846632289</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1749846632289</updated>
+    </task>
+    <task id="LOCAL-00029" summary="wip: [server] Working on publishing pipeline and added task worker and runnners">
+      <option name="closed" value="true" />
+      <created>1749923729896</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1749923729896</updated>
+    </task>
+    <task id="LOCAL-00030" summary="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)">
+      <option name="closed" value="true" />
+      <created>1749959859285</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1749959859285</updated>
+    </task>
+    <task id="LOCAL-00031" summary="[infra] Formatting">
+      <option name="closed" value="true" />
+      <created>1749959921354</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1749959921354</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="CLI: Implemented `info`" />
+    <MESSAGE value="CLI: Implement `info`" />
+    <MESSAGE value="CLI: Migrated Command Implementations" />
+    <MESSAGE value="WIP: [cli] Implementing `unpack` command" />
+    <MESSAGE value="[cli] Implemented `unpack` and `adapter unpack` command at unpack.dart&#10;&#10;Looking towards how I can redirect `package unpack` to `unpack`" />
+    <MESSAGE value="added .gitattributes for generated files" />
+    <MESSAGE value="added new SQL table" />
+    <MESSAGE value="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql" />
+    <MESSAGE value="[server] Completed Access Token Updates and Auth Session Integration" />
+    <MESSAGE value="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT" />
+    <MESSAGE value="[server] Access Token and Auth Session Implementation" />
+    <MESSAGE value="[cli] Implemented `login`: awaiting testing" />
+    <MESSAGE value="[cli] Completed `login` command flow&#10;&#10;- added `ApiException` for handling exceptions to API&#10;- added functionality for describing `ApiException`s&#10;- added first client request" />
+    <MESSAGE value="[web] Added index page code (index.vue.hbs)" />
+    <MESSAGE value="[web] Added entry layout code (entry.vue.hbs)" />
+    <MESSAGE value="[web] Updated Layouts and Views, and added Tailwind Theme Generator" />
+    <MESSAGE value="[server] Minor Change" />
+    <MESSAGE value="Working on publish command @ publish.dart" />
+    <MESSAGE value="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well" />
+    <MESSAGE value="Added logging in and handler validation to the publish command" />
+    <MESSAGE value="wip: get config" />
+    <MESSAGE value="[cli] Publishing System in CLI" />
+    <MESSAGE value="wip: [server] Working on publishing pipeline and added task worker and runnners" />
+    <MESSAGE value="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)" />
+    <MESSAGE value="[infra] Formatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="[infra] Formatting" />
+  </component>
+</project>

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pritt_common/version.dart';
 
-import '../../utils/version.dart';
-import 'annotations.dart';
+import 'annotations/schema.dart';
 
 part 'schema.g.dart';
 
@@ -65,6 +65,9 @@ class Package {
   /// This information is not used at the moment, and is reserved for future iterations
   VCS vcs;
 
+  /// The VCS URL of the package, if applicable
+  Uri? vcsUrl;
+
   /// The archive directory path of the given package.
   ///
   /// This archive is usually for the Object File System and so is relative to that
@@ -73,19 +76,27 @@ class Package {
   /// The license of the given package
   String? license;
 
-  Package({
-    required this.id,
-    required this.name,
-    required this.version,
-    required this.author,
-    required this.language,
-    this.description,
-    DateTime? updated,
-    required this.created,
-    this.vcs = VCS.git,
-    required this.archive,
-    this.license,
-  }) : updated = updated ?? created;
+  /// Whether a package is scoped or not
+  bool get scoped => scope != null;
+
+  /// The scope of the package, if it is scoped
+  String? scope;
+
+  Package(
+      {required this.id,
+      required this.name,
+      required this.version,
+      required this.author,
+      required this.language,
+      this.description,
+      DateTime? updated,
+      required this.created,
+      this.vcs = VCS.git,
+      required this.archive,
+      this.license,
+      this.scope,
+      this.vcsUrl})
+      : updated = updated ?? created;
 }
 
 /// Maps packages to their versions, and info about those versions
@@ -178,6 +189,9 @@ class PackageContributors {
   @ForeignKey(User, property: 'id')
   User contributor;
 
+  /// When the contributor was added to the package
+  DateTime addedAt;
+
   /// The kind of privileges this contributor has, when contributing to this package.
   ///
   /// No contributor can have [Privileges.ultimate] except the author himself, unless he passes the package down to another person (not possible in pritt yet)
@@ -189,7 +203,10 @@ class PackageContributors {
     required this.package,
     required this.contributor,
     required this.privileges,
-  });
+    required this.addedAt,
+  }) : assert(
+            privileges.contains(Privileges.ultimate) && privileges.length == 1,
+            "Ultimate privilege cannot be combined with read privilege");
 }
 
 /// User information
@@ -203,16 +220,11 @@ class User {
   /// The name of the user
   String name;
 
-  /// The current access token for the given user
-  ///
-  /// This is used for authenticating workflows for the CLI, installing packages, etc
-  String accessToken;
-
-  /// When the current access token expires
-  DateTime accessTokenExpiresAt;
-
   /// The email address of the user
   String email;
+
+  /// A URL to the image of the user
+  String? avatarUrl;
 
   /// The time the user joined
   DateTime createdAt;
@@ -223,11 +235,124 @@ class User {
   User(
       {required this.id,
       required this.name,
-      required this.accessToken,
-      required this.accessTokenExpiresAt,
       required this.email,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      this.avatarUrl});
+}
+
+// class NewUser extends User {
+//   /// The current access token for the given user
+//   ///
+//   /// This is used for authenticating workflows for the CLI, installing packages, etc
+//   // String accessToken;
+// }
+
+/// A scope is an organizational unit for packages
+@Table('organizations')
+class Scope {
+  /// The id of the scope
+  @primary
+  String id;
+
+  /// The name of the scope
+  @unique
+  String name;
+
+  /// The description of the scope
+  String? description;
+
+  /// The time the scope was created
+  DateTime createdAt;
+
+  /// The time the scope was last updated
+  DateTime updatedAt;
+
+  Scope({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+}
+
+class AccessToken {
+  String id;
+
+  /// The user
+  String userId;
+
+  /// The hashed version of the access token
+  String hash;
+
+  /// The type of access token used
+  /// Could be a personal one [AccessTokenType.personal], or for the CLI [AccessTokenType.device], or for Actions [AccessTokenType.pipeline]
+  AccessTokenType tokenType;
+
+  String? description;
+
+  /// The device id, if any
+  String? deviceId;
+
+  /// When the access token expires
+  DateTime expiresAt;
+
+  /// When the access token was last used
+  DateTime lastUsedAt;
+
+  /// When the access token was created
+  DateTime createdAt;
+
+  /// The device information
+  Map<String, dynamic>? deviceInfo;
+
+  AccessToken(
+      {required this.id,
+      required this.userId,
+      required this.hash,
+      required this.tokenType,
+      this.description,
+      this.deviceId,
+      required this.expiresAt,
+      required this.lastUsedAt,
+      required this.createdAt,
+      this.deviceInfo});
+}
+
+enum AccessTokenType {
+  device,
+  personal,
+  extended,
+  pipeline;
+
+  static AccessTokenType fromString(String name) =>
+      AccessTokenType.values.firstWhere((v) => v.name == name);
+}
+
+/// A join table for users and scopes
+@Table('organization_members')
+class ScopeUsers {
+  @ForeignKey(Scope, property: 'id')
+  @Key(name: 'organization_id')
+  Scope scope;
+
+  @ForeignKey(User, property: 'id')
+  @Key(name: 'user_id')
+  User user;
+
+  /// The privileges the user has in the scope
+  Iterable<Privileges> privileges;
+
+  /// When the user was added to the scope
+  DateTime joinedAt;
+
+  ScopeUsers({
+    required this.scope,
+    required this.user,
+    required this.privileges,
+    required this.joinedAt,
+  });
 }
 
 @JsonSerializable()
@@ -266,14 +391,178 @@ class Plugin {
 
   PluginArchiveType archiveType;
 
-  Plugin({
-    required this.id,
-    required this.name,
-    required this.language,
-    this.description,
-    required this.archive,
-    this.archiveType = PluginArchiveType.single,
-  });
+  PluginSourceType sourceType;
+
+  Uri? url;
+
+  VCS? vcs;
+
+  Plugin(
+      {required this.id,
+      required this.name,
+      required this.language,
+      this.description,
+      required this.archive,
+      this.archiveType = PluginArchiveType.single,
+      required this.sourceType,
+      this.url,
+      this.vcs});
 }
 
-enum PluginArchiveType { single, multi }
+enum PluginArchiveType {
+  single,
+  multi;
+
+  static PluginArchiveType fromString(String name) =>
+      PluginArchiveType.values.firstWhere((v) => v.name == name);
+}
+
+enum PluginSourceType {
+  hosted,
+  vcs,
+  local,
+  other;
+
+  static PluginSourceType fromString(String name) =>
+      PluginSourceType.values.firstWhere((v) => v.name == name);
+}
+
+/// Authorization Session Tasks
+class AuthorizationSession {
+  String id;
+  @Key(name: 'session_id')
+  String sessionId;
+
+  String? userId;
+
+  TaskStatus status;
+
+  @Key(name: 'expires_at')
+  DateTime expiresAt;
+
+  /// The device ID information
+  String deviceId;
+
+  String? accessToken;
+
+  /// When the auth flow started
+  DateTime startedAt;
+
+  /// When the auth flow was authorized
+  DateTime? authorizedAt;
+
+  /// A code to authorize with
+  String code;
+
+  AuthorizationSession({
+    required this.id,
+    required this.sessionId,
+    this.userId,
+    required this.deviceId,
+    this.status = TaskStatus.pending,
+    required this.expiresAt,
+    required this.startedAt,
+    this.authorizedAt,
+    this.accessToken,
+    required this.code,
+  }) {
+    if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending) {
+      status = TaskStatus.expired;
+    }
+  }
+}
+
+@Table('package_publishing_tasks')
+class PublishingTask {
+  String id;
+
+  /// The task status
+  TaskStatus status;
+
+  /// The user responsible for this publishing task
+  String user;
+
+  /// The version of the package to be published
+  String version;
+
+  /// Whether this is a new package or not
+  @Key(name: 'new')
+  bool $new;
+
+  /// The name of the package
+  String name;
+
+  /// The scope of the package
+  String? scope;
+
+  /// The language of the package
+  String language;
+
+  /// The configuration file path
+  String config;
+
+  /// The configuration file code as a map
+  Map<String, dynamic> configMap;
+
+  /// Environment information (runtime, package manager versions, etc)
+  /// e.g npm, node
+  Map<String, String> env;
+
+  /// Metadata about the package
+  ///
+  /// This varies between programming languages based on schema
+  /// e.g npmUser
+  Map<String, dynamic> metadata;
+
+  /// The VCS of the project
+  VCS vcs;
+
+  /// The VCS Url, if any
+  Uri? vcsUrl;
+
+  /// Created at
+  DateTime createdAt;
+
+  /// Updated at
+  DateTime updatedAt;
+
+  /// Expires at
+  DateTime expiresAt;
+
+  /// If a URL was specified, get the tarball associated with this request from there
+  Uri? tarball;
+
+  PublishingTask(
+      {required this.id,
+      required this.name,
+      required this.status,
+      required this.user,
+      this.scope,
+      required this.version,
+      required this.$new,
+      this.language = 'unknown',
+      required this.config,
+      required this.configMap,
+      this.metadata = const {},
+      this.env = const {},
+      this.vcs = VCS.other,
+      this.vcsUrl,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.expiresAt})
+      : assert(
+            expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
+}
+
+enum TaskStatus {
+  pending,
+  success,
+  fail,
+  expired,
+  idle,
+  queue,
+  error;
+
+  static TaskStatus fromString(String name) =>
+      TaskStatus.values.firstWhere((v) => v.name == name);
+}
