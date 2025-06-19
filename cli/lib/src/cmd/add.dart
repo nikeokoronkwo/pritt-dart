@@ -29,11 +29,14 @@ class AddCommand extends PrittCommand {
 
   AddCommand() {
     argParser
-    ..addFlag('configure', negatable: true, help: 'Whether to configure the project before running this command', defaultsTo: true)
-    ..addFlag('dev', abbr: 'D', negatable: false, help: 'Add dev dependency');
+      ..addFlag('configure',
+          negatable: true,
+          help: 'Whether to configure the project before running this command',
+          defaultsTo: true)
+      ..addFlag('dev', abbr: 'D', negatable: false, help: 'Add dev dependency');
   }
- 
-  // TODO: We should track if certain assets are already generated, if not 
+
+  // TODO: We should track if certain assets are already generated, if not
   @override
   FutureOr? run() async {
     // arg resolution
@@ -43,7 +46,6 @@ class AddCommand extends PrittCommand {
     }
 
     logger.warn('For best results, use your language package manager if any');
-
 
     // basically run everything in configure if not already there
     var userCredentials = await UserCredentials.fetch();
@@ -82,14 +84,16 @@ class AddCommand extends PrittCommand {
     }
 
     if (project.primaryHandler.packageManager == null) {
-      logger.severe('${styleBold.wrap('Error')}: The given language ${project.primaryHandler.language} does not have a package maanger to run');
+      logger.severe(
+          '${styleBold.wrap('Error')}: The given language ${project.primaryHandler.language} does not have a package maanger to run');
       exit(2);
     }
 
     // run the package manager's add
-    final packages = restArgs
-      .map(parsePackageInfo);
-    var type = argResults?.wasParsed('dev') ?? false ? PackageType.dev : PackageType.normal;
+    final packages = restArgs.map(parsePackageInfo);
+    var type = argResults?.wasParsed('dev') ?? false
+        ? PackageType.dev
+        : PackageType.normal;
 
     final packageCommands = project.primaryHandler.packageManager!.onAdd();
 
@@ -97,41 +101,38 @@ class AddCommand extends PrittCommand {
 
     if (packages.isSingle) {
       // collation shouldnt matter
-
     } else {
       final firstArg = packages.first;
       // try to collate
-      final pkgAddInfo = packageCommands.resolveType(packageCommands.resolveVersion(firstArg.name, firstArg.version), type);
+      final pkgAddInfo = packageCommands.resolveType(
+          packageCommands.resolveVersion(firstArg.name, firstArg.version),
+          type);
       if (pkgAddInfo.collate ?? false) {
         // collate add into one arg afterwards
-        final cmdsToAdd = pkgAddInfo.$1
-          ..removeLast();
-        
+        final cmdsToAdd = pkgAddInfo.$1..removeLast();
       }
     }
 
     // TODO: Links to go to
-    logger.stderr('This command is under maintenance at this point. Please file a bug with us');
+    logger.stderr(
+        'This command is under maintenance at this point. Please file a bug with us');
 
+    //   final pc = packages.map((info) {
 
-  //   final pc = packages.map((info) {
-        
-  //       final cmd = project.primaryHandler.packageManager!.onAdd();
+    //       final cmd = project.primaryHandler.packageManager!.onAdd();
 
-  //       final resolvedNameAndTypeArgs = cmd.resolveType(cmd.resolveVersion(info.name, info.version), type);
-  //       final resolvedUrlArgs = (cmd.resolveUrl ?? ((name, url) => ([name], singleUse: true)))(resolvedNameAndTypeArgs.last, prittClient?.url);
-  //       if (resolvedUrlArgs.$1.isSingle) {
-  //         resolvedNameAndTypeArgs.last = resolvedUrlArgs.$1.single;
-  //       } else {
-  //         resolvedNameAndTypeArgs.removeLast();
-  //         resolvedNameAndTypeArgs.addAll(resolvedUrlArgs.$1);
-  //       }
-  //       return [
-  //         ...cmd.args,
-  //         ...resolvedNameAndTypeArgs
-  //       ];
-  //     });
-
-    
+    //       final resolvedNameAndTypeArgs = cmd.resolveType(cmd.resolveVersion(info.name, info.version), type);
+    //       final resolvedUrlArgs = (cmd.resolveUrl ?? ((name, url) => ([name], singleUse: true)))(resolvedNameAndTypeArgs.last, prittClient?.url);
+    //       if (resolvedUrlArgs.$1.isSingle) {
+    //         resolvedNameAndTypeArgs.last = resolvedUrlArgs.$1.single;
+    //       } else {
+    //         resolvedNameAndTypeArgs.removeLast();
+    //         resolvedNameAndTypeArgs.addAll(resolvedUrlArgs.$1);
+    //       }
+    //       return [
+    //         ...cmd.args,
+    //         ...resolvedNameAndTypeArgs
+    //       ];
+    //     });
   }
 }

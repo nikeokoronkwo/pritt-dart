@@ -19,7 +19,10 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
       defaultValue:
           'http://localhost:${String.fromEnvironment('S3_LOCAL_PORT', defaultValue: '6007')}');
 
-  final databaseUrl = dbUrl ?? (Platform.environment['DATABASE_URL'] != null ? String.fromEnvironment('DATABASE_URL') : null);
+  final databaseUrl = dbUrl ??
+      (Platform.environment['DATABASE_URL'] != null
+          ? String.fromEnvironment('DATABASE_URL')
+          : null);
   final dbUri = databaseUrl == null ? null : Uri.parse(databaseUrl);
 
   // read keys for authentication
@@ -38,9 +41,7 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
   final storage = await PrittStorage.connect(ofsUrl);
 
   registry = await AdapterRegistry.connect(
-    db: db,
-    runnerUri: Uri.parse(String.fromEnvironment('PRITT_RUNNER_URL'))
-  );
+      db: db, runnerUri: Uri.parse(String.fromEnvironment('PRITT_RUNNER_URL')));
 
   crs = await CoreRegistryService.connect(db: db, storage: storage);
 }

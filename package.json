@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "cli": "dart cli/bin/pritt.dart",
+    "e2e:setup": "cp .env e2e && cp -r server/sql e2e/assets",
+    "e2e": "cd e2e && pnpm test",
     "schema:generate": "pkl eval config/main.pkl --project-dir config -f yaml -o config/out/openapi.yaml && pkl eval config/main.pkl --project-dir config -f json -o config/out/openapi.json",
     "schema:web": "mkdir -p web/schema && cp -r config/out/openapi.yaml web/schema/openapi.yaml; cd web; pnpm schema",
     "schema": "pnpm schema:generate",

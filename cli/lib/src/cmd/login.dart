@@ -30,7 +30,11 @@ class LoginCommand extends PrittCommand {
               "By default, if this is not a local instance of pritt, or 'main', an 'api' prefix will be placed in front of this URL\nif not specified already, and omitted for the Client URL.\n"
               "To prevent this default behaviour, you can specify the client URL using the '--client-url' option.",
           valueHelp: 'url')
-      ..addFlag('new', negatable: false, defaultsTo: false, help: 'Forces logging into Pritt even if already logged into the current client')
+      ..addFlag('new',
+          negatable: false,
+          defaultsTo: false,
+          help:
+              'Forces logging into Pritt even if already logged into the current client')
       ..addOption('client-url',
           valueHelp: 'url',
           help:
@@ -71,7 +75,9 @@ class LoginCommand extends PrittCommand {
       // check if user is logged in
       var userCredentials = await UserCredentials.fetch();
 
-      if (userCredentials == null || userCredentials.isExpired || userCredentials.uri.toString() != url) {
+      if (userCredentials == null ||
+          userCredentials.isExpired ||
+          userCredentials.uri.toString() != url) {
         // else log user in
         userCredentials = await loginUser(client, clientUrl, logger);
         await userCredentials.update();

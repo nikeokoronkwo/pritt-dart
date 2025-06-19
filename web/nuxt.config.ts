@@ -30,7 +30,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    databaseUrl: "",
+    databaseName: "",
+    databaseUsername: "",
+    databasePassword: "",
+    databaseHost: "",
+    databasePort: "",
     public: {
       apiUrl: "",
     },

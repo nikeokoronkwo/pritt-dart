@@ -1,7 +1,9 @@
 import { defineConfig } from 'vitest/config';
+import { loadEnv } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   test: {
-    setupFiles: ['./src/setup.ts']
+    setupFiles: './setup.ts',
+    env: loadEnv(mode, process.cwd()),
   },
-});
+}));

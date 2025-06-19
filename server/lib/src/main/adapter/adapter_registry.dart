@@ -51,7 +51,9 @@ class AdapterRegistry {
   ///
   /// This function must be called before any other function on this, else an error will be thrown to connect the database first.
   static Future<AdapterRegistry> connect(
-      {Object? db, PrittStorageInterface? storage, required Uri runnerUri}) async {
+      {Object? db,
+      PrittStorageInterface? storage,
+      required Uri runnerUri}) async {
     if (service != null) {
       return AdapterRegistry._();
     }
