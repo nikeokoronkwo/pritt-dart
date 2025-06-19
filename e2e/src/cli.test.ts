@@ -12,6 +12,9 @@
 
 import { test, expect, describe, assert } from 'vitest';
 import { invokeCLI } from '../utils/cli';
+import { join } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { parse, stringify } from "@std/yaml";
 
 function assertHelpDescription(text: string, global: boolean = false) {
   const lines = text.split('\n');
@@ -78,9 +81,39 @@ describe('Command-Line E2E Testing', async () => {
     },
   );
 
-  describe.todo('[WF]: Publish Workflow', () => {
-    test.todo('Get Current Package Info');
-    test.todo('Publish Package A');
+  describe('[WF]: Publish Workflow', () => {
+    const dir = 'pkgs';
+    const pkgA = 'dart-a';
+    const pkgAName = 'a';
+    const pkgB = 'dart-b';
+    const pkgBName = 'b';
+    const pkgAPath =  join(dir, pkgA);
+
+    test.skip('Get Current Package Info', async () => {
+      const baseCall = invokeCLI(['package', 'current', 'pkgs/dart-a', '--json', 'stdout']);
+      
+      expect(baseCall.code).eq(0);
+      expect(baseCall.stderr).string('');
+
+      const info = JSON.parse(baseCall.stdout);
+      const pkgPubspec: Record<string, any> = parse(await readFile(join(pkgAPath, 'pubspec.yaml'), 'utf8')) as Record<string, any>;
+
+      expect(info).toBeDefined();
+      expect(info.name).toBe(pkgPubspec.name);
+      expect(info.version).toBe(pkgPubspec.version);
+      expect(info.description).toBe(pkgPubspec.description);
+      expect(info.published).toBe(false);
+    });
+
+    test('Publish Package A', () => {
+      const baseCall = invokeCLI(['package', 'publish', pkgAPath, 
+        '--url', `${globalThis.serverContainer.getHost()}:${globalThis.serverContainer.getMappedPort(8080)}`,
+        '--client-url', `${globalThis.webContainer.getHost()}:${globalThis.webContainer.getMappedPort(3000)}`,
+      ]);
+
+      expect(baseCall.code).eq(0);
+    });
+
     test.todo('Get Packages Published by User');
     test.todo('Get Package Info after Publishing A');
     test.todo('Install Package A into Package B');
