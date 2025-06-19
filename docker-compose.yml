@@ -3,6 +3,13 @@ name: pritt
 services:
   web:
     build: web-ref
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_PUBLIC_API_URL: ${API_URL}
+      DATABASE_URL: ${DATABASE_URL}
+    env_file:
+      - .env
 
   server:
     build:
@@ -11,10 +18,22 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - PORT=8080
+      PORT: 8080
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_HOST: ${DATABASE_HOST}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_URL: ${S3_URL}
+      PRITT_RUNNER_URL: ${PRITT_RUNNER_URL}
+    env_file:
+      - .env
     depends_on:
       - db
       - filestorage
+  
   filestorage:
     image: quay.io/minio/minio
     ports:
@@ -53,6 +72,8 @@ services:
     depends_on:
       - db
     restart: "no"
+    env_file:
+      - .env
 
 volumes:
   fs-data:

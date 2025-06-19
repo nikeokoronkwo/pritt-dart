@@ -11,7 +11,10 @@
     "format:dart": "dart format .",
     "format:js": "prettier . --write",
     "format": "pnpm format:dart && pnpm format:js; cd web; pnpm format; cd -",
-    "server": "./tool/denv.dart --cwd server -- dart run bin/server.dart",
+    "server": "./tools/denv.dart --cwd server -- dart run bin/server.dart",
+    "build:server": "",
+    "docker:server": "exit 1 && docker build pritt-server",
+    "docker:server-run": "docker run --rm --env-file .env pritt-server ",
     "gen:common": "pnpm schema:generate && ./scripts/openapigen ./config/out/openapi.yaml -o ./common",
     "gen:web": "./scripts/webgen"
   },
