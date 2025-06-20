@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest",
+    "test:debug": "DEBUG=testcontainers* vitest",
     "coverage": "vitest run --coverage"
   },
   "keywords": [],

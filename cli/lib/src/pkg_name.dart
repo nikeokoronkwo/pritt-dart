@@ -13,12 +13,12 @@ PkgRepName parsePackageInfo(String raw) {
 
   final [first, ...rest] = splitStr.split('@');
 
-  identifier = first;
+  identifier = raw.startsWith('@') ? '@$first' : first;
 
   if (rest.isEmpty) {
     version = null;
   } else {
-    version = rest.first;
+    version = rest.join('@');
   }
 
   final (name, scope: scope) = parsePackageName(identifier);
