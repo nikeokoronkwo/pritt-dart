@@ -61,7 +61,7 @@ export default defineConfig({
   dialect: "postgresql",
   dbCredentials: {
     url: assemblePostgresUrl({
-      host: process.env.DATABASE_NAME!,
+      host: process.env.DATABASE_HOST!,
       port: parseInt(process.env.DATABASE_PORT!),
       user: process.env.DATABASE_USERNAME!,
       password: process.env.DATABASE_PASSWORD!,

@@ -1,14 +1,14 @@
 # Build Stage 1
 
-FROM node:22-alpine AS build
+FROM node:23-alpine AS build
 WORKDIR /app
 
 RUN corepack enable
 
-COPY package.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm i
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm i --frozen-lockfile
 
 # Copy the entire project
 COPY . ./

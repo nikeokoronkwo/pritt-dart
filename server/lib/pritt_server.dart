@@ -14,6 +14,7 @@ late CoreRegistryService crs;
 late AdapterRegistry registry;
 
 Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
+  print(String.fromEnvironment('S3_URL', defaultValue: 'S3_URL not set'));
   // Load environment variables for the S3 URL and database connection
   ofsUrl ??= String.fromEnvironment('S3_URL',
       defaultValue:

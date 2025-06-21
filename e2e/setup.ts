@@ -7,6 +7,7 @@ import { Client } from 'pg';
 import { setupPostgresContainer } from './utils/pg';
 import { afterAll, beforeAll } from 'vitest';
 import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 
 beforeAll(async () => {
   console.log(
@@ -85,7 +86,7 @@ beforeAll(async () => {
     // console.log('Server container started successfully');
 
     // set up web
-    const result = spawnSync('pnpm', ['gen:web'], {
+    if (!existsSync('../web-ref')) spawnSync('pnpm', ['gen:web'], {
       cwd: '..',
       encoding: 'utf8',
     });
@@ -133,7 +134,7 @@ beforeAll(async () => {
     }
     throw err;
   }
-}, 70000);
+}, 100000);
 
 afterAll(async () => {
   await globalThis.fileSystemContainer.stop();

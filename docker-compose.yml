@@ -1,19 +1,24 @@
 name: pritt
 
 services:
-  web:
-    build: web-ref
-    ports:
-      - '3000:3000'
-    environment:
-      NUXT_PUBLIC_API_URL: ${API_URL}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_HOST: ${DATABASE_HOST}
-    env_file:
-      - .env
+  # web:
+  #   build: web-ref
+  #   ports:
+  #     - '3000:3000'
+  #   environment:
+  #     NUXT_PUBLIC_API_URL: ${API_URL}
+  #     DATABASE_NAME: ${DATABASE_NAME}
+  #     DATABASE_USERNAME: ${DATABASE_USERNAME}
+  #     DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+  #     DATABASE_PORT: ${DATABASE_PORT}
+  #     DATABASE_HOST: ${DATABASE_HOST}
+  #   env_file:
+  #     - .env
+
+  runner:
+    image: pritt-runner:latest
+    expose:
+      - 8000
 
   server:
     build:
@@ -35,8 +40,12 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
-      - filestorage
+      runner:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      filestorage:
+        condition: service_healthy
 
   filestorage:
     image: quay.io/minio/minio
@@ -51,6 +60,11 @@ services:
     volumes:
       - fs-data:/data
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   db:
     image: postgres:17
@@ -63,6 +77,11 @@ services:
       - '${DATABASE_PORT}:5432'
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DATABASE_USERNAME}", "-d", "${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   migrate:
     image: flyway/flyway:latest
@@ -74,7 +93,8 @@ services:
     volumes:
       - ./server/sql:/flyway/sql
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: 'no'
     env_file:
       - .env
