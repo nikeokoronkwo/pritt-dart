@@ -58,6 +58,7 @@ void main(List<String> args) async {
 
   var executable = actualArgs[0];
   var arguments = [
+    ...(contents.entries.map((e) => "${e.key}=${e.value}")),
     if (dotEnv.isNotEmpty)
       ...(contents.entries.map((e) => "$defineArg=${e.key}=${e.value}")),
     ...(actualArgs.skip(1)),

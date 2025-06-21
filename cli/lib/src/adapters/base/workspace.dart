@@ -57,7 +57,8 @@ class PackageCmdArgs {
   final List<String> args;
 
   /// used to resolve args when given a package name and type
-  final (List<String>, {bool? collate}) Function(String name, PackageType type) resolveType;
+  final (List<String>, {bool? collate}) Function(String name, PackageType type)
+      resolveType;
 
   /// used to resolve args when given a package name and version
   final String Function(String name, String? version) resolveVersion;

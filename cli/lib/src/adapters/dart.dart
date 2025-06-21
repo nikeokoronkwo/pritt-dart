@@ -26,9 +26,12 @@ final dartHandler = Handler<PubspecConfig>(
       onAdd: () {
         return PackageCmdArgs(
           args: ['dart', 'pub', 'add'],
-          resolveType: (name, type) => ([
-            type == PackageType.dev ? 'dev:$name' : name,
-          ], collate: false),
+          resolveType: (name, type) => (
+            [
+              type == PackageType.dev ? 'dev:$name' : name,
+            ],
+            collate: false
+          ),
           resolveVersion: (name, version) => '$name:^$version',
           resolveUrl: (name, url) => (
             [

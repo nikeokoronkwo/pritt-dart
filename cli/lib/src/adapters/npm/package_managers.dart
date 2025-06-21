@@ -6,13 +6,16 @@ final npmPM = PackageManager(
       return PackageCmdArgs(
         args: ['npm', 'install'],
         resolveType: (name, type) {
-          return (switch (type) {
-            PackageType.normal => [name],
-            PackageType.dev => ['--save-dev', name],
-            PackageType.peer => ['--save-peer', name],
-            PackageType.optional => ['--save-optional', name],
-            _ => [name]
-          }, collate: true);
+          return (
+            switch (type) {
+              PackageType.normal => [name],
+              PackageType.dev => ['--save-dev', name],
+              PackageType.peer => ['--save-peer', name],
+              PackageType.optional => ['--save-optional', name],
+              _ => [name]
+            },
+            collate: true
+          );
         },
         resolveVersion: (name, version) => '$name@$version',
       );
@@ -31,13 +34,16 @@ final pnpmPM = PackageManager(
       return PackageCmdArgs(
         args: ['pnpm', 'add'],
         resolveType: (name, type) {
-          return (switch (type) {
-            PackageType.normal => [name],
-            PackageType.dev => ['-D', name],
-            PackageType.peer => ['--save-peer', name],
-            PackageType.optional => ['-O', name],
-            _ => [name]
-          }, collate: true);
+          return (
+            switch (type) {
+              PackageType.normal => [name],
+              PackageType.dev => ['-D', name],
+              PackageType.peer => ['--save-peer', name],
+              PackageType.optional => ['-O', name],
+              _ => [name]
+            },
+            collate: true
+          );
         },
         resolveVersion: (name, version) => '$name@$version',
       );
@@ -56,13 +62,16 @@ final bunPM = PackageManager(
       return PackageCmdArgs(
         args: ['bun', 'add'],
         resolveType: (name, type) {
-          return (switch (type) {
-            PackageType.normal => [name],
-            PackageType.dev => ['-d', name],
-            PackageType.peer => ['--peer', name],
-            PackageType.optional => ['--optional', name],
-            _ => [name]
-          }, collate: true);
+          return (
+            switch (type) {
+              PackageType.normal => [name],
+              PackageType.dev => ['-d', name],
+              PackageType.peer => ['--peer', name],
+              PackageType.optional => ['--optional', name],
+              _ => [name]
+            },
+            collate: true
+          );
         },
         resolveVersion: (name, version) => '$name@$version',
       );
@@ -81,13 +90,16 @@ final yarnPM = PackageManager(
       return PackageCmdArgs(
         args: ['yarn', 'add'],
         resolveType: (name, type) {
-          return (switch (type) {
-            PackageType.normal => [name],
-            PackageType.dev => ['-D', name],
-            PackageType.peer => ['-P', name],
-            PackageType.optional => ['-O', name],
-            _ => [name]
-          }, collate: true);
+          return (
+            switch (type) {
+              PackageType.normal => [name],
+              PackageType.dev => ['-D', name],
+              PackageType.peer => ['-P', name],
+              PackageType.optional => ['-O', name],
+              _ => [name]
+            },
+            collate: true
+          );
         },
         resolveVersion: (name, version) => '$name@$version',
       );

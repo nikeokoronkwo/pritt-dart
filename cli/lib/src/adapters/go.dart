@@ -19,7 +19,8 @@ final goHandler = Handler<GoModConfig>(
         onAdd: () {
           return PackageCmdArgs(
             args: ['go', 'get'],
-            resolveType: (String name, PackageType type) => ([name], collate: false),
+            resolveType: (String name, PackageType type) =>
+                ([name], collate: false),
             resolveVersion: (String name, String? version) => '$name/v$version',
           );
         },
