@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:aws_s3_api/s3-2006-03-01.dart';
 import 'package:aws_signer_api/signer-2017-08-25.dart';
@@ -96,9 +97,11 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
   static Future<PrittStorage> connect(String url,
       {String? s3region, String? s3accessKey, String? s3secretKey}) async {
-    s3region ??= String.fromEnvironment('S3_REGION');
-    s3secretKey ??= String.fromEnvironment('S3_SECRET_KEY');
-    s3accessKey ??= String.fromEnvironment('S3_ACCESS_KEY');
+    s3region ??= Platform.environment['S3_REGION'] ?? 'us-east-1';
+    s3secretKey ??= Platform.environment['S3_SECRET_KEY'] ??
+        String.fromEnvironment('S3_SECRET_KEY');
+    s3accessKey ??= Platform.environment['S3_ACCESS_KEY'] ??
+        String.fromEnvironment('S3_ACCESS_KEY');
 
     final signer = Signer(
         region: s3region,

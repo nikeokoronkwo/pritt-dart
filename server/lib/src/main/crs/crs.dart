@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
@@ -105,15 +106,15 @@ class CoreRegistryService implements CRSController {
   static Future<CoreRegistryService> connect(
       {PrittDatabase? db, PrittStorage? storage}) async {
     db ??= await PrittDatabase.connect(
-      host: String.fromEnvironment('DATABASE_HOST'),
-      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
-      database: String.fromEnvironment('DATABASE_NAME'),
-      username: String.fromEnvironment('DATABASE_USERNAME'),
-      password: String.fromEnvironment('DATABASE_PASSWORD'),
-      devMode: String.fromEnvironment('DATABASE_HOST') == 'localhost',
-    );
+        host: Platform.environment['DATABASE_HOST']!,
+        port: int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
+        database: Platform.environment['DATABASE_NAME']!,
+        username: Platform.environment['DATABASE_USERNAME']!,
+        password: Platform.environment['DATABASE_PASSWORD'] ??
+            String.fromEnvironment('DATABASE_PASSWORD'),
+        devMode: Platform.environment['DATABASE_HOST'] == 'localhost');
 
-    storage ??= await PrittStorage.connect(String.fromEnvironment('S3_URL'));
+    storage ??= await PrittStorage.connect(Platform.environment['S3_URL']!);
 
     return CoreRegistryService._(db, storage);
   }
