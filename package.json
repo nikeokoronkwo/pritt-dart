@@ -17,6 +17,7 @@
     "build:server": "",
     "docker:server": "exit 1 && docker build pritt-server",
     "docker:server-run": "docker run --rm --env-file .env pritt-server ",
+    "compose:setup": "",
     "gen:common": "pnpm schema:generate && ./scripts/openapigen ./config/out/openapi.yaml -o ./common",
     "gen:web": "./scripts/webgen"
   },

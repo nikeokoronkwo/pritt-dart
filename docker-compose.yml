@@ -22,19 +22,25 @@ services:
 
   server:
     build:
+      secrets:
+        - db-password
+        - s3-access-key
+        - s3-secret-key
       context: .
       dockerfile: server/Dockerfile
     ports:
       - '8080:8080'
+    volumes:
+      - db-data:/var/lib/postgresql/data
     environment:
       PORT: 8080
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      # DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_HOST: ${DATABASE_HOST}
-      S3_SECRET_KEY: ${S3_SECRET_KEY}
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      # S3_SECRET_KEY: ${S3_SECRET_KEY}
+      # S3_ACCESS_KEY: ${S3_ACCESS_KEY}
       S3_URL: ${S3_URL}
       PRITT_RUNNER_URL: ${PRITT_RUNNER_URL}
     env_file:
@@ -46,6 +52,8 @@ services:
         condition: service_healthy
       filestorage:
         condition: service_healthy
+    
+
 
   filestorage:
     image: quay.io/minio/minio
@@ -72,7 +80,8 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     ports:
       - '${DATABASE_PORT}:5432'
     env_file:
@@ -82,6 +91,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    secrets:
+      - db-password
 
   migrate:
     image: flyway/flyway:latest
@@ -89,16 +100,28 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     volumes:
       - ./server/sql:/flyway/sql
     depends_on:
       db:
         condition: service_healthy
     restart: 'no'
+    secrets:
+      - db-password
     env_file:
       - .env
 
 volumes:
+  db-data:
   fs-data:
-    name: 'pritt_fs_data'
+
+secrets:
+  db-password:
+    # TODO: Make this ENV
+    file: docker/secrets/db_password.txt
+  s3-access-key:
+    file: docker/secrets/s3_access_key.txt
+  s3-secret-key:
+    file: docker/≈secrets/s3_secret_key.txt
