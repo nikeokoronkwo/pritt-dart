@@ -41,7 +41,7 @@ class Handler<T extends Config> {
   String? get ignoreFile => ignore?.name;
 
   /// A function to run when the handler is called for getting configuration data about the package
-  /// 
+  ///
   /// This function is usually run to get the configuration object when getting the project workspace
   ///
   /// This configuration data can contain multiple things, but must contain the following:
@@ -57,7 +57,7 @@ class Handler<T extends Config> {
       onGetConfig;
 
   /// A function to run to get workspace data about the package
-  /// 
+  ///
   /// This function is usually run when the package is being published, set up, etc
   ///
   /// - The configuration file for the workspace
@@ -73,12 +73,12 @@ class Handler<T extends Config> {
       onCheckWorkspace;
 
   /// A function run to configure a given workspace
-  /// 
+  ///
   /// This is run to set up a workspace when installing a given package
-  final FutureOr<List<Asset>?> Function(PrittContext context, PrittLocalController controller)
-      onConfigure;
+  final FutureOr<List<Asset>?> Function(
+      PrittContext context, PrittLocalController controller) onConfigure;
 
-  /// Whether 
+  /// Whether
 
   final FutureOr<Map<String, dynamic>> Function(
       PrittContext context, PrittLocalController controller)? getEnv;
@@ -132,7 +132,6 @@ class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
   PackageManager? get packageManager =>
       throw Exception("Use `packageManagers` instead");
 }
-
 
 class Asset {
   String name;

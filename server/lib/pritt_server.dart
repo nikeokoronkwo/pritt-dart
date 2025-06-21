@@ -15,20 +15,23 @@ late AdapterRegistry registry;
 
 Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
   // Load environment variables for the S3 URL and database connection
-  ofsUrl ??= Platform.environment['S3_URL'] ?? 'http://localhost:${Platform.environment['S3_LOCAL_PORT'] ?? '6007'}';
+  ofsUrl ??= Platform.environment['S3_URL'] ??
+      'http://localhost:${Platform.environment['S3_LOCAL_PORT'] ?? '6007'}';
 
   final dbUri = dbUrl == null ? null : Uri.parse(dbUrl);
 
   // read keys for authentication
   final db = await PrittDatabase.connect(
       host: (dbUri?.host ?? Platform.environment['DATABASE_HOST'])!,
-      port: dbUri?.port ?? int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
+      port: dbUri?.port ??
+          int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
       database:
-          (dbUri?.pathSegments.first ?? Platform.environment['DATABASE_NAME'])!, 
+          (dbUri?.pathSegments.first ?? Platform.environment['DATABASE_NAME'])!,
       username: (dbUri?.userInfo.split(':').first ??
           Platform.environment['DATABASE_USERNAME'])!,
       password: (dbUri?.userInfo.split(':').last ??
-          Platform.environment['DATABASE_PASSWORD'] ?? String.fromEnvironment('DATABASE_PASSWORD')),
+          Platform.environment['DATABASE_PASSWORD'] ??
+          String.fromEnvironment('DATABASE_PASSWORD')),
       devMode: (dbUri?.host ?? Platform.environment['DATABASE_HOST']) ==
           'localhost');
   final storage = await PrittStorage.connect(ofsUrl);

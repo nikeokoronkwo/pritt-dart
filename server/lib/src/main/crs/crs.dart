@@ -105,16 +105,14 @@ class CoreRegistryService implements CRSController {
   /// Creates a new instance of the core registry service
   static Future<CoreRegistryService> connect(
       {PrittDatabase? db, PrittStorage? storage}) async {
-    db ??= await PrittDatabase.connect
-    (
-      host: Platform.environment['DATABASE_HOST']!,
-      port: int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
-      database: Platform.environment['DATABASE_NAME']!, 
-      username: Platform.environment['DATABASE_USERNAME']!,
-      password: Platform.environment['DATABASE_PASSWORD'] ?? String.fromEnvironment('DATABASE_PASSWORD'),
-      devMode: Platform.environment['DATABASE_HOST'] ==
-          'localhost'
-    );
+    db ??= await PrittDatabase.connect(
+        host: Platform.environment['DATABASE_HOST']!,
+        port: int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
+        database: Platform.environment['DATABASE_NAME']!,
+        username: Platform.environment['DATABASE_USERNAME']!,
+        password: Platform.environment['DATABASE_PASSWORD'] ??
+            String.fromEnvironment('DATABASE_PASSWORD'),
+        devMode: Platform.environment['DATABASE_HOST'] == 'localhost');
 
     storage ??= await PrittStorage.connect(Platform.environment['S3_URL']!);
 

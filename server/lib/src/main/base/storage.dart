@@ -98,8 +98,10 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   static Future<PrittStorage> connect(String url,
       {String? s3region, String? s3accessKey, String? s3secretKey}) async {
     s3region ??= Platform.environment['S3_REGION'] ?? 'us-east-1';
-    s3secretKey ??= Platform.environment['S3_SECRET_KEY'] ?? String.fromEnvironment('S3_SECRET_KEY');
-    s3accessKey ??= Platform.environment['S3_ACCESS_KEY'] ?? String.fromEnvironment('S3_ACCESS_KEY');
+    s3secretKey ??= Platform.environment['S3_SECRET_KEY'] ??
+        String.fromEnvironment('S3_SECRET_KEY');
+    s3accessKey ??= Platform.environment['S3_ACCESS_KEY'] ??
+        String.fromEnvironment('S3_ACCESS_KEY');
 
     final signer = Signer(
         region: s3region,
