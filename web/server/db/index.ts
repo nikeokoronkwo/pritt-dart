@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/node-postgres";
 export { sql, eq, and, or } from "drizzle-orm";
 
 import { schema } from "./schema";

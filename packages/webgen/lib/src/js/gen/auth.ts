@@ -4,7 +4,7 @@ import * as templ from '@babel/template';
 import { generate } from '@babel/generator';
 import { AuthOptions } from './types';
 
-const template = templ.default.default;
+const template = templ.default.default ?? templ.default;
 
 /**
  *
@@ -25,7 +25,13 @@ export function generateAuthConfig(options: AuthOptions): {
   const serverImports = generateAuthImports(options);
   const serverConfig = generateAuthExport(options, serverImports);
 
-  const serverAst = t.program([...serverImports, serverConfig]);
+  const serverProgramParts: t.Declaration[] = [...serverImports, serverConfig];
+
+  if (options.magicLink) {
+    serverProgramParts.push(nodeMailerCode);
+  }
+
+  const serverAst = t.program(serverProgramParts);
 
   const { code: authFileCode } = generate(serverAst);
 
@@ -187,10 +193,14 @@ function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
   const otherImports = [];
   //
   const betterAuthPluginSpecifiers = [];
-  if (options.magicLink)
+  if (options.magicLink) {
     betterAuthPluginSpecifiers.push(
       t.importSpecifier(t.identifier('magicLink'), t.identifier('magicLink')),
     );
+    otherImports.push(
+      t.importDeclaration([t.importDefaultSpecifier(t.identifier('nodemailer'))], t.stringLiteral('nodemailer')),
+    )
+  }
   if (options.passkey)
     otherImports.push(
       t.importDeclaration(
@@ -211,6 +221,7 @@ function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
     );
 
   return [
+    t.importDeclaration([], t.stringLiteral('dotenv/config')),
     // better auth
     t.importDeclaration(betterAuthSpecifiers, t.stringLiteral('better-auth')),
     // better auth drizzle adapter
@@ -464,6 +475,28 @@ function generateAuthExport(
     ]),
   );
 }
+
+function processEnvExpression(name: string) {
+  return t.memberExpression(
+    t.memberExpression(t.identifier('process'), t.identifier('env')), t.identifier(name)
+  )
+}
+
+export const nodeMailerCode = t.variableDeclaration('const', [
+  t.variableDeclarator(
+    t.identifier('transporter'),
+    t.callExpression(t.identifier('nodemailer.createTransport'), [t.objectExpression([
+      t.objectProperty(t.identifier('host'), processEnvExpression('SMTP_HOST')),
+      t.objectProperty(t.identifier('port'), t.callExpression(t.identifier('parseInt'), [t.logicalExpression('??', processEnvExpression('SMTP_PORT'), t.stringLiteral('587'))])),
+      t.objectProperty(t.identifier('auth'), t.objectExpression([
+        t.objectProperty(t.identifier('user'), processEnvExpression('SMTP_USER')),
+        t.objectProperty(t.identifier('pass'), processEnvExpression('SMTP_PASS')),
+      ]))
+    ])])
+  )
+])
+
+// process.env.SMTP_PORT ?? '587'
 
 const magicLinkCode = template(`
     // code...

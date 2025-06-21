@@ -1053,6 +1053,9 @@ class PublishPackageStatusResponse {
     required this.status,
     this.error,
     this.description,
+    required this.name,
+    this.scope,
+    required this.version,
   });
 
   factory PublishPackageStatusResponse.fromJson(Map<String, dynamic> json) =>
@@ -1063,6 +1066,12 @@ class PublishPackageStatusResponse {
   final String? error;
 
   final String? description;
+
+  final String name;
+
+  final String? scope;
+
+  final String version;
 
   Map<String, dynamic> toJson() => _$PublishPackageStatusResponseToJson(this);
 }

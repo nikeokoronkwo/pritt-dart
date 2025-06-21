@@ -721,6 +721,9 @@ PublishPackageStatusResponse _$PublishPackageStatusResponseFromJson(
       status: $enumDecode(_$PublishingStatusEnumMap, json['status']),
       error: json['error'] as String?,
       description: json['description'] as String?,
+      name: json['name'] as String,
+      scope: json['scope'] as String?,
+      version: json['version'] as String,
     );
 
 Map<String, dynamic> _$PublishPackageStatusResponseToJson(
@@ -729,6 +732,9 @@ Map<String, dynamic> _$PublishPackageStatusResponseToJson(
       'status': _$PublishingStatusEnumMap[instance.status]!,
       'error': instance.error,
       'description': instance.description,
+      'name': instance.name,
+      'scope': instance.scope,
+      'version': instance.version,
     };
 
 ServerError _$ServerErrorFromJson(Map<String, dynamic> json) => ServerError(

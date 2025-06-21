@@ -28,7 +28,12 @@ final handler = defineRequestHandler((event) async {
       TaskStatus.idle => common.PublishingStatus.idle,
       TaskStatus.queue => common.PublishingStatus.queue,
       TaskStatus.error => common.PublishingStatus.error,
-    })
+    },
+    name: pubTask.name,
+    version: pubTask.version,
+    scope: pubTask.scope,
+    // TODO: Describe the error in more detail
+    error: pubTask.status == TaskStatus.fail ? 'Publishing Task Failed' : null)
         .toJson();
   } catch (e) {
     setResponseCode(event, 500);

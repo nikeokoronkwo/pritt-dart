@@ -46,7 +46,7 @@ CREATE TABLE users (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
-    avatar_url TEXT NOT NULL,
+    avatar_url TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
