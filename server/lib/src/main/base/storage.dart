@@ -3,8 +3,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:aws_s3_api/s3-2006-03-01.dart';
 import 'package:aws_signer_api/signer-2017-08-25.dart';
+import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
+
 import '../crs/exceptions.dart';
 import 'storage/interface.dart';
 
@@ -49,6 +53,8 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       {required String region,
       required String accessKey,
       required String secretKey}) async {
+
+    print('$accessKey $secretKey');
     s3 = S3(
       region: region,
       credentials:
@@ -56,10 +62,18 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       endpointUrl: url,
     );
 
-    var s3Buckets = (await s3!.listBuckets()).buckets ?? [];
+    final r = RetryOptions(maxAttempts: 8);
+
+    // let's perform a health check
+    final s3BucketsResponse = await r.retry(
+      () => s3!.listBuckets(),
+      retryIf: (e) => e is http.ClientException || e is SocketException
+    );
+
+    var s3Buckets = s3BucketsResponse.buckets ?? [];
 
     // check if needed buckets already exist
-    // TODO: Might be lighter work to do HEAD work instead
+    // TODO: Might be lighter work to do HEAD work instead: s3.headBucket
     bool recallListBuckets = false;
     if (s3Buckets.any((b) => b.name == 'pritt-packages')) {
       recallListBuckets = true;

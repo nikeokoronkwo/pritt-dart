@@ -18,6 +18,7 @@ dependencies:
   pool: ^1.5.1
   postgres: ^3.5.6
   pritt_common: ^0.0.1
+  retry: ^3.1.2
   shelf: ^1.4.2
   shelf_router: ^1.1.4
   slugid: ^1.1.2

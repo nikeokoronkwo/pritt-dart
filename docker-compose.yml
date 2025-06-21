@@ -30,28 +30,31 @@ services:
       dockerfile: server/Dockerfile
     ports:
       - '8080:8080'
-    volumes:
-      - db-data:/var/lib/postgresql/data
     environment:
       PORT: 8080
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
-      # DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_HOST: ${DATABASE_HOST}
-      # S3_SECRET_KEY: ${S3_SECRET_KEY}
-      # S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      # S3_CREDENTIALS_FILE: /secrets/env
       S3_URL: ${S3_URL}
       PRITT_RUNNER_URL: ${PRITT_RUNNER_URL}
     env_file:
       - .env
+    volumes:
+      - shared-secrets:/secrets
     depends_on:
       runner:
-        condition: service_healthy
+        condition: service_started
       db:
         condition: service_healthy
       filestorage:
         condition: service_healthy
+      filestorage-bootstrap:
+        condition: service_completed_successfully
     
 
 
@@ -74,6 +77,35 @@ services:
       timeout: 10s
       retries: 5
 
+  filestorage-bootstrap:
+    image: minio/mc
+    depends_on:
+      filestorage:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    restart: 'no'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USERNAME}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    env_file:
+      - .env
+    command: |
+      "
+      echo 'Waiting for MinIO...';
+      echo $MINIO_USERNAME $MINIO_PASSWORD;
+      until mc alias set local http://filestorage:9000 $MINIO_USERNAME $MINIO_PASSWORD; do sleep 1; done;
+
+      # echo 'Creating new access key...';
+      # CREDS=$(mc admin accesskey create local | tee /secrets/credentials.txt)
+
+      # ACCESS_KEY=$(echo \"$CREDS\" | grep 'Access Key:' | awk '{print $3}')
+      # SECRET_KEY=$(echo \"$CREDS\" | grep 'Secret Key:' | awk '{print $3}')
+      # echo \"ACCESS_KEY=$ACCESS_KEY\" > /secrets/env
+      # echo \"SECRET_KEY=$SECRET_KEY\" >> /secrets/env
+      "
+    volumes:
+      - shared-secrets:/secrets
+
   db:
     image: postgres:17
     restart: always
@@ -86,6 +118,8 @@ services:
       - '${DATABASE_PORT}:5432'
     env_file:
       - .env
+    # volumes:
+    #   - db-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${DATABASE_USERNAME}", "-d", "${DATABASE_NAME}"]
       interval: 10s
@@ -114,14 +148,13 @@ services:
       - .env
 
 volumes:
-  db-data:
+  shared-secrets:
   fs-data:
 
 secrets:
   db-password:
-    # TODO: Make this ENV
-    file: docker/secrets/db_password.txt
+    file: ./docker/secrets/db_password.txt
   s3-access-key:
-    file: docker/secrets/s3_access_key.txt
+    file: ./docker/secrets/s3_access_key.txt
   s3-secret-key:
-    file: docker/≈secrets/s3_secret_key.txt
+    file: ./docker/secrets/s3_secret_key.txt
