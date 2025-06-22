@@ -34,7 +34,7 @@ class LoginCommand extends PrittCommand {
           negatable: false,
           defaultsTo: false,
           help:
-              'Forces logging into Pritt even if already logged into the current client')
+              'Forces logging into Pritt even if already logged into the current client. (useful for logging into a different account)')
       ..addOption('client-url',
           valueHelp: 'url',
           help:
@@ -84,7 +84,7 @@ class LoginCommand extends PrittCommand {
 
       if (userCredentials == null ||
           userCredentials.isExpired ||
-          userCredentials.uri.toString() != url) {
+          userCredentials.uri.toString() != url || argResults?['new']) {
         // else log user in
         userCredentials = await loginUser(client, clientUrl, logger);
         await userCredentials.update();
