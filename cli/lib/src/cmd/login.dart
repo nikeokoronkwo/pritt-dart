@@ -84,7 +84,8 @@ class LoginCommand extends PrittCommand {
 
       if (userCredentials == null ||
           userCredentials.isExpired ||
-          userCredentials.uri.toString() != url || argResults?['new']) {
+          userCredentials.uri.toString() != url ||
+          argResults?['new']) {
         // else log user in
         userCredentials = await loginUser(client, clientUrl, logger);
         await userCredentials.update();
@@ -100,7 +101,8 @@ class LoginCommand extends PrittCommand {
       // display user log in info
       logger.fine('Logged in as: ${user.name}');
       if (user.name == '') {
-        logger.warn('Warning: Your name seems to be empty. Try logging into ${clientUrl == mainPrittInstance ? 'Pritt' : 'your Pritt instance'} on the web and update your name');
+        logger.warn(
+            'Warning: Your name seems to be empty. Try logging into ${clientUrl == mainPrittInstance ? 'Pritt' : 'your Pritt instance'} on the web and update your name');
       }
 
       exit(0);

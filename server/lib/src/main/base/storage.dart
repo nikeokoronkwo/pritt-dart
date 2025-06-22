@@ -53,7 +53,6 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       {required String region,
       required String accessKey,
       required String secretKey}) async {
-
     s3 = S3(
       region: region,
       credentials:
@@ -64,10 +63,8 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     final r = RetryOptions(maxAttempts: 8);
 
     // let's perform a health check
-    final s3BucketsResponse = await r.retry(
-      () => s3!.listBuckets(),
-      retryIf: (e) => e is http.ClientException || e is SocketException
-    );
+    final s3BucketsResponse = await r.retry(() => s3!.listBuckets(),
+        retryIf: (e) => e is http.ClientException || e is SocketException);
 
     var s3Buckets = s3BucketsResponse.buckets ?? [];
 

@@ -1,5 +1,3 @@
-
-
 class A {
   String getName() {
     return "A";

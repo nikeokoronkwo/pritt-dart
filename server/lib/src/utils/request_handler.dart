@@ -111,10 +111,12 @@ Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
       case int():
         return event.responseFunc(response);
       case Map():
-        event._responseBuilder.headers.putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/json');
+        event._responseBuilder.headers.putIfAbsent(
+            HttpHeaders.contentTypeHeader, () => 'application/json');
         return event.responseFunc(jsonEncode(response));
       case List<Map>():
-        event._responseBuilder.headers.putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/json');
+        event._responseBuilder.headers.putIfAbsent(
+            HttpHeaders.contentTypeHeader, () => 'application/json');
         return event.responseFunc(jsonEncode(response));
       case Stream<List<int>>():
         event._responseBuilder.headers

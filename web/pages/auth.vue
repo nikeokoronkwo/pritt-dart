@@ -16,7 +16,12 @@ const pinError = ref("");
 const pinStatus = ref<null | "success" | "fail" | "pending">(null);
 const router = useRouter();
 
-const { data: authDetails, status: authDetailsStatus, error, refresh } = pritt.getAuthDetailsById(query ?? '');
+const {
+  data: authDetails,
+  status: authDetailsStatus,
+  error,
+  refresh,
+} = pritt.getAuthDetailsById(query ?? "");
 
 const targetPin = ref(authDetails.value?.code);
 const PIN_LENGTH = ref(targetPin.value?.length ?? 6);
@@ -49,9 +54,8 @@ async function handleComplete(value: string[], target: string) {
       user_id: authDetails.value?.user_id ?? session?.user.user_id,
       session_id: authDetails.value?.token,
       time: new Date(Date.now()).toISOString(),
-      status: 'success',
+      status: "success",
     });
-      
 
     return router.push(redirect ?? "/home");
   } else {
@@ -76,7 +80,13 @@ function onSubmit(target: string) {
       class="border-primary-50 min-w-xl space-y-8 rounded-xl border bg-gray-50 p-8 shadow-lg backdrop-blur"
     >
       <!-- Header -->
-      <div v-if="loadingState === 'loading' || authDetailsStatus === 'pending' || authDetails == null">
+      <div
+        v-if="
+          loadingState === 'loading' ||
+          authDetailsStatus === 'pending' ||
+          authDetails == null
+        "
+      >
         <div class="flex flex-col items-center space-y-2">
           <span class="text-primary-400 text-lg font-semibold"
             >Loading authentication...</span
@@ -86,13 +96,18 @@ function onSubmit(target: string) {
           ></div>
         </div>
       </div>
-      <div v-else-if="loadingState === 'error' || authDetailsStatus === 'error'">
+      <div
+        v-else-if="loadingState === 'error' || authDetailsStatus === 'error'"
+      >
         <div class="text-red-600">Failed to load authentication data.</div>
         <div class="text-sm">
           {{ error }}
         </div>
         <DevOnly>
-          <button @click="refresh()" class="border rounded-lg p-2 hover:shadow-xl transition ease-in-out delay-200">
+          <button
+            @click="refresh()"
+            class="rounded-lg border p-2 transition delay-200 ease-in-out hover:shadow-xl"
+          >
             Refresh Request
           </button>
         </DevOnly>
@@ -102,7 +117,7 @@ function onSubmit(target: string) {
           Enter your Pin Code
         </div>
         <form
-          @submit.prevent="e => onSubmit('')"
+          @submit.prevent="(e) => onSubmit('')"
           class="flex flex-col items-center space-y-6"
         >
           <Label for="pin-input" class="Text">Pin Input</Label>
@@ -110,7 +125,7 @@ function onSubmit(target: string) {
             id="pin-input"
             v-model="pin"
             class="mt-1 flex items-center gap-6"
-            @complete="value => handleComplete(value, targetPin ?? '')"
+            @complete="(value) => handleComplete(value, targetPin ?? '')"
           >
             <PinInputInput
               v-for="(id, index) in PIN_LENGTH"

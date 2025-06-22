@@ -47,14 +47,14 @@ export default function () {
 
   function getAuthDetailsById(id: string) {
     return usePrittFetch<components["schemas"]["AuthDetailsResponse"]>(
-      `/api/auth/details/${id}`
+      `/api/auth/details/${id}`,
     );
   }
 
-  function validateAuth(body: components['schemas']["AuthValidateRequest"]) {
-    return $api(apiUrl)('/api/auth/validate', {
-      method: 'POST',
-      body
+  function validateAuth(body: components["schemas"]["AuthValidateRequest"]) {
+    return $api(apiUrl)("/api/auth/validate", {
+      method: "POST",
+      body,
     });
   }
 
@@ -62,6 +62,6 @@ export default function () {
     getPackages,
     getPublishingStatus,
     getAuthDetailsById,
-    validateAuth
+    validateAuth,
   };
 }

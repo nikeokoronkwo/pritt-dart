@@ -32,22 +32,44 @@ void main() {
 
       // Start Postgres (example, adjust as needed)
       postgresProcess = await Process.start(
-        'docker', [
-          'run', '--rm', '-e', 'POSTGRES_DB=${env['DATABASE_NAME']}',
-          '-e', 'POSTGRES_USER=${env['DATABASE_USERNAME']}',
-          '-e', 'POSTGRES_PASSWORD=${env['DATABASE_PASSWORD']}',
-          '-p', '${env['DATABASE_PORT']}:5432', '--name', 'test-postgres', 'postgres:17'
+        'docker',
+        [
+          'run',
+          '--rm',
+          '-e',
+          'POSTGRES_DB=${env['DATABASE_NAME']}',
+          '-e',
+          'POSTGRES_USER=${env['DATABASE_USERNAME']}',
+          '-e',
+          'POSTGRES_PASSWORD=${env['DATABASE_PASSWORD']}',
+          '-p',
+          '${env['DATABASE_PORT']}:5432',
+          '--name',
+          'test-postgres',
+          'postgres:17'
         ],
         mode: ProcessStartMode.detached,
       );
 
       // Start MinIO (example, adjust as needed)
       minioProcess = await Process.start(
-        'docker', [
-          'run', '--rm', '-e', 'MINIO_ROOT_USER=${env['MINIO_USERNAME']}',
-          '-e', 'MINIO_ROOT_PASSWORD=${env['MINIO_PASSWORD']}',
-          '-p', '9000:9000', '-p', '9001:9001', '--name', 'test-minio',
-          'quay.io/minio/minio', 'server', '/data'
+        'docker',
+        [
+          'run',
+          '--rm',
+          '-e',
+          'MINIO_ROOT_USER=${env['MINIO_USERNAME']}',
+          '-e',
+          'MINIO_ROOT_PASSWORD=${env['MINIO_PASSWORD']}',
+          '-p',
+          '9000:9000',
+          '-p',
+          '9001:9001',
+          '--name',
+          'test-minio',
+          'quay.io/minio/minio',
+          'server',
+          '/data'
         ],
         mode: ProcessStartMode.detached,
       );
@@ -76,7 +98,8 @@ void main() {
     });
 
     test('GET /api/auth/new returns 200', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/auth/new'));
+      final response =
+          await http.get(Uri.parse('http://localhost:8080/api/auth/new'));
       expect(response.statusCode, 200);
     });
 
@@ -99,7 +122,8 @@ void main() {
     });
 
     test('GET /api/package/status returns 200', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/package/status'));
+      final response =
+          await http.get(Uri.parse('http://localhost:8080/api/package/status'));
       expect(response.statusCode, 200);
     });
 
@@ -113,7 +137,8 @@ void main() {
     });
 
     test('GET /api/package/:name/:version returns 200 or 404', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/package/pritt/0.1.0'));
+      final response = await http
+          .get(Uri.parse('http://localhost:8080/api/package/pritt/0.1.0'));
       expect([200, 404], contains(response.statusCode));
     });
 
@@ -127,7 +152,8 @@ void main() {
     });
 
     test('GET /api/package/@:scope/:name returns 200 or 404', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/package/@pritt/pritt'));
+      final response = await http
+          .get(Uri.parse('http://localhost:8080/api/package/@pritt/pritt'));
       expect([200, 404], contains(response.statusCode));
     });
 
@@ -140,12 +166,15 @@ void main() {
       expect([401, 400, 404], contains(response.statusCode));
     });
 
-    test('GET /api/package/@:scope/:name/:version returns 200 or 404', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'));
+    test('GET /api/package/@:scope/:name/:version returns 200 or 404',
+        () async {
+      final response = await http.get(
+          Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'));
       expect([200, 404], contains(response.statusCode));
     });
 
-    test('POST /api/package/@:scope/:name/:version returns 401 without auth', () async {
+    test('POST /api/package/@:scope/:name/:version returns 401 without auth',
+        () async {
       final response = await http.post(
         Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'),
         headers: {'Content-Type': 'application/json'},
@@ -155,19 +184,23 @@ void main() {
     });
 
     test('GET /api/packages returns 200', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/packages'));
+      final response =
+          await http.get(Uri.parse('http://localhost:8080/api/packages'));
       expect(response.statusCode, 200);
     });
 
     test('GET /api/package/{name} returns 200 for existing package', () async {
       final packageName = 'pritt'; // adjust as needed for your test data
-      final response = await http.get(Uri.parse('http://localhost:8080/api/package/$packageName'));
+      final response = await http
+          .get(Uri.parse('http://localhost:8080/api/package/$packageName'));
       expect(response.statusCode, 200);
     });
 
-    test('GET /api/package/{name} returns 404 for non-existent package', () async {
+    test('GET /api/package/{name} returns 404 for non-existent package',
+        () async {
       final packageName = 'nonexistent-package-xyz';
-      final response = await http.get(Uri.parse('http://localhost:8080/api/package/$packageName'));
+      final response = await http
+          .get(Uri.parse('http://localhost:8080/api/package/$packageName'));
       expect(response.statusCode, 404);
     });
 

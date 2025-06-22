@@ -57,7 +57,6 @@ services:
           path: ./server
           target: /app/server
 
-
   filestorage:
     image: quay.io/minio/minio
     ports:
@@ -72,7 +71,7 @@ services:
       - fs-data:/data
     command: server /data --console-address ":9001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 30s
       timeout: 10s
       retries: 5
@@ -92,7 +91,15 @@ services:
     # volumes:
     #   - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DATABASE_USERNAME}", "-d", "${DATABASE_NAME}"]
+      test:
+        [
+          'CMD',
+          'pg_isready',
+          '-U',
+          '${DATABASE_USERNAME}',
+          '-d',
+          '${DATABASE_NAME}',
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

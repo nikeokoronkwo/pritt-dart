@@ -41,10 +41,12 @@ final handler = defineRequestHandler((event) async {
     case TaskStatus.fail:
       return common.AuthPollResponse(status: common.PollStatus.fail).toJson();
     case TaskStatus.expired:
-      return common.AuthPollResponse(status: common.PollStatus.expired).toJson();
+      return common.AuthPollResponse(status: common.PollStatus.expired)
+          .toJson();
     case TaskStatus.error:
       return common.AuthPollResponse(status: common.PollStatus.error).toJson();
     default:
-      return common.AuthPollResponse(status: common.PollStatus.pending).toJson();
+      return common.AuthPollResponse(status: common.PollStatus.pending)
+          .toJson();
   }
 });

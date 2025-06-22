@@ -31,7 +31,8 @@ Future<UserCredentials> loginUser(
       'You can complete logging in using this URL: ${styleUnderlined.wrap(Uri.parse(clientUrl).replace(path: 'auth', queryParameters: {
         'id': authRequest.token
       }).toString())}');
-  logger.stdout('Enter the given code: ${wrapWith(authRequest.code, [styleBold])}');
+  logger.stdout(
+      'Enter the given code: ${wrapWith(authRequest.code, [styleBold])}');
   logger.info(
       'NOTE: This token expires at ${_getTime(expiresDate.toLocal(), verbose: logger is VerboseLogger)} (${(expiresDate.isUtc ? expiresDate : expiresDate.toUtc()).hour.toString().padLeft(2, '0')}:${(expiresDate.isUtc ? expiresDate : expiresDate.toUtc()).minute.toString().padLeft(2, '0')} UTC)');
 

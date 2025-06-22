@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     "@scalar/nuxt",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
-    'reka-ui/nuxt'
+    "reka-ui/nuxt",
   ],
 
   css: ["~/assets/css/main.css"],

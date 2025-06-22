@@ -38,9 +38,11 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
 
   final PrittStorage storage;
   if (Platform.environment.containsKey('S3_CREDENTIALS_FILE')) {
-    final keys = await loadSecretsFromFile(Platform.environment['S3_CREDENTIALS_FILE']!);
+    final keys =
+        await loadSecretsFromFile(Platform.environment['S3_CREDENTIALS_FILE']!);
     if (keys != null) {
-      storage = await PrittStorage.connect(ofsUrl, s3secretKey: keys.secretKey, s3accessKey: keys.accessKey);
+      storage = await PrittStorage.connect(ofsUrl,
+          s3secretKey: keys.secretKey, s3accessKey: keys.accessKey);
     } else {
       storage = await PrittStorage.connect(ofsUrl);
     }
@@ -55,14 +57,15 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
 }
 
 /// Loads credentials from the given [path].
-/// 
-/// For cases in development, we will need to bootstrap the 
+///
+/// For cases in development, we will need to bootstrap the
 /// Therefore, the credentials we need may be stored in a file, rather than in environment
-/// 
+///
 /// This function loads these credentials.
-/// 
+///
 /// This should not be done during production: credentials must be ready before server startup
-Future<({String accessKey, String secretKey})?> loadSecretsFromFile(String path) async {
+Future<({String accessKey, String secretKey})?> loadSecretsFromFile(
+    String path) async {
   final file = File(path);
 
   if (!await file.exists()) {
@@ -83,7 +86,13 @@ Future<({String accessKey, String secretKey})?> loadSecretsFromFile(String path)
     }
   }
 
-  return credentials.containsKey('ACCESS_KEY') && credentials.containsKey('SECRET_KEY') ? (accessKey: credentials['ACCESS_KEY']!, secretKey: credentials['SECRET_KEY']!) : null;
+  return credentials.containsKey('ACCESS_KEY') &&
+          credentials.containsKey('SECRET_KEY')
+      ? (
+          accessKey: credentials['ACCESS_KEY']!,
+          secretKey: credentials['SECRET_KEY']!
+        )
+      : null;
 }
 
 Handler createRouter() {
@@ -106,9 +115,9 @@ Handler createRouter() {
   /// This will be very helpful in DS, where the `vm_isolates` preset may need some message passing,
   /// However, this means that the `Event` object will no longer be standard/based on Shelf [Request]
   final cascade = Cascade()
-    .add(adapterHandler(crs))
-    .add(preFlightHandler())
-    .add(serverHandler());
+      .add(adapterHandler(crs))
+      .add(preFlightHandler())
+      .add(serverHandler());
 
   return cascade.handler;
 }

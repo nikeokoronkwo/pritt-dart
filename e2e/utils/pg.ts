@@ -1,10 +1,12 @@
-import { Client } from "pg";
-import { readdir, readFile } from "node:fs/promises";
+import { Client } from 'pg';
+import { readdir, readFile } from 'node:fs/promises';
 
 export async function setupPostgresContainer(pgClient: Client) {
   const sqlAssets = '../assets/sql';
-  const sqlFiles = (await readdir(sqlAssets, { withFileTypes: true, encoding: 'utf8' }));
-
+  const sqlFiles = await readdir(sqlAssets, {
+    withFileTypes: true,
+    encoding: 'utf8',
+  });
 
   for (const file of sqlFiles) {
     if (file.isFile() && file.name.endsWith('.sql')) {

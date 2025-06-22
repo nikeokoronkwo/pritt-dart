@@ -112,12 +112,10 @@ class PrittClient extends ApiClient implements PrittInterface {
         throw ApiException.internalServerError(
             ServerError.fromJson(json.decode(response.body)));
       case 405:
-        throw ApiException(
-            ExpiredError.fromJson(json.decode(response.body)),
+        throw ApiException(ExpiredError.fromJson(json.decode(response.body)),
             statusCode: 405);
       case 404:
-        throw ApiException(
-            NotFoundError.fromJson(json.decode(response.body)),
+        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
             statusCode: 404);
       default:
         throw ApiException(response.body, statusCode: response.statusCode);
@@ -245,8 +243,8 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<GetUserResponse> getUserById({required String id}) async {
-    final response = await requestBasic('/api/user/$id',
-        Method.GET, {}, null, null,
+    final response = await requestBasic(
+        '/api/user/$id', Method.GET, {}, null, null,
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -419,8 +417,7 @@ class PrittClient extends ApiClient implements PrittInterface {
         throw ApiException.internalServerError(
             ServerError.fromJson(tryDecode(response.body)));
       case 401:
-        throw ApiException(
-            UnauthorizedError.fromJson(tryDecode(response.body)),
+        throw ApiException(UnauthorizedError.fromJson(tryDecode(response.body)),
             statusCode: response.statusCode);
       case 404:
         throw ApiException(NotFoundError.fromJson(tryDecode(response.body)),
@@ -492,8 +489,7 @@ class PrittClient extends ApiClient implements PrittInterface {
 
     switch (response.statusCode) {
       case 200:
-        return AuthDetailsResponse.fromJson(
-            json.decode(response.body));
+        return AuthDetailsResponse.fromJson(json.decode(response.body));
       case 500:
         throw ApiException.internalServerError(
             ServerError.fromJson(tryDecode(response.body)));
@@ -510,9 +506,7 @@ Map<String, String> tryDecode(String body) {
   try {
     return json.decode(body);
   } catch (e) {
-    return {
-      'error': body
-    };
+    return {'error': body};
   }
 }
 

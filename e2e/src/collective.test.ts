@@ -12,10 +12,7 @@ import {
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 
 describe.todo('Collective E2E Testing', () => {
-
-  beforeAll(async () => {
-
-  });
+  beforeAll(async () => {});
 
   test.todo('[WF]: Login Workflow');
   test.todo('[WF]: Login Workflow when logged in on browser already');
@@ -30,11 +27,11 @@ describe.todo('Collective E2E Testing', () => {
     test.todo('Install Package A into Package B');
     test.todo('Unpack Package A elsewhere');
     test.todo('Get Packages From Web');
-    test.todo('Validate Package Information from Web with published information');
+    test.todo(
+      'Validate Package Information from Web with published information',
+    );
     test.todo('Validate Package Information from Web with CLI');
   });
 
-  afterAll(async () => {
-
-  });
+  afterAll(async () => {});
 });

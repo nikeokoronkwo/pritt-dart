@@ -21,19 +21,21 @@ final handler = defineRequestHandler((event) async {
 
     return common.PublishPackageStatusResponse(
             status: switch (pubTask.status) {
-      TaskStatus.pending => common.PublishingStatus.pending,
-      TaskStatus.success => common.PublishingStatus.success,
-      TaskStatus.fail => common.PublishingStatus.error,
-      TaskStatus.expired => common.PublishingStatus.error,
-      TaskStatus.idle => common.PublishingStatus.idle,
-      TaskStatus.queue => common.PublishingStatus.queue,
-      TaskStatus.error => common.PublishingStatus.error,
-    },
-    name: pubTask.name,
-    version: pubTask.version,
-    scope: pubTask.scope,
-    // TODO: Describe the error in more detail
-    error: pubTask.status == TaskStatus.fail ? 'Publishing Task Failed' : null)
+              TaskStatus.pending => common.PublishingStatus.pending,
+              TaskStatus.success => common.PublishingStatus.success,
+              TaskStatus.fail => common.PublishingStatus.error,
+              TaskStatus.expired => common.PublishingStatus.error,
+              TaskStatus.idle => common.PublishingStatus.idle,
+              TaskStatus.queue => common.PublishingStatus.queue,
+              TaskStatus.error => common.PublishingStatus.error,
+            },
+            name: pubTask.name,
+            version: pubTask.version,
+            scope: pubTask.scope,
+            // TODO: Describe the error in more detail
+            error: pubTask.status == TaskStatus.fail
+                ? 'Publishing Task Failed'
+                : null)
         .toJson();
   } catch (e) {
     setResponseCode(event, 500);

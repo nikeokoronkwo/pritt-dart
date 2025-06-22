@@ -6,7 +6,6 @@ import '../../../../main/crs/exceptions.dart';
 import '../../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
-
   // get id
   final id = getParams(event, 'id') as String;
 
@@ -32,6 +31,7 @@ final handler = defineRequestHandler((event) async {
     return resp.toJson();
   } on CRSException catch (e) {
     setResponseCode(event, 404);
-    return common.NotFoundError(error: 'UnauthorizedError', message: e.message).toJson();
+    return common.NotFoundError(error: 'UnauthorizedError', message: e.message)
+        .toJson();
   }
 });

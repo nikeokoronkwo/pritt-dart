@@ -21,16 +21,50 @@ class PackageInfoTest {
 }
 
 final packageInfoTests = <PackageInfoTest, Map<String, dynamic>>{
-  PackageInfoTest('foo', 'foo'): {'name': 'foo', 'scope': null, 'version': null},
-  PackageInfoTest('foo@1.2.3', 'foo', version: '1.2.3'): {'name': 'foo', 'scope': null, 'version': '1.2.3'},
-  PackageInfoTest('@scope/foo', 'foo', scope: 'scope'): {'name': 'foo', 'scope': 'scope', 'version': null},
-  PackageInfoTest('@scope/foo@2.0.0', 'foo', scope: 'scope', version: '2.0.0'): {'name': 'foo', 'scope': 'scope', 'version': '2.0.0'},
-  PackageInfoTest('@scope/foo@2.0.0@beta', 'foo', scope: 'scope', version: '2.0.0@beta'): {'name': 'foo', 'scope': 'scope', 'version': '2.0.0@beta'},
+  PackageInfoTest('foo', 'foo'): {
+    'name': 'foo',
+    'scope': null,
+    'version': null
+  },
+  PackageInfoTest('foo@1.2.3', 'foo', version: '1.2.3'): {
+    'name': 'foo',
+    'scope': null,
+    'version': '1.2.3'
+  },
+  PackageInfoTest('@scope/foo', 'foo', scope: 'scope'): {
+    'name': 'foo',
+    'scope': 'scope',
+    'version': null
+  },
+  PackageInfoTest('@scope/foo@2.0.0', 'foo', scope: 'scope', version: '2.0.0'):
+      {'name': 'foo', 'scope': 'scope', 'version': '2.0.0'},
+  PackageInfoTest('@scope/foo@2.0.0@beta', 'foo',
+      scope: 'scope', version: '2.0.0@beta'): {
+    'name': 'foo',
+    'scope': 'scope',
+    'version': '2.0.0@beta'
+  },
   // More cases
-  PackageInfoTest('bar@latest', 'bar', version: 'latest'): {'name': 'bar', 'scope': null, 'version': 'latest'},
-  PackageInfoTest('@org/bar', 'bar', scope: 'org'): {'name': 'bar', 'scope': 'org', 'version': null},
-  PackageInfoTest('@org/bar@dev', 'bar', scope: 'org', version: 'dev'): {'name': 'bar', 'scope': 'org', 'version': 'dev'},
-  PackageInfoTest('baz@', 'baz', version: ''): {'name': 'baz', 'scope': null, 'version': ''},
+  PackageInfoTest('bar@latest', 'bar', version: 'latest'): {
+    'name': 'bar',
+    'scope': null,
+    'version': 'latest'
+  },
+  PackageInfoTest('@org/bar', 'bar', scope: 'org'): {
+    'name': 'bar',
+    'scope': 'org',
+    'version': null
+  },
+  PackageInfoTest('@org/bar@dev', 'bar', scope: 'org', version: 'dev'): {
+    'name': 'bar',
+    'scope': 'org',
+    'version': 'dev'
+  },
+  PackageInfoTest('baz@', 'baz', version: ''): {
+    'name': 'baz',
+    'scope': null,
+    'version': ''
+  },
 };
 
 void main() {

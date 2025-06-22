@@ -198,8 +198,11 @@ function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
       t.importSpecifier(t.identifier('magicLink'), t.identifier('magicLink')),
     );
     otherImports.push(
-      t.importDeclaration([t.importDefaultSpecifier(t.identifier('nodemailer'))], t.stringLiteral('nodemailer')),
-    )
+      t.importDeclaration(
+        [t.importDefaultSpecifier(t.identifier('nodemailer'))],
+        t.stringLiteral('nodemailer'),
+      ),
+    );
   }
   if (options.passkey)
     otherImports.push(
@@ -462,15 +465,30 @@ function generateAuthExport(
       ]),
     ),
     // user hooks for db
-    t.objectProperty(t.identifier('databaseHooks'), t.objectExpression([
-      t.objectProperty(t.identifier('user'), t.objectExpression([
-        t.objectProperty(t.identifier('create'), t.objectExpression([
-          t.objectMethod('method', t.identifier('before'), [
-            t.identifier('user'), t.identifier('context')
-          ], t.blockStatement(databaseHookCode()), undefined, undefined, true)
-        ]))
-      ]))
-    ])),
+    t.objectProperty(
+      t.identifier('databaseHooks'),
+      t.objectExpression([
+        t.objectProperty(
+          t.identifier('user'),
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('create'),
+              t.objectExpression([
+                t.objectMethod(
+                  'method',
+                  t.identifier('before'),
+                  [t.identifier('user'), t.identifier('context')],
+                  t.blockStatement(databaseHookCode()),
+                  undefined,
+                  undefined,
+                  true,
+                ),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
     // plugins
     t.objectProperty(t.identifier('plugins'), t.arrayExpression(authPlugins)),
   );
@@ -489,54 +507,93 @@ function generateAuthExport(
 
 function processEnvExpression(name: string) {
   return t.memberExpression(
-    t.memberExpression(t.identifier('process'), t.identifier('env')), t.identifier(name)
-  )
+    t.memberExpression(t.identifier('process'), t.identifier('env')),
+    t.identifier(name),
+  );
 }
 
 export const nodeMailerCode = t.variableDeclaration('const', [
   t.variableDeclarator(
     t.identifier('transporter'),
-    t.callExpression(t.identifier('nodemailer.createTransport'), [t.objectExpression([
-      t.objectProperty(t.identifier('host'), processEnvExpression('SMTP_HOST')),
-      t.objectProperty(t.identifier('port'), t.callExpression(t.identifier('parseInt'), [t.logicalExpression('??', processEnvExpression('SMTP_PORT'), t.stringLiteral('587'))])),
-      t.objectProperty(t.identifier('auth'), t.objectExpression([
-        t.objectProperty(t.identifier('user'), processEnvExpression('SMTP_USER')),
-        t.objectProperty(t.identifier('pass'), processEnvExpression('SMTP_PASS')),
-      ]))
-    ])])
-  )
-])
+    t.callExpression(t.identifier('nodemailer.createTransport'), [
+      t.objectExpression([
+        t.objectProperty(
+          t.identifier('host'),
+          processEnvExpression('SMTP_HOST'),
+        ),
+        t.objectProperty(
+          t.identifier('port'),
+          t.callExpression(t.identifier('parseInt'), [
+            t.logicalExpression(
+              '??',
+              processEnvExpression('SMTP_PORT'),
+              t.stringLiteral('587'),
+            ),
+          ]),
+        ),
+        t.objectProperty(
+          t.identifier('auth'),
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('user'),
+              processEnvExpression('SMTP_USER'),
+            ),
+            t.objectProperty(
+              t.identifier('pass'),
+              processEnvExpression('SMTP_PASS'),
+            ),
+          ]),
+        ),
+      ]),
+    ]),
+  ),
+]);
 
 export const mlc = t.blockStatement([
-  t.expressionStatement(t.awaitExpression(t.callExpression(t.identifier('transporter.verify'), []))),
+  t.expressionStatement(
+    t.awaitExpression(t.callExpression(t.identifier('transporter.verify'), [])),
+  ),
   t.variableDeclaration('const', [
     t.variableDeclarator(
       t.identifier('info'),
       t.awaitExpression(
-        t.callExpression(
-          t.identifier('transporter.sendMail'), 
-          [t.objectExpression([
-            t.objectProperty(t.identifier('from'), t.logicalExpression('??', processEnvExpression('SMTP_EMAIL'), processEnvExpression('SMTP_USER'))),
+        t.callExpression(t.identifier('transporter.sendMail'), [
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('from'),
+              t.logicalExpression(
+                '??',
+                processEnvExpression('SMTP_EMAIL'),
+                processEnvExpression('SMTP_USER'),
+              ),
+            ),
             t.objectProperty(t.identifier('to'), t.identifier('email')),
             // TODO: Subject and Email references
-            t.objectProperty(t.identifier('subject'), t.stringLiteral('Pritt: Verify Email Address')),
+            t.objectProperty(
+              t.identifier('subject'),
+              t.stringLiteral('Pritt: Verify Email Address'),
+            ),
             // For now it is: `We received a login request from you. Verify this login request by using <a href="${url}" target="_blank">this link</a>`
-            t.objectProperty(t.identifier('html'), t.templateLiteral([
-              t.templateElement({
-                raw: `We received a login request from you. Verify this login request by using <a href="`
-              }), 
-              t.templateElement({
-                raw: `" target="_blank">this link</a>`
-              }), 
-            ], [
-              t.identifier('url')
-            ]))
-          ])]
-        )
-      )
-    )
-  ])
-])
+            t.objectProperty(
+              t.identifier('html'),
+              t.templateLiteral(
+                [
+                  t.templateElement({
+                    raw: `We received a login request from you. Verify this login request by using <a href="`,
+                  }),
+                  t.templateElement({
+                    raw: `" target="_blank">this link</a>`,
+                  }),
+                ],
+                [t.identifier('url')],
+              ),
+            ),
+          ]),
+        ]),
+      ),
+    ),
+  ]),
+]);
 
 const databaseHookCode = template(`
   const [u] = await db.insert(users).values({

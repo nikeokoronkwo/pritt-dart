@@ -44,7 +44,8 @@ class InfoCommand extends PrittCommand {
           '\t${styleBold.wrap(e.key)}: ${e.key.endsWith('_at') ? transformDate(e.value) : e.value}');
     });
     if (user.name == '') {
-        logger.warn('Warning: Your name seems to be empty. Try logging into your Pritt instance on the web and update your name');
+      logger.warn(
+          'Warning: Your name seems to be empty. Try logging into your Pritt instance on the web and update your name');
     }
   }
 }

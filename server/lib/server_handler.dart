@@ -10,8 +10,7 @@ import 'src/routes/api/auth/details/[id].get.dart' as authDetailsIdGet;
 import 'src/routes/api/auth/new.get.dart' as authNewGet;
 import 'src/routes/api/auth/status.post.dart' as authStatusPost;
 import 'src/routes/api/auth/validate.post.dart' as authValidatePost;
-import 'src/routes/api/package/@[scope]/[name].get.dart'
-    as packageScopeNameGet;
+import 'src/routes/api/package/@[scope]/[name].get.dart' as packageScopeNameGet;
 import 'src/routes/api/package/@[scope]/[name].post.dart'
     as packageScopeNamePost;
 import 'src/routes/api/package/@[scope]/[name]/[version].get.dart'
@@ -62,7 +61,8 @@ Handler optionsWithCors({
     final corsHeaders = {
       HttpHeaders.accessControlAllowMethodsHeader: allowedMethods.join(', '),
       HttpHeaders.accessControlAllowHeadersHeader: '*',
-      HttpHeaders.accessControlAllowOriginHeader: request.headers['origin'] ?? '*',
+      HttpHeaders.accessControlAllowOriginHeader:
+          request.headers['origin'] ?? '*',
       HttpHeaders.allowHeader: allowedMethods.join(', '),
       HttpHeaders.dateHeader: DateTime.now().toIso8601String()
     };
@@ -73,13 +73,14 @@ Handler optionsWithCors({
   };
 }
 
-/// TODO: A better way to do this would be to patch `Router` with a `route` handler 
+/// TODO: A better way to do this would be to patch `Router` with a `route` handler
 ///  that adds options to the Router by default
 /// TODO: Complete this work!
 Handler preFlightHandler() {
   final router = Router()
     ..options('/', optionsWithCors(allowedMethods: ['GET']))
-    ..options('/api/auth/details/<id>', optionsWithCors(allowedMethods: ['GET']))
+    ..options(
+        '/api/auth/details/<id>', optionsWithCors(allowedMethods: ['GET']))
     ..options('/api/auth/validate', optionsWithCors(allowedMethods: ['POST']));
   return router.call;
 }

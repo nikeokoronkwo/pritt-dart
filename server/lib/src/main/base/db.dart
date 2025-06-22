@@ -64,15 +64,15 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
             database: database,
             username: username,
             password: password,
-            port: port
-          ),
+            port: port),
       ],
           settings: devMode
               ? PoolSettings(maxConnectionCount: 20, sslMode: SslMode.disable)
               : PoolSettings(
                   maxConnectionCount: 20,
-                  sslMode: Platform.environment.containsKey('DATABASE_SSL') ? SslMode.verifyFull : SslMode.disable
-                ));
+                  sslMode: Platform.environment.containsKey('DATABASE_SSL')
+                      ? SslMode.verifyFull
+                      : SslMode.disable));
 
       _preparePool(pool);
 
@@ -144,8 +144,8 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
       return PackageVersions(
         package: package!,
         version: columnMap['version'] as String,
-        versionType:
-            VersionType.fromString((columnMap['version_type'] as UndecodedBytes).asString),
+        versionType: VersionType.fromString(
+            (columnMap['version_type'] as UndecodedBytes).asString),
         created: columnMap['created_at'] as DateTime,
         info: columnMap['info'] as Map<String, dynamic>,
         env: columnMap['env'] as Map<String, String>,
@@ -208,7 +208,8 @@ WHERE p.name = @name AND p.scope = @scope
         language: columnMap['language'] as String,
         updated: columnMap['updated_at'] as DateTime,
         created: columnMap['created_at'] as DateTime,
-        vcs: VCS.fromString((columnMap['updated_at'] as UndecodedBytes).asString),
+        vcs: VCS
+            .fromString((columnMap['updated_at'] as UndecodedBytes).asString),
         vcsUrl: columnMap['vcs_url'] != null
             ? Uri.parse(columnMap['vcs_url'] as String)
             : null,
@@ -267,7 +268,8 @@ LEFT JOIN users u ON p.author_id = u.id
           language: columnMap['language'] as String,
           updated: columnMap['updated_at'] as DateTime,
           created: columnMap['created_at'] as DateTime,
-          vcs: VCS.fromString((columnMap['updated_at'] as UndecodedBytes).asString),
+          vcs: VCS
+              .fromString((columnMap['updated_at'] as UndecodedBytes).asString),
           vcsUrl: columnMap['vcs_url'] != null
               ? Uri.parse(columnMap['vcs_url'] as String)
               : null,
@@ -290,9 +292,7 @@ WHERE u.id = @userId
 ''');
     }
 
-    final result = await _statements['getPackagesForUser']!.run({
-      'userId': id
-    });
+    final result = await _statements['getPackagesForUser']!.run({'userId': id});
 
     return result.map((row) {
       final columnMap = row.toColumnMap();
@@ -312,7 +312,8 @@ WHERE u.id = @userId
           language: columnMap['language'] as String,
           updated: columnMap['updated_at'] as DateTime,
           created: columnMap['created_at'] as DateTime,
-          vcs: VCS.fromString((columnMap['updated_at'] as UndecodedBytes).asString),
+          vcs: VCS
+              .fromString((columnMap['updated_at'] as UndecodedBytes).asString),
           vcsUrl: columnMap['vcs_url'] != null
               ? Uri.parse(columnMap['vcs_url'] as String)
               : null,
@@ -333,23 +334,21 @@ WHERE id = @userId
 '''));
     }
 
-    final result = await _statements['getUser']!.run({
-      'userId': id
-    });
+    final result = await _statements['getUser']!.run({'userId': id});
 
     try {
       final columnMap = result.first.toColumnMap();
 
       return User(
-        id: id, 
-        name: columnMap['name'] as String, 
-        email: columnMap['email'] as String, 
-        createdAt: columnMap['created_at'] as DateTime, 
-        updatedAt: columnMap['updated_at'] as DateTime,
-        avatarUrl: columnMap['avatar_url'] as String?
-      );
+          id: id,
+          name: columnMap['name'] as String,
+          email: columnMap['email'] as String,
+          createdAt: columnMap['created_at'] as DateTime,
+          updatedAt: columnMap['updated_at'] as DateTime,
+          avatarUrl: columnMap['avatar_url'] as String?);
     } on StateError catch (e, st) {
-      throw CRSException(CRSExceptionType.USER_NOT_FOUND, 'Could not find user with id $id', e, st);
+      throw CRSException(CRSExceptionType.USER_NOT_FOUND,
+          'Could not find user with id $id', e, st);
     }
   }
 
@@ -441,7 +440,8 @@ LIMIT 1
           language: columnMap['package_language'] as String,
           created: columnMap['package_created_at'] as DateTime,
           updated: columnMap['package_updated_at'] as DateTime,
-          vcs: VCS.fromString((columnMap['package_vcs'] as UndecodedBytes).asString),
+          vcs: VCS.fromString(
+              (columnMap['package_vcs'] as UndecodedBytes).asString),
           vcsUrl: columnMap['package_vcs_url'] != null
               ? Uri.parse(columnMap['package_vcs_url'] as String)
               : null,
@@ -449,7 +449,8 @@ LIMIT 1
           description: columnMap['package_description'] as String?,
           license: columnMap['package_license'] as String?),
       version: version.toString(),
-      versionType: VersionType.fromString((columnMap['version_type'] as UndecodedBytes).asString),
+      versionType: VersionType.fromString(
+          (columnMap['version_type'] as UndecodedBytes).asString),
       created: columnMap['created_at'] as DateTime,
       info: columnMap['info'] as Map<String, dynamic>,
       env: columnMap['env'] as Map<String, String>,
@@ -536,9 +537,7 @@ LEFT JOIN users u ON p.author_id = u.id
 WHERE u.id = @userId
 '''));
     }
-    final result = _statements['getPackagesForUser']!.run({
-      'userId': id
-    });
+    final result = _statements['getPackagesForUser']!.run({'userId': id});
 
     yield* Stream.fromFuture(result)
         .asyncExpand((e) => Stream.fromIterable(e.map((row) {
@@ -558,7 +557,8 @@ WHERE u.id = @userId
                   language: columnMap['language'] as String,
                   updated: columnMap['updated_at'] as DateTime,
                   created: columnMap['created_at'] as DateTime,
-                  vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+                  vcs: VCS.fromString(
+                      (columnMap['vcs'] as UndecodedBytes).asString),
                   archive: Uri.directory(columnMap['archive'] as String),
                   description: columnMap['description'] as String?,
                   license: columnMap['license'] as String?);
@@ -596,7 +596,8 @@ LEFT JOIN users u ON p.author_id = u.id
                   language: columnMap['language'] as String,
                   updated: columnMap['updated_at'] as DateTime,
                   created: columnMap['created_at'] as DateTime,
-                  vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+                  vcs: VCS.fromString(
+                      (columnMap['vcs'] as UndecodedBytes).asString),
                   archive: Uri.directory(columnMap['archive'] as String),
                   description: columnMap['description'] as String?,
                   license: columnMap['license'] as String?);
@@ -672,10 +673,10 @@ FROM plugins p
           description: columnMap['description'] as String?,
           language: columnMap['language'] as String,
           archive: Uri.file(columnMap['archive'] as String),
-          archiveType:
-              PluginArchiveType.fromString((columnMap['archive_type'] as UndecodedBytes).asString),
-          sourceType:
-              PluginSourceType.fromString((columnMap['source_type'] as UndecodedBytes).asString),
+          archiveType: PluginArchiveType.fromString(
+              (columnMap['archive_type'] as UndecodedBytes).asString),
+          sourceType: PluginSourceType.fromString(
+              (columnMap['source_type'] as UndecodedBytes).asString),
           url: (columnMap['url'] as String?) == null
               ? null
               : Uri.parse(columnMap['url']),
@@ -883,7 +884,8 @@ FROM plugins p
 
       // validate if expired or not
       final expiresAt = row['expires_at'] as DateTime;
-      var status = TaskStatus.fromString((row['status'] as UndecodedBytes).asString);
+      var status =
+          TaskStatus.fromString((row['status'] as UndecodedBytes).asString);
       if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending) {
         status = TaskStatus.expired;
       } else if (newStatus != null) status = newStatus;
@@ -902,7 +904,8 @@ FROM plugins p
         id: columnMap['id'] as String,
         sessionId: sessionId,
         deviceId: columnMap['device_id'] as String,
-        status: TaskStatus.fromString((columnMap['status'] as UndecodedBytes).asString),
+        status: TaskStatus.fromString(
+            (columnMap['status'] as UndecodedBytes).asString),
         authorizedAt: columnMap['authorized_at'] as DateTime,
         startedAt: columnMap['started_at'] as DateTime,
         expiresAt: columnMap['expires_at'] as DateTime,
@@ -923,71 +926,73 @@ FROM plugins p
 
     try {
       final result = await _pool.runTx((session) async {
-      final String hash;
-      // get current status of session
-      final rs = await session.execute(
-          r'''SELECT user_id, device_id FROM authorization_sessions WHERE session_id = $1''',
-          parameters: [sessionId]);
+        final String hash;
+        // get current status of session
+        final rs = await session.execute(
+            r'''SELECT user_id, device_id FROM authorization_sessions WHERE session_id = $1''',
+            parameters: [sessionId]);
 
-      final row = rs.first.toColumnMap();
+        final row = rs.first.toColumnMap();
 
-      // set access token
-      // for the most part, logging in would require making a new access token, but what would happen to other devices?
+        // set access token
+        // for the most part, logging in would require making a new access token, but what would happen to other devices?
 
-      final userInfoQuery = await session.execute(
-          r'''SELECT name, email FROM users WHERE id = $1''',
-          parameters: [row['user_id'] as String]);
-      final userInfo = userInfoQuery.first.toColumnMap();
+        final userInfoQuery = await session.execute(
+            r'''SELECT name, email FROM users WHERE id = $1''',
+            parameters: [row['user_id'] as String]);
+        final userInfo = userInfoQuery.first.toColumnMap();
 
-      // generate new token
-      final (key: key, hash: accessTokenHash) = auth.createAccessTokenForUser(
-        name: userInfo['name'],
-        email: userInfo['email'],
-        expiresAt: accessTokenExpiresAt,
-      );
-      token = key;
-      hash = accessTokenHash;
+        // generate new token
+        final (key: key, hash: accessTokenHash) = auth.createAccessTokenForUser(
+          name: userInfo['name'],
+          email: userInfo['email'],
+          expiresAt: accessTokenExpiresAt,
+        );
+        token = key;
+        hash = accessTokenHash;
 
-      final _ = await _pool.execute(r'''
+        final _ = await _pool.execute(r'''
 INSERT INTO access_tokens (user_id, hash, token_type, device_id, expires_at)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING *''', parameters: [
-        row['user_id'] as String,
-        accessTokenHash,
-        AccessTokenType.device.name,
-        row['device_id'] as String,
-        accessTokenExpiresAt
-      ]);
+          row['user_id'] as String,
+          accessTokenHash,
+          AccessTokenType.device.name,
+          row['device_id'] as String,
+          accessTokenExpiresAt
+        ]);
 
-      return await session.execute(r'''
+        return await session.execute(r'''
         UPDATE authorization_sessions
         SET access_token = $1, authorized_at = now()
         WHERE session_id = $2
         RETURNING *
       ''', parameters: [hash, sessionId]);
-    });
+      });
 
-    final columnMap = result.first.toColumnMap();
+      final columnMap = result.first.toColumnMap();
 
-    print(columnMap);
+      print(columnMap);
 
-    return (
-      session: AuthorizationSession(
-          id: columnMap['id'] as String,
-          sessionId: sessionId,
-          deviceId: columnMap['device_id'] as String,
-          status: TaskStatus.fromString((columnMap['status'] as UndecodedBytes).asString),
-          authorizedAt: columnMap['authorized_at'] as DateTime,
-          startedAt: columnMap['started_at'] as DateTime,
-          expiresAt: columnMap['expires_at'] as DateTime,
-          userId: columnMap['user_id'] as String,
-          accessToken: (token ?? columnMap['access_token']) as String,
-          code: columnMap['code'] as String),
-      token: (token ?? columnMap['access_token']) as String,
-      tokenExpiration: accessTokenExpiresAt
-    );
+      return (
+        session: AuthorizationSession(
+            id: columnMap['id'] as String,
+            sessionId: sessionId,
+            deviceId: columnMap['device_id'] as String,
+            status: TaskStatus.fromString(
+                (columnMap['status'] as UndecodedBytes).asString),
+            authorizedAt: columnMap['authorized_at'] as DateTime,
+            startedAt: columnMap['started_at'] as DateTime,
+            expiresAt: columnMap['expires_at'] as DateTime,
+            userId: columnMap['user_id'] as String,
+            accessToken: (token ?? columnMap['access_token']) as String,
+            code: columnMap['code'] as String),
+        token: (token ?? columnMap['access_token']) as String,
+        tokenExpiration: accessTokenExpiresAt
+      );
     } on StateError catch (e, st) {
-      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND, 'The given item could not be found', e, st);
+      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND,
+          'The given item could not be found', e, st);
     }
   }
 
@@ -996,8 +1001,10 @@ RETURNING *''', parameters: [
   Future<AuthorizationSession> createNewAuthSession(
       {required String deviceId}) async {
     var dateTime = DateTime.now();
-    final enc = sha256.convert(utf8.encode(deviceId + dateTime.toIso8601String())).toString();
-    
+    final enc = sha256
+        .convert(utf8.encode(deviceId + dateTime.toIso8601String()))
+        .toString();
+
     final expiresAt = dateTime.add(Duration(hours: 1));
 
     final sessionId = enc.substring(0, 10);
@@ -1161,17 +1168,18 @@ WHERE session_id = @sessionId
       final columnMap = result.first.toColumnMap();
 
       return AuthorizationSession(
-        id: columnMap['id'] as String,
-        sessionId: sessionId,
-        userId: columnMap['user_id'] as String?,
-        authorizedAt: columnMap['authorized_at'] as DateTime?,
-        startedAt: columnMap['started_at'] as DateTime,
-        expiresAt: columnMap['expires_at'] as DateTime,
-        deviceId: columnMap['device_id'] as String,
-        code: columnMap['code'] as String,
-        accessToken: columnMap['access_token'] as String?);
+          id: columnMap['id'] as String,
+          sessionId: sessionId,
+          userId: columnMap['user_id'] as String?,
+          authorizedAt: columnMap['authorized_at'] as DateTime?,
+          startedAt: columnMap['started_at'] as DateTime,
+          expiresAt: columnMap['expires_at'] as DateTime,
+          deviceId: columnMap['device_id'] as String,
+          code: columnMap['code'] as String,
+          accessToken: columnMap['access_token'] as String?);
     } on StateError catch (e, st) {
-      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND, 'The auth session with id: $sessionId cannot be found', e, st);
+      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND,
+          'The auth session with id: $sessionId cannot be found', e, st);
     }
   }
 
@@ -1217,7 +1225,8 @@ RETURNING *
 
     return PublishingTask(
         id: columnMap['id'] as String,
-        status: TaskStatus.fromString((columnMap['status'] as UndecodedBytes).asString),
+        status: TaskStatus.fromString(
+            (columnMap['status'] as UndecodedBytes).asString),
         name: name,
         scope: scope,
         user: user.id,
@@ -1228,7 +1237,8 @@ RETURNING *
         configMap: configData,
         metadata: metadata ?? {},
         env: env ?? {},
-        vcs: vcs ?? VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+        vcs: vcs ??
+            VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
         vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
         createdAt: columnMap['created_at'] as DateTime,
         updatedAt: columnMap['updated_at'] as DateTime,
@@ -1350,7 +1360,8 @@ WHERE id = @id
           id: columnMap['id'] as String,
           name: columnMap['name'] as String,
           scope: columnMap['scope'] as String?,
-          status: TaskStatus.fromString((columnMap['status'] as UndecodedBytes).asString),
+          status: TaskStatus.fromString(
+              (columnMap['status'] as UndecodedBytes).asString),
           user: columnMap['user_id'] as String,
           version: columnMap['version'] as String,
           $new: columnMap['new'] as bool,
@@ -1374,7 +1385,8 @@ WHERE id = @id
   FutureOr<PublishingTask> updatePublishingTaskStatus(String id,
       {required TaskStatus status}) async {
     if (_statements['updatePublishingTaskStatus'] == null) {
-      _statements['updatePublishingTaskStatus'] = await _pool.prepare(Sql.named('''
+      _statements['updatePublishingTaskStatus'] =
+          await _pool.prepare(Sql.named('''
 UPDATE package_publishing_tasks
 SET status = @status
 WHERE id = @id
@@ -1392,7 +1404,8 @@ RETURNING *
         id: columnMap['id'] as String,
         name: columnMap['name'] as String,
         scope: columnMap['scope'] as String?,
-        status: TaskStatus.fromString((columnMap['status'] as UndecodedBytes).asString),
+        status: TaskStatus.fromString(
+            (columnMap['status'] as UndecodedBytes).asString),
         user: columnMap['user_id'] as String,
         version: columnMap['version'] as String,
         $new: columnMap['new'] as bool,
@@ -1455,8 +1468,8 @@ WHERE a.hash = @accessToken'''),
 
     // if a token type is presented, validate the token type
     if (tokenType != null) {
-      final targetTokenType =
-          AccessTokenType.fromString((columnMap['token_type'] as UndecodedBytes).asString);
+      final targetTokenType = AccessTokenType.fromString(
+          (columnMap['token_type'] as UndecodedBytes).asString);
       if (targetTokenType != tokenType) {
         throw UnauthorizedException(
             'The device wanting to access with this access code is not authorized',
