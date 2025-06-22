@@ -1,7 +1,7 @@
 import { test } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { generateAuthConfig, nodeMailerCode } from '../lib/src/js/gen/auth';
+import { generateAuthConfig, mlc, nodeMailerCode } from '../lib/src/js/gen/auth';
 
 const specDir = './test/specs';
 

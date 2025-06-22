@@ -3,7 +3,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const { data: session } = await authClient.useSession(useFetch);
   if (!session.value) {
     // navigate
-    return navigateTo("/login");
+    return navigateTo({
+      path: "/login",
+      query: {
+        redirect: to.fullPath
+      }
+    });
   }
-  return navigateTo(to);
 });

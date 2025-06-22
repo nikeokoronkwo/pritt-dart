@@ -283,7 +283,8 @@ function generateAuthExport(
                 t.identifier('request'),
               ],
               // magicLinkCode() as t.BlockStatement,
-              t.blockStatement(magicLinkCode()),
+              // t.blockStatement(magicLinkCode()),
+              mlc,
               true,
             ),
           ),
@@ -460,6 +461,16 @@ function generateAuthExport(
         ),
       ]),
     ),
+    // user hooks for db
+    t.objectProperty(t.identifier('databaseHooks'), t.objectExpression([
+      t.objectProperty(t.identifier('user'), t.objectExpression([
+        t.objectProperty(t.identifier('create'), t.objectExpression([
+          t.objectMethod('method', t.identifier('before'), [
+            t.identifier('user'), t.identifier('context')
+          ], t.blockStatement(databaseHookCode()), undefined, undefined, true)
+        ]))
+      ]))
+    ])),
     // plugins
     t.objectProperty(t.identifier('plugins'), t.arrayExpression(authPlugins)),
   );
@@ -496,10 +507,48 @@ export const nodeMailerCode = t.variableDeclaration('const', [
   )
 ])
 
-// process.env.SMTP_PORT ?? '587'
+export const mlc = t.blockStatement([
+  t.expressionStatement(t.awaitExpression(t.callExpression(t.identifier('transporter.verify'), []))),
+  t.variableDeclaration('const', [
+    t.variableDeclarator(
+      t.identifier('info'),
+      t.awaitExpression(
+        t.callExpression(
+          t.identifier('transporter.sendMail'), 
+          [t.objectExpression([
+            t.objectProperty(t.identifier('from'), t.logicalExpression('??', processEnvExpression('SMTP_EMAIL'), processEnvExpression('SMTP_USER'))),
+            t.objectProperty(t.identifier('to'), t.identifier('email')),
+            // TODO: Subject and Email references
+            t.objectProperty(t.identifier('subject'), t.stringLiteral('Pritt: Verify Email Address')),
+            // For now it is: `We received a login request from you. Verify this login request by using <a href="${url}" target="_blank">this link</a>`
+            t.objectProperty(t.identifier('html'), t.templateLiteral([
+              t.templateElement({
+                raw: `We received a login request from you. Verify this login request by using <a href="`
+              }), 
+              t.templateElement({
+                raw: `" target="_blank">this link</a>`
+              }), 
+            ], [
+              t.identifier('url')
+            ]))
+          ])]
+        )
+      )
+    )
+  ])
+])
 
-const magicLinkCode = template(`
-    // code...
-    const o = 9;
-    const f = 9;
+const databaseHookCode = template(`
+  const [u] = await db.insert(users).values({
+    id: nanoid(),
+    name: user.name,
+    email: user.email,
+  }).returning();
+
+  return {
+    data: {
+      ...user,
+      user_id: u.id
+    }
+  }
 `);
