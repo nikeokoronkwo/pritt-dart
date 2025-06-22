@@ -54,7 +54,6 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       required String accessKey,
       required String secretKey}) async {
 
-    print('$accessKey $secretKey');
     s3 = S3(
       region: region,
       credentials:
@@ -75,19 +74,19 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     // check if needed buckets already exist
     // TODO: Might be lighter work to do HEAD work instead: s3.headBucket
     bool recallListBuckets = false;
-    if (s3Buckets.any((b) => b.name == 'pritt-packages')) {
+    if (!s3Buckets.any((b) => b.name == 'pritt-packages')) {
       recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-packages',
       );
     }
-    if (s3Buckets.any((b) => b.name == 'pritt-publishing-archives')) {
+    if (!s3Buckets.any((b) => b.name == 'pritt-publishing-archives')) {
       recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-publishing-archives',
       );
     }
-    if (s3Buckets.any((b) => b.name == 'pritt-adapters')) {
+    if (!s3Buckets.any((b) => b.name == 'pritt-adapters')) {
       recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-adapters',
@@ -95,9 +94,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     }
 
     // lets not call this whenever, only when needed
-    s3Buckets = recallListBuckets
-        ? ((await s3!.listBuckets()).buckets ?? s3Buckets)
-        : s3Buckets;
+    s3Buckets = (await s3!.listBuckets()).buckets ?? [];
 
     // get buckets
     final s3PkgBucket = s3Buckets.firstWhere((b) => b.name == 'pritt-packages');

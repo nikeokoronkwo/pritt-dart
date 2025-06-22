@@ -66,7 +66,13 @@ class LoginCommand extends PrittCommand {
         throw UsageException("'client-url' option must be valid URL", usage);
       }
     } else {
-      clientUrl = mainPrittInstance;
+      if (url == mainPrittApiUrl.toString()) {
+        clientUrl = mainPrittInstance;
+      } else {
+        clientUrl = url;
+        final uri = Uri.parse(url);
+        url = uri.replace(host: 'api.${uri.host}').toString();
+      }
     }
 
     final client = PrittClient(url: url);
@@ -74,6 +80,7 @@ class LoginCommand extends PrittCommand {
     try {
       // check if user is logged in
       var userCredentials = await UserCredentials.fetch();
+      print(userCredentials);
 
       if (userCredentials == null ||
           userCredentials.isExpired ||
@@ -92,6 +99,11 @@ class LoginCommand extends PrittCommand {
 
       // display user log in info
       logger.fine('Logged in as: ${user.name}');
+      if (user.name == '') {
+        logger.warn('Warning: Your name seems to be empty. Try logging into ${clientUrl == mainPrittInstance ? 'Pritt' : 'your Pritt instance'} on the web and update your name');
+      }
+
+      exit(0);
     } on ApiException catch (e) {
       logger.describe(e);
       exit(1);

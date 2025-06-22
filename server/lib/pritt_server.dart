@@ -92,7 +92,7 @@ Handler createRouter() {
   // the main handler
   /// TODO: We can improve the performance a bit more:
   /// We have two request handlers here, but we only need one.
-  /// Rather than cascading between, we can run the two requests in parallel and set priorities
+  /// Rather than cascading between, we can run the two requests (adapter and preflight+server) in parallel and set priorities
   /// When both finish (the adapter resolver) and the server handler, then the one that is successful gets passed down
   ///
   /// The performance need not be extremely much, so we can (and probably should) use Dart Isolates.
@@ -105,7 +105,10 @@ Handler createRouter() {
   ///
   /// This will be very helpful in DS, where the `vm_isolates` preset may need some message passing,
   /// However, this means that the `Event` object will no longer be standard/based on Shelf [Request]
-  final cascade = Cascade().add(adapterHandler(crs)).add(serverHandler());
+  final cascade = Cascade()
+    .add(adapterHandler(crs))
+    .add(preFlightHandler())
+    .add(serverHandler());
 
   return cascade.handler;
 }

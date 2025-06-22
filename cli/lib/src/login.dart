@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:io/ansi.dart';
 import 'package:pritt_common/interface.dart';
 
 import 'client.dart';
@@ -25,10 +26,12 @@ Future<UserCredentials> loginUser(
   final expiresDate = DateTime.parse(authRequest.token_expires);
 
   // present auth request
+  logger.fine('Login Attempt!');
   logger.stdout(
-      'You can complete logging in using this URL: ${Uri.parse(clientUrl).replace(path: 'auth', queryParameters: {
+      'You can complete logging in using this URL: ${styleUnderlined.wrap(Uri.parse(clientUrl).replace(path: 'auth', queryParameters: {
         'id': authRequest.token
-      })}');
+      }).toString())}');
+  logger.stdout('Enter the given code: ${wrapWith(authRequest.code, [styleBold])}');
   logger.info(
       'NOTE: This token expires at ${_getTime(expiresDate.toLocal(), verbose: logger is VerboseLogger)} (${(expiresDate.isUtc ? expiresDate : expiresDate.toUtc()).hour.toString().padLeft(2, '0')}:${(expiresDate.isUtc ? expiresDate : expiresDate.toUtc()).minute.toString().padLeft(2, '0')} UTC)');
 
@@ -40,16 +43,8 @@ Future<UserCredentials> loginUser(
   while (authPollStatus == PollStatus.pending) {
     final authStatus = await client.getAuthStatus(id: authRequest.token);
 
-    switch (authStatus.status) {
-      case PollStatus.fail:
-      case PollStatus.error:
-        authPollResponse = authStatus.response ?? {};
-        authPollStatus = authStatus.status;
-        break;
-      default:
-        authPollStatus = authStatus.status;
-        break;
-    }
+    authPollStatus = authStatus.status;
+    authPollResponse = authStatus.response ?? {};
 
     // sleep for a while
     sleep(Duration(milliseconds: 1500));

@@ -34,21 +34,17 @@ final handler = defineRequestHandler((event) async {
           common.AuthPollResponse(status: common.PollStatus.success, response: {
         'id': userId,
         'access_token': accessToken,
-        'access_token_expires_at': accessTokenExpiresAt
+        'access_token_expires_at': accessTokenExpiresAt.toIso8601String()
       });
 
       return resp.toJson();
     case TaskStatus.fail:
-      // TODO: Handle this case.
-      throw UnimplementedError();
+      return common.AuthPollResponse(status: common.PollStatus.fail).toJson();
     case TaskStatus.expired:
-      // TODO: Handle this case.
-      throw UnimplementedError();
+      return common.AuthPollResponse(status: common.PollStatus.expired).toJson();
     case TaskStatus.error:
-      // TODO: Handle this case.
-      throw UnimplementedError();
+      return common.AuthPollResponse(status: common.PollStatus.error).toJson();
     default:
-      // TODO: Handle this case.
-      throw UnimplementedError();
+      return common.AuthPollResponse(status: common.PollStatus.pending).toJson();
   }
 });

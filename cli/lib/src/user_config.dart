@@ -100,6 +100,10 @@ class UserCredentials {
           id: id,
           deviceId: deviceId ?? await getDeviceId());
 
+      if (!(await _file.parent.exists())) {
+        await _file.parent.create(recursive: true);
+      }
+
       await _file.writeAsString(json.encode(credentialsObject.toJson()));
 
       return credentialsObject;
