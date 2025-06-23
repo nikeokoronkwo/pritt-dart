@@ -27,8 +27,8 @@ class PrittControllerManager {
 
   PrittController<T> makeController<T extends Config>(Handler<T> handler) {
     // create first
-    final configUnawareCtrl =
-        PrittConfigUnawareController(configLoader: handler.config);
+    final configUnawareCtrl = PrittConfigUnawareController(
+        configLoader: handler.config, client: apiClient);
 
     Future<T> converter(String contents) async {
       return await handler.onGetConfig(dir ?? p.current, configUnawareCtrl);
@@ -74,8 +74,7 @@ class PrittConfigUnawareController
           'The current adapter needs user credentials, but user not logged in');
     }
 
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+    return await client!.getCurrentUser();
   }
 
   @override

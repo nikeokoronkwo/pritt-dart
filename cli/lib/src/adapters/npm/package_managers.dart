@@ -125,7 +125,7 @@ enum NpmPackageManager {
       NpmPackageManager.npm => npmPM,
       NpmPackageManager.pnpm => pnpmPM,
       NpmPackageManager.yarn => yarnPM,
-      NpmPackageManager.bun => throw UnimplementedError("TODO: Implement bun"),
+      NpmPackageManager.bun => bunPM,
     };
   }
 }

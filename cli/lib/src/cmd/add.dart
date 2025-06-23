@@ -66,7 +66,7 @@ class AddCommand extends PrittCommand {
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getWorkspace(p.current,
+    var project = await getProject(p.current,
         config: argResults?['config'], client: prittClient);
     if (project.handlers.isEmpty) {
       logger.warn('Could not find a suitable handler for the given project.');

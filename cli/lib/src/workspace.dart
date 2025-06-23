@@ -148,7 +148,7 @@ class Project {
 }
 
 /// Get the current workspace information for the project being worked on
-Future<Project> getWorkspace(String directory,
+Future<Project> getProject(String directory,
     {String? config, PrittClient? client}) async {
   final dir = Directory(directory);
   // get basic workspace information
@@ -174,9 +174,11 @@ Future<Project> getWorkspace(String directory,
   for (final h in resolvedHandlers) {
     // add ignores
     if (h.ignore != null) {
-      final ignoreContents = h.ignore!
-          .load(await File(p.join(directory, h.ignoreFile)).readAsString());
-      ignoreFiles.addAll(ignoreContents);
+      final ignoreFile = File(p.join(directory, h.ignoreFile));
+      if (await ignoreFile.exists()) {
+        final ignoreContents = h.ignore!.load(await ignoreFile.readAsString());
+        ignoreFiles.addAll(ignoreContents);
+      }
     }
   }
 
@@ -193,7 +195,7 @@ Future<Project> getWorkspace(String directory,
 Future<PrittConfig?> readPrittConfig(String dir, String? config) async {
   final File configFile = File(config ?? p.join(dir, 'pritt.yaml'));
 
-  if (await configFile.exists()) return null;
+  if (!(await configFile.exists())) return null;
 
   final configContents = await configFile.readAsString();
   return PrittConfig.fromJson(jsonDecode(jsonEncode(loadYaml(configContents))));

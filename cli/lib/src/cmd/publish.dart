@@ -105,7 +105,7 @@ class PublishCommand extends PrittCommand {
 
     // 0. PROJECT SETUP
     logger.info('Going through project...');
-    var project = await getWorkspace(p.current,
+    var project = await getProject(p.current,
         config: argResults?['config'], client: client);
 
     // check for a handler to use

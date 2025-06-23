@@ -236,15 +236,49 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<GetPackagesResponse> getPackages({String? index, String? user}) {
-    // TODO: implement getPackages
-    throw UnimplementedError();
+  FutureOr<GetPackagesResponse> getPackages(
+      {String? index, String? user}) async {
+    final response = await requestBasic(
+        '/api/packages', Method.GET, {'user': user, 'index': index}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return GetPackagesResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(tryDecode(response.body)));
+      case 404:
+        throw ApiException(NotFoundError.fromJson(tryDecode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
   }
 
   @override
   FutureOr<GetUserResponse> getUserById({required String id}) async {
     final response = await requestBasic(
         '/api/user/$id', Method.GET, {}, null, null,
+        headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return GetUserResponse.fromJson(json.decode(response.body));
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(tryDecode(response.body)));
+      case 404:
+        throw ApiException(NotFoundError.fromJson(tryDecode(response.body)),
+            statusCode: response.statusCode);
+      default:
+        throw ApiException(response.body, statusCode: response.statusCode);
+    }
+  }
+
+  @override
+  FutureOr<GetUserResponse> getCurrentUser() async {
+    final response = await requestBasic('/api/user', Method.GET, {}, null, null,
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -472,12 +506,6 @@ class PrittClient extends ApiClient implements PrittInterface {
       {required String name,
       required String version}) {
     // TODO: implement yankPackageVersionByName
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<GetUserResponse> getCurrentUser() {
-    // TODO: implement getCurrentUser
     throw UnimplementedError();
   }
 
