@@ -106,7 +106,6 @@ class Project {
   }
 
   Future<String> getConfig() async {
-    final controller = _manager.makeController(primaryHandler);
     return primaryHandler.config.load(
         await File(p.join(directory, primaryHandler.configFile))
             .readAsString());
@@ -223,17 +222,4 @@ Future<VCS> getVersionControlSystem(Directory directory) async {
     }
   }
   return VCS.other;
-}
-
-/// Configure the current project to make use of Pritt
-void configureWorkspace(String directory) {
-  // get the current project workspace
-
-  // get the language of the project
-
-  // check if user is logged in
-
-  // if not logged in,
-
-  // configure for project
 }
