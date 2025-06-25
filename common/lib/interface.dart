@@ -1372,7 +1372,7 @@ abstract interface class PrittInterface {
   });
 
   /// **Get the publishing status for a package**
-  /// GET /api/package/status
+  /// GET /api/publish/status
   ///
   /// Get the publishing status for a package being published, given the status id
   _i3.FutureOr<PublishPackageStatusResponse> getPackagePubStatus({String id});

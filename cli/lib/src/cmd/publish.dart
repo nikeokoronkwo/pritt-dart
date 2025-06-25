@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:args/command_runner.dart';
+import 'package:chunked_stream/chunked_stream.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_common/functions.dart';
@@ -15,6 +16,7 @@ import '../adapters/base/config.dart';
 import '../cli/base.dart';
 import '../cli/progress_bar.dart';
 import '../client.dart';
+import '../client/base.dart';
 import '../constants.dart';
 import '../login.dart';
 import '../user_config.dart';
@@ -170,6 +172,7 @@ class PublishCommand extends PrittCommand {
       final pkg = await (scope == null
           ? client.getPackageByName(name: name)
           : client.getPackageByNameWithScope(scope: scope, name: name));
+
       basePackage = pkg;
 
       final pkgVersion = await (scope == null
@@ -198,7 +201,8 @@ class PublishCommand extends PrittCommand {
     String pubId;
 
     // send publish initiate request to endpoint
-    if (basePackage != null) {
+    try {
+      if (basePackage == null) {
       // create package with version
       final pkgRequest = assemblePubRequest(
         name: name,
@@ -242,6 +246,14 @@ class PublishCommand extends PrittCommand {
       uploadUrl = pubInitResponse.url;
       pubId = pubInitResponse.queue.id;
     }
+    } on ApiException catch (e) {
+      logger.describe(e);
+      exit(1);
+    } catch (e, _) {
+      logger.stdout('An unknown error occured while initiating publishing task');
+      logger.verbose(e);
+      exit(2);
+    }
 
     // given url and stuff, lets zip up and upload
     logger.info('Zipping Up Package...');
@@ -260,13 +272,16 @@ class PublishCommand extends PrittCommand {
 
     final uploadCompleter = Completer<void>();
 
-    final Stream<Uint8List> tarballStream = ByteStream.fromBytes(tarball)
+    final Stream<Uint8List> tarballStream = asChunkedStream(16, Stream.fromIterable(tarball))
+        .asBroadcastStream()
         .transform(StreamTransformer.fromHandlers(handleData: (chunk, sink) {
       sink.add(Uint8List.fromList(chunk));
       bytesUploaded += chunk.length;
       progressBar.tick(bytesUploaded, contentLength);
+      sleep(Duration(milliseconds: 10));
     }, handleDone: (sink) async {
       sink.close();
+      sleep(Duration(milliseconds: 100));
       progressBar.end();
       uploadCompleter.complete();
     }, handleError: (e, st, sink) {
@@ -278,20 +293,34 @@ class PublishCommand extends PrittCommand {
     // upload
     if (uploadUrl != null) {
       // PUT
-      await client.client.put(Uri.parse(uploadUrl), headers: {
-        HttpHeaders.contentTypeHeader: 'application/gzip',
-        HttpHeaders.authorizationHeader: 'Bearer ${userCredentials.accessToken}'
-      });
+      final request = StreamedRequest('PUT', Uri.parse(uploadUrl));
+      request.headers[HttpHeaders.contentTypeHeader] = 'application/gzip';
+      request.headers[HttpHeaders.authorizationHeader] = 'Bearer ${userCredentials.accessToken}';
+      request.contentLength = contentLength;
+      await for (final chunk in ByteStream.fromBytes(tarball)) {
+        request.sink.add(chunk);
+      }
+      await request.sink.close();
+      final response = await client.client.send(request);
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        logger.severe('Failed to upload package: ${response.statusCode}');
+        exit(1);
+      }
+      // await uploadCompleter.future;
     } else {
-      final uploadResult = await client.uploadPackageWithToken(
+      try {
+        final _ = await client.uploadPackageWithToken(
           common.StreamedContent(
               archivePath(name, version: version, scope: scope),
               tarballStream,
               contentLength),
           id: pubId);
+      } on ApiException catch (e) {
+        logger.describe(e);
+        exit(1);
+      }
+      
     }
-
-    await uploadCompleter.future;
 
     // while endpoint is being listened to: wait
     logger.stdout('Waiting for publishing to finish...');
@@ -338,19 +367,26 @@ class PublishCommand extends PrittCommand {
 
   Future waitForPublishingQueueToComplete(PrittClient client, String pubID,
       {Duration? pollInterval}) async {
-    var response = await client.getPackagePubStatus(id: pubID);
-    logger.stdout('Publishing Status: ${response.status.value}\r');
+    var response;
+    try {
+      response = await client.getPackagePubStatus(id: pubID);
+      _clearAndWrite('Publishing Status: ${response.status.value}');
+    } on ApiException catch (e) {
+      logger.describe(e);
+      exit(1);
+    }
     while (response.status != common.PublishingStatus.success &&
         response.status != common.PublishingStatus.error) {
       await Future.delayed(pollInterval ?? Duration(milliseconds: 600),
           () async {
         response = await client.getPackagePubStatus(id: pubID);
-        logger.stdout('Publishing Status: ${response.status.value}\r');
+        _clearAndWrite('Publishing Status: ${response.status.value}');
       });
     }
 
     switch (response.status) {
       case common.PublishingStatus.success:
+      print('\n');
         // pub complete
         return;
       default:
@@ -361,6 +397,10 @@ class PublishCommand extends PrittCommand {
         exit(1);
     }
   }
+}
+
+void _clearAndWrite(String text) {
+  stdout.write('\r\x1B[2K$text');
 }
 
 common.PublishPackageRequest assemblePubRequest({

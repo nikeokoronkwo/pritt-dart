@@ -4,7 +4,8 @@ import 'package:pritt_common/interface.dart' as common;
 
 import '../../../../../pritt_server.dart';
 import '../../../../main/base/db/schema.dart';
-import '../../../../main/publishing_tasks.dart';
+import '../../../../main/publishing/interfaces.dart';
+import '../../../../main/publishing/tasks.dart';
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';
 
@@ -59,7 +60,7 @@ final handler = defineRequestHandler((event) async {
         env: body.env
             ?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
         vcs: body.vcs == null
-            ? null
+            ? VCS.other
             : switch (body.vcs!.name) {
                 common.VCS.git => VCS.git,
                 common.VCS.svn => VCS.svn,
@@ -69,8 +70,12 @@ final handler = defineRequestHandler((event) async {
               },
         vcsUrl: body.vcs?.url);
 
+    print(pubTask.toJson());
+
     // add package queue task
     publishingTaskRunner.addTask(PubTaskItem(pubTask.id));
+
+    print(publishingTaskRunner.queue);
 
     // TODO: Create upload URL for S3
 

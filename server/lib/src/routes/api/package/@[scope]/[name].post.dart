@@ -5,7 +5,8 @@ import 'package:pritt_common/interface.dart' as common;
 
 import '../../../../../pritt_server.dart';
 import '../../../../main/base/db/schema.dart';
-import '../../../../main/publishing_tasks.dart';
+import '../../../../main/publishing/interfaces.dart';
+import '../../../../main/publishing/tasks.dart';
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';
 

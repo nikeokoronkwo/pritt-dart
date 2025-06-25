@@ -88,8 +88,9 @@ class Worker<P, R> {
     ReceivePort receivePort,
     SendPort sendPort,
     FutureOr<R> Function(P) work,
-  ) {
-    receivePort.listen((message) async {
+  ) async {
+    await for (final message in receivePort) {
+      // receivePort.listen((message) async {
       if (message is WorkerTask) {
         switch (message) {
           case WorkerTask.shutdown:
@@ -99,12 +100,15 @@ class Worker<P, R> {
       }
       final (int id, P param) = message as (int, P);
       try {
-        final data = await work(param);
+        /// TODO: We need to handle errors. They are leaking out of this despite try/catch, handleError, and Future.sync
+        ///  We might consider running this call zoned.
+        final data = await Future.sync(() => work(param));
         sendPort.send((id, data));
       } catch (e, stackTrace) {
         sendPort.send((id, RemoteError(e.toString(), stackTrace.toString())));
       }
-    });
+    // });
+    }
   }
 
   static void Function(SendPort) _startRemoteIsolate<P, R>(

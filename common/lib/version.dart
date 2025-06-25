@@ -75,7 +75,7 @@ class Version implements Comparable<Version> {
   List<String> _splitPrerelease(String prerelease) => prerelease.split('.');
 
   VersionType get versionType {
-    if (isPreRelease()) {
+    if (!isPreRelease()) {
       return VersionType.major;
     } else {
       if (preRelease!.startsWith('beta')) return VersionType.beta;
@@ -86,7 +86,7 @@ class Version implements Comparable<Version> {
       if (preRelease!.startsWith('canary')) return VersionType.canary;
       if (preRelease!.startsWith('next')) return VersionType.next;
     }
-    return VersionType.other;
+    return VersionType.major;
   }
 
   @override

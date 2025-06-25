@@ -32,13 +32,14 @@ final handler = defineRequestHandler((event) async {
             name: pubTask.name,
             version: pubTask.version,
             scope: pubTask.scope,
-            // TODO: Describe the error in more detail
+            // TODO: Describe the error in more detail...
             error: pubTask.status == TaskStatus.fail
                 ? 'Publishing Task Failed'
                 : null)
         .toJson();
-  } catch (e) {
+  } catch (e, st) {
+    print('$e: $st');
     setResponseCode(event, 500);
-    return common.ServerError(error: 'Server Error').toJson();
+    return common.ServerError(error: 'Server').toJson();
   }
 });

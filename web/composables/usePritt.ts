@@ -36,7 +36,7 @@ export default function () {
 
   function getPublishingStatus(id: string) {
     return usePrittFetch<components["schemas"]["PublishPackageStatusResponse"]>(
-      "/api/package/status",
+      "/api/publish/status",
       {
         query: {
           id,

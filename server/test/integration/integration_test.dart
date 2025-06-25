@@ -121,9 +121,9 @@ void main() {
       expect([200, 400, 401, 404], contains(response.statusCode));
     });
 
-    test('GET /api/package/status returns 200', () async {
+    test('GET /api/publish/status returns 200', () async {
       final response =
-          await http.get(Uri.parse('http://localhost:8080/api/package/status'));
+          await http.get(Uri.parse('http://localhost:8080/api/publish/status'));
       expect(response.statusCode, 200);
     });
 

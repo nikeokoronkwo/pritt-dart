@@ -688,7 +688,7 @@ FROM plugins p
 
   @override
   FutureOr<Package> addContributorToPackage(
-      String name, User user, Privileges privileges,
+      String name, User user, List<Privileges> privileges,
       {String? scope}) {
     // TODO: implement addContributorToPackage
     throw UnimplementedError();
@@ -788,6 +788,7 @@ FROM plugins p
     throw UnimplementedError();
   }
 
+  // TODO: VCS Url
   @override
   FutureOr<Package> addNewPackage(
       {required String name,
@@ -797,11 +798,125 @@ FROM plugins p
       required User author,
       required String language,
       required VCS vcs,
-      Uri? archive,
-      Iterable<User>? contributors}) {
-    // TODO: implement addNewPackage
-    throw UnimplementedError();
+      String? vcsUrl,
+      String? license,
+      required Uri archive,
+      Iterable<User>? contributors}) async {
+    final id = Slugid.nice().toString();
+    try {
+      final result = await _pool.execute(r'''
+INSERT INTO packages (id, name, scope, version, description, author_id, language, vcs, vcs_url, archive, license)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+RETURNING *''', parameters: [
+        id,
+        name,
+        scope,
+        version,
+        description,
+        author.id,
+        language,
+        vcs.name,
+        vcsUrl,
+        archive.toFilePath(windows: false),
+        license
+      ]);
+
+      if ((contributors ?? []).isNotEmpty) {
+        await contributors
+            ?.map((c) async => await addContributorToPackage(
+                name, c, [Privileges.write, Privileges.read],
+                scope: scope))
+            .wait;
+      }
+
+      final columnMap = result.first.toColumnMap();
+
+      return Package(
+          id: id,
+          name: name,
+          scope: scope,
+          version: version,
+          description: description,
+          author: author,
+          language: language,
+          created: columnMap['created_at'] as DateTime,
+          archive: archive);
+    } catch (e, stack) {
+      throw CRSException(
+          CRSExceptionType.INCOMPATIBLE_PACKAGE, e.toString(), e, stack);
+    }
   }
+
+  // Brief workaround
+  FutureOr<PackageVersions> addNewVersionOfPackageGivenPkg(
+      {required Package pkg,
+      required String version,
+      VersionType? versionType,
+      required String hash,
+      required String signature,
+      required String integrity,
+      String? readme,
+      String? config,
+      String? configName,
+      Map<String, dynamic> info = const {},
+      Map<String, String> env = const {},
+      Map<String, dynamic> metadata = const {},
+      required Uri archive,
+      Iterable<String>? contributors}) async {
+        final sig = Signature(
+        publicKeyId: '', signature: signature, created: DateTime.now());
+    final result = await _pool.runTx((session) async {
+      // TODO: Get version type
+      final v = Version.parse(version);
+      final oldV = Version.parse(pkg.version);
+      final versionType = v.versionType;
+
+      if (v > oldV)
+        await session.execute(
+            Sql.named(
+                r'''UPDATE packages SET version = @version WHERE name = @name AND scope = @scope'''),
+            parameters: {'name': pkg.name, 'scope': pkg.scope, 'version': version});
+
+      return await session.execute(r'''
+INSERT INTO package_versions (package_id, version, version_type, readme, config, config_name, info, env, metadata, archive, hash, signatures, integrity)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+RETURNING *''', parameters: [
+        pkg.id,
+        version,
+        versionType.name,
+        readme,
+        config,
+        configName,
+        info,
+        env,
+        metadata,
+        archive.toFilePath(windows: false),
+        hash,
+        jsonEncode([sig.toJson()]),
+        integrity
+      ]);
+    });
+
+    final columnMap = result.first.toColumnMap();
+
+    return PackageVersions(
+      package: pkg,
+      version: version,
+      versionType: VersionType.fromString(
+          (columnMap['version_type'] as UndecodedBytes).asString),
+      created: columnMap['created_at'] as DateTime,
+      readme: readme,
+      config: config,
+      configName: configName,
+      info: info,
+      env: env,
+      metadata: metadata,
+      archive: archive,
+      hash: hash,
+      signatures: [sig],
+      integrity: integrity,
+    );
+      }
 
   @override
   FutureOr<PackageVersions> addNewVersionOfPackage(
@@ -822,10 +937,63 @@ FROM plugins p
       required User author,
       required String language,
       required VCS vcs,
-      Uri? archive,
-      Iterable<String>? contributors}) {
-    // TODO: implement addNewVersionOfPackage
-    throw UnimplementedError();
+      required Uri archive,
+      Iterable<String>? contributors}) async {
+    final sig = Signature(
+        publicKeyId: '', signature: signature, created: DateTime.now());
+    final p = await getPackage(name, language: language, scope: scope);
+    final result = await _pool.runTx((session) async {
+      // TODO: Get version type
+      final v = Version.parse(version);
+      final oldV = Version.parse(p.version);
+      final versionType = v.versionType;
+
+      if (v > oldV)
+        await session.execute(
+            Sql.named(
+                r'''UPDATE packages SET version = @version WHERE name = @name AND scope = @scope'''),
+            parameters: {'name': name, 'scope': scope, 'version': version});
+
+      return await session.execute(r'''
+INSERT INTO package_versions (package_id, version, version_type, readme, config, config_name, info, env, metadata, archive, hash, signatures, integrity)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+RETURNING *''', parameters: [
+        p.id,
+        version,
+        versionType.name,
+        readme,
+        config,
+        configName,
+        info,
+        env,
+        metadata,
+        archive.toFilePath(windows: false),
+        hash,
+        jsonEncode([sig.toJson()]),
+        integrity
+      ]);
+    });
+
+    final columnMap = result.first.toColumnMap();
+
+    return PackageVersions(
+      // TODO: Why should we have to make this call twice (three times in Postgres) when initing a package?
+      package: p,
+      version: version,
+      versionType: VersionType.fromString(
+          (columnMap['version_type'] as UndecodedBytes).asString),
+      created: columnMap['created_at'] as DateTime,
+      readme: readme,
+      config: config,
+      configName: configName,
+      info: info,
+      env: env,
+      metadata: metadata,
+      archive: archive,
+      hash: hash,
+      signatures: [sig],
+      integrity: integrity,
+    );
   }
 
   @override
@@ -971,8 +1139,6 @@ RETURNING *''', parameters: [
       });
 
       final columnMap = result.first.toColumnMap();
-
-      print(columnMap);
 
       return (
         session: AuthorizationSession(
@@ -1264,8 +1430,9 @@ RETURNING *
     task ??= await getPublishingTaskById(id);
 
     final author = await getUser(task.user);
-    final pkg = await addNewPackage(
-      name: task.name,
+
+    return await Future.sync(() => addNewPackage(
+      name: task!.name,
       scope: task.scope,
       version: task.version,
       description: description,
@@ -1273,13 +1440,10 @@ RETURNING *
       language: task.language,
       vcs: task.vcs,
       archive: archive,
-    );
-
-    final pkgVer = await addNewVersionOfPackage(
-        name: task.name,
-        scope: task.scope,
-        version: task.version,
-        description: description,
+    )).then((pkg) async {
+      final pkgVer = await addNewVersionOfPackageGivenPkg(
+        pkg: pkg,
+        version: task!.version,
         hash: hash,
         signature: signatures.firstOrNull?.signature ?? '',
         integrity: integrity,
@@ -1290,12 +1454,12 @@ RETURNING *
         env: task.env,
         contributors: contributorIds,
         metadata: task.configMap,
-        author: author,
-        language: task.language,
-        vcs: task.vcs,
         archive: archive);
 
-    return (pkg, pkgVer);
+        return (pkg, pkgVer);
+    });
+
+    
   }
 
   @override
@@ -1369,7 +1533,8 @@ WHERE id = @id
           config: columnMap['config'] as String,
           configMap: columnMap['config_map'],
           metadata: columnMap['metadata'],
-          env: columnMap['env'],
+          env: (columnMap['env'] as Map<String, dynamic>)
+              .map((k, v) => MapEntry(k, v is String ? v : v.toString())),
           vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
           vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
           createdAt: columnMap['created_at'] as DateTime,
@@ -1388,14 +1553,14 @@ WHERE id = @id
       _statements['updatePublishingTaskStatus'] =
           await _pool.prepare(Sql.named('''
 UPDATE package_publishing_tasks
-SET status = @status
+SET status = @status, updated_at = @updatedAt
 WHERE id = @id
 RETURNING *
 '''));
     }
 
     final result = await _statements['updatePublishingTaskStatus']!
-        .run({'status': status.name, 'id': id});
+        .run({'status': status.name, 'id': id, 'updatedAt': DateTime.now()});
 
     final columnMap = result.first.toColumnMap();
     final vcsUrl = columnMap['vcs_url'] as String?;
@@ -1413,7 +1578,8 @@ RETURNING *
         config: columnMap['config'] as String,
         configMap: columnMap['config_map'],
         metadata: columnMap['metadata'],
-        env: columnMap['env'],
+        env: (columnMap['env'] as Map<String, dynamic>)
+            .map((k, v) => MapEntry(k, v is String ? v : v.toString())),
         vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
         vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
         createdAt: columnMap['created_at'] as DateTime,

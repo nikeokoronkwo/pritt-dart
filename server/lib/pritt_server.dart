@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:shelf/shelf.dart';
 
 import 'adapter_handler.dart';
@@ -7,13 +8,16 @@ import 'server_handler.dart';
 import 'src/main/adapter/adapter_registry.dart';
 import 'src/main/base/db.dart';
 import 'src/main/base/storage.dart';
+import 'src/main/base/task_manager.dart';
 import 'src/main/crs/crs.dart';
+import 'src/main/publishing/tasks.dart';
 
-late CoreRegistryService crs;
+late final CoreRegistryService crs;
 
-late AdapterRegistry registry;
+late final AdapterRegistry registry;
 
-Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
+Future<void> startPrittServices(
+    {String? ofsUrl, String? dbUrl, bool customAdapters = true}) async {
   // Load environment variables for the S3 URL and database connection
   ofsUrl ??= Platform.environment['S3_URL'] ??
       'http://localhost:${Platform.environment['S3_LOCAL_PORT'] ?? '6007'}';
@@ -50,10 +54,14 @@ Future<void> startPrittServices({String? ofsUrl, String? dbUrl}) async {
     storage = await PrittStorage.connect(ofsUrl);
   }
 
-  registry = await AdapterRegistry.connect(
-      db: db, runnerUri: Uri.parse(Platform.environment['PRITT_RUNNER_URL']!));
-
   crs = await CoreRegistryService.connect(db: db, storage: storage);
+
+  if (customAdapters)
+    registry = await AdapterRegistry.connect(
+        db: db,
+        runnerUri: Uri.parse(Platform.environment['PRITT_RUNNER_URL']!));
+
+  publishingTaskRunner.start();
 }
 
 /// Loads credentials from the given [path].

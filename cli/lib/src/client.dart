@@ -305,7 +305,7 @@ class PrittClient extends ApiClient implements PrittInterface {
   FutureOr<PublishPackageResponse> publishPackage(PublishPackageRequest body,
       {required String name}) async {
     final response = await requestBasic(
-        '/api/package/$name', Method.POST, {}, null, body,
+        '/api/package/$name', Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -329,7 +329,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       {required String name,
       required String version}) async {
     final response = await requestBasic(
-        '/api/package/$name/$version', Method.POST, {}, null, body,
+        '/api/package/$name/$version', Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -354,7 +354,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       {required String scope,
       required String name}) async {
     final response = await requestBasic(
-        '/api/package/@$scope/$name', Method.POST, {}, null, body,
+        '/api/package/@$scope/$name', Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -379,7 +379,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       required String name,
       required String version}) async {
     final response = await requestBasic(
-        '/api/package/@$scope/$name/$version', Method.POST, {}, null, body,
+        '/api/package/@$scope/$name/$version', Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -409,29 +409,32 @@ class PrittClient extends ApiClient implements PrittInterface {
   Future<UploadPackageResponse> uploadPackageWithToken(StreamedContent body,
       {String? id}) async {
     assert(id != null, "ID must be non-null");
-    final response = await requestBasic(
+    final response = await requestStreamed(
         '/api/package/upload', Method.PUT, {'id': id}, null, body,
         headerParams: _prittHeaders);
+    
+    final responseBody = await response.stream.bytesToString();
 
     switch (response.statusCode) {
       case 200:
-        return UploadPackageResponse.fromJson(json.decode(response.body));
+      case 204:
+        return UploadPackageResponse.fromJson(responseBody.isNotEmpty ? json.decode(responseBody) : {});
       case 500:
         throw ApiException.internalServerError(
-            ServerError.fromJson(json.decode(response.body)));
+            ServerError.fromJson(json.decode(responseBody)));
       case 401:
         throw ApiException(
-            UnauthorizedError.fromJson(json.decode(response.body)),
+            UnauthorizedError.fromJson(json.decode(responseBody)),
             statusCode: response.statusCode);
       case 402:
         throw ApiException(
-            UnauthorizedError.fromJson(json.decode(response.body)),
+            UnauthorizedError.fromJson(json.decode(responseBody)),
             statusCode: response.statusCode);
       case 404:
-        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+        throw ApiException(NotFoundError.fromJson(json.decode(responseBody)),
             statusCode: response.statusCode);
       default:
-        throw ApiException(response.body, statusCode: response.statusCode);
+        throw ApiException(responseBody, statusCode: response.statusCode);
     }
   }
 
@@ -440,7 +443,7 @@ class PrittClient extends ApiClient implements PrittInterface {
       {String? id}) async {
     assert(id != null, "ID cannot be null");
     final response = await requestBasic(
-        '/api/package/status', Method.POST, {'id': id}, null, null,
+        '/api/publish/status', Method.POST, {'id': id}, null, null,
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {

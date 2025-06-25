@@ -289,11 +289,15 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   @override
   FutureOr createPubArchive(String path, Uint8List data,
       {String? contentType, Map<String, String>? metadata}) async {
+    print(
+        '|----------- CONTENT LENGTH: ${data.lengthInBytes} ----------------|');
+
     // Create the object in the bucket
     final upload = await s3Instance.putObject(
       bucket: publishingBucket.name ?? 'pritt-publishing-archives',
       key: path,
       body: data,
+      // contentLength: ,
       contentType: contentType,
     );
 
@@ -348,6 +352,9 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     final pkgStatus = await s3Instance.headObject(
         bucket: publishingBucket.name ?? 'pritt-publishing-archives',
         key: path);
+
+    print(
+        'Archive Details: ${pkgStatus.contentLength} ${pkgStatus.contentType} ${pkgStatus.lastModified} ${pkgStatus.metadata} ${pkgStatus}');
 
     return pkgStatus.metadata != null;
   }

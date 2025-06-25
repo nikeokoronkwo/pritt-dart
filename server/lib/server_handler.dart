@@ -23,14 +23,16 @@ import 'src/routes/api/package/[name]/[version].post.dart'
     as packageNameVersionPost;
 import 'src/routes/api/package/[name]/index.get.dart' as packageNameGet;
 import 'src/routes/api/package/[name]/index.post.dart' as packageNamePost;
-import 'src/routes/api/package/status.get.dart' as packageStatusGet;
 import 'src/routes/api/package/upload.put.dart' as packageUploadPut;
 import 'src/routes/api/packages.get.dart' as packagesGet;
+import 'src/routes/api/publish/status.post.dart' as publishStatusPost;
 import 'src/routes/api/user/[id].get.dart' as userIdGet;
+import 'src/routes/api/user/index.get.dart' as userGet;
 
 Handler serverHandler() {
   final app = Router()
     ..get('/', (req) => Response.ok('Active'))
+    ..get('/api/user', userGet.handler)
     ..get('/api/user/<id>', userIdGet.handler)
     ..get('/api/packages', packagesGet.handler)
     ..get('/api/package/<name>', packageNameGet.handler)
@@ -43,8 +45,8 @@ Handler serverHandler() {
         packageScopeNameVersionGet.handler)
     ..post('/api/package/@<scope>/<name>/<version>',
         packageScopeNameVersionPost.handler)
-    ..get('/api/package/status', packageStatusGet.handler)
     ..put('/api/package/upload', packageUploadPut.handler)
+    ..post('/api/publish/status', publishStatusPost.handler)
     ..get('/api/auth/new', authNewGet.handler)
     ..get('/api/auth/details/<id>', authDetailsIdGet.handler)
     ..post('/api/auth/status', authStatusPost.handler)
