@@ -1,7 +1,6 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -50,7 +49,7 @@ class ApiClient {
     Method method,
     QueryParams queryParams,
     String? hash,
-    Object body, {
+    Object? body, {
     String? contentType,
     Map<String, String>? headerParams,
   }) async {
@@ -115,7 +114,8 @@ class ApiClient {
       }
 
       if (streamResponse) {
-        final req = http.Request(method.name, uri);
+        final req = http.Request(method.name, uri)
+                      ..headers.addAll(headerParams);
         return await client.send(req);
       }
 

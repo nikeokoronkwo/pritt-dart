@@ -34,7 +34,7 @@ class Handler<T extends Config> {
   final Loader<String, String> config;
 
   /// The ignore file
-  final Loader<IgnoreFiles, String>? ignore;
+  final Loader<List<String>, String>? ignore;
 
   String get configFile => config.name;
 

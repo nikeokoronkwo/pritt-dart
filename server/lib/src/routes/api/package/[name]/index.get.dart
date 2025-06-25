@@ -15,7 +15,7 @@ final handler = defineRequestHandler((event) async {
 
   // check authorization
   var authHeader = getHeader(event, 'Authorization');
-  final isAuthorized = await checkAuthorization(authHeader) != null;
+  final isAuthorized = authHeader == null ? false : (await checkAuthorization(authHeader) != null);
 
   try {
     // get the package
@@ -124,9 +124,10 @@ final handler = defineRequestHandler((event) async {
     return resp.toJson();
 
     // if package not found, return 404
-  } on CRSException catch (e) {
+  } on CRSException catch (e, stack) {
     switch (e.type) {
       case CRSExceptionType.PACKAGE_NOT_FOUND:
+        print('${e.message} -- ${e.cause} : ${e.stackTrace} : \n$stack');
         setResponseCode(event, 404);
         return common.NotFoundError(
                 error: 'Package not found',
@@ -140,10 +141,11 @@ final handler = defineRequestHandler((event) async {
             .toJson();
       default:
         setResponseCode(event, 500);
-        return 'Internal server error';
+        return common.ServerError(error: e.message).toJson();
     }
-  } catch (e) {
+  } catch (e, stack) {
     setResponseCode(event, 500);
-    return 'Internal server error';
+    print('$e : $stack');
+    return common.ServerError(error: 'Internal Server Error').toJson();
   }
 });

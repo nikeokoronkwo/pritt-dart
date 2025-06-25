@@ -136,9 +136,31 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   @override
   FutureOr<StreamedContent> getPackageArchiveWithName(
-      {required String name, String? version}) {
-    // TODO: implement getPackageArchiveWithName
-    throw UnimplementedError();
+      {required String name, String? version}) async {
+    final response = await requestStreamed('/api/archive/package/$name', Method.GET, {'version': version}, null, null,
+    headerParams: _prittHeaders);
+
+    switch (response.statusCode) {
+      case 200:
+        return StreamedContent(name, response.stream, response.contentLength ?? 0);
+      case 403:
+        throw ApiException(
+          json.decode(await response.stream.bytesToString()) as Map<String, dynamic>,
+          statusCode: 403
+        );
+      case 404:
+        throw ApiException(NotFoundError.fromJson(json.decode(await response.stream.bytesToString())),
+            statusCode: response.statusCode);
+      case 500:
+        throw ApiException.internalServerError(
+            ServerError.fromJson(tryDecode(await response.stream.bytesToString())));
+      case 401:
+        throw ApiException(
+            UnauthorizedError.fromJson(json.decode(await response.stream.bytesToString())),
+            statusCode: 401);
+      default:
+        throw ApiException(await response.stream.bytesToString(), statusCode: response.statusCode);
+    }
   }
 
   @override
@@ -150,12 +172,12 @@ class PrittClient extends ApiClient implements PrittInterface {
 
     switch (response.statusCode) {
       case 200:
-        return GetPackageResponse.fromJson(json.decode(response.body));
+        return GetPackageResponse.fromJson(tryDecode(response.body));
       case 500:
         throw ApiException.internalServerError(
-            ServerError.fromJson(json.decode(response.body)));
+            ServerError.fromJson(tryDecode(response.body)));
       case 404:
-        throw ApiException(NotFoundError.fromJson(json.decode(response.body)),
+        throw ApiException(NotFoundError.fromJson(tryDecode(response.body)),
             statusCode: response.statusCode);
       default:
         throw ApiException(response.body, statusCode: response.statusCode);

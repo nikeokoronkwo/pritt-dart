@@ -16,12 +16,8 @@ final handler = defineRequestHandler((event) async {
 
     bool isAuthorized = false;
 
-    try {
-      var authHeader = getHeader(event, 'Authorization');
-      isAuthorized = await checkAuthorization(authHeader) != null;
-    } catch (e) {
-      // skip
-    }
+    var authHeader = getHeader(event, 'Authorization');
+    isAuthorized = authHeader == null ? false : (await checkAuthorization(authHeader) != null);
 
     return GetUserResponse(
             name: user.name,

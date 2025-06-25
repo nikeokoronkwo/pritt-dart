@@ -8,7 +8,7 @@ import '../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   try {
     var authHeader = getHeader(event, 'Authorization');
-    var user = await checkAuthorization(authHeader);
+    var user = authHeader == null ? null : await checkAuthorization(authHeader);
 
     if (user == null) {
       setResponseCode(event, 404);

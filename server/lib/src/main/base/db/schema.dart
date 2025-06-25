@@ -128,7 +128,7 @@ class PackageVersions {
 
   /// Environment information (runtime, package manager versions, etc)
   /// e.g npm, node
-  Map<String, String> env;
+  Map<String, dynamic> env;
 
   /// Metadata about the package
   ///

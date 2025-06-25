@@ -9,7 +9,7 @@ final handler = defineRequestHandler((event) async {
   final id = getQueryParams(event)['id'] as String;
 
   var authHeader = getHeader(event, 'Authorization');
-  final user = await checkAuthorization(authHeader);
+  var user = authHeader == null ? null : await checkAuthorization(authHeader);
 
   if (user == null) {
     setResponseCode(event, 401);

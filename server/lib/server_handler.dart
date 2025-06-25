@@ -6,6 +6,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 // TODO(nikeokoronkwo): Autogen this file
+import 'src/routes/api/archive/package/[name].get.dart' as archivePackageNameGet;
 import 'src/routes/api/auth/details/[id].get.dart' as authDetailsIdGet;
 import 'src/routes/api/auth/new.get.dart' as authNewGet;
 import 'src/routes/api/auth/status.post.dart' as authStatusPost;
@@ -34,6 +35,7 @@ Handler serverHandler() {
     ..get('/', (req) => Response.ok('Active'))
     ..get('/api/user', userGet.handler)
     ..get('/api/user/<id>', userIdGet.handler)
+    ..get('/api/archive/package/<name>', archivePackageNameGet.handler)
     ..get('/api/packages', packagesGet.handler)
     ..get('/api/package/<name>', packageNameGet.handler)
     ..post('/api/package/<name>', packageNamePost.handler)

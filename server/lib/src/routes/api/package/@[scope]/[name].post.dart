@@ -18,7 +18,7 @@ final handler = defineRequestHandler((event) async {
   try {
     // check if user is authenticated
     var authHeader = getHeader(event, 'Authorization');
-    final user = await checkAuthorization(authHeader);
+    var user = authHeader == null ? null : await checkAuthorization(authHeader);
 
     if (user == null) {
       setResponseCode(event, 401);

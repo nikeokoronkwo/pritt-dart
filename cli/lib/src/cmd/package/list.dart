@@ -76,7 +76,7 @@ class PackageListCommand extends PrittCommand {
 
       switch (format) {
         case OutputFormat.text:
-          listPackageInfo(pkgs.packages!);
+          logger.stdout(listPackageInfo(pkgs.packages!));
         case OutputFormat.csv:
           final jsonOutput = pkgs.packages!.map((p) => p.toJson());
           await File(argResults?['csv'] ?? 'results.csv')
@@ -86,6 +86,8 @@ class PackageListCommand extends PrittCommand {
           await File(argResults?['json'] ?? 'results.json')
               .writeAsString(jsonEncode(jsonOutput));
       }
+
+      exit(0);
     } on ClientException catch (e) {
       logger.severe(
           'Failed to connect to Pritt Instance at ${e.uri?.removeFragment().replace(

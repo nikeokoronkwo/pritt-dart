@@ -21,6 +21,7 @@ import '../constants.dart';
 import '../login.dart';
 import '../user_config.dart';
 import '../utils/extensions.dart';
+import '../vcs.dart';
 import '../workspace.dart';
 
 class PublishCommand extends PrittCommand {
@@ -257,10 +258,7 @@ class PublishCommand extends PrittCommand {
 
     // given url and stuff, lets zip up and upload
     logger.info('Zipping Up Package...');
-    final archive = createArchiveFromDirectory(Directory(
-        p.isAbsolute(project.directory)
-            ? project.directory
-            : p.join(p.current, project.directory)));
+    final archive = await createArchiveFromDirectory(project.files(), rootDir: project.directory);
     final tarball = GZipEncoder().encode(TarEncoder().encode(archive))!;
     logger.fine('Completed Zipping Package!');
 
@@ -330,39 +328,6 @@ class PublishCommand extends PrittCommand {
     logger.fine(
         'Completed publishing package: ${scopedName(name, scope)}@$version');
     return;
-  }
-
-  Future<String?> getVcsRemoteUrl(common.VCS vcs, {String? directory}) async {
-    Future<String?> getvcsurl(executable, args) async {
-      final process = await rootRunner.manager
-          .spawn(executable, args, workingDirectory: directory ?? p.current);
-
-      final stdout = await process.stdout.transform(utf8.decoder).join();
-      final stderr = await process.stderr.transform(utf8.decoder).join();
-      final exitCode = await process.exitCode;
-
-      if (exitCode == 0) {
-        return stdout.trim();
-      } else {
-        logger.warn('Could not get $executable remote url');
-        logger.verbose('STDOUT: $stdout');
-        logger.verbose('STDERR: $stderr');
-        return null;
-      }
-    }
-
-    return switch (vcs) {
-      common.VCS.git =>
-        await getvcsurl('git', ['config', '--get', 'remote.origin.url']),
-      common.VCS.svn => await getvcsurl('svn', ['info', '--show-item', 'url']),
-      common.VCS.fossil => await getvcsurl('fossil', ['remote-url']) ??
-          await getvcsurl('fossil', ['info']).then((out) {
-            final match = RegExp(r'url:\s*(.*)').firstMatch(out ?? '');
-            return match?.group(1);
-          }),
-      common.VCS.mercurial => await getvcsurl('hg', ['paths', 'default']),
-      _ => null
-    };
   }
 
   Future waitForPublishingQueueToComplete(PrittClient client, String pubID,

@@ -22,9 +22,6 @@ class UnpackCommand extends PrittCommand {
   String description =
       "Get a package locally and make modifications to the package";
 
-  @override
-  List<String> get aliases => ['unpack'];
-
   UnpackCommand() {
     argParser
       ..addFlag(
@@ -104,14 +101,17 @@ class UnpackCommand extends PrittCommand {
         sink.add(chunk);
         bytesReceived += chunk.length;
         progressBar.tick(bytesReceived, contentLength);
+        sleep(Duration(milliseconds: 10));
       },
       onDone: () async {
         await sink.close();
+        sleep(Duration(milliseconds: 100));
         progressBar.end();
         downloadCompleter.complete();
       },
       onError: (e, st) async {
         await sink.close();
+        sleep(Duration(milliseconds: 100));
         downloadCompleter.completeError(e, st);
       },
       cancelOnError: true,
@@ -120,12 +120,14 @@ class UnpackCommand extends PrittCommand {
     await downloadCompleter.future;
 
     // now deflate, and open
-    // TODO: Complete
 
     logger.info('Expanding Contents');
 
     // extract tar.gz and save to directory
     await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+
+    await sink.close();
+    await tarFile.delete();
 
     logger.stdout('Package $pkgName has been unpacked at $outName');
 

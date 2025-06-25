@@ -13,6 +13,7 @@ import 'config.dart';
 import 'ignore.dart';
 import 'project/controller.dart';
 import 'project/handler_manager.dart';
+import 'vcs.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
 ///
@@ -59,7 +60,7 @@ class Project {
   final VCS vcs;
 
   /// Files being ignored
-  final IgnoreFiles _ignoreFiles;
+  final IgnoreMatcher _ignoreMatcher;
 
   /// The handler manager
   final PrittControllerManager _manager;
@@ -69,14 +70,17 @@ class Project {
       this.vcs = VCS.git,
       required this.config,
       required this.directory,
-      IgnoreFiles ignoreFiles = commonlyIgnoredFiles,
+      List<String> ignoreFiles = commonlyIgnoredFiles,
+      IgnoreMatcher? matcher,
       required PrittControllerManager manager})
       :
         // TODO: Add support for multiple handlers
         assert(handlers.length <= 1,
             "Unsupported: Multiple handlers is not supported"),
         _manager = manager,
-        _ignoreFiles = ignoreFiles;
+        _ignoreMatcher = matcher ?? IgnoreMatcher() {
+          _ignoreMatcher.addLines(ignoreFiles);
+        }
 
   /// configures the project
   Future<void> configure() async {
@@ -111,36 +115,17 @@ class Project {
             .readAsString());
   }
 
-  // FIXME: Fix this function
   Stream<File> files() {
     return Directory(directory)
         .list(recursive: true)
-        .where((f) {
-          if (f is File) {
-            return _ignoreFiles.match(f.path);
-          } else if (f is Directory) {
-            return _ignoreFiles.match(f.path);
-          } else {
-            return false;
-          }
-        })
-        .where((f) => f is File)
+        .where((f) => f is File && !_ignoreMatcher.ignores(f.path))
         .map((f) => f as File);
   }
 
-  // FIXME: Fix this function
   List<File> filesSync() {
     return Directory(directory)
         .listSync(recursive: true)
-        .where((f) {
-          if (f is File) {
-            return _ignoreFiles.match(f.path);
-          } else if (f is Directory) {
-            return _ignoreFiles.match(f.path);
-          } else {
-            return false;
-          }
-        })
+        .where((f) => !_ignoreMatcher.ignores(f.path))
         .whereType<File>()
         .toList();
   }
@@ -159,15 +144,32 @@ Future<Project> getProject(String directory,
   // check for the vcs
   final VCS vcs = await getVersionControlSystem(dir);
 
+  // get the ignore file
+
   // check for the pritt configuration
   final PrittConfig? prittConfig = await readPrittConfig(directory, config);
 
   // check for a .prittignore
-  final List<String> ignoreFiles = const LineSplitter().convert(
-      (await File(p.join(directory, '.prittignore')).exists())
+  // final List<String> ignoreFiles = const LineSplitter().convert(
+  //     (await File(p.join(directory, '.prittignore')).exists())
+  //         ? await File(p.join(directory, '.prittignore')).readAsString()
+  //         : '')
+  //   ..addAll(commonlyIgnoredFiles);
+  final String prittIgnore = (await File(p.join(directory, '.prittignore')).exists())
           ? await File(p.join(directory, '.prittignore')).readAsString()
-          : '')
-    ..addAll(commonlyIgnoredFiles);
+          : '';
+  final String? vcsIgnoreFile = getVCSIgnoreFile(vcs);
+
+  final IgnoreMatcher matcher = IgnoreMatcher()
+  ..addContent(prittIgnore);
+
+  if (vcsIgnoreFile == null && await File(p.join(directory, vcsIgnoreFile)).exists()) {
+    matcher.addLines(
+      await getIgnoredVCSFiles(vcs)
+    );
+  } else {
+    matcher.addContent(await File(p.join(directory, vcsIgnoreFile)).readAsString() );
+  }
 
   final resolvedHandlers = await handlers;
   for (final h in resolvedHandlers) {
@@ -176,7 +178,7 @@ Future<Project> getProject(String directory,
       final ignoreFile = File(p.join(directory, h.ignoreFile));
       if (await ignoreFile.exists()) {
         final ignoreContents = h.ignore!.load(await ignoreFile.readAsString());
-        ignoreFiles.addAll(ignoreContents);
+        matcher.addLines(ignoreContents);
       }
     }
   }
@@ -187,7 +189,7 @@ Future<Project> getProject(String directory,
       config: prittConfig,
       directory: directory,
       vcs: vcs,
-      ignoreFiles: ignoreFiles,
+      matcher: matcher,
       manager: manager.controllerHandler);
 }
 

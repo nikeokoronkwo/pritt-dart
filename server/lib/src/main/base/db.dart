@@ -17,9 +17,10 @@ import 'db/interface.dart';
 import 'db/schema.dart';
 
 /// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/)
-/// via the [postgres](https://pub.dev/packages/postgres) package
+/// via the [postgres](https://pub.dev/packages/postgres) package.
 ///
-/// It uses a connection Pool to handle multiple requests
+/// It uses a connection Pool to handle multiple requests. 
+/// Certain requests are prepared for reuse throughout the API lifecycle to improve performance.
 ///
 /// For more information on the APIs used in this class, see [PrittDatabaseInterface]
 class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
@@ -128,7 +129,7 @@ RETURNING *''', parameters: [id, name, email]);
 SELECT version, version_type, created_at, info, env, metadata, archive, hash, signatures, integrity, readme, config, config_name,
        deprecated, deprecated_message, yanked
 FROM package_versions
-WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scope LIMIT 1)
+WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
 '''));
     }
 
@@ -148,11 +149,11 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
             (columnMap['version_type'] as UndecodedBytes).asString),
         created: columnMap['created_at'] as DateTime,
         info: columnMap['info'] as Map<String, dynamic>,
-        env: columnMap['env'] as Map<String, String>,
+        env: columnMap['env'] as Map<String, dynamic>,
         metadata: columnMap['metadata'] as Map<String, dynamic>,
         archive: Uri.file(columnMap['archive'] as String),
         hash: columnMap['hash'] as String,
-        signatures: (columnMap['signatures'] as List<Map<String, dynamic>>)
+        signatures: (columnMap['signatures'] as List<dynamic>)
             .map((e) => Signature.fromJson(e))
             .toList(),
         integrity: columnMap['integrity'] as String,
@@ -161,7 +162,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scop
         configName: columnMap['config_name'] as String?,
         isDeprecated: columnMap['deprecated'] as bool,
         isYanked: columnMap['yanked'] as bool,
-        deprecationMessage: columnMap['deprecated_message'] as String,
+        deprecationMessage: columnMap['deprecated_message'] as String?,
       );
     });
   }
@@ -176,7 +177,7 @@ SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at,
        u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
-WHERE p.name = @name AND p.scope = @scope
+WHERE p.name = @name AND p.scope IS NOT DISTINCT FROM @scope
 '''));
     }
     final result = await _statements['getPackage']!.run({
@@ -209,7 +210,7 @@ WHERE p.name = @name AND p.scope = @scope
         updated: columnMap['updated_at'] as DateTime,
         created: columnMap['created_at'] as DateTime,
         vcs: VCS
-            .fromString((columnMap['updated_at'] as UndecodedBytes).asString),
+            .fromString((columnMap['vcs'] as UndecodedBytes).asString),
         vcsUrl: columnMap['vcs_url'] != null
             ? Uri.parse(columnMap['vcs_url'] as String)
             : null,
@@ -269,7 +270,7 @@ LEFT JOIN users u ON p.author_id = u.id
           updated: columnMap['updated_at'] as DateTime,
           created: columnMap['created_at'] as DateTime,
           vcs: VCS
-              .fromString((columnMap['updated_at'] as UndecodedBytes).asString),
+              .fromString((columnMap['vcs'] as UndecodedBytes).asString),
           vcsUrl: columnMap['vcs_url'] != null
               ? Uri.parse(columnMap['vcs_url'] as String)
               : null,
@@ -313,7 +314,7 @@ WHERE u.id = @userId
           updated: columnMap['updated_at'] as DateTime,
           created: columnMap['created_at'] as DateTime,
           vcs: VCS
-              .fromString((columnMap['updated_at'] as UndecodedBytes).asString),
+              .fromString((columnMap['vcs'] as UndecodedBytes).asString),
           vcsUrl: columnMap['vcs_url'] != null
               ? Uri.parse(columnMap['vcs_url'] as String)
               : null,
@@ -406,7 +407,7 @@ SELECT pv.version, pv.version_type, pv.created_at, pv.info, pv.env, pv.metadata,
 FROM package_versions pv
 INNER JOIN packages p ON pv.package_id = p.id
 LEFT JOIN users u ON p.author_id = u.id
-WHERE p.name = @name AND pv.version = @version AND p.scope = @scope
+WHERE p.name = @name AND pv.version = @version AND p.scope IS NOT DISTINCT FROM @scope
 LIMIT 1
 '''));
     }
@@ -453,11 +454,11 @@ LIMIT 1
           (columnMap['version_type'] as UndecodedBytes).asString),
       created: columnMap['created_at'] as DateTime,
       info: columnMap['info'] as Map<String, dynamic>,
-      env: columnMap['env'] as Map<String, String>,
+      env: columnMap['env'] as Map<String, dynamic>,
       metadata: columnMap['metadata'] as Map<String, dynamic>,
       archive: Uri.file(columnMap['archive'] as String),
       hash: columnMap['hash'] as String,
-      signatures: (columnMap['signatures'] as List<Map<String, dynamic>>)
+      signatures: (columnMap['signatures'] as List<dynamic>)
           .map((e) => Signature.fromJson(e))
           .toList(),
       integrity: columnMap['integrity'] as String,
@@ -501,7 +502,7 @@ SELECT u.id, u.name, u.email, u.created_at, u.updated_at, u.avatar_url,
        pc.package_id as package_id, pc.privileges as privileges
 FROM package_contributors pc
 LEFT JOIN users u ON pc.contributor_id = u.id
-WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope = @scope LIMIT 1)
+WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
 '''), parameters: {
       'name': name,
       'scope': scope,
@@ -840,7 +841,12 @@ RETURNING *''', parameters: [
           author: author,
           language: language,
           created: columnMap['created_at'] as DateTime,
-          archive: archive);
+          updated: columnMap['updated_at'] as DateTime,
+          vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+          vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
+          archive: archive,
+          license: license,
+        );
     } catch (e, stack) {
       throw CRSException(
           CRSExceptionType.INCOMPATIBLE_PACKAGE, e.toString(), e, stack);
@@ -874,7 +880,7 @@ RETURNING *''', parameters: [
       if (v > oldV)
         await session.execute(
             Sql.named(
-                r'''UPDATE packages SET version = @version WHERE name = @name AND scope = @scope'''),
+                r'''UPDATE packages SET version = @version WHERE name = @name AND scope IS NOT DISTINCT FROM @scope'''),
             parameters: {'name': pkg.name, 'scope': pkg.scope, 'version': version});
 
       return await session.execute(r'''
@@ -951,7 +957,7 @@ RETURNING *''', parameters: [
       if (v > oldV)
         await session.execute(
             Sql.named(
-                r'''UPDATE packages SET version = @version WHERE name = @name AND scope = @scope'''),
+                r'''UPDATE packages SET version = @version WHERE name = @name AND scope IS NOT DISTINCT FROM @scope'''),
             parameters: {'name': name, 'scope': scope, 'version': version});
 
       return await session.execute(r'''

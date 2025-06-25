@@ -54,13 +54,9 @@ Map<String, String> getQueryParams(Event e) {
   return e.request.url.queryParameters;
 }
 
-String getHeader(Event e, String name) {
+String? getHeader(Event e, String name) {
   var headerValue = e.request.headers[name];
-  if (headerValue != null) {
-    return headerValue;
-  } else {
-    throw Exception('Could not find a value for the header $name');
-  }
+  return headerValue;
 }
 
 Map<String, String> getHeaders(Event e) => e.request.headers;
@@ -120,11 +116,12 @@ Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
         return event.responseFunc(jsonEncode(response));
       case Stream<List<int>>():
         event._responseBuilder.headers
-            .putIfAbsent('Content-Type', () => 'application/octet-stream');
+            .putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/octet-stream');
         return event.responseFunc(response);
       case Uint8List():
         event._responseBuilder.headers
-            .putIfAbsent('Content-Type', () => 'application/octet-stream');
+            ..putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/octet-stream')
+            ..putIfAbsent(HttpHeaders.contentLengthHeader, () => response.lengthInBytes.toString());
         return event.responseFunc(response);
       default:
         return event.responseFunc(response);

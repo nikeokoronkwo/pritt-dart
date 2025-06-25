@@ -14,9 +14,9 @@ import '../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   // check authorization
   final authToken = getHeader(event, 'Authorization');
-  final auth = await checkAuthorization(authToken);
+  var user = authToken == null ? null : await checkAuthorization(authToken);
 
-  if (auth == null) {
+  if (user == null) {
     setResponseCode(event, 401);
     return common.UnauthorizedError(
             error: 'You are not authorized to view or use this endpoint')

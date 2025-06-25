@@ -13,7 +13,7 @@ final handler = defineRequestHandler((event) async {
 
   // check authorization
   var authHeader = getHeader(event, 'Authorization');
-  final isAuthorized = await checkAuthorization(authHeader) != null;
+  final isAuthorized = authHeader == null ? false : (await checkAuthorization(authHeader) != null);
 
   try {
     // get the package version
