@@ -34,7 +34,7 @@
     "@tanstack/vue-form": "^1.12.0",
     "@unhead/vue": "^2.0.3",
     "asciidoctor": "^3.0.4",
-    "better-auth": "^1.2.8",
+    "better-auth": "^1.2.9",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "eslint": "^9.0.0",
