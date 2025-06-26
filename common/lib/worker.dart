@@ -100,7 +100,7 @@ class Worker<P, R> {
       }
       final (int id, P param) = message as (int, P);
       try {
-        // TODO(nikeokoronkwo): We need to handle errors. 
+        // TODO(nikeokoronkwo): We need to handle errors.
         //  They are leaking out of this despite try/catch, handleError, and Future.sync
         //  We might consider running this call zoned. https://github.com/nikeokoronkwo/pritt-dart/issues/50
         final data = await Future.sync(() => work(param));
