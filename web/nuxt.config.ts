@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "@scalar/nuxt",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
+    "reka-ui/nuxt",
   ],
 
   css: ["~/assets/css/main.css"],
@@ -30,7 +31,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    databaseUrl: "",
+    databaseName: "",
+    databaseUsername: "",
+    databasePassword: "",
+    databaseHost: "",
+    databasePort: "",
     public: {
       apiUrl: "",
     },

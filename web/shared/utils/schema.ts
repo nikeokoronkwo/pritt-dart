@@ -160,12 +160,35 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    put?: never;
     /**
      * Upload a package to the Pritt Server
      * @description This API Endpoint is used to upload the tarball for the package
      */
-    post: operations["uploadPackageWithToken"];
+    put: operations["uploadPackageWithToken"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/package/status": {
+    parameters: {
+      query: {
+        /** @description The Package Publishing ID */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get the publishing status for a package
+     * @description Get the publishing status for a package being published, given the status id
+     */
+    get: operations["getPackagePubStatus"];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -341,12 +364,12 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    put?: never;
     /**
      * Upload an adapter to the Pritt Server
      * @description This API Endpoint is used to upload the tarball for the processed adapter
      */
-    post: operations["uploadAdapterWithToken"];
+    put: operations["uploadAdapterWithToken"];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -593,6 +616,11 @@ export interface components {
      */
     Error: {
       error?: string | null;
+    };
+    /** ExistsError */
+    ExistsError: {
+      error?: string | null;
+      name: string;
     };
     /** ExpiredError */
     ExpiredError: {
@@ -912,15 +940,89 @@ export interface components {
     };
     /** GetUsersResponse */
     GetUsersResponse: Record<string, never>;
+    /** InvalidError */
+    InvalidError: {
+      error?: string | null;
+      description?: string | null;
+      redirect?: string | null;
+    };
+    /** InvalidTarballError */
+    InvalidTarballError: {
+      error?: string | null;
+      description: string;
+      sanction: boolean;
+      violations_remaining?: number | null;
+    };
     /** NotFoundError */
     NotFoundError: {
       error?: string | null;
       message?: string | null;
     };
-    /** PublishPackageByVersionRequest */
-    PublishPackageByVersionRequest: Record<string, never>;
+    /**
+     * PublishPackageByVersionRequest
+     * @description A request object to publish a given package
+     */
+    PublishPackageByVersionRequest: {
+      /** @description The name of the package to publish */
+      name: string;
+      /** @description The scope of the package, if any */
+      scope?: string | null;
+      /**
+       * Version
+       * @description The version of the package to publish
+       */
+      version: string;
+      /** @description The language of the package */
+      language: string;
+      /**
+       * Configuration
+       * @description The configuration info about the package
+       */
+      config: {
+        /** @description The configuration file for the given project */
+        path: string;
+        /** @description The configuration values for the package */
+        config?: {
+          [key: string]: unknown;
+        } | null;
+      };
+      info?: {
+        [key: string]: unknown;
+      } | null;
+      env?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * VersionControlSystem
+       * @description The version control system
+       */
+      vcs?: {
+        /**
+         * VCS
+         * @enum {string}
+         */
+        name: "git" | "svn" | "fossil" | "mercurial" | "other";
+        /** Uri */
+        url?: string | null;
+      } | null;
+    };
     /** PublishPackageByVersionResponse */
-    PublishPackageByVersionResponse: Record<string, never>;
+    PublishPackageByVersionResponse: {
+      /** @description The URL to upload the API to, if any */
+      url?: string | null;
+      /**
+       * Queue
+       * @description The details
+       */
+      queue: {
+        id: string;
+        /**
+         * PublishingStatus
+         * @enum {string}
+         */
+        status: "pending" | "error" | "success" | "idle" | "queue";
+      };
+    };
     /**
      * PublishPackageRequest
      * @description A request object to publish a given package
@@ -928,23 +1030,78 @@ export interface components {
     PublishPackageRequest: {
       /** @description The name of the package to publish */
       name: string;
+      /** @description The scope of the package, if any */
+      scope?: string | null;
       /**
        * Version
        * @description The version of the package to publish
        */
       version: string;
-      /** @description The configuration info about the package */
-      config: {
-        [key: string]: unknown;
-      };
+      /** @description The language of the package */
+      language: string;
       /**
-       * Uri
-       * @description The configuration file for the given project
+       * Configuration
+       * @description The configuration info about the package
        */
-      configFile: string;
+      config: {
+        /** @description The configuration file for the given project */
+        path: string;
+        /** @description The configuration values for the package */
+        config?: {
+          [key: string]: unknown;
+        } | null;
+      };
+      info?: {
+        [key: string]: unknown;
+      } | null;
+      env?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * VersionControlSystem
+       * @description The version control system
+       */
+      vcs?: {
+        /**
+         * VCS
+         * @enum {string}
+         */
+        name: "git" | "svn" | "fossil" | "mercurial" | "other";
+        /** Uri */
+        url?: string | null;
+      } | null;
     };
     /** PublishPackageResponse */
-    PublishPackageResponse: Record<string, never>;
+    PublishPackageResponse: {
+      /** @description The URL to upload the API to, if any */
+      url?: string | null;
+      /**
+       * Queue
+       * @description The details
+       */
+      queue: {
+        id: string;
+        /**
+         * PublishingStatus
+         * @enum {string}
+         */
+        status: "pending" | "error" | "success" | "idle" | "queue";
+      };
+    };
+    /** PublishPackageStatusResponse */
+    PublishPackageStatusResponse: {
+      /**
+       * PublishingStatus
+       * @enum {string}
+       */
+      status: "pending" | "error" | "success" | "idle" | "queue";
+      error?: string | null;
+      description?: string | null;
+      name: string;
+      scope?: string | null;
+      /** Version */
+      version: string;
+    };
     /**
      * ServerError
      * @description A server error, returned in the case of a 500 Server Error
@@ -957,6 +1114,14 @@ export interface components {
     /** UnauthorizedError */
     UnauthorizedError: {
       error?: string | null;
+      /**
+       * UnauthorizedReason
+       * @description The reason for not being authorized
+       * @enum {string|null}
+       */
+      reason?: "protected" | "org" | "package_access" | "other" | null;
+      /** @description a description */
+      description?: string | null;
     };
     /** UploadAdapterResponse */
     UploadAdapterResponse: Record<string, never>;
@@ -1097,6 +1262,15 @@ export interface operations {
           "application/json": components["schemas"]["PublishPackageResponse"];
         };
       };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
+        };
+      };
       /** @description Unauthorized Response */
       401: {
         headers: {
@@ -1141,6 +1315,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Package Already Exists */
+      402: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExistsError"];
         };
       };
       /** @description Not Found Response */
@@ -1615,6 +1798,15 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
+      /** @description Invalid Tarball */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InvalidTarballError"];
+        };
+      };
       /** @description Not Found Response */
       404: {
         headers: {
@@ -1623,6 +1815,29 @@ export interface operations {
         content: {
           /** @example {} */
           "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+    };
+  };
+  getPackagePubStatus: {
+    parameters: {
+      query: {
+        /** @description The Package Publishing ID */
+        id: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PublishPackageStatusResponse"];
         };
       };
     };

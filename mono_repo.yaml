@@ -2,7 +2,7 @@
 github:
   on:
     pull_request:
-      branches: ["main", "stable"]
+      branches: ['main', 'stable']
     workflow_dispatch:
 
   workflows:

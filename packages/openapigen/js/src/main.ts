@@ -1,6 +1,6 @@
-import { dereference, load } from "@scalar/openapi-parser";
-import { OpenAPIV3 } from "@scalar/openapi-types";
-import { isEqual } from "lodash";
+import { dereference, load } from '@scalar/openapi-parser';
+import { OpenAPIV3 } from '@scalar/openapi-types';
+import { isEqual } from 'lodash';
 
 interface OpenAPIGenResult {
   docs?: string;
@@ -41,7 +41,7 @@ interface OAPIGenMethods {
 export async function parseOpenAPIDocumentSource(source: string) {
   // dereference
   const { schema } = await dereference(source);
-  if (!schema) throw Error("Schema did not parse");
+  if (!schema) throw Error('Schema did not parse');
 
   // return openapiDocToResult(schema as OpenAPIV3.Document);
   return openapiDocToResult(schema as OpenAPIV3.Document);
@@ -75,7 +75,7 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
       }
     | undefined {
     if (responseInfo) {
-      if ("$ref" in responseInfo) {
+      if ('$ref' in responseInfo) {
         return {
           type: undefined,
           name: undefined,
@@ -90,11 +90,11 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
         );
 
         let name = obj.schema?.title
-          ? obj.schema.title !== "schema"
+          ? obj.schema.title !== 'schema'
             ? obj.schema?.title
-            : "unknown"
+            : 'unknown'
           : undefined;
-        if (name === "unknown") name = searchComponent(obj);
+        if (name === 'unknown') name = searchComponent(obj);
 
         return {
           type: contentType,
@@ -149,7 +149,7 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
           returnArray.push(
             generateMethod(
               v.get,
-              "GET",
+              'GET',
               k,
               v.parameters as OpenAPIV3.ParameterObject[],
             ),
@@ -159,7 +159,7 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
           returnArray.push(
             generateMethod(
               v.post,
-              "POST",
+              'POST',
               k,
               v.parameters as OpenAPIV3.ParameterObject[],
             ),
@@ -169,7 +169,7 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
           returnArray.push(
             generateMethod(
               v.delete,
-              "DELETE",
+              'DELETE',
               k,
               v.parameters as OpenAPIV3.ParameterObject[],
             ),
@@ -179,7 +179,7 @@ function openapiDocToResult(spec: OpenAPIV3.Document): OpenAPIGenResult {
           returnArray.push(
             generateMethod(
               v.put,
-              "PUT",
+              'PUT',
               k,
               v.parameters as OpenAPIV3.ParameterObject[],
             ),

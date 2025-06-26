@@ -9,15 +9,19 @@ dependencies:
   archive: ^3.6.1
   aws_s3_api: ^2.0.0
   aws_signer_api: ^2.0.0
+  chunked_stream: ^1.4.2
   crypto: ^3.0.6
+  file: ^7.0.1
   html: ^0.15.6
   http: ^1.4.0
   json_annotation: ^4.9.0
+  logging: ^1.3.0
   mime: ^2.0.0
   path: ^1.9.1
   pool: ^1.5.1
   postgres: ^3.5.6
   pritt_common: ^0.0.1
+  retry: ^3.1.2
   shelf: ^1.4.2
   shelf_router: ^1.1.4
   slugid: ^1.1.2
@@ -27,6 +31,7 @@ dependencies:
   yaml: ^3.1.3
 
 dev_dependencies:
+  benchmark_harness: ^2.3.1
   build_runner: ^2.4.15
   json_serializable: ^6.9.5
   mockito: ^5.4.5

@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart' as p;
 
-import 'constants.dart';
-import 'device_id.dart';
+import '../constants.dart';
+import '../device_id.dart';
 
 part 'user_config.g.dart';
 
@@ -99,6 +99,10 @@ class UserCredentials {
           uri: uri,
           id: id,
           deviceId: deviceId ?? await getDeviceId());
+
+      if (!(await _file.parent.exists())) {
+        await _file.parent.create(recursive: true);
+      }
 
       await _file.writeAsString(json.encode(credentialsObject.toJson()));
 

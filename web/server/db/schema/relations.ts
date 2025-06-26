@@ -1,30 +1,50 @@
 import { relations } from "drizzle-orm/relations";
 import {
   users,
+  authorizationSessions,
+  packagePublishingTasks,
   accessTokens,
   packages,
   organizations,
-  authorizationSessions,
-  packagePublishingTasks,
   organizationMembers,
   packageContributors,
   packageVersions,
 } from "./schema";
+
+export const authorizationSessionsRelations = relations(
+  authorizationSessions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [authorizationSessions.userId],
+      references: [users.id],
+    }),
+  }),
+);
+
+export const usersRelations = relations(users, ({ many }) => ({
+  authorizationSessions: many(authorizationSessions),
+  packagePublishingTasks: many(packagePublishingTasks),
+  accessTokens: many(accessTokens),
+  packages: many(packages),
+  organizationMembers: many(organizationMembers),
+  packageContributors: many(packageContributors),
+}));
+
+export const packagePublishingTasksRelations = relations(
+  packagePublishingTasks,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [packagePublishingTasks.userId],
+      references: [users.id],
+    }),
+  }),
+);
 
 export const accessTokensRelations = relations(accessTokens, ({ one }) => ({
   user: one(users, {
     fields: [accessTokens.userId],
     references: [users.id],
   }),
-}));
-
-export const usersRelations = relations(users, ({ many }) => ({
-  accessTokens: many(accessTokens),
-  packages: many(packages),
-  authorizationSessions: many(authorizationSessions),
-  packagePublishingTasks: many(packagePublishingTasks),
-  organizationMembers: many(organizationMembers),
-  packageContributors: many(packageContributors),
 }));
 
 export const packagesRelations = relations(packages, ({ one, many }) => ({
@@ -44,26 +64,6 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
   packages: many(packages),
   organizationMembers: many(organizationMembers),
 }));
-
-export const authorizationSessionsRelations = relations(
-  authorizationSessions,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [authorizationSessions.userId],
-      references: [users.id],
-    }),
-  }),
-);
-
-export const packagePublishingTasksRelations = relations(
-  packagePublishingTasks,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [packagePublishingTasks.userId],
-      references: [users.id],
-    }),
-  }),
-);
 
 export const organizationMembersRelations = relations(
   organizationMembers,

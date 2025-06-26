@@ -770,7 +770,7 @@ paths {
             }
         }
     }
-    ["/api/package/status"] {
+    ["/api/publish/status"] {
         parameters {
             new {
                 name = "id"

@@ -1,0 +1,29 @@
+{
+  "name": "@pritt/e2e",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:debug": "DEBUG=testcontainers* vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.36.0",
+    "@testcontainers/postgresql": "^11.0.3",
+    "@types/node": "^22.15.32",
+    "@types/pg": "^8.15.2",
+    "testcontainers": "^11.0.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.832.0",
+    "@aws-sdk/lib-storage": "^3.832.0",
+    "@std/yaml": "npm:@jsr/std__yaml@^1.0.8",
+    "pg": "^8.16.0"
+  }
+}

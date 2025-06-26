@@ -8,8 +8,6 @@ deno.lock
 
 private
 
-.DS_Store
-
 config/out
 
 **/.env.**
@@ -21,10 +19,14 @@ node_modules
 
 # Other
 
+secrets
 dist
 
 out
 
+# Nuxt
+.nuxt
 web-ref
 
 *.pem
+.terraform

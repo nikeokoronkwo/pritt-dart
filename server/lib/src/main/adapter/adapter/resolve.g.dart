@@ -17,7 +17,7 @@ Map<String, dynamic> _$AdapterResolveObjectToJson(
       'maxAge': instance.maxAge,
       'query': instance.query,
       'meta': instance.meta,
-      'userAgent': instance.userAgent,
+      'userAgent': instance.userAgent.toJson(),
     };
 
 const _$RequestMethodEnumMap = {

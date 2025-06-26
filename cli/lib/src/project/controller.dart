@@ -8,6 +8,7 @@ import '../adapters/base.dart';
 import '../adapters/base/config.dart';
 import '../adapters/base/controller.dart';
 import '../client.dart';
+import '../client/authentication.dart';
 import '../constants.dart';
 import '../loader.dart';
 import '../utils/annotations.dart';
@@ -27,8 +28,8 @@ class PrittControllerManager {
 
   PrittController<T> makeController<T extends Config>(Handler<T> handler) {
     // create first
-    final configUnawareCtrl =
-        PrittConfigUnawareController(configLoader: handler.config);
+    final configUnawareCtrl = PrittConfigUnawareController(
+        configLoader: handler.config, client: apiClient);
 
     Future<T> converter(String contents) async {
       return await handler.onGetConfig(dir ?? p.current, configUnawareCtrl);
@@ -42,8 +43,12 @@ class PrittConfigUnawareController
     implements PrittLocalConfigUnawareController {
   Loader<String, String> configLoader;
   PrittClient? client;
+  String? token;
 
-  PrittConfigUnawareController({required this.configLoader, this.client});
+  PrittConfigUnawareController(
+      {required this.configLoader, this.client, String? token})
+      : token =
+            token ?? (client?.authentication as HttpBearerAuth?)?.accessToken;
 
   PrittController<T> _upgrade<T extends Config>({
     required FutureOr<T> Function(String) convertConfig,
@@ -74,8 +79,7 @@ class PrittConfigUnawareController
           'The current adapter needs user credentials, but user not logged in');
     }
 
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+    return await client!.getCurrentUser();
   }
 
   @override
@@ -122,8 +126,14 @@ class PrittConfigUnawareController
 
   @override
   Future<String> run(String command,
-      {List<String> args = const [], String? directory}) async {
-    return (await Process.run(command, args, workingDirectory: directory))
+      {List<String> args = const [],
+      String? directory,
+      Map<String, String>? environment}) async {
+    return (await Process.run(command, args,
+            workingDirectory: directory,
+            environment: (environment ?? {})
+              ..addAll(Platform.environment)
+              ..addAll({if (token != null) 'PRITT_AUTH_TOKEN': token!})))
         .stdout;
   }
 }
@@ -150,12 +160,6 @@ class PrittController<T extends Config> extends PrittConfigUnawareController
 
   @override
   String get instanceUri => apiClient?.url ?? mainPrittApiInstance;
-
-  @override
-  void useHostedPMCommands() {
-    // TODO: implement useHostedPMCommands
-    throw UnimplementedError();
-  }
 
   @override
   Future<void> writeFileAt(String path, String contents, {String? cwd}) async {

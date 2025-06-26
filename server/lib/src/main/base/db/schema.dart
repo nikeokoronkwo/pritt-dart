@@ -25,7 +25,8 @@ enum VCS {
   other;
 
   static VCS fromString(String name) {
-    return VCS.values.singleWhere((v) => v.toString() == name.toLowerCase());
+    return VCS.values.firstWhere((v) => v.toString() == name.toLowerCase(),
+        orElse: () => VCS.other);
   }
 }
 
@@ -113,7 +114,7 @@ class PackageVersions {
   /// The published time of the given package
   DateTime created;
 
-  /// The contents of the readme file associated with the package
+  /// The contents of the readme file associated with the package, **base-64 encoded**
   String? readme;
 
   /// The raw contents of the config file associated with the config
@@ -127,7 +128,7 @@ class PackageVersions {
 
   /// Environment information (runtime, package manager versions, etc)
   /// e.g npm, node
-  Map<String, String> env;
+  Map<String, dynamic> env;
 
   /// Metadata about the package
   ///
@@ -162,7 +163,6 @@ class PackageVersions {
       {required this.package,
       required this.version,
       required this.versionType,
-      DateTime? updated,
       required this.created,
       this.readme,
       this.config,
@@ -473,6 +473,7 @@ class AuthorizationSession {
 }
 
 @Table('package_publishing_tasks')
+@JsonSerializable(createFactory: false)
 class PublishingTask {
   String id;
 
@@ -552,6 +553,8 @@ class PublishingTask {
       required this.expiresAt})
       : assert(
             expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
+
+  Map<String, dynamic> toJson() => _$PublishingTaskToJson(this);
 }
 
 enum TaskStatus {

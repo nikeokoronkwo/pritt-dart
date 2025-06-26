@@ -4,15 +4,14 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/functions.dart';
 
 import '../adapters/base/workspace.dart';
 import '../cli/base.dart';
 import '../client.dart';
+import '../config/user_config.dart';
 import '../pkg_name.dart';
-import '../user_config.dart';
 import '../utils/extensions.dart';
-import '../workspace.dart';
+import '../workspace/workspace.dart';
 
 class AddCommand extends PrittCommand {
   @override
@@ -66,7 +65,7 @@ class AddCommand extends PrittCommand {
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getWorkspace(p.current,
+    var project = await getProject(p.current,
         config: argResults?['config'], client: prittClient);
     if (project.handlers.isEmpty) {
       logger.warn('Could not find a suitable handler for the given project.');

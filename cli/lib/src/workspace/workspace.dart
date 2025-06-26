@@ -5,14 +5,15 @@ import 'package:path/path.dart' as p;
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
-import 'adapters/base.dart';
-import 'adapters/base/context.dart';
-import 'adapters/base/workspace.dart';
-import 'client.dart';
-import 'config.dart';
+import '../adapters/base.dart';
+import '../adapters/base/context.dart';
+import '../adapters/base/workspace.dart';
+import '../client.dart';
+import '../config/config.dart';
+import '../project/controller.dart';
+import '../project/handler_manager.dart';
 import 'ignore.dart';
-import 'project/controller.dart';
-import 'project/handler_manager.dart';
+import 'vcs.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
 ///
@@ -59,7 +60,7 @@ class Project {
   final VCS vcs;
 
   /// Files being ignored
-  final IgnoreFiles _ignoreFiles;
+  final IgnoreMatcher _ignoreMatcher;
 
   /// The handler manager
   final PrittControllerManager _manager;
@@ -69,14 +70,17 @@ class Project {
       this.vcs = VCS.git,
       required this.config,
       required this.directory,
-      IgnoreFiles ignoreFiles = commonlyIgnoredFiles,
+      List<String> ignoreFiles = commonlyIgnoredFiles,
+      IgnoreMatcher? matcher,
       required PrittControllerManager manager})
       :
         // TODO: Add support for multiple handlers
         assert(handlers.length <= 1,
             "Unsupported: Multiple handlers is not supported"),
         _manager = manager,
-        _ignoreFiles = ignoreFiles;
+        _ignoreMatcher = matcher ?? IgnoreMatcher() {
+    _ignoreMatcher.addLines(ignoreFiles);
+  }
 
   /// configures the project
   Future<void> configure() async {
@@ -106,49 +110,29 @@ class Project {
   }
 
   Future<String> getConfig() async {
-    final controller = _manager.makeController(primaryHandler);
     return primaryHandler.config.load(
         await File(p.join(directory, primaryHandler.configFile))
             .readAsString());
   }
 
-  // FIXME: Fix this function
   Stream<File> files() {
     return Directory(directory)
         .list(recursive: true)
-        .where((f) {
-          if (f is File) {
-            return _ignoreFiles.match(f.path);
-          } else if (f is Directory) {
-            return _ignoreFiles.match(f.path);
-          } else {
-            return false;
-          }
-        })
-        .where((f) => f is File)
+        .where((f) => f is File && !_ignoreMatcher.ignores(f.path))
         .map((f) => f as File);
   }
 
-  // FIXME: Fix this function
   List<File> filesSync() {
     return Directory(directory)
         .listSync(recursive: true)
-        .where((f) {
-          if (f is File) {
-            return _ignoreFiles.match(f.path);
-          } else if (f is Directory) {
-            return _ignoreFiles.match(f.path);
-          } else {
-            return false;
-          }
-        })
+        .where((f) => !_ignoreMatcher.ignores(f.path))
         .whereType<File>()
         .toList();
   }
 }
 
 /// Get the current workspace information for the project being worked on
-Future<Project> getWorkspace(String directory,
+Future<Project> getProject(String directory,
     {String? config, PrittClient? client}) async {
   final dir = Directory(directory);
   // get basic workspace information
@@ -160,23 +144,42 @@ Future<Project> getWorkspace(String directory,
   // check for the vcs
   final VCS vcs = await getVersionControlSystem(dir);
 
+  // get the ignore file
+
   // check for the pritt configuration
   final PrittConfig? prittConfig = await readPrittConfig(directory, config);
 
   // check for a .prittignore
-  final List<String> ignoreFiles = const LineSplitter().convert(
+  // final List<String> ignoreFiles = const LineSplitter().convert(
+  //     (await File(p.join(directory, '.prittignore')).exists())
+  //         ? await File(p.join(directory, '.prittignore')).readAsString()
+  //         : '')
+  //   ..addAll(commonlyIgnoredFiles);
+  final String prittIgnore =
       (await File(p.join(directory, '.prittignore')).exists())
           ? await File(p.join(directory, '.prittignore')).readAsString()
-          : '')
-    ..addAll(commonlyIgnoredFiles);
+          : '';
+  final String? vcsIgnoreFile = getVCSIgnoreFile(vcs);
+
+  final IgnoreMatcher matcher = IgnoreMatcher()..addContent(prittIgnore);
+
+  if (vcsIgnoreFile == null &&
+      !(await File(p.join(directory, vcsIgnoreFile)).exists())) {
+    matcher.addLines(await getIgnoredVCSFiles(vcs));
+  } else {
+    matcher.addContent(
+        await File(p.join(directory, vcsIgnoreFile)).readAsString());
+  }
 
   final resolvedHandlers = await handlers;
   for (final h in resolvedHandlers) {
     // add ignores
     if (h.ignore != null) {
-      final ignoreContents = h.ignore!
-          .load(await File(p.join(directory, h.ignoreFile)).readAsString());
-      ignoreFiles.addAll(ignoreContents);
+      final ignoreFile = File(p.join(directory, h.ignoreFile));
+      if (await ignoreFile.exists()) {
+        final ignoreContents = h.ignore!.load(await ignoreFile.readAsString());
+        matcher.addLines(ignoreContents);
+      }
     }
   }
 
@@ -186,14 +189,14 @@ Future<Project> getWorkspace(String directory,
       config: prittConfig,
       directory: directory,
       vcs: vcs,
-      ignoreFiles: ignoreFiles,
+      matcher: matcher,
       manager: manager.controllerHandler);
 }
 
 Future<PrittConfig?> readPrittConfig(String dir, String? config) async {
   final File configFile = File(config ?? p.join(dir, 'pritt.yaml'));
 
-  if (await configFile.exists()) return null;
+  if (!(await configFile.exists())) return null;
 
   final configContents = await configFile.readAsString();
   return PrittConfig.fromJson(jsonDecode(jsonEncode(loadYaml(configContents))));
@@ -221,17 +224,4 @@ Future<VCS> getVersionControlSystem(Directory directory) async {
     }
   }
   return VCS.other;
-}
-
-/// Configure the current project to make use of Pritt
-void configureWorkspace(String directory) {
-  // get the current project workspace
-
-  // get the language of the project
-
-  // check if user is logged in
-
-  // if not logged in,
-
-  // configure for project
 }

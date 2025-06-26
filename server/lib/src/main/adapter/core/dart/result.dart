@@ -5,7 +5,7 @@ import 'pubspec.dart';
 part 'result.g.dart';
 
 /// The result of a dart meta (i.e [AdapterResolveType.meta]) request
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class DartMetaResult with JsonConvertible {
   /// the name of the package
   final String name;
@@ -21,6 +21,7 @@ class DartMetaResult with JsonConvertible {
     required this.latest,
     required this.versions,
   });
+
   factory DartMetaResult.fromJson(Map<String, dynamic> json) =>
       _$DartMetaResultFromJson(json);
 
@@ -28,7 +29,7 @@ class DartMetaResult with JsonConvertible {
   Map<String, dynamic> toJson() => _$DartMetaResultToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class DartPackage {
   /// The version of the package
   final String version;
@@ -41,7 +42,7 @@ class DartPackage {
   final String archiveUrl;
 
   /// The archive SHA256 hash of the file
-  @JsonKey(name: 'archive_hash')
+  @JsonKey(name: 'archive_sha256')
   final String archiveHash;
 
   /// The date the package was published
@@ -57,5 +58,6 @@ class DartPackage {
 
   factory DartPackage.fromJson(Map<String, dynamic> json) =>
       _$DartPackageFromJson(json);
+
   Map<String, dynamic> toJson() => _$DartPackageToJson(this);
 }

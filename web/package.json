@@ -34,14 +34,16 @@
     "@tanstack/vue-form": "^1.12.0",
     "@unhead/vue": "^2.0.3",
     "asciidoctor": "^3.0.4",
-    "better-auth": "^1.2.8",
+    "better-auth": "^1.2.9",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "eslint": "^9.0.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.3",
     "nuxt": "^3.17.5",
     "pg": "^8.16.0",
     "pinia": "^3.0.3",
+    "reka-ui": "^2.3.1",
     "tailwindcss": "^4.1.10",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1"
@@ -49,6 +51,7 @@
   "devDependencies": {
     "@better-auth/cli": "^1.2.8",
     "@tailwindcss/forms": "^0.5.10",
+    "@types/nodemailer": "^6.4.17",
     "@types/pg": "^8.15.2",
     "@vue/test-utils": "^2.4.6",
     "drizzle-kit": "^0.31.1",
@@ -56,8 +59,8 @@
     "happy-dom": "^17.4.7",
     "openapi-typescript": "^7.8.0",
     "prettier": "3.5.3",
-    "tsx": "^4.20.3",
     "prettier-plugin-tailwindcss": "^0.6.12",
+    "tsx": "^4.20.3",
     "vitest": "^3.2.3"
   }
 }

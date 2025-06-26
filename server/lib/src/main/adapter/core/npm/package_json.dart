@@ -4,7 +4,7 @@ part 'package_json.g.dart';
 
 /// A package.json file is a JSON file that contains metadata about the package.
 /// It is used by npm to manage the package and its dependencies.
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PackageJson {
   /// The name of the package
   final String name;
@@ -158,7 +158,7 @@ class PackageJson {
   Map<String, dynamic> toJson() => _$PackageJsonToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PackageJsonDirectories {
   /// man pages
   final String? man;
@@ -181,7 +181,7 @@ class PackageJsonDirectories {
   Map<String, dynamic> toJson() => _$PackageJsonDirectoriesToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PackageJsonFunding {
   /// The type of funding
   final String? type;
@@ -200,7 +200,7 @@ class PackageJsonFunding {
   Map<String, dynamic> toJson() => _$PackageJsonFundingToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PackageJsonAuthor {
   /// The name of the author
   final String? name;
@@ -223,7 +223,7 @@ class PackageJsonAuthor {
   Map<String, dynamic> toJson() => _$PackageJsonAuthorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PackageJsonRepository {
   /// The type of the repository
   final String? type;

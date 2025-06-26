@@ -13,8 +13,10 @@ final handler = defineRequestHandler((event) async {
         (body) => common.AuthValidateRequest.fromJson(json.decode(body)));
 
     // update the status
-    final session = await crs.db
-        .completeAuthSession(sessionId: body.session_id, userId: body.user_id);
+    final session = await crs.db.completeAuthSession(
+        sessionId: body.session_id,
+        userId: body.user_id,
+        newStatus: TaskStatus.success);
 
     // check status
     switch (session.status) {

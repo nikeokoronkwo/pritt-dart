@@ -6,8 +6,7 @@ part of 'sorter.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SorterResponse _$SorterResponseFromJson(Map<String, dynamic> json) =>
-    SorterResponse(
+SorterResponse _$SorterResponseFromJson(Map json) => SorterResponse(
       type: $enumDecode(_$AdapterResolveTypeEnumMap, json['result']),
       adapterId: json['adapterId'] as String?,
       success: json['success'] as bool,

@@ -5,7 +5,9 @@ import 'package:pritt_common/version.dart';
 
 import '../../../../../pritt_server.dart';
 import '../../../../main/base/db/schema.dart';
-import '../../../../main/publishing_tasks.dart';
+import '../../../../main/crs/exceptions.dart';
+import '../../../../main/publishing/interfaces.dart';
+import '../../../../main/publishing/tasks.dart';
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';
 
@@ -17,7 +19,7 @@ final handler = defineRequestHandler((event) async {
   try {
     // check if user is authenticated
     var authHeader = getHeader(event, 'Authorization');
-    final user = await checkAuthorization(authHeader);
+    var user = authHeader == null ? null : await checkAuthorization(authHeader);
 
     if (user == null) {
       setResponseCode(event, 401);
@@ -26,6 +28,7 @@ final handler = defineRequestHandler((event) async {
 
     // get pkg
     final pkg = await crs.db.getPackage(pkgName);
+
     if (pkg.author.id != user.id) {
       // check if user is contrib to the package
       final contributors = await crs.db.getContributorsForPackage(pkgName);
@@ -105,8 +108,18 @@ final handler = defineRequestHandler((event) async {
   } on TypeError {
     setResponseCode(event, 400);
     return common.Error(error: 'InvalidBody').toJson();
-  } catch (e) {
+  } on CRSException catch (e, st) {
+    switch (e.type) {
+      case CRSExceptionType.PACKAGE_NOT_FOUND:
+        setResponseCode(event, 403);
+        print('${e.stackTrace} :: $st');
+        return common.Error(error: 'Error: ${e.message}: Instead, call')
+            .toJson();
+      default:
+    }
+  } catch (e, st) {
     setResponseCode(event, 500);
+    print('$e: $st');
     return common.ServerError(error: 'Server Error').toJson();
   }
 });

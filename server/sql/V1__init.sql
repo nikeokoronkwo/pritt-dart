@@ -46,7 +46,7 @@ CREATE TABLE users (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
-    avatar_url TEXT NOT NULL,
+    avatar_url TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -100,16 +100,9 @@ CREATE TABLE packages (
     UNIQUE (name, scope),
     CONSTRAINT valid_name CHECK (name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
     CONSTRAINT valid_scope CHECK (scope ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
-    CONSTRAINT scoped_means_scope CHECK (scoped = TRUE AND scope IS NOT NULL OR scoped = FALSE AND scope IS NULL),
     FOREIGN KEY (author_id) REFERENCES users (id),
     FOREIGN KEY (scope) REFERENCES organizations (name)
 );
-
--- Ensure that the combination of name and scope is unique
--- This allows for scoped packages (e.g., @scope/package) and non-scoped packages (e.g., package)
-ALTER TABLE packages
-ADD CONSTRAINT unique_name_scope
-UNIQUE (name, scope);
 
 CREATE TABLE package_contributors (
     package_id TEXT NOT NULL,
