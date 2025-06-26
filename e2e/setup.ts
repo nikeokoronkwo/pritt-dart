@@ -89,16 +89,21 @@ beforeAll(async () => {
     // console.log('Server container started successfully');
 
     // set up web
-    if (!existsSync('../web-ref'))
+    if (!existsSync('../web-ref')) {
+      console.log('Generating Ref Website Code')
       spawnSync('pnpm', ['gen:web'], {
         cwd: '..',
         encoding: 'utf8',
       });
+    }
+
+    console.log('web container time...')
 
     const webDockerContainer = await GenericContainer.fromDockerfile(
       '../web-ref',
     )
       .withPullPolicy(PullPolicy.defaultPolicy())
+      // .withBuildkit()
       .withCache(true)
       .build();
 
