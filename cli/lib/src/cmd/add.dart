@@ -10,9 +10,9 @@ import '../adapters/base/workspace.dart';
 import '../cli/base.dart';
 import '../client.dart';
 import '../pkg_name.dart';
-import '../user_config.dart';
+import '../config/user_config.dart';
 import '../utils/extensions.dart';
-import '../workspace.dart';
+import '../workspace/workspace.dart';
 
 class AddCommand extends PrittCommand {
   @override

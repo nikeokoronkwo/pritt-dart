@@ -10,7 +10,7 @@ import '../../client.dart';
 import '../../csv.dart';
 import '../../list.dart';
 import '../../output.dart';
-import '../../user_config.dart';
+import '../../config/user_config.dart';
 
 class PackageListCommand extends PrittCommand {
   @override

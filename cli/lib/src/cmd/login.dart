@@ -8,7 +8,7 @@ import '../client.dart';
 import '../client/base.dart';
 import '../constants.dart';
 import '../login.dart';
-import '../user_config.dart';
+import '../config/user_config.dart';
 import '../utils/extensions.dart';
 
 class LoginCommand extends PrittCommand {
@@ -80,7 +80,6 @@ class LoginCommand extends PrittCommand {
     try {
       // check if user is logged in
       var userCredentials = await UserCredentials.fetch();
-      print(userCredentials);
 
       if (userCredentials == null ||
           userCredentials.isExpired ||

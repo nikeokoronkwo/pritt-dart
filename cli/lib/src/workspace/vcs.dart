@@ -4,7 +4,7 @@ import 'package:io/io.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_common/interface.dart';
 
-import 'utils/log.dart';
+import '../utils/log.dart';
 
 Future<String?> _runCommand(String executable, List<String> args, {ProcessManager? manager, String? directory, Logger? logger}) async {
   logger ??= Logger();

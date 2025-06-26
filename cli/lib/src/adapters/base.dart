@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../ignore.dart';
+import '../workspace/ignore.dart';
 import '../loader.dart';
 import 'base/config.dart';
 import 'base/context.dart';
@@ -87,6 +87,8 @@ class Handler<T extends Config> {
   /// Given that the publisher is [PublishManager.pm], then publish commands must be passed to the [packageManager] in order to perform such publishing
   final PublishManager publisher;
 
+  final bool usePMForHostedPkgs;
+
   Handler(
       {required this.id,
       required this.name,
@@ -99,11 +101,15 @@ class Handler<T extends Config> {
       this.onCheckWorkspace,
       required this.onConfigure,
       this.getEnv,
-      this.publisher = PublishManager.pritt})
+      this.publisher = PublishManager.pritt,
+      this.usePMForHostedPkgs = false})
       : assert(
             publisher == PublishManager.pritt ||
                 packageManager?.onPublish != null,
             "For the publisher to be the language's package manager, publishing instructions should be passed");
+  
+  @override
+  String toString() => '$language Handler';
 }
 
 enum PublishManager {

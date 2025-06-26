@@ -7,7 +7,7 @@ import '../../archive.dart';
 import '../../cli/base.dart';
 import '../../cli/progress_bar.dart';
 import '../../client.dart';
-import '../../user_config.dart';
+import '../../config/user_config.dart';
 
 class AdapterUnpackCommand extends PrittCommand {
   @override

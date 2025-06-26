@@ -5,7 +5,7 @@ import 'package:pritt_common/interface.dart';
 
 import 'client.dart';
 import 'device_id.dart';
-import 'user_config.dart';
+import 'config/user_config.dart';
 import 'utils/log.dart';
 
 /// Log a user in to the Pritt server

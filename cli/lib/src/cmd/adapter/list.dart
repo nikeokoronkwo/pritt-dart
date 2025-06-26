@@ -9,7 +9,7 @@ import '../../constants.dart';
 import '../../csv.dart';
 import '../../list.dart';
 import '../../output.dart';
-import '../../user_config.dart';
+import '../../config/user_config.dart';
 
 class AdapterListCommand extends PrittCommand {
   @override

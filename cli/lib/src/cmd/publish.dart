@@ -19,10 +19,10 @@ import '../client.dart';
 import '../client/base.dart';
 import '../constants.dart';
 import '../login.dart';
-import '../user_config.dart';
+import '../config/user_config.dart';
 import '../utils/extensions.dart';
-import '../vcs.dart';
-import '../workspace.dart';
+import '../workspace/vcs.dart';
+import '../workspace/workspace.dart';
 
 class PublishCommand extends PrittCommand {
   @override

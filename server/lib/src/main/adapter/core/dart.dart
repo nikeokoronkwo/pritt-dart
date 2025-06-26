@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:path/path.dart';
+import 'package:pritt_common/version.dart';
 import 'package:yaml/yaml.dart';
 
 import '../../base/db/schema.dart';
@@ -9,6 +10,7 @@ import '../../utils/mixins.dart';
 import '../adapter.dart';
 import '../adapter/resolve.dart';
 import '../adapter/result.dart';
+import 'dart/pubspec.dart';
 import 'dart/result.dart';
 
 final dartAdapter = Adapter(
@@ -16,9 +18,9 @@ final dartAdapter = Adapter(
     language: 'dart',
     resolve: (resolve) {
       if (resolve.userAgent.toString().contains('Dart pub')) {
-        if (resolve.path.startsWith('api/packages')) {
+        if (resolve.path.startsWith('/api/packages')) {
           return AdapterResolveType.meta;
-        } else if (resolve.path.startsWith('api/archives')) {
+        } else if (resolve.path.startsWith('/api/archives')) {
           return AdapterResolveType.archive;
         }
       }
@@ -55,19 +57,19 @@ final dartAdapter = Adapter(
 
       // get all packages
       final packages = await crs.getPackages(packageName)
-          as CRSSuccessResponse<Map<String, PackageVersions>>;
+          as CRSSuccessResponse<Map<Version, PackageVersions>>;
 
-      final latestPackage = packages.body.values.firstWhere(
-        (element) => element.version == latestVersion,
-      );
+      final latestPackage = packages.body.entries.firstWhere(
+        (entry) => entry.key.toString() == latestVersion,
+      ).value;
 
-      return AdapterMetaResult(
+      return AdapterMetaJsonResult(
+        contentType: 'application/vnd.pub.v2+json',
         DartMetaResult(
             name: packageName,
             latest: DartPackage(
                 version: latestPackage.version,
-                pubspec:
-                    jsonDecode(jsonEncode(loadYaml(latestPackage.config!))),
+                pubspec: PubSpec.fromJson(jsonDecode(jsonEncode(loadYaml(latestPackage.config!)))),
                 // TODO: Shouldn't we make this easier on ourselves and just use a /dart/ path to reduce guess work?
                 archiveUrl:
                     '${req.resolveObject.url}/api/archives/${latestPackage.configName}-${latestPackage.version}.tar.gz',
@@ -76,9 +78,9 @@ final dartAdapter = Adapter(
             versions: packages.body.values
                 .map((e) => DartPackage(
                     version: e.version,
-                    pubspec: jsonDecode(jsonEncode(loadYaml(e.config!))),
+                    pubspec: PubSpec.fromJson(jsonDecode(jsonEncode(loadYaml(e.config!)))),
                     archiveUrl:
-                        '${req.resolveObject.url}/api/archives/${e.configName}-${e.version}.tar.gz',
+                        '${req.resolveObject.url}/api/archives/${e.package.name}-${e.version}.tar.gz',
                     archiveHash: e.hash,
                     published: e.created))
                 .toList()),
@@ -89,7 +91,7 @@ final dartAdapter = Adapter(
       final packageNameWithExtension = req.resolveObject.path.split('/').last;
       final [packageName, versionAndExtension] =
           packageNameWithExtension.split('-');
-      final version = basenameWithoutExtension(versionAndExtension);
+      final version = basenameWithoutExtension(basenameWithoutExtension(versionAndExtension));
       final _ = versionAndExtension.replaceFirst(version, '');
 
       // get the archive

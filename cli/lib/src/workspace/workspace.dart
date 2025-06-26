@@ -5,14 +5,14 @@ import 'package:path/path.dart' as p;
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
-import 'adapters/base.dart';
-import 'adapters/base/context.dart';
-import 'adapters/base/workspace.dart';
-import 'client.dart';
-import 'config.dart';
+import '../adapters/base.dart';
+import '../adapters/base/context.dart';
+import '../adapters/base/workspace.dart';
+import '../client.dart';
+import '../config/config.dart';
 import 'ignore.dart';
-import 'project/controller.dart';
-import 'project/handler_manager.dart';
+import '../project/controller.dart';
+import '../project/handler_manager.dart';
 import 'vcs.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
@@ -163,7 +163,7 @@ Future<Project> getProject(String directory,
   final IgnoreMatcher matcher = IgnoreMatcher()
   ..addContent(prittIgnore);
 
-  if (vcsIgnoreFile == null && await File(p.join(directory, vcsIgnoreFile)).exists()) {
+  if (vcsIgnoreFile == null && !(await File(p.join(directory, vcsIgnoreFile)).exists())) {
     matcher.addLines(
       await getIgnoredVCSFiles(vcs)
     );

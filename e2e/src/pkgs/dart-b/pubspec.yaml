@@ -3,3 +3,7 @@ version: 0.1.0
 
 environment:
   sdk: ^3.6.0
+dependencies:
+  a:
+    hosted: http://localhost:8080
+    version: ^0.1.0

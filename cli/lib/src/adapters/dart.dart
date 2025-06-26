@@ -19,6 +19,7 @@ final dartHandler = Handler<PubspecConfig>(
           .skipWhile((c) => c.trim().startsWith('#'))
           .toList()
         ..addAll(['.dart_tool', 'pubspec.lock'])),
+  usePMForHostedPkgs: true,
   packageManager: PackageManager(
       name: 'pub',
       args: ['dart', 'pub'],
@@ -62,9 +63,16 @@ final dartHandler = Handler<PubspecConfig>(
         directory: directory,
         name: directory);
   },
-  onConfigure: (context, controller) {
-    // use package manager hosted commands
-    controller.useHostedPMCommands();
+
+  onConfigure: (context, controller) async {
+    final tokenUrls = const LineSplitter().convert(await controller.run('dart', args: ['pub', 'token', 'list']))
+      .map((line) => line.trim())
+      .where((line) => line.startsWith('http'));
+    
+    if (!tokenUrls.any((line) => line.contains(controller.instanceUri))) {
+      // add token
+      await controller.run('dart', args: ['pub', 'token', 'add', controller.instanceUri, '--env-var', 'PRITT_AUTH_TOKEN']);
+    }
 
     return [];
   },
@@ -74,7 +82,7 @@ class PubspecConfig extends Config {
   const PubspecConfig._(
       {required super.name,
       required super.version,
-      required super.description,
+      super.description,
       required super.author,
       super.private,
       required this.rawConfig});
@@ -83,7 +91,7 @@ class PubspecConfig extends Config {
     return PubspecConfig._(
         name: json['name'] as String,
         version: json['version'] as String,
-        description: json['description'] as String,
+        description: json['description'] as String?,
         author: author,
         private: json['publish_to'] == 'none',
         rawConfig: json);

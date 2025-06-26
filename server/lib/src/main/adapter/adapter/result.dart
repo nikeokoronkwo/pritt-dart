@@ -63,7 +63,8 @@ class AdapterMetaResult<T> extends AdapterResult {
 
 class AdapterMetaJsonResult<T extends JsonConvertible>
     extends AdapterMetaResult<T> {
-  AdapterMetaJsonResult(super.body, {super.responseType});
+  String contentType;
+  AdapterMetaJsonResult(super.body, {super.responseType, this.contentType = 'application/json'});
 }
 
 class AdapterArchiveResult extends AdapterResult {

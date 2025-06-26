@@ -4,7 +4,7 @@ import 'package:io/ansi.dart';
 
 import '../cli/base.dart';
 import '../client.dart';
-import '../user_config.dart';
+import '../config/user_config.dart';
 
 class InfoCommand extends PrittCommand {
   @override

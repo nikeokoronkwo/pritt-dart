@@ -6,7 +6,7 @@ part of 'schema.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Signature _$SignatureFromJson(Map<String, dynamic> json) => Signature(
+Signature _$SignatureFromJson(Map json) => Signature(
       publicKeyId: json['publicKeyId'] as String,
       signature: json['signature'] as String,
       created: DateTime.parse(json['created'] as String),
