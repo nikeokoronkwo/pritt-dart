@@ -8,6 +8,8 @@ const l.Level VERBOSE = l.Level('VERBOSE', 100);
 class Logger {
   factory Logger.verbose() = VerboseLogger;
 
+  final _messageDuration = const Duration(milliseconds: 100);
+
   Logger();
 
   void stderr(Object msg) {
@@ -16,6 +18,7 @@ class Logger {
 
   void stdout(Object msg) {
     io.stdout.writeln(msg);
+    io.sleep(_messageDuration);
   }
 
   void severe(Object msg, {bool stderr = true, Object? error}) {
@@ -25,10 +28,12 @@ class Logger {
 
   void fine(Object msg) {
     io.stdout.writeln(green.wrap(msg.toString()));
+    io.sleep(_messageDuration * 2);
   }
 
   void info(Object msg) {
     io.stdout.writeln(blue.wrap(msg.toString()));
+    io.sleep(_messageDuration);
   }
 
   void warn(Object msg, {bool warnKey = false}) {
@@ -40,6 +45,9 @@ class Logger {
 
 class VerboseLogger implements Logger {
   final l.Logger _logger;
+
+  @override
+  final _messageDuration = const Duration(milliseconds: 100);
 
   @override
   void fine(Object msg) {

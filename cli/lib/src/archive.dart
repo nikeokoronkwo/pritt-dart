@@ -34,7 +34,10 @@ Future<void> safeExtractTarGz({
 }
 
 String sanitizeFilename(String targetDir, String filePath) {
-  final fullPath = File('$targetDir/$filePath').absolute.path;
+  final fullPath = File(
+          '$targetDir/${p.relative(filePath, from: filePath.split('/').first)}')
+      .absolute
+      .path;
   final safeRoot = Directory(targetDir).absolute.path;
 
   if (!fullPath.startsWith(safeRoot)) {

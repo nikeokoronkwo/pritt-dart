@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:logging/logging.dart';
 import 'package:pritt_common/retry_map.dart';
 import 'package:pritt_common/worker.dart';
 import 'package:slugid/slugid.dart';
@@ -17,14 +18,16 @@ abstract class TaskBase {
 }
 
 extension Elevate<T extends TaskBase> on T {
-  WorkerItem<T, K> upgrade<K>(K resource) => WorkerItem(this, resource);
+  WorkerItem<T, K, C> upgrade<K, C extends Object>(K resource, {C? context}) =>
+      WorkerItem<T, K, C>(this, resource, context: context);
 }
 
-class WorkerItem<T extends TaskBase, K> {
+class WorkerItem<T extends TaskBase, K, Ctx extends Object> {
   final T task;
   final K resource;
+  final Ctx? context;
 
-  WorkerItem(this.task, this.resource);
+  WorkerItem(this.task, this.resource, {this.context});
 }
 
 /// The different modes the [TaskRunner] can run on
@@ -73,7 +76,9 @@ enum TaskRunnerMode {
 /// TODO: Clear out prints from code
 /// TODO: Testing
 /// TODO: Handling running outside the main loop
-class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
+class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
+    Ctx extends Object> {
+  final Logger? _logger;
   static final int _maximumWorkers = 2;
 
   /// The queue for worker/task items
@@ -85,8 +90,11 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
   /// A map of "eager" assets
   final Map<String, Res> eagerWorkerAssets = {};
 
+  /// The context for worker items
+  final Ctx? context;
+
   /// A map of active workers
-  final Map<String, Worker<WorkerItem<Task, Res>, Ret>> workers = {};
+  final Map<String, Worker<WorkerItem<Task, Res, Ctx>, Ret>> workers = {};
   final Duration pollInterval;
   final Duration retryInterval;
   late final RetryMap<String, Task> idleTasks;
@@ -104,7 +112,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
   ///
   /// NOTE: in order to function properly, the resource [Res] must be serializable and suitable for isolate work
   /// For more information, see: https://api.dart.dev/dart-isolate/SendPort/send.html
-  final FutureOr<Ret> Function(WorkerItem<Task, Res>) workAction;
+  final FutureOr<Ret> Function(WorkerItem<Task, Res, Ctx>) workAction;
 
   /// The mode the task runner is in
   final TaskRunnerMode mode;
@@ -116,19 +124,35 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
   bool get complete => empty && workers.values.every((w) => !w.isBusy);
 
   /// if [onRetrieve] returns null, then the resource associated with the queue task is not available
-  TaskRunner({
-    this.pollInterval = const Duration(milliseconds: 150),
-    Duration? retryInterval,
-    required this.onRetrieve,
-    required this.workAction,
-    this.mode = TaskRunnerMode.singleTask,
-    this.onCheck,
-  }) : retryInterval = retryInterval ?? Duration(milliseconds: 150) {
+  TaskRunner(
+      {this.pollInterval = const Duration(milliseconds: 150),
+      Duration? retryInterval,
+      required this.onRetrieve,
+      required this.workAction,
+      this.mode = TaskRunnerMode.singleTask,
+      this.onCheck,
+      this.context,
+      bool debug = false})
+      : _logger = debug ? Logger('PRITT TASK RUNNER') : null,
+        retryInterval = retryInterval ?? Duration(milliseconds: 150) {
+    if (!hierarchicalLoggingEnabled) hierarchicalLoggingEnabled = true;
+    _logger?.level = Level.ALL;
+    _logger?.onRecord.listen((record) {
+      print(
+          'LOG ${record.loggerName}:: ${record.level.name}: ${record.time}: ${record.message} :: Logged at ${record.time}');
+    });
+
+    _logger?.shout(
+        'TEST MESSAGE: This ensures the logger is active if set active');
+
     idleTasks = RetryMap(
         retry: this.retryInterval,
         onRetry: (key, value) async {
           if (this.onCheck != null) {
             if (await this.onCheck!.call(value)) {
+              _logger?.info('Queue item ${value.id} released from idle');
+
+              await value.updateStatus(TaskStatus.queue);
               // add value back to queue beginning
               queue.addFirst(value);
               return true;
@@ -137,6 +161,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
           } else {
             final resource = await onRetrieve(value);
             if (resource != null) {
+              _logger?.info('Queue item ${value.id} released from idle');
+
               eagerWorkerAssets[key] = resource;
               queue.addFirst(value);
               return true;
@@ -149,6 +175,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
   /// Starts the task runner
   void start() async {
     _isActive = true;
+    _logger?.fine('Task Runner Started');
     unawaited(_run());
   }
 
@@ -156,6 +183,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
     while (_isActive) {
       // check queue is empty or not
       if (queue.isEmpty) {
+        if (idleTasks.isNotEmpty) _logger?.info('Empty queue');
+
         // give back control to event loop
         await Future.delayed(pollInterval);
         continue;
@@ -167,9 +196,12 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
         TaskRunnerMode.multiTask => await _getLeastBusyWorker(),
       };
 
+      _logger?.info('Gotten new worker $nextWorker');
+
       // once next worker is active, get resource for queue
       // pop queue item
       var nextTask = queue.removeFirst();
+      _logger?.info('Gotten task ${nextTask.id}. Awaiting resource check');
 
       // get resource
 
@@ -177,33 +209,65 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
         Res? resource;
 
         if (eagerWorkerAssets.containsKey(nextTask.id)) {
+          _logger?.info(
+              'Task. of id ${nextTask.id} contains eager resource loaded from idle task map');
           resource = eagerWorkerAssets[nextTask.id];
         } else {
+          _logger?.info('Finding resource...');
           if (onCheck != null) {
             // use on check to loop
-            final resourceIsAvailable = await onCheck!(nextTask);
+            var resourceIsAvailable = await onCheck!(nextTask);
+
+            if (resourceIsAvailable) {
+              resource = await onRetrieve(nextTask);
+              if (resource == null) {
+                _logger
+                    ?.info('Omor: The check is true, but no resource is found');
+                resourceIsAvailable = false;
+              } else {
+                resourceIsAvailable = true;
+              }
+            }
+
             while (!resourceIsAvailable) {
+              _logger?.info('Task ${nextTask.id} is now idle');
               await nextTask.updateStatus(TaskStatus.idle);
               // add to retry map, set as idle
               idleTasks[nextTask.id] = nextTask;
               if (queue.isNotEmpty) {
                 nextTask = queue.removeFirst();
               } else {
+                _logger?.info('All tasks have been exhausted');
                 break;
               }
-              resource = await onRetrieve(nextTask);
+              resourceIsAvailable = await onCheck!(nextTask);
+
+              if (resourceIsAvailable) {
+                resource = await onRetrieve(nextTask);
+                if (resource == null) {
+                  _logger?.info(
+                      'Omor: The check is true, but no resource is found');
+                  resourceIsAvailable = false;
+                } else {
+                  _logger?.fine(resource);
+                  break;
+                }
+              }
             }
 
-            if (resourceIsAvailable) resource = await onRetrieve(nextTask);
+            resource ??= await onRetrieve(nextTask);
           } else {
             var resource = await onRetrieve(nextTask);
             while (resource == null) {
+              _logger?.info('Task ${nextTask.id} is now idle');
+
               await nextTask.updateStatus(TaskStatus.idle);
               // add to retry map, set as idle
               idleTasks[nextTask.id] = nextTask;
               if (queue.isNotEmpty) {
                 nextTask = queue.removeFirst();
               } else {
+                _logger?.info('All tasks have been exhausted');
                 break;
               }
               resource = await onRetrieve(nextTask);
@@ -211,15 +275,27 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
           }
         }
 
+        _logger?.info('Resource check and delegation....');
+
         // delegate to worker
         if (resource != null) {
+          _logger?.info('Gotten new task to execute');
+
           await nextTask.updateStatus(TaskStatus.pending);
-          nextWorker.run(nextTask.upgrade(resource)).then((v) async {
+
+          nextWorker
+              .run(nextTask.upgrade(resource, context: context))
+              .then((v) async {
+            _logger?.fine('Task ${nextTask.id} completed successfully');
             await nextTask.updateStatus(TaskStatus.success);
+            _logger?.fine('Task is now ended');
             return completedTasks[nextTask.id] = v;
           });
         }
+
+        _logger?.info('Next loop');
       } catch (e) {
+        _logger?.severe('Task of id ${nextTask.id} contains error');
         nextTask.updateError(e);
         await nextTask.updateStatus(TaskStatus.fail);
       }
@@ -228,9 +304,9 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
     }
   }
 
-  Future<Worker<WorkerItem<Task, Res>, Ret>> _getLeastBusyWorker() async {
+  Future<Worker<WorkerItem<Task, Res, Ctx>, Ret>> _getLeastBusyWorker() async {
     if (workers.length < _maximumWorkers) {
-      final worker = await Worker.spawn<WorkerItem<Task, Res>, Ret>(
+      final worker = await Worker.spawn<WorkerItem<Task, Res, Ctx>, Ret>(
           work: workAction, onCleanup: notifyAvailability);
       workers[Slugid.nice().uuid()] = worker;
       // return new worker spawned
@@ -243,9 +319,9 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret> {
   }
 
   /// Fetches the next available worker
-  Future<Worker<WorkerItem<Task, Res>, Ret>> _getNextWorker() async {
+  Future<Worker<WorkerItem<Task, Res, Ctx>, Ret>> _getNextWorker() async {
     if (workers.length < _maximumWorkers) {
-      final worker = await Worker.spawn<WorkerItem<Task, Res>, Ret>(
+      final worker = await Worker.spawn<WorkerItem<Task, Res, Ctx>, Ret>(
           work: workAction, onCleanup: notifyAvailability);
       workers[Slugid.nice().uuid()] = worker;
       // return new worker spawned

@@ -1,18 +1,20 @@
 # Build Stage 1
 
-FROM node:22-alpine AS build
+FROM node:23-alpine AS build
 WORKDIR /app
 
 RUN corepack enable
 
-# Copy package.json and your lockfile, here we add pnpm-lock.yaml for illustration
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
 # Copy the entire project
 COPY . ./
+
+# Push DB Changes
+RUN pnpm run db:push
 
 # Build the project
 RUN pnpm run build
@@ -27,8 +29,8 @@ COPY --from=build /app/.output/ ./
 
 # Change the port and host
 # TODO: Set env
-ENV PORT 80
-ENV HOST 0.0.0.0
+ENV PORT=3000
+ENV HOST=0.0.0.0
 
 EXPOSE 80
 

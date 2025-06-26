@@ -4,7 +4,7 @@ import 'package:io/ansi.dart';
 
 import '../cli/base.dart';
 import '../client.dart';
-import '../user_config.dart';
+import '../config/user_config.dart';
 
 class InfoCommand extends PrittCommand {
   @override
@@ -32,7 +32,7 @@ class InfoCommand extends PrittCommand {
     final client = PrittClient(
         url: userCredentials.uri.toString(),
         accessToken: userCredentials.accessToken);
-    final user = await client.getCurrentUser();
+    final user = await client.getUserById(id: userCredentials.userId);
 
     // print user info as table
     logger.fine(
@@ -43,6 +43,10 @@ class InfoCommand extends PrittCommand {
       logger.stdout(
           '\t${styleBold.wrap(e.key)}: ${e.key.endsWith('_at') ? transformDate(e.value) : e.value}');
     });
+    if (user.name == '') {
+      logger.warn(
+          'Warning: Your name seems to be empty. Try logging into your Pritt instance on the web and update your name');
+    }
   }
 }
 

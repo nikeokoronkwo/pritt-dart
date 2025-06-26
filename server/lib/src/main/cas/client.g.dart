@@ -6,7 +6,7 @@ part of 'client.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CASMessage _$CASMessageFromJson(Map<String, dynamic> json) => CASMessage(
+CASMessage _$CASMessageFromJson(Map json) => CASMessage(
       messageType: $enumDecode(_$CASMessageTypeEnumMap, json['message_type']),
     );
 
@@ -24,14 +24,14 @@ const _$CASMessageTypeEnumMap = {
   CASMessageType.archiveResponse: 'archiveResponse',
 };
 
-CASRequest _$CASRequestFromJson(Map<String, dynamic> json) => CASRequest(
+CASRequest _$CASRequestFromJson(Map json) => CASRequest(
       id: json['id'] as String,
       method: json['method'] as String,
-      params: json['params'] as Map<String, dynamic>,
+      params: Map<String, dynamic>.from(json['params'] as Map),
     );
 
 CASResponse<T> _$CASResponseFromJson<T extends Jsonable>(
-  Map<String, dynamic> json,
+  Map json,
   T Function(Object? json) fromJsonT,
 ) =>
     CASResponse<T>(

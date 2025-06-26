@@ -6,13 +6,13 @@ import {
   timestamp,
   boolean,
   unique,
+  check,
   text,
   foreignKey,
   uuid,
   jsonb,
-  check,
-  primaryKey,
   json,
+  primaryKey,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
@@ -45,6 +45,8 @@ export const taskStatus = pgEnum("task_status", [
   "fail",
   "expired",
   "error",
+  "idle",
+  "queue",
 ]);
 export const versionControlSystem = pgEnum("version_control_system", [
   "git",
@@ -83,117 +85,6 @@ export const flywaySchemaHistory = pgTable(
     index("flyway_schema_history_s_idx").using(
       "btree",
       table.success.asc().nullsLast().op("bool_ops"),
-    ),
-  ],
-);
-
-export const organizations = pgTable(
-  "organizations",
-  {
-    id: text().primaryKey().notNull(),
-    name: text().notNull(),
-    description: text(),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [unique("organizations_name_key").on(table.name)],
-);
-
-export const users = pgTable("users", {
-  id: text().primaryKey().notNull(),
-  name: text().notNull(),
-  email: text().notNull(),
-  avatarUrl: text("avatar_url").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
-    .defaultNow()
-    .notNull(),
-});
-
-export const accessTokens = pgTable(
-  "access_tokens",
-  {
-    id: uuid()
-      .default(sql`uuid_generate_v4()`)
-      .primaryKey()
-      .notNull(),
-    userId: text("user_id").notNull(),
-    hash: text().notNull(),
-    tokenType: accessTokenType("token_type").notNull(),
-    description: text(),
-    deviceId: text("device_id"),
-    expiresAt: timestamp("expires_at", {
-      withTimezone: true,
-      mode: "string",
-    }).notNull(),
-    lastUsedAt: timestamp("last_used_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .defaultNow()
-      .notNull(),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    deviceInfo: jsonb("device_info"),
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "access_tokens_user_id_fkey",
-    }).onDelete("cascade"),
-    unique("access_tokens_hash_key").on(table.hash),
-  ],
-);
-
-export const packages = pgTable(
-  "packages",
-  {
-    id: text().primaryKey().notNull(),
-    name: text().notNull(),
-    version: text().notNull(),
-    scoped: boolean().default(false).notNull(),
-    description: text(),
-    authorId: text("author_id").notNull(),
-    scope: text(),
-    language: text().notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
-    vcs: versionControlSystem().default("git").notNull(),
-    vcsUrl: text("vcs_url"),
-    archive: text().notNull(),
-    license: text(),
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.authorId],
-      foreignColumns: [users.id],
-      name: "packages_author_id_fkey",
-    }),
-    foreignKey({
-      columns: [table.scope],
-      foreignColumns: [organizations.name],
-      name: "packages_scope_fkey",
-    }),
-    unique("unique_name_scope").on(table.name, table.scope),
-    unique("packages_version_key").on(table.version),
-    check("valid_name", sql`name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'::text`),
-    check("valid_scope", sql`scope ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'::text`),
-    check(
-      "scoped_means_scope",
-      sql`((scoped = true) AND (scope IS NOT NULL)) OR ((scoped = false) AND (scope IS NULL))`,
     ),
   ],
 );
@@ -273,16 +164,29 @@ export const packagePublishingTasks = pgTable(
       .default(sql`uuid_generate_v4()`)
       .primaryKey()
       .notNull(),
-    status: taskStatus().default("pending").notNull(),
+    status: taskStatus().default("queue").notNull(),
     userId: text("user_id").notNull(),
+    name: text().notNull(),
     scope: text(),
-    package: text().notNull(),
+    version: text().notNull(),
+    new: boolean().notNull(),
+    language: text().notNull(),
+    config: text().notNull(),
+    configMap: jsonb("config_map").notNull(),
+    metadata: jsonb().default({}).notNull(),
+    env: json().default({}).notNull(),
+    vcs: versionControlSystem().default("other").notNull(),
+    vcsUrl: text("vcs_url"),
     updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
       .defaultNow()
       .notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .defaultNow()
       .notNull(),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }).notNull(),
   },
   (table) => [
     foreignKey({
@@ -290,6 +194,112 @@ export const packagePublishingTasks = pgTable(
       foreignColumns: [users.id],
       name: "package_publishing_tasks_user_id_fkey",
     }).onDelete("set null"),
+  ],
+);
+
+export const organizations = pgTable(
+  "organizations",
+  {
+    id: text().primaryKey().notNull(),
+    name: text().notNull(),
+    description: text(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [unique("organizations_name_key").on(table.name)],
+);
+
+export const users = pgTable("users", {
+  id: text().primaryKey().notNull(),
+  name: text().notNull(),
+  email: text().notNull(),
+  avatarUrl: text("avatar_url").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
+});
+
+export const accessTokens = pgTable(
+  "access_tokens",
+  {
+    id: uuid()
+      .default(sql`uuid_generate_v4()`)
+      .primaryKey()
+      .notNull(),
+    userId: text("user_id").notNull(),
+    hash: text().notNull(),
+    tokenType: accessTokenType("token_type").notNull(),
+    description: text(),
+    deviceId: text("device_id"),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }).notNull(),
+    lastUsedAt: timestamp("last_used_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    deviceInfo: jsonb("device_info"),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "access_tokens_user_id_fkey",
+    }).onDelete("cascade"),
+    unique("access_tokens_hash_key").on(table.hash),
+  ],
+);
+
+export const packages = pgTable(
+  "packages",
+  {
+    id: text().primaryKey().notNull(),
+    name: text().notNull(),
+    version: text().notNull(),
+    description: text(),
+    authorId: text("author_id").notNull(),
+    scope: text(),
+    language: text().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    vcs: versionControlSystem().default("git").notNull(),
+    vcsUrl: text("vcs_url"),
+    archive: text().notNull(),
+    license: text(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.authorId],
+      foreignColumns: [users.id],
+      name: "packages_author_id_fkey",
+    }),
+    foreignKey({
+      columns: [table.scope],
+      foreignColumns: [organizations.name],
+      name: "packages_scope_fkey",
+    }),
+    unique("packages_name_scope_key").on(table.name, table.scope),
+    unique("packages_version_key").on(table.version),
+    check("valid_name", sql`name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'::text`),
+    check("valid_scope", sql`scope ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'::text`),
   ],
 );
 

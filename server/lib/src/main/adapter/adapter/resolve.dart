@@ -56,8 +56,7 @@ class AdapterResolveObject {
       required this.userAgent})
       : path = uri.path,
         pathSegments = uri.pathSegments,
-        url =
-            '${uri.scheme}://${uri.host}${uri.port == 80 ? '' : ':${uri.port}'}';
+        url = uri.replace(path: '').toString();
 
   Map<String, dynamic> toJson() => _$AdapterResolveObjectToJson(this);
 }

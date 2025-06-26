@@ -129,11 +129,12 @@ class CoreRegistryService implements CRSController {
       {String? language, Map<String, dynamic>? env}) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final file = await ofs
-          .getPackage('/${scope == null ? name : '$scope/$name'}/$version.tgz');
+      print('${scope == null ? name : '$scope/$name'}/$version.tar.gz');
+      final file = await ofs.getPackage(
+          '${scope == null ? name : '$scope/$name'}/$version.tar.gz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
-        file.contentType ?? 'application/gzip',
+        'application/gzip',
         Stream.fromIterable([file.data]),
       );
       return CRSResponse.success(

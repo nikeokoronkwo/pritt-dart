@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'pubspec.g.dart';
 
 ///Dart Pubspec file
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PubSpec {
   @JsonKey(name: "dependencies")
   final Map<String, dynamic>? dependencies;
@@ -132,7 +132,7 @@ class PubSpec {
 ///Git dependency
 ///
 ///Path dependency
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Dependency {
   ///The SDK which contains this package
   @JsonKey(name: "sdk")
@@ -160,7 +160,7 @@ class Dependency {
   Map<String, dynamic> toJson() => _$DependencyToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GitClass {
   ///Path of this package relative to the Git repo's root
   @JsonKey(name: "path")
@@ -186,7 +186,7 @@ class GitClass {
   Map<String, dynamic> toJson() => _$GitClassToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class HostedClass {
   @JsonKey(name: "name")
   final String? name;
@@ -207,7 +207,7 @@ class HostedClass {
 }
 
 ///Flutter-specific metadata. [Learn more.](https://docs.flutter.dev/tools/pubspec)
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Flutter {
   ///A list of directories or files that contain images or other assets. [Learn
   ///more.](https://flutter.dev/docs/development/ui/assets-and-images)
@@ -250,7 +250,7 @@ class Flutter {
   Map<String, dynamic> toJson() => _$FlutterToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AssetClass {
   ///A list of flavors that include the asset. [Learn
   ///more.](https://docs.flutter.dev/deployment/flavors#conditionally-bundling-assets-based-on-flavor)
@@ -276,7 +276,7 @@ class AssetClass {
   Map<String, dynamic> toJson() => _$AssetClassToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AssetTransformer {
   @JsonKey(name: "args")
   final List<String>? args;
@@ -298,7 +298,7 @@ class AssetTransformer {
   Map<String, dynamic> toJson() => _$AssetTransformerToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Font {
   ///The name of the typeface. You use this name in the `fontFamily` property of a `TextStyle`
   ///object.
@@ -317,7 +317,7 @@ class Font {
   Map<String, dynamic> toJson() => _$FontToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class FontFont {
   ///The path to the font file. Flutter supports the following font formats: OpenType font
   ///collections: .ttc, TrueType fonts: .ttf, OpenType fonts: .otf. Flutter does not support
@@ -364,7 +364,7 @@ enum Style {
 
 ///The platforms field specifies which platforms the package supports. [Learn
 ///more](https://dart.dev/tools/pub/pubspec#platforms)
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Platforms {
   @JsonKey(name: "android")
   final dynamic android;
@@ -394,7 +394,7 @@ class Platforms {
   Map<String, dynamic> toJson() => _$PlatformsToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Screenshot {
   @JsonKey(name: "description")
   final String description;

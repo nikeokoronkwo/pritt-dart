@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
@@ -28,11 +29,22 @@ Handler adapterHandler(CoreRegistryService crs) {
       final adapter = adapterSearchResult.adapter;
 
       // once we get an adapter, we can then begin the adapter life cycle
-      final result = await adapter.run(
-          adapter.language == null ? crs : crs.controller(adapter.language!),
-          AdapterOptions(
-              resolveObject: adapterResolve,
-              resolveType: adapterSearchResult.resolve));
+      final AdapterResult result;
+      try {
+        result = await adapter.run(
+            adapter.language == null ? crs : crs.controller(adapter.language!),
+            AdapterOptions(
+                resolveObject: adapterResolve,
+                resolveType: adapterSearchResult.resolve));
+      } catch (e, stackTrace) {
+        print('$e -- $stackTrace');
+        rethrow;
+      }
+
+      print(result is AdapterMetaJsonResult
+          ? jsonEncode(result.body.toJson())
+          : '');
+      print(result);
 
       // return response based on the result
       return switch (result) {
@@ -43,25 +55,25 @@ Handler adapterHandler(CoreRegistryService crs) {
                 _ => result.error.toString(),
               },
               headers: {
-                'Content-Type': result.responseType.mimeType,
+                HttpHeaders.contentTypeHeader: result.responseType.mimeType,
               }),
         AdapterMetaResult() => Response.ok(
               result is AdapterMetaJsonResult
-                  ? result.body.toJson()
+                  ? jsonEncode(result.body.toJson())
                   : switch (result.responseType) {
-                      ResponseType.json => result.body.toJson(),
+                      ResponseType.json => jsonEncode(result.body.toJson()),
                       ResponseType.xml => mapToXml(result.body.toJson()),
                       _ => result.body.toString()
                     },
               headers: {
-                'Content-Type': result is AdapterMetaJsonResult
-                    ? 'application/json'
+                HttpHeaders.contentTypeHeader: result is AdapterMetaJsonResult
+                    ? result.contentType
                     : result.responseType.contentType,
               }),
         AdapterArchiveResult() => Response.ok(result.archive, headers: {
-            'Content-Type': result.contentType,
-            'Content-Disposition': 'attachment; filename=${result.name}',
-            'Transfer-Encoding': 'chunked',
+            HttpHeaders.contentTypeHeader: result.contentType,
+            HttpHeaders.contentDisposition:
+                'attachment; filename=${result.name}',
           }),
       };
     } on AdapterException catch (_) {

@@ -45,6 +45,9 @@ enum CRSExceptionType {
   /// Unsupported feature
   UNSUPPORTED_FEATURE,
 
+  /// User not found
+  USER_NOT_FOUND,
+
   /// The item is not found (something other than a package or tarball)
   ITEM_NOT_FOUND
 }

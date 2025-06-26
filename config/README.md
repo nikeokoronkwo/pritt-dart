@@ -1,3 +1,5 @@
+<!-- TODO: Update these docs -->
+
 # Pritt Schema
 
 This is the [apple pkl](https://pkl-lang.org/) schemas used for the development

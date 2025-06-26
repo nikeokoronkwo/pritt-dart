@@ -32,8 +32,6 @@ class Table {
       return allLines.map((l) => l[i]);
     }).map((col) => col.map((v) => v.length).max + 2).toList();
 
-    print(lineSpacings);
-
     // draw up border
     sink.writeln(_writeLine(List.filled(rows, ''),
         sep: '+',
