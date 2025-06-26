@@ -1,8 +1,12 @@
-# Ignore artifacts:
+
+/dist
+/coverage
 build
-coverage
 pnpm-lock.yaml
+
+.github
 
 # already have prettier config there
 web
 web-ref
+

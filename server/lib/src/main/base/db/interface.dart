@@ -56,7 +56,9 @@ abstract interface class PrittDatabaseInterface
     required User author,
     required String language,
     required VCS vcs,
-    Uri? archive,
+    String? vcsUrl,
+    String? license,
+    required Uri archive,
     Iterable<User>? contributors,
   });
 
@@ -82,13 +84,13 @@ abstract interface class PrittDatabaseInterface
     required User author,
     required String language,
     required VCS vcs,
-    Uri? archive,
+    required Uri archive,
     Iterable<String>? contributors,
   });
 
   /// Add a user as a contributor to a package
   FutureOr<Package> addContributorToPackage(
-      String name, User user, Privileges privileges,
+      String name, User user, List<Privileges> privileges,
       {String? scope});
 
   /// Updates a new version of a package with archive details such as hash, signature, integrity, etc

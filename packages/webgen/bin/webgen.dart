@@ -91,8 +91,8 @@ void main(List<String> args) async {
 
   // run install
   print('LOG: Installing Dependencies...');
-  execSync(
-      'pnpm i', ChildProcessExecOptions(cwd: outDir.path, encoding: 'utf-8'));
+  execSync('pnpm i --ignore-workspace',
+      ChildProcessExecOptions(cwd: outDir.path, encoding: 'utf-8'));
 
   print('LOG: Reading Configuration...');
   // get configuration
@@ -126,6 +126,8 @@ void main(List<String> args) async {
 
     await Directory(newPath).delete(recursive: true);
   }
+
+  // run
 
   if (argResults.wasParsed('watch')) {
     print('STARTED WATCHING FOR CHANGES...');

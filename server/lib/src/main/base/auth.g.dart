@@ -6,8 +6,7 @@ part of 'auth.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PrittAuthMetadata _$PrittAuthMetadataFromJson(Map<String, dynamic> json) =>
-    PrittAuthMetadata(
+PrittAuthMetadata _$PrittAuthMetadataFromJson(Map json) => PrittAuthMetadata(
       name: json['name'] as String,
       email: json['email'] as String,
     );
@@ -18,7 +17,7 @@ Map<String, dynamic> _$PrittAuthMetadataToJson(PrittAuthMetadata instance) =>
       'email': instance.email,
     };
 
-APIKeyResult _$APIKeyResultFromJson(Map<String, dynamic> json) => APIKeyResult(
+APIKeyResult _$APIKeyResultFromJson(Map json) => APIKeyResult(
       apiKey: json['apiKey'] as String,
       keyHash: json['keyHash'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),

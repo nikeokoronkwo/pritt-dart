@@ -103,7 +103,7 @@ final npmAdapter = Adapter(
         }
       }
 
-      return AdapterMetaResult(NpmMetaResult(
+      return AdapterMetaJsonResult(NpmMetaResult(
           id: packageName,
           name: packageName,
           distTags: NpmDistTags(

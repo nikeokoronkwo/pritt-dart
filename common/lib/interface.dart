@@ -1,4 +1,5 @@
-// ignore_for_file: directives_ordering, non_constant_identifier_names
+// ignore_for_file: constant_identifier_names, directives_ordering
+// ignore_for_file: non_constant_identifier_names, package_access
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
@@ -65,7 +66,7 @@ class StreamedContent extends Content {
       'Do not call raw on streamed content: Use `data` instead');
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AddAdapterRequest {
   AddAdapterRequest();
 
@@ -75,7 +76,7 @@ class AddAdapterRequest {
   Map<String, dynamic> toJson() => _$AddAdapterRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AddAdapterResponse {
   AddAdapterResponse();
 
@@ -85,7 +86,7 @@ class AddAdapterResponse {
   Map<String, dynamic> toJson() => _$AddAdapterResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AddUserRequest {
   AddUserRequest();
 
@@ -95,7 +96,7 @@ class AddUserRequest {
   Map<String, dynamic> toJson() => _$AddUserRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AddUserResponse {
   AddUserResponse();
 
@@ -118,7 +119,7 @@ enum PollStatus {
   final String value;
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthDetailsResponse {
   AuthDetailsResponse({
     required this.token,
@@ -147,7 +148,7 @@ class AuthDetailsResponse {
   Map<String, dynamic> toJson() => _$AuthDetailsResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthError {
   AuthError({
     this.error,
@@ -164,7 +165,7 @@ class AuthError {
   Map<String, dynamic> toJson() => _$AuthErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthPollResponse {
   AuthPollResponse({
     required this.status,
@@ -181,7 +182,7 @@ class AuthPollResponse {
   Map<String, dynamic> toJson() => _$AuthPollResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthResponse {
   AuthResponse({
     required this.token,
@@ -215,7 +216,7 @@ enum ValidatedPollStatus {
   final String value;
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthValidateRequest {
   AuthValidateRequest({
     required this.user_id,
@@ -241,7 +242,7 @@ class AuthValidateRequest {
   Map<String, dynamic> toJson() => _$AuthValidateRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthValidateResponse {
   AuthValidateResponse({required this.validated});
 
@@ -253,7 +254,7 @@ class AuthValidateResponse {
   Map<String, dynamic> toJson() => _$AuthValidateResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Error {
   Error({this.error});
 
@@ -264,7 +265,7 @@ class Error {
   Map<String, dynamic> toJson() => _$ErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class ExistsError {
   ExistsError({
     this.error,
@@ -281,7 +282,7 @@ class ExistsError {
   Map<String, dynamic> toJson() => _$ExistsErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class ExpiredError {
   ExpiredError({
     this.error,
@@ -298,7 +299,7 @@ class ExpiredError {
   Map<String, dynamic> toJson() => _$ExpiredErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetAdapterResponse {
   GetAdapterResponse({
     required this.name,
@@ -327,7 +328,7 @@ class GetAdapterResponse {
   Map<String, dynamic> toJson() => _$GetAdapterResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetAdaptersByLangResponse {
   GetAdaptersByLangResponse();
 
@@ -337,7 +338,7 @@ class GetAdaptersByLangResponse {
   Map<String, dynamic> toJson() => _$GetAdaptersByLangResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Plugin {
   Plugin({
     required this.name,
@@ -365,7 +366,7 @@ class Plugin {
   Map<String, dynamic> toJson() => _$PluginToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetAdaptersResponse {
   GetAdaptersResponse({required this.adapters});
 
@@ -399,7 +400,7 @@ enum Privilege {
   final String value;
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PackageMap {
   PackageMap({
     required this.name,
@@ -419,7 +420,7 @@ class PackageMap {
   Map<String, dynamic> toJson() => _$PackageMapToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetCurrentUserResponse {
   GetCurrentUserResponse({
     required this.name,
@@ -448,7 +449,7 @@ class GetCurrentUserResponse {
   Map<String, dynamic> toJson() => _$GetCurrentUserResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Author {
   Author({
     required this.name,
@@ -467,7 +468,7 @@ class Author {
   Map<String, dynamic> toJson() => _$AuthorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Contributor {
   Contributor({
     required this.name,
@@ -490,7 +491,7 @@ class Contributor {
   Map<String, dynamic> toJson() => _$ContributorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Signature {
   Signature({
     required this.public_key_id,
@@ -510,7 +511,7 @@ class Signature {
   Map<String, dynamic> toJson() => _$SignatureToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class ConfigFile {
   ConfigFile({
     required this.name,
@@ -527,7 +528,7 @@ class ConfigFile {
   Map<String, dynamic> toJson() => _$ConfigFileToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetPackageByVersionResponse {
   GetPackageByVersionResponse({
     required this.name,
@@ -608,7 +609,7 @@ enum VCS {
   final String value;
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class VerbosePackage {
   VerbosePackage({
     required this.name,
@@ -664,7 +665,7 @@ class VerbosePackage {
   Map<String, dynamic> toJson() => _$VerbosePackageToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetPackageResponse {
   GetPackageResponse({
     required this.name,
@@ -714,7 +715,7 @@ class GetPackageResponse {
   Map<String, dynamic> toJson() => _$GetPackageResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Package {
   Package({
     required this.name,
@@ -749,7 +750,7 @@ class Package {
   Map<String, dynamic> toJson() => _$PackageToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetPackagesResponse {
   GetPackagesResponse({
     this.next_url,
@@ -766,7 +767,7 @@ class GetPackagesResponse {
   Map<String, dynamic> toJson() => _$GetPackagesResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetScopeResponse {
   GetScopeResponse({
     required this.name,
@@ -783,7 +784,7 @@ class GetScopeResponse {
   Map<String, dynamic> toJson() => _$GetScopeResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetUserResponse {
   GetUserResponse({
     required this.name,
@@ -809,7 +810,7 @@ class GetUserResponse {
   Map<String, dynamic> toJson() => _$GetUserResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class GetUsersResponse {
   GetUsersResponse();
 
@@ -819,7 +820,7 @@ class GetUsersResponse {
   Map<String, dynamic> toJson() => _$GetUsersResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class InvalidError {
   InvalidError({
     this.error,
@@ -839,7 +840,7 @@ class InvalidError {
   Map<String, dynamic> toJson() => _$InvalidErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class InvalidTarballError {
   InvalidTarballError({
     this.error,
@@ -862,7 +863,7 @@ class InvalidTarballError {
   Map<String, dynamic> toJson() => _$InvalidTarballErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class NotFoundError {
   NotFoundError({
     this.error,
@@ -879,7 +880,7 @@ class NotFoundError {
   Map<String, dynamic> toJson() => _$NotFoundErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Configuration {
   Configuration({
     required this.path,
@@ -896,7 +897,7 @@ class Configuration {
   Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class VersionControlSystem {
   VersionControlSystem({
     required this.name,
@@ -913,7 +914,7 @@ class VersionControlSystem {
   Map<String, dynamic> toJson() => _$VersionControlSystemToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PublishPackageByVersionRequest {
   PublishPackageByVersionRequest({
     required this.name,
@@ -961,7 +962,7 @@ enum PublishingStatus {
   final String value;
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class Queue {
   Queue({
     required this.id,
@@ -977,7 +978,7 @@ class Queue {
   Map<String, dynamic> toJson() => _$QueueToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PublishPackageByVersionResponse {
   PublishPackageByVersionResponse({
     this.url,
@@ -995,7 +996,7 @@ class PublishPackageByVersionResponse {
       _$PublishPackageByVersionResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PublishPackageRequest {
   PublishPackageRequest({
     required this.name,
@@ -1030,7 +1031,7 @@ class PublishPackageRequest {
   Map<String, dynamic> toJson() => _$PublishPackageRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PublishPackageResponse {
   PublishPackageResponse({
     this.url,
@@ -1047,12 +1048,15 @@ class PublishPackageResponse {
   Map<String, dynamic> toJson() => _$PublishPackageResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class PublishPackageStatusResponse {
   PublishPackageStatusResponse({
     required this.status,
     this.error,
     this.description,
+    required this.name,
+    this.scope,
+    required this.version,
   });
 
   factory PublishPackageStatusResponse.fromJson(Map<String, dynamic> json) =>
@@ -1064,10 +1068,16 @@ class PublishPackageStatusResponse {
 
   final String? description;
 
+  final String name;
+
+  final String? scope;
+
+  final String version;
+
   Map<String, dynamic> toJson() => _$PublishPackageStatusResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class ServerError {
   ServerError({this.error});
 
@@ -1091,7 +1101,7 @@ enum UnauthorizedReason {
   final String value;
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class UnauthorizedError {
   UnauthorizedError({
     this.error,
@@ -1111,7 +1121,7 @@ class UnauthorizedError {
   Map<String, dynamic> toJson() => _$UnauthorizedErrorToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class UploadAdapterResponse {
   UploadAdapterResponse();
 
@@ -1121,7 +1131,7 @@ class UploadAdapterResponse {
   Map<String, dynamic> toJson() => _$UploadAdapterResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class UploadPackageResponse {
   UploadPackageResponse();
 
@@ -1131,7 +1141,7 @@ class UploadPackageResponse {
   Map<String, dynamic> toJson() => _$UploadPackageResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class YankAdapterResponse {
   YankAdapterResponse();
 
@@ -1141,7 +1151,7 @@ class YankAdapterResponse {
   Map<String, dynamic> toJson() => _$YankAdapterResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class YankPackageByVersionRequest {
   YankPackageByVersionRequest();
 
@@ -1151,7 +1161,7 @@ class YankPackageByVersionRequest {
   Map<String, dynamic> toJson() => _$YankPackageByVersionRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class YankPackageByVersionResponse {
   YankPackageByVersionResponse();
 
@@ -1161,7 +1171,7 @@ class YankPackageByVersionResponse {
   Map<String, dynamic> toJson() => _$YankPackageByVersionResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class YankPackageRequest {
   YankPackageRequest({required this.version});
 
@@ -1173,7 +1183,7 @@ class YankPackageRequest {
   Map<String, dynamic> toJson() => _$YankPackageRequestToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class YankPackageResponse {
   YankPackageResponse();
 
@@ -1363,7 +1373,7 @@ abstract interface class PrittInterface {
   });
 
   /// **Get the publishing status for a package**
-  /// GET /api/package/status
+  /// GET /api/publish/status
   ///
   /// Get the publishing status for a package being published, given the status id
   _i3.FutureOr<PublishPackageStatusResponse> getPackagePubStatus({String id});

@@ -47,7 +47,9 @@ abstract interface class PrittLocalConfigUnawareController {
 
   /// Runs a command, and passes the value of stdout if successful
   Future<String> run(String command,
-      {List<String> args = const [], String? directory});
+      {List<String> args = const [],
+      String? directory,
+      Map<String, String>? environment});
 }
 
 /// TODO: Get more functions for configuring
@@ -55,9 +57,6 @@ abstract interface class PrittLocalController<T>
     extends PrittLocalConfigUnawareController {
   /// Get the configuration from a project
   FutureOr<T> getConfiguration(String directory);
-
-  /// Set to use package manager commands with hosted
-  useHostedPMCommands();
 
   /// Write to files
   Future<void> writeFileAt(String path, String contents, {String? cwd});

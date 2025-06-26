@@ -6,9 +6,9 @@ import 'package:args/command_runner.dart';
 import '../cli/base.dart';
 import '../client.dart';
 import '../client/base.dart';
+import '../config/user_config.dart';
 import '../constants.dart';
 import '../login.dart';
-import '../user_config.dart';
 import '../utils/extensions.dart';
 
 class LoginCommand extends PrittCommand {
@@ -30,6 +30,11 @@ class LoginCommand extends PrittCommand {
               "By default, if this is not a local instance of pritt, or 'main', an 'api' prefix will be placed in front of this URL\nif not specified already, and omitted for the Client URL.\n"
               "To prevent this default behaviour, you can specify the client URL using the '--client-url' option.",
           valueHelp: 'url')
+      ..addFlag('new',
+          negatable: false,
+          defaultsTo: false,
+          help:
+              'Forces logging into Pritt even if already logged into the current client. (useful for logging into a different account)')
       ..addOption('client-url',
           valueHelp: 'url',
           help:
@@ -61,7 +66,13 @@ class LoginCommand extends PrittCommand {
         throw UsageException("'client-url' option must be valid URL", usage);
       }
     } else {
-      clientUrl = mainPrittInstance;
+      if (url == mainPrittApiUrl.toString()) {
+        clientUrl = mainPrittInstance;
+      } else {
+        clientUrl = url;
+        final uri = Uri.parse(url);
+        url = uri.replace(host: 'api.${uri.host}').toString();
+      }
     }
 
     final client = PrittClient(url: url);
@@ -70,7 +81,10 @@ class LoginCommand extends PrittCommand {
       // check if user is logged in
       var userCredentials = await UserCredentials.fetch();
 
-      if (userCredentials == null || userCredentials.isExpired) {
+      if (userCredentials == null ||
+          userCredentials.isExpired ||
+          userCredentials.uri.toString() != url ||
+          argResults?['new']) {
         // else log user in
         userCredentials = await loginUser(client, clientUrl, logger);
         await userCredentials.update();
@@ -85,6 +99,12 @@ class LoginCommand extends PrittCommand {
 
       // display user log in info
       logger.fine('Logged in as: ${user.name}');
+      if (user.name == '') {
+        logger.warn(
+            'Warning: Your name seems to be empty. Try logging into ${clientUrl == mainPrittInstance ? 'Pritt' : 'your Pritt instance'} on the web and update your name');
+      }
+
+      exit(0);
     } on ApiException catch (e) {
       logger.describe(e);
       exit(1);

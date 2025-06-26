@@ -8,3 +8,12 @@ build/
 .gitignore
 .idea/
 .packages
+
+node_modules
+
+private
+.vscode
+.idea
+e2e
+infra
+web-ref

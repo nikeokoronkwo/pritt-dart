@@ -5,7 +5,7 @@ import '../main/utils/user_agent.dart';
 
 AdapterResolveObject getAdapterResolveObject(Request request) {
   return AdapterResolveObject(
-    uri: request.url,
+    uri: request.requestedUri,
     method: getMethodFromString(request.method),
     maxAge: int.tryParse(request.headers['max-age'] ?? ''),
     userAgent: getUserAgentFromHeader(request.headers),

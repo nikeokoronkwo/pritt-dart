@@ -1,0 +1,12 @@
+<template>
+  <div class="main flex min-h-screen flex-col">
+    <main class="flex grow flex-col overflow-auto p-4">
+      <slot />
+    </main>
+    <footer
+      class="text-primary-200 flex min-h-4 flex-none flex-col items-center justify-center p-2"
+    >
+      <small class="text-xs"> {{ name }} (C) Copyright 2025 </small>
+    </footer>
+  </div>
+</template>

@@ -5,7 +5,8 @@ import 'package:pritt_common/version.dart';
 
 import '../../../../../../pritt_server.dart';
 import '../../../../../main/base/db/schema.dart';
-import '../../../../../main/publishing_tasks.dart';
+import '../../../../../main/publishing/interfaces.dart';
+import '../../../../../main/publishing/tasks.dart';
 import '../../../../../server_utils/authorization.dart';
 import '../../../../../utils/request_handler.dart';
 
@@ -18,7 +19,7 @@ final handler = defineRequestHandler((event) async {
   try {
     // check if user is authenticated
     var authHeader = getHeader(event, 'Authorization');
-    final user = await checkAuthorization(authHeader);
+    var user = authHeader == null ? null : await checkAuthorization(authHeader);
 
     if (user == null) {
       setResponseCode(event, 401);

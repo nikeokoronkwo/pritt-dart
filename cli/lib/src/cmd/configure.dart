@@ -5,8 +5,9 @@ import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
 import '../cli/base.dart';
 import '../client.dart';
-import '../user_config.dart';
-import '../workspace.dart';
+import '../config/user_config.dart';
+import '../env.dart';
+import '../workspace/workspace.dart';
 
 class ConfigureCommand extends PrittCommand {
   @override
@@ -45,7 +46,7 @@ class ConfigureCommand extends PrittCommand {
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getWorkspace(p.current,
+    var project = await getProject(p.current,
         config: argResults?['config'], client: prittClient);
     if (project.handlers.isEmpty) {
       logger.warn('Could not find a suitable handler for the given project.');
@@ -60,6 +61,10 @@ class ConfigureCommand extends PrittCommand {
     // configure project
     logger.info('Configuring Project...');
     await project.configure();
+
+    // add auth token
+    if (!(userCredentials == null || userCredentials.isExpired))
+      await addEnvVar('PRITT_AUTH_TOKEN', userCredentials.accessToken);
 
     logger.fine('All Done!');
     logger.fine(

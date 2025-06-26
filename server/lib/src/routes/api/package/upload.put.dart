@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
@@ -12,9 +13,9 @@ import '../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   // check authorization
   final authToken = getHeader(event, 'Authorization');
-  final auth = await checkAuthorization(authToken);
+  var user = authToken == null ? null : await checkAuthorization(authToken);
 
-  if (auth != null) {
+  if (user == null) {
     setResponseCode(event, 401);
     return common.UnauthorizedError(
             error: 'You are not authorized to view or use this endpoint')
@@ -22,7 +23,7 @@ final handler = defineRequestHandler((event) async {
   }
 
   // get the tarball from the body
-  final bodyBytes = getStreamedBody(event);
+  final bodyStream = getStreamedBody(event).asBroadcastStream();
 
   // get the pub id
   final pubID = getQueryParams(event)['id'] as String;
@@ -30,7 +31,14 @@ final handler = defineRequestHandler((event) async {
   try {
     // read the tarball
     final archive = TarDecoder().decodeBytes(
-        await ByteStream(bodyBytes.transform(gzip.decoder)).toBytes());
+        await ByteStream(bodyStream.cast<List<int>>().transform(gzip.decoder))
+            .toBytes());
+
+    print('=' * 100);
+    print('Archive: ${archive.length} : ${archive.map((f) => (
+          f.name,
+          f.content.runtimeType
+        ))} --> $archive');
 
     // check if empty
     if (archive.isEmpty) {
@@ -69,10 +77,17 @@ final handler = defineRequestHandler((event) async {
     final tarballName = archivePath(taskInfo.name,
         version: taskInfo.version, scope: taskInfo.scope);
 
+    print(tarballName);
+
     // place tarball in bucket temporarily
-    await crs.ofs
-        .createPubArchive(tarballName, await ByteStream(bodyBytes).toBytes());
-  } on CRSException catch (e) {
+    final bodyBytes = GZipEncoder().encode(TarEncoder().encode(archive))!;
+
+    await crs.ofs.createPubArchive(tarballName, Uint8List.fromList(bodyBytes));
+
+    setResponseCode(event, 204);
+    return null;
+  } on CRSException catch (e, st) {
+    print('${e.message} : ${e.cause} : ${e.stackTrace} -- $st');
     switch (e.type) {
       case CRSExceptionType.ITEM_NOT_FOUND:
         setResponseCode(event, 404);
@@ -81,7 +96,8 @@ final handler = defineRequestHandler((event) async {
         setResponseCode(event, 500);
         return common.ServerError(error: e.message).toJson();
     }
-  } catch (e) {
+  } catch (e, st) {
+    print('$e -- $st');
     setResponseCode(event, 500);
     return common.ServerError(error: 'Server Error').toJson();
   }
