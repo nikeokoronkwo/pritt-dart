@@ -88,10 +88,12 @@ class ApiClient {
       if (body is StreamedContent) {
         final req = http.StreamedRequest(method.name, uri)
           ..headers.addAll(headerParams)
-          ..headers.update(HttpHeaders.contentTypeHeader, (v) => body.contentType, ifAbsent: () => body.contentType);
+          ..headers.update(
+              HttpHeaders.contentTypeHeader, (v) => body.contentType,
+              ifAbsent: () => body.contentType);
 
         req.sink.addStream(body.data).then((_) {
-          return req.sink.close(); 
+          return req.sink.close();
         });
 
         return await client.send(req);
@@ -115,7 +117,7 @@ class ApiClient {
 
       if (streamResponse) {
         final req = http.Request(method.name, uri)
-                      ..headers.addAll(headerParams);
+          ..headers.addAll(headerParams);
         return await client.send(req);
       }
 

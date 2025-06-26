@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:pritt_cli/src/pkg_name.dart';
+import 'package:test/test.dart';
 
 class PackageInfoTest {
   final String input;

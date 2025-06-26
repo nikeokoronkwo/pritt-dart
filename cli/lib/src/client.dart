@@ -137,29 +137,35 @@ class PrittClient extends ApiClient implements PrittInterface {
   @override
   FutureOr<StreamedContent> getPackageArchiveWithName(
       {required String name, String? version}) async {
-    final response = await requestStreamed('/api/archive/package/$name', Method.GET, {'version': version}, null, null,
-    headerParams: _prittHeaders);
+    final response = await requestStreamed('/api/archive/package/$name',
+        Method.GET, {'version': version}, null, null,
+        headerParams: _prittHeaders);
 
     switch (response.statusCode) {
       case 200:
-        return StreamedContent(name, response.stream, response.contentLength ?? 0);
+        return StreamedContent(
+            name, response.stream, response.contentLength ?? 0);
       case 403:
         throw ApiException(
-          json.decode(await response.stream.bytesToString()) as Map<String, dynamic>,
-          statusCode: 403
-        );
+            json.decode(await response.stream.bytesToString())
+                as Map<String, dynamic>,
+            statusCode: 403);
       case 404:
-        throw ApiException(NotFoundError.fromJson(json.decode(await response.stream.bytesToString())),
+        throw ApiException(
+            NotFoundError.fromJson(
+                json.decode(await response.stream.bytesToString())),
             statusCode: response.statusCode);
       case 500:
-        throw ApiException.internalServerError(
-            ServerError.fromJson(tryDecode(await response.stream.bytesToString())));
+        throw ApiException.internalServerError(ServerError.fromJson(
+            tryDecode(await response.stream.bytesToString())));
       case 401:
         throw ApiException(
-            UnauthorizedError.fromJson(json.decode(await response.stream.bytesToString())),
+            UnauthorizedError.fromJson(
+                json.decode(await response.stream.bytesToString())),
             statusCode: 401);
       default:
-        throw ApiException(await response.stream.bytesToString(), statusCode: response.statusCode);
+        throw ApiException(await response.stream.bytesToString(),
+            statusCode: response.statusCode);
     }
   }
 
@@ -350,8 +356,8 @@ class PrittClient extends ApiClient implements PrittInterface {
       PublishPackageByVersionRequest body,
       {required String name,
       required String version}) async {
-    final response = await requestBasic(
-        '/api/package/$name/$version', Method.POST, {}, null, json.encode(body.toJson()),
+    final response = await requestBasic('/api/package/$name/$version',
+        Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -375,8 +381,8 @@ class PrittClient extends ApiClient implements PrittInterface {
       PublishPackageRequest body,
       {required String scope,
       required String name}) async {
-    final response = await requestBasic(
-        '/api/package/@$scope/$name', Method.POST, {}, null, json.encode(body.toJson()),
+    final response = await requestBasic('/api/package/@$scope/$name',
+        Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -400,8 +406,8 @@ class PrittClient extends ApiClient implements PrittInterface {
       {required String scope,
       required String name,
       required String version}) async {
-    final response = await requestBasic(
-        '/api/package/@$scope/$name/$version', Method.POST, {}, null, json.encode(body.toJson()),
+    final response = await requestBasic('/api/package/@$scope/$name/$version',
+        Method.POST, {}, null, json.encode(body.toJson()),
         headerParams: _prittHeaders);
 
     switch (response.statusCode) {
@@ -434,13 +440,14 @@ class PrittClient extends ApiClient implements PrittInterface {
     final response = await requestStreamed(
         '/api/package/upload', Method.PUT, {'id': id}, null, body,
         headerParams: _prittHeaders);
-    
+
     final responseBody = await response.stream.bytesToString();
 
     switch (response.statusCode) {
       case 200:
       case 204:
-        return UploadPackageResponse.fromJson(responseBody.isNotEmpty ? json.decode(responseBody) : {});
+        return UploadPackageResponse.fromJson(
+            responseBody.isNotEmpty ? json.decode(responseBody) : {});
       case 500:
         throw ApiException.internalServerError(
             ServerError.fromJson(json.decode(responseBody)));

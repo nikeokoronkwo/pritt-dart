@@ -130,8 +130,8 @@ class CoreRegistryService implements CRSController {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       print('${scope == null ? name : '$scope/$name'}/$version.tar.gz');
-      final file = await ofs
-          .getPackage('${scope == null ? name : '$scope/$name'}/$version.tar.gz');
+      final file = await ofs.getPackage(
+          '${scope == null ? name : '$scope/$name'}/$version.tar.gz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
         'application/gzip',

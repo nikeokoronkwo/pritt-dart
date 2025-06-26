@@ -6,7 +6,8 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 // TODO(nikeokoronkwo): Autogen this file
-import 'src/routes/api/archive/package/[name].get.dart' as archivePackageNameGet;
+import 'src/routes/api/archive/package/[name].get.dart'
+    as archivePackageNameGet;
 import 'src/routes/api/auth/details/[id].get.dart' as authDetailsIdGet;
 import 'src/routes/api/auth/new.get.dart' as authNewGet;
 import 'src/routes/api/auth/status.post.dart' as authStatusPost;

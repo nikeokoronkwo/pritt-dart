@@ -59,9 +59,11 @@ final dartAdapter = Adapter(
       final packages = await crs.getPackages(packageName)
           as CRSSuccessResponse<Map<Version, PackageVersions>>;
 
-      final latestPackage = packages.body.entries.firstWhere(
-        (entry) => entry.key.toString() == latestVersion,
-      ).value;
+      final latestPackage = packages.body.entries
+          .firstWhere(
+            (entry) => entry.key.toString() == latestVersion,
+          )
+          .value;
 
       return AdapterMetaJsonResult(
         contentType: 'application/vnd.pub.v2+json',
@@ -69,7 +71,8 @@ final dartAdapter = Adapter(
             name: packageName,
             latest: DartPackage(
                 version: latestPackage.version,
-                pubspec: PubSpec.fromJson(jsonDecode(jsonEncode(loadYaml(latestPackage.config!)))),
+                pubspec: PubSpec.fromJson(
+                    jsonDecode(jsonEncode(loadYaml(latestPackage.config!)))),
                 // TODO: Shouldn't we make this easier on ourselves and just use a /dart/ path to reduce guess work?
                 archiveUrl:
                     '${req.resolveObject.url}/api/archives/${latestPackage.configName}-${latestPackage.version}.tar.gz',
@@ -78,7 +81,8 @@ final dartAdapter = Adapter(
             versions: packages.body.values
                 .map((e) => DartPackage(
                     version: e.version,
-                    pubspec: PubSpec.fromJson(jsonDecode(jsonEncode(loadYaml(e.config!)))),
+                    pubspec: PubSpec.fromJson(
+                        jsonDecode(jsonEncode(loadYaml(e.config!)))),
                     archiveUrl:
                         '${req.resolveObject.url}/api/archives/${e.package.name}-${e.version}.tar.gz',
                     archiveHash: e.hash,
@@ -91,7 +95,8 @@ final dartAdapter = Adapter(
       final packageNameWithExtension = req.resolveObject.path.split('/').last;
       final [packageName, versionAndExtension] =
           packageNameWithExtension.split('-');
-      final version = basenameWithoutExtension(basenameWithoutExtension(versionAndExtension));
+      final version = basenameWithoutExtension(
+          basenameWithoutExtension(versionAndExtension));
       final _ = versionAndExtension.replaceFirst(version, '');
 
       // get the archive

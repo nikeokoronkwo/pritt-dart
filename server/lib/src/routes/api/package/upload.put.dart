@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
-import 'package:chunked_stream/chunked_stream.dart';
 import 'package:http/http.dart';
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/interface.dart' as common;

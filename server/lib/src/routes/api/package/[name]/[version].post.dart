@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:pritt_common/interface.dart' as common;
 import 'package:pritt_common/version.dart';

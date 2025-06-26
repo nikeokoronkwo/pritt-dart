@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/functions.dart';
 
 import '../adapters/base/workspace.dart';
 import '../cli/base.dart';
 import '../client.dart';
-import '../pkg_name.dart';
 import '../config/user_config.dart';
+import '../pkg_name.dart';
 import '../utils/extensions.dart';
 import '../workspace/workspace.dart';
 

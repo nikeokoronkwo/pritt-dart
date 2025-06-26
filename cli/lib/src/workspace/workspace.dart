@@ -10,9 +10,9 @@ import '../adapters/base/context.dart';
 import '../adapters/base/workspace.dart';
 import '../client.dart';
 import '../config/config.dart';
-import 'ignore.dart';
 import '../project/controller.dart';
 import '../project/handler_manager.dart';
+import 'ignore.dart';
 import 'vcs.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
@@ -79,8 +79,8 @@ class Project {
             "Unsupported: Multiple handlers is not supported"),
         _manager = manager,
         _ignoreMatcher = matcher ?? IgnoreMatcher() {
-          _ignoreMatcher.addLines(ignoreFiles);
-        }
+    _ignoreMatcher.addLines(ignoreFiles);
+  }
 
   /// configures the project
   Future<void> configure() async {
@@ -155,20 +155,20 @@ Future<Project> getProject(String directory,
   //         ? await File(p.join(directory, '.prittignore')).readAsString()
   //         : '')
   //   ..addAll(commonlyIgnoredFiles);
-  final String prittIgnore = (await File(p.join(directory, '.prittignore')).exists())
+  final String prittIgnore =
+      (await File(p.join(directory, '.prittignore')).exists())
           ? await File(p.join(directory, '.prittignore')).readAsString()
           : '';
   final String? vcsIgnoreFile = getVCSIgnoreFile(vcs);
 
-  final IgnoreMatcher matcher = IgnoreMatcher()
-  ..addContent(prittIgnore);
+  final IgnoreMatcher matcher = IgnoreMatcher()..addContent(prittIgnore);
 
-  if (vcsIgnoreFile == null && !(await File(p.join(directory, vcsIgnoreFile)).exists())) {
-    matcher.addLines(
-      await getIgnoredVCSFiles(vcs)
-    );
+  if (vcsIgnoreFile == null &&
+      !(await File(p.join(directory, vcsIgnoreFile)).exists())) {
+    matcher.addLines(await getIgnoredVCSFiles(vcs));
   } else {
-    matcher.addContent(await File(p.join(directory, vcsIgnoreFile)).readAsString() );
+    matcher.addContent(
+        await File(p.join(directory, vcsIgnoreFile)).readAsString());
   }
 
   final resolvedHandlers = await handlers;

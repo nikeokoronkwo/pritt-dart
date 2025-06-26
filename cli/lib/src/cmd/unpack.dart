@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:archive/archive.dart';
-import 'package:archive/archive_io.dart';
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
@@ -11,8 +9,8 @@ import '../archive.dart';
 import '../cli/base.dart';
 import '../cli/progress_bar.dart';
 import '../client.dart';
-import '../pkg_name.dart';
 import '../config/user_config.dart';
+import '../pkg_name.dart';
 
 class UnpackCommand extends PrittCommand {
   @override

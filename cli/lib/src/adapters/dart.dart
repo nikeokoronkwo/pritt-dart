@@ -63,15 +63,22 @@ final dartHandler = Handler<PubspecConfig>(
         directory: directory,
         name: directory);
   },
-
   onConfigure: (context, controller) async {
-    final tokenUrls = const LineSplitter().convert(await controller.run('dart', args: ['pub', 'token', 'list']))
-      .map((line) => line.trim())
-      .where((line) => line.startsWith('http'));
-    
+    final tokenUrls = const LineSplitter()
+        .convert(await controller.run('dart', args: ['pub', 'token', 'list']))
+        .map((line) => line.trim())
+        .where((line) => line.startsWith('http'));
+
     if (!tokenUrls.any((line) => line.contains(controller.instanceUri))) {
       // add token
-      await controller.run('dart', args: ['pub', 'token', 'add', controller.instanceUri, '--env-var', 'PRITT_AUTH_TOKEN']);
+      await controller.run('dart', args: [
+        'pub',
+        'token',
+        'add',
+        controller.instanceUri,
+        '--env-var',
+        'PRITT_AUTH_TOKEN'
+      ]);
     }
 
     return [];

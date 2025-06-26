@@ -354,7 +354,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         key: path);
 
     print(
-        'Archive Details: ${pkgStatus.contentLength} ${pkgStatus.contentType} ${pkgStatus.lastModified} ${pkgStatus.metadata} ${pkgStatus}');
+        'Archive Details: ${pkgStatus.contentLength} ${pkgStatus.contentType} ${pkgStatus.lastModified} ${pkgStatus.metadata} $pkgStatus');
 
     return pkgStatus.metadata != null;
   }

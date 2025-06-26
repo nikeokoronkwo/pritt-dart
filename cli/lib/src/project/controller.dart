@@ -45,8 +45,10 @@ class PrittConfigUnawareController
   PrittClient? client;
   String? token;
 
-  PrittConfigUnawareController({required this.configLoader, this.client, String? token}) :
-  token = token ?? (client?.authentication as HttpBearerAuth?)?.accessToken;
+  PrittConfigUnawareController(
+      {required this.configLoader, this.client, String? token})
+      : token =
+            token ?? (client?.authentication as HttpBearerAuth?)?.accessToken;
 
   PrittController<T> _upgrade<T extends Config>({
     required FutureOr<T> Function(String) convertConfig,
@@ -124,11 +126,14 @@ class PrittConfigUnawareController
 
   @override
   Future<String> run(String command,
-      {List<String> args = const [], String? directory, Map<String, String>? environment}) async {
-    return (await Process.run(command, args, workingDirectory: directory, environment: (environment ?? {})
-    ..addAll(Platform.environment)
-    ..addAll({if (token != null) 'PRITT_AUTH_TOKEN': token!})
-    ))
+      {List<String> args = const [],
+      String? directory,
+      Map<String, String>? environment}) async {
+    return (await Process.run(command, args,
+            workingDirectory: directory,
+            environment: (environment ?? {})
+              ..addAll(Platform.environment)
+              ..addAll({if (token != null) 'PRITT_AUTH_TOKEN': token!})))
         .stdout;
   }
 }

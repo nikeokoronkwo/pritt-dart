@@ -58,6 +58,6 @@ class DartPackage {
 
   factory DartPackage.fromJson(Map<String, dynamic> json) =>
       _$DartPackageFromJson(json);
-      
+
   Map<String, dynamic> toJson() => _$DartPackageToJson(this);
 }

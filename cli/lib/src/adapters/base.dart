@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import '../workspace/ignore.dart';
 import '../loader.dart';
 import 'base/config.dart';
 import 'base/context.dart';
@@ -107,7 +106,7 @@ class Handler<T extends Config> {
             publisher == PublishManager.pritt ||
                 packageManager?.onPublish != null,
             "For the publisher to be the language's package manager, publishing instructions should be passed");
-  
+
   @override
   String toString() => '$language Handler';
 }

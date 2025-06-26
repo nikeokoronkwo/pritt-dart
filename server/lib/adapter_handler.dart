@@ -32,18 +32,19 @@ Handler adapterHandler(CoreRegistryService crs) {
       final AdapterResult result;
       try {
         result = await adapter.run(
-          adapter.language == null ? crs : crs.controller(adapter.language!),
-          AdapterOptions(
-              resolveObject: adapterResolve,
-              resolveType: adapterSearchResult.resolve));
+            adapter.language == null ? crs : crs.controller(adapter.language!),
+            AdapterOptions(
+                resolveObject: adapterResolve,
+                resolveType: adapterSearchResult.resolve));
       } catch (e, stackTrace) {
         print('$e -- $stackTrace');
         rethrow;
       }
 
-      print(result is AdapterMetaJsonResult ? jsonEncode(result.body.toJson()) : '');      
+      print(result is AdapterMetaJsonResult
+          ? jsonEncode(result.body.toJson())
+          : '');
       print(result);
-
 
       // return response based on the result
       return switch (result) {
@@ -71,7 +72,8 @@ Handler adapterHandler(CoreRegistryService crs) {
               }),
         AdapterArchiveResult() => Response.ok(result.archive, headers: {
             HttpHeaders.contentTypeHeader: result.contentType,
-            HttpHeaders.contentDisposition: 'attachment; filename=${result.name}',
+            HttpHeaders.contentDisposition:
+                'attachment; filename=${result.name}',
           }),
       };
     } on AdapterException catch (_) {

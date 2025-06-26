@@ -47,7 +47,9 @@ abstract interface class PrittLocalConfigUnawareController {
 
   /// Runs a command, and passes the value of stdout if successful
   Future<String> run(String command,
-      {List<String> args = const [], String? directory, Map<String, String>? environment});
+      {List<String> args = const [],
+      String? directory,
+      Map<String, String>? environment});
 }
 
 /// TODO: Get more functions for configuring

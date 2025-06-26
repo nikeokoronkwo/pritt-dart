@@ -4,8 +4,8 @@ import 'package:io/ansi.dart';
 import 'package:pritt_common/interface.dart';
 
 import 'client.dart';
-import 'device_id.dart';
 import 'config/user_config.dart';
+import 'device_id.dart';
 import 'utils/log.dart';
 
 /// Log a user in to the Pritt server

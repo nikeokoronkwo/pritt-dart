@@ -115,13 +115,15 @@ Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
             HttpHeaders.contentTypeHeader, () => 'application/json');
         return event.responseFunc(jsonEncode(response));
       case Stream<List<int>>():
-        event._responseBuilder.headers
-            .putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/octet-stream');
+        event._responseBuilder.headers.putIfAbsent(
+            HttpHeaders.contentTypeHeader, () => 'application/octet-stream');
         return event.responseFunc(response);
       case Uint8List():
         event._responseBuilder.headers
-            ..putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/octet-stream')
-            ..putIfAbsent(HttpHeaders.contentLengthHeader, () => response.lengthInBytes.toString());
+          ..putIfAbsent(
+              HttpHeaders.contentTypeHeader, () => 'application/octet-stream')
+          ..putIfAbsent(HttpHeaders.contentLengthHeader,
+              () => response.lengthInBytes.toString());
         return event.responseFunc(response);
       default:
         return event.responseFunc(response);

@@ -9,29 +9,27 @@ class IgnoreMatcher {
 
   IgnoreMatcher([List<String>? lines])
       : patterns = lines
-          ?.map((l) => l.trim())
-          .where((l) => l.isNotEmpty && !l.startsWith('#'))
-          .map((l) => IgnorePattern.from(l))
-          .toList() ?? <IgnorePattern>[];
+                ?.map((l) => l.trim())
+                .where((l) => l.isNotEmpty && !l.startsWith('#'))
+                .map((l) => IgnorePattern.from(l))
+                .toList() ??
+            <IgnorePattern>[];
 
   void add(String line) {
     if (line.isNotEmpty && !line.startsWith('#')) {
       patterns.add(IgnorePattern.from(line.trim()));
     }
   }
+
   void addLines(Iterable<String> lines) {
-    patterns.addAll(
-      lines
-          .map((l) => l.trim())
-          .where((l) => l.isNotEmpty && !l.startsWith('#'))
-          .map((l) => IgnorePattern.from(l))
-    );
+    patterns.addAll(lines
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty && !l.startsWith('#'))
+        .map((l) => IgnorePattern.from(l)));
   }
 
   void addContent(String contents) {
-    return addLines(
-      _lineSplitter.convert(contents)
-    );
+    return addLines(_lineSplitter.convert(contents));
   }
 
   bool ignores(String path) {
@@ -63,7 +61,6 @@ class IgnorePattern {
     return glob.matches(path);
   }
 }
-
 
 /// Some basic ignored files:
 const List<String> commonlyIgnoredFiles = [

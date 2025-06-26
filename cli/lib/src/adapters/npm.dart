@@ -79,6 +79,7 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
 
       controller.log(
           "${styleBold.wrap("NOTE:")} When using the local package manager, install 'pkg' as: ${styleUnderlined.wrap('${pm?.name ?? 'npm'} add @pritt/pkg')}");
+      return null;
     });
 
 class PackageJsonConfig extends Config {

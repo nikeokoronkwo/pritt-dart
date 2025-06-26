@@ -63,7 +63,8 @@ class ConfigureCommand extends PrittCommand {
     await project.configure();
 
     // add auth token
-    if (!(userCredentials == null || userCredentials.isExpired)) await addEnvVar('PRITT_AUTH_TOKEN', userCredentials.accessToken);
+    if (!(userCredentials == null || userCredentials.isExpired))
+      await addEnvVar('PRITT_AUTH_TOKEN', userCredentials.accessToken);
 
     logger.fine('All Done!');
     logger.fine(

@@ -6,9 +6,9 @@ import 'package:args/command_runner.dart';
 import '../cli/base.dart';
 import '../client.dart';
 import '../client/base.dart';
+import '../config/user_config.dart';
 import '../constants.dart';
 import '../login.dart';
-import '../config/user_config.dart';
 import '../utils/extensions.dart';
 
 class LoginCommand extends PrittCommand {

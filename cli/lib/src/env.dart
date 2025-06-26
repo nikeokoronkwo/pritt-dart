@@ -9,7 +9,9 @@ Future<int> _addEnvVarLinux(String key, String value, {Logger? logger}) async {
   final exportLine = 'export $key="$value"';
 
   // Avoid duplicate entries
-  if (await shellFile.readAsString().then((s) => s.contains(exportLine), onError: (_) => false)) {
+  if (await shellFile
+      .readAsString()
+      .then((s) => s.contains(exportLine), onError: (_) => false)) {
     print('$key already set.');
     return 0;
   }
@@ -35,23 +37,27 @@ Future<int> _addEnvVarMacOS(String key, String value, {Logger? logger}) async {
   final exportLine = 'export $key="$value"';
 
   // Avoid duplicate entries
-  if (await shellFile.readAsString().then((s) => s.contains(exportLine), onError: (_) => false)) {
+  if (await shellFile
+      .readAsString()
+      .then((s) => s.contains(exportLine), onError: (_) => false)) {
     logger.warn('$key already set.');
     return 0;
   }
 
   await shellFile.writeAsString('\n$exportLine\n', mode: FileMode.append);
 
-  final processResult = isBash ? await Process.run('bash', ['-c', 'source ~/.bashrc'])
-  : await Process.run('zsh', ['-c', 'source ~/.zshrc']);
+  final processResult = isBash
+      ? await Process.run('bash', ['-c', 'source ~/.bashrc'])
+      : await Process.run('zsh', ['-c', 'source ~/.zshrc']);
 
-  logger.stdout('Pritt Auth Token saved to "${isBash ? '~/.bashrc' : '~/.zshrc'}"');
+  logger.stdout(
+      'Pritt Auth Token saved to "${isBash ? '~/.bashrc' : '~/.zshrc'}"');
 
   return processResult.exitCode;
 }
 
-
-Future<int> _addEnvVarWindows(String key, String value, {Logger? logger}) async {
+Future<int> _addEnvVarWindows(String key, String value,
+    {Logger? logger}) async {
   final result = await Process.run('setx', [key, value]);
   return result.exitCode;
 }
@@ -64,4 +70,3 @@ Future<int> addEnvVar(String key, String value, {Logger? logger}) async {
     _ => throw Exception('Unsupported Platform ${platform.name}')
   };
 }
-

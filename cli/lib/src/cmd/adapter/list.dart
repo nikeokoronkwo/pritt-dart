@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:io/ansi.dart';
+
 import '../../cli/base.dart';
 import '../../client.dart';
+import '../../config/user_config.dart';
 import '../../constants.dart';
 import '../../csv.dart';
 import '../../list.dart';
 import '../../output.dart';
-import '../../config/user_config.dart';
 
 class AdapterListCommand extends PrittCommand {
   @override

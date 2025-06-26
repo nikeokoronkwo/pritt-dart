@@ -107,7 +107,7 @@ class Worker<P, R> {
       } catch (e, stackTrace) {
         sendPort.send((id, RemoteError(e.toString(), stackTrace.toString())));
       }
-    // });
+      // });
     }
   }
 

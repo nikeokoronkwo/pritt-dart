@@ -19,7 +19,7 @@ import 'db/schema.dart';
 /// The current implementation of the CRS Database makes use of [postgresql](https://www.postgresql.org/)
 /// via the [postgres](https://pub.dev/packages/postgres) package.
 ///
-/// It uses a connection Pool to handle multiple requests. 
+/// It uses a connection Pool to handle multiple requests.
 /// Certain requests are prepared for reuse throughout the API lifecycle to improve performance.
 ///
 /// For more information on the APIs used in this class, see [PrittDatabaseInterface]
@@ -209,8 +209,7 @@ WHERE p.name = @name AND p.scope IS NOT DISTINCT FROM @scope
         language: columnMap['language'] as String,
         updated: columnMap['updated_at'] as DateTime,
         created: columnMap['created_at'] as DateTime,
-        vcs: VCS
-            .fromString((columnMap['vcs'] as UndecodedBytes).asString),
+        vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
         vcsUrl: columnMap['vcs_url'] != null
             ? Uri.parse(columnMap['vcs_url'] as String)
             : null,
@@ -269,8 +268,7 @@ LEFT JOIN users u ON p.author_id = u.id
           language: columnMap['language'] as String,
           updated: columnMap['updated_at'] as DateTime,
           created: columnMap['created_at'] as DateTime,
-          vcs: VCS
-              .fromString((columnMap['vcs'] as UndecodedBytes).asString),
+          vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
           vcsUrl: columnMap['vcs_url'] != null
               ? Uri.parse(columnMap['vcs_url'] as String)
               : null,
@@ -313,8 +311,7 @@ WHERE u.id = @userId
           language: columnMap['language'] as String,
           updated: columnMap['updated_at'] as DateTime,
           created: columnMap['created_at'] as DateTime,
-          vcs: VCS
-              .fromString((columnMap['vcs'] as UndecodedBytes).asString),
+          vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
           vcsUrl: columnMap['vcs_url'] != null
               ? Uri.parse(columnMap['vcs_url'] as String)
               : null,
@@ -833,20 +830,20 @@ RETURNING *''', parameters: [
       final columnMap = result.first.toColumnMap();
 
       return Package(
-          id: id,
-          name: name,
-          scope: scope,
-          version: version,
-          description: description,
-          author: author,
-          language: language,
-          created: columnMap['created_at'] as DateTime,
-          updated: columnMap['updated_at'] as DateTime,
-          vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
-          vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
-          archive: archive,
-          license: license,
-        );
+        id: id,
+        name: name,
+        scope: scope,
+        version: version,
+        description: description,
+        author: author,
+        language: language,
+        created: columnMap['created_at'] as DateTime,
+        updated: columnMap['updated_at'] as DateTime,
+        vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+        vcsUrl: vcsUrl == null ? null : Uri.parse(vcsUrl),
+        archive: archive,
+        license: license,
+      );
     } catch (e, stack) {
       throw CRSException(
           CRSExceptionType.INCOMPATIBLE_PACKAGE, e.toString(), e, stack);
@@ -869,7 +866,7 @@ RETURNING *''', parameters: [
       Map<String, dynamic> metadata = const {},
       required Uri archive,
       Iterable<String>? contributors}) async {
-        final sig = Signature(
+    final sig = Signature(
         publicKeyId: '', signature: signature, created: DateTime.now());
     final result = await _pool.runTx((session) async {
       // TODO: Get version type
@@ -881,7 +878,11 @@ RETURNING *''', parameters: [
         await session.execute(
             Sql.named(
                 r'''UPDATE packages SET version = @version WHERE name = @name AND scope IS NOT DISTINCT FROM @scope'''),
-            parameters: {'name': pkg.name, 'scope': pkg.scope, 'version': version});
+            parameters: {
+              'name': pkg.name,
+              'scope': pkg.scope,
+              'version': version
+            });
 
       return await session.execute(r'''
 INSERT INTO package_versions (package_id, version, version_type, readme, config, config_name, info, env, metadata, archive, hash, signatures, integrity)
@@ -922,7 +923,7 @@ RETURNING *''', parameters: [
       signatures: [sig],
       integrity: integrity,
     );
-      }
+  }
 
   @override
   FutureOr<PackageVersions> addNewVersionOfPackage(
@@ -1438,34 +1439,32 @@ RETURNING *
     final author = await getUser(task.user);
 
     return await Future.sync(() => addNewPackage(
-      name: task!.name,
-      scope: task.scope,
-      version: task.version,
-      description: description,
-      author: author,
-      language: task.language,
-      vcs: task.vcs,
-      archive: archive,
-    )).then((pkg) async {
+          name: task!.name,
+          scope: task.scope,
+          version: task.version,
+          description: description,
+          author: author,
+          language: task.language,
+          vcs: task.vcs,
+          archive: archive,
+        )).then((pkg) async {
       final pkgVer = await addNewVersionOfPackageGivenPkg(
-        pkg: pkg,
-        version: task!.version,
-        hash: hash,
-        signature: signatures.firstOrNull?.signature ?? '',
-        integrity: integrity,
-        readme: readme,
-        config: rawConfig,
-        configName: task.config,
-        info: info ?? {},
-        env: task.env,
-        contributors: contributorIds,
-        metadata: task.configMap,
-        archive: archive);
+          pkg: pkg,
+          version: task!.version,
+          hash: hash,
+          signature: signatures.firstOrNull?.signature ?? '',
+          integrity: integrity,
+          readme: readme,
+          config: rawConfig,
+          configName: task.config,
+          info: info ?? {},
+          env: task.env,
+          contributors: contributorIds,
+          metadata: task.configMap,
+          archive: archive);
 
-        return (pkg, pkgVer);
+      return (pkg, pkgVer);
     });
-
-    
   }
 
   @override
