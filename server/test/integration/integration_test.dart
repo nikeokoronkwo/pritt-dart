@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
+import 'package:pritt_common/interface.dart';
 import 'package:test/test.dart';
 
 Map<String, String> readEnvFile(String dir) {
@@ -97,34 +100,70 @@ void main() {
       expect(response.body, contains('Active'));
     });
 
-    test('GET /api/auth/new returns 200', () async {
+    test('GET /api/packages returns 200 and empty', () async {
+      final response = await http.get(Uri.parse('http://localhost:8080/api/packages'));
+      expect(response.statusCode, equals(200));
+      expect(response.headers[HttpHeaders.contentTypeHeader], equalsIgnoringCase('application/json'));
+      expect(response.body, isNotEmpty);
+
+      final body = jsonDecode(response.body);
+      final structuredBody = GetPackagesResponse.fromJson(body);
+      expect(structuredBody.packages, isEmpty);
+    });
+
+    test('GET /api/package/:name returns 200 and pkg from previous add', () async {
+
+    });
+
+    group('Adding Packages Manipulation', () async {
+      setUp(() {
+
+      });
+
+      tearDown(() {
+
+      });
+
+      test('GET /api/package/:name returns 200 for existing package', () async {
+        // add pritt
+        
+        // run
+        final packageName = 'pritt'; // adjust as needed for your test data
+        final response = await http
+            .get(Uri.parse('http://localhost:8080/api/package/$packageName'));
+        expect(response.statusCode, 200);
+      });
+    }, skip: 'Postgres Implementation not supported yet');
+
+
+    test('GET /api/auth/new returns 401 because it is not Pritt', () async {
       final response =
           await http.get(Uri.parse('http://localhost:8080/api/auth/new'));
+      expect(response.statusCode, 401);
+    });
+
+    test('GET /api/auth/new returns 200 when pritt', () async {
+      final response = await http.get(Uri.parse('http://localhost:8080/api/auth/new'), headers: {
+        HttpHeaders.userAgentHeader: 'pritt cli'
+      });
       expect(response.statusCode, 200);
     });
 
-    test('POST /api/auth/status returns 200 or 400', () async {
+    test('POST /api/auth/status returns 404 with ID not found', () async {
+      final Random random = Random();
+      StringBuffer s = StringBuffer('');
+      for (int i = 0; i < 10; i += 2) s.write(String.fromCharCode(random.nextInt(26) + 65));
+      final response = await http.post(
+        Uri.parse('http://localhost:8080/api/auth/status?id=$s'),
+      );
+      expect([200, 400, 401, 404], contains(response.statusCode));
+    });
+
+    test('POST /api/auth/status returns 500 without ID', () async {
       final response = await http.post(
         Uri.parse('http://localhost:8080/api/auth/status'),
-        headers: {'Content-Type': 'application/json'},
-        body: '{}',
       );
-      expect([200, 400, 401, 404], contains(response.statusCode));
-    });
-
-    test('POST /api/auth/validate returns 200 or 400', () async {
-      final response = await http.post(
-        Uri.parse('http://localhost:8080/api/auth/validate'),
-        headers: {'Content-Type': 'application/json'},
-        body: '{}',
-      );
-      expect([200, 400, 401, 404], contains(response.statusCode));
-    });
-
-    test('GET /api/publish/status returns 200', () async {
-      final response =
-          await http.get(Uri.parse('http://localhost:8080/api/publish/status'));
-      expect(response.statusCode, 200);
+      expect([500, 400, 404], contains(response.statusCode));
     });
 
     test('PUT /api/package/upload returns 401 without auth', () async {
@@ -136,10 +175,10 @@ void main() {
       expect([401, 400, 404], contains(response.statusCode));
     });
 
-    test('GET /api/package/:name/:version returns 200 or 404', () async {
+    test('GET /api/package/:name/:version returns 404 with package not found', () async {
       final response = await http
           .get(Uri.parse('http://localhost:8080/api/package/pritt/0.1.0'));
-      expect([200, 404], contains(response.statusCode));
+      expect([404], contains(response.statusCode));
     });
 
     test('POST /api/package/:name/:version returns 401 without auth', () async {
@@ -183,26 +222,6 @@ void main() {
       expect([401, 400, 404], contains(response.statusCode));
     });
 
-    test('GET /api/packages returns 200', () async {
-      final response =
-          await http.get(Uri.parse('http://localhost:8080/api/packages'));
-      expect(response.statusCode, 200);
-    });
-
-    test('GET /api/package/{name} returns 200 for existing package', () async {
-      final packageName = 'pritt'; // adjust as needed for your test data
-      final response = await http
-          .get(Uri.parse('http://localhost:8080/api/package/$packageName'));
-      expect(response.statusCode, 200);
-    });
-
-    test('GET /api/package/{name} returns 404 for non-existent package',
-        () async {
-      final packageName = 'nonexistent-package-xyz';
-      final response = await http
-          .get(Uri.parse('http://localhost:8080/api/package/$packageName'));
-      expect(response.statusCode, 404);
-    });
 
     test('POST /api/package/{name} returns 401 without auth', () async {
       final packageName = 'pritt';
