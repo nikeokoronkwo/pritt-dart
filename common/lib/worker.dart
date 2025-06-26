@@ -15,7 +15,7 @@ import 'dart:isolate';
 ///
 /// Running workers on multitask mode is faster for longer tasks with a larger number of task items
 ///
-/// TODO: Handle sorting adapters implementation
+// TODO(nikeokoronkwo): Handle sorting adapters implementation, https://github.com/nikeokoronkwo/pritt-dart/issues/24
 class Worker<P, R> {
   final SendPort _commands;
   final ReceivePort _responses;
@@ -100,8 +100,9 @@ class Worker<P, R> {
       }
       final (int id, P param) = message as (int, P);
       try {
-        /// TODO: We need to handle errors. They are leaking out of this despite try/catch, handleError, and Future.sync
-        ///  We might consider running this call zoned.
+        // TODO(nikeokoronkwo): We need to handle errors. 
+        //  They are leaking out of this despite try/catch, handleError, and Future.sync
+        //  We might consider running this call zoned. https://github.com/nikeokoronkwo/pritt-dart/issues/50
         final data = await Future.sync(() => work(param));
         sendPort.send((id, data));
       } catch (e, stackTrace) {

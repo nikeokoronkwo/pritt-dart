@@ -32,7 +32,7 @@ extension SchemaGen on OpenAPIGenResult {
 
     final lib = Library((l) => l
       ..ignoreForFile
-          .addAll(['non_constant_identifier_names', 'directives_ordering'])
+          .addAll(['non_constant_identifier_names', 'directives_ordering', 'package_access'])
       ..directives
           .add(Directive.import('package:json_annotation/json_annotation.dart'))
       ..directives.add(Directive.part('interface.g.dart'))
@@ -241,7 +241,9 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   final classForSchema = Class((c) => c
     // JSON serializable
-    ..annotations.add(refer('JsonSerializable').call([]))
+    ..annotations.add(refer('JsonSerializable').call([], {
+      'includeIfNull': literalFalse
+    }))
     ..name = name
 
     // main constructor
