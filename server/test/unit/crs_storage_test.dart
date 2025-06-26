@@ -9,9 +9,7 @@ import 'package:test/scaffolding.dart';
 import 'crs_storage_test.mocks.dart';
 
 void main() {
-  group('Pritt Storage Interface Testing', () {
-
-  });
+  group('Pritt Storage Interface Testing', () {});
 
   group('Pritt Storage Testing', () {
     late final PrittStorage storage;
@@ -19,16 +17,10 @@ void main() {
 
     setUpAll(() {
       storage = MockPrittStorage();
-
-
     });
 
-    tearDownAll(() {
-
-    });
+    tearDownAll(() {});
   });
 
-  group('CRS Archive Controller Testing', () {
-
-  });
+  group('CRS Archive Controller Testing', () {});
 }

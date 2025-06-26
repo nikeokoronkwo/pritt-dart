@@ -101,9 +101,11 @@ void main() {
     });
 
     test('GET /api/packages returns 200 and empty', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/packages'));
+      final response =
+          await http.get(Uri.parse('http://localhost:8080/api/packages'));
       expect(response.statusCode, equals(200));
-      expect(response.headers[HttpHeaders.contentTypeHeader], equalsIgnoringCase('application/json'));
+      expect(response.headers[HttpHeaders.contentTypeHeader],
+          equalsIgnoringCase('application/json'));
       expect(response.body, isNotEmpty);
 
       final body = jsonDecode(response.body);
@@ -111,22 +113,17 @@ void main() {
       expect(structuredBody.packages, isEmpty);
     });
 
-    test('GET /api/package/:name returns 200 and pkg from previous add', () async {
-
-    });
+    test('GET /api/package/:name returns 200 and pkg from previous add',
+        () async {});
 
     group('Adding Packages Manipulation', () async {
-      setUp(() {
+      setUp(() {});
 
-      });
-
-      tearDown(() {
-
-      });
+      tearDown(() {});
 
       test('GET /api/package/:name returns 200 for existing package', () async {
         // add pritt
-        
+
         // run
         final packageName = 'pritt'; // adjust as needed for your test data
         final response = await http
@@ -135,7 +132,6 @@ void main() {
       });
     }, skip: 'Postgres Implementation not supported yet');
 
-
     test('GET /api/auth/new returns 401 because it is not Pritt', () async {
       final response =
           await http.get(Uri.parse('http://localhost:8080/api/auth/new'));
@@ -143,16 +139,17 @@ void main() {
     });
 
     test('GET /api/auth/new returns 200 when pritt', () async {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/auth/new'), headers: {
-        HttpHeaders.userAgentHeader: 'pritt cli'
-      });
+      final response = await http.get(
+          Uri.parse('http://localhost:8080/api/auth/new'),
+          headers: {HttpHeaders.userAgentHeader: 'pritt cli'});
       expect(response.statusCode, 200);
     });
 
     test('POST /api/auth/status returns 404 with ID not found', () async {
       final Random random = Random();
       StringBuffer s = StringBuffer('');
-      for (int i = 0; i < 10; i += 2) s.write(String.fromCharCode(random.nextInt(26) + 65));
+      for (int i = 0; i < 10; i += 2)
+        s.write(String.fromCharCode(random.nextInt(26) + 65));
       final response = await http.post(
         Uri.parse('http://localhost:8080/api/auth/status?id=$s'),
       );
@@ -175,7 +172,8 @@ void main() {
       expect([401, 400, 404], contains(response.statusCode));
     });
 
-    test('GET /api/package/:name/:version returns 404 with package not found', () async {
+    test('GET /api/package/:name/:version returns 404 with package not found',
+        () async {
       final response = await http
           .get(Uri.parse('http://localhost:8080/api/package/pritt/0.1.0'));
       expect([404], contains(response.statusCode));
@@ -221,7 +219,6 @@ void main() {
       );
       expect([401, 400, 404], contains(response.statusCode));
     });
-
 
     test('POST /api/package/{name} returns 401 without auth', () async {
       final packageName = 'pritt';

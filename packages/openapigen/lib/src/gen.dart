@@ -33,7 +33,8 @@ extension SchemaGen on OpenAPIGenResult {
     final lib = Library((l) => l
       ..ignoreForFile.addAll([
         'non_constant_identifier_names',
-        'directives_ordering', 'constant_identifier_names',
+        'directives_ordering',
+        'constant_identifier_names',
         'package_access'
       ])
       ..directives
