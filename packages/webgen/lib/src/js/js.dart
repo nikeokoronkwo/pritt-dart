@@ -41,5 +41,5 @@ external JSArray<K> keysFromRecord<K extends JSAny, V extends JSAny>(
     JSRecord<K, V> record);
 
 @JS('Object.values')
-external JSArray<V>
-    valuesFromRecord<K extends JSAny, V extends JSAny>(JSRecord<K, V> record);
+external JSArray<V> valuesFromRecord<K extends JSAny, V extends JSAny>(
+    JSRecord<K, V> record);

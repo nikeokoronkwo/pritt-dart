@@ -8,33 +8,58 @@ import '../db/interface.dart';
 /// The Object File System is a file system that is used to store the packages and their versions.
 ///
 /// This should only be used for accessing the raw packages. Data can be accessed via the [PrittDatabaseInterface] interface.
-abstract interface class PrittStorageInterface {
-  /// Add a new file to the CRS OFS
+abstract interface class PrittStorageInterface<T> {
+  T get pkgBucket;
+
+  T get publishingBucket;
+
+  T get adapterBucket;
+
+  /// Add a new package file to the CRS OFS (package bucket)
   ///
   /// [path] represents the path of the new file, to which [data] is stored as bytes.
-  FutureOr create(String path, Uint8List data, String sha,
+  FutureOr createPackage(String path, Uint8List data, String sha,
       {String? contentType, Map<String, String>? metadata});
 
-  /// Remove a file located at [path] from the CRS OFS
-  FutureOr remove(String path);
+  /// Remove a package file located at [path] from the CRS OFS
+  FutureOr removePackage(String path);
 
-  /// Update the file at [path] with the new [data]
-  FutureOr update(String path, Uint8List data);
+  /// Update the package file at [path] with the new [data]
+  FutureOr updatePackage(String path, Uint8List data);
 
-  /// Copy the file from [from] to [to]
-  FutureOr copy(String from, String to);
+  /// Copy the package file from [from] to [to]
+  FutureOr copyPackage(String from, String to);
 
-  /// List the file in the given [path]
-  FutureOr<CRSFile?> find(String path);
+  /// List the package file in the given [path]
+  FutureOr<CRSFile?> findPackage(String path);
 
-  /// List all the files which satisfy the given requirement
-  FutureOr<List<CRSFile>> listWhere(bool Function(String path) where);
+  /// List all the package files which satisfy the given requirement
+  FutureOr<List<CRSFile>> listPackagesWhere(bool Function(String path) where);
 
-  /// List all the files in the OFS
-  FutureOr<List<CRSFile>> listAll();
+  /// List all the package files in the OFS
+  FutureOr<List<CRSFile>> listAllPackages();
 
-  /// Get the file at [path]
-  FutureOr<CRSFileOutputStream> get(String path);
+  /// Get the package file at [path]
+  FutureOr<CRSFileOutputStream> getPackage(String path);
+
+  /// Check if the publishing archive file at a given path exists
+  FutureOr<bool> pubArchiveExists(String path);
+
+  /// Get publishing archive
+  FutureOr<CRSFileOutputStream> getPubArchive(String path);
+
+  /// Add a publishing archive to the pub archive bucket
+  FutureOr createPubArchive(String path, Uint8List data,
+      {String? contentType, Map<String, String>? metadata});
+
+  /// Remove a publishing archive file located at [path] from the CRS OFS
+  FutureOr removePubArchive(String path);
+
+  /// Move a publishing archive to a package archive
+  FutureOr movePubArchiveToPackage(String from, String to);
+
+  /// Create a new URL for the storage system
+  FutureOr<Uri> createPubEndpointUrl(String path, {required String pubId});
 }
 
 class CRSFile {

@@ -1,21 +1,22 @@
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/crs/exceptions.dart';
-import 'package:pritt_server/src/main/utils/version.dart';
+import 'package:pritt_common/interface.dart' as common;
+import 'package:pritt_common/version.dart';
 
+import '../../../../../pritt_server.dart';
+import '../../../../main/crs/exceptions.dart';
 import '../../../../server_utils/authorization.dart';
 import '../../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
   // check authorization
   final authToken = getHeader(event, 'Authorization');
-  final auth = await checkAuthorization(authToken);
+  var user = authToken == null ? null : await checkAuthorization(authToken);
 
-  if (auth != null) {
+  if (user == null) {
     setResponseCode(event, 401);
-    return {
-      'error': 'Unauthorized',
-      'message': 'You are not authorized to view or use this endpoint'
-    };
+    return common.UnauthorizedError(
+            error: 'Unauthorized',
+            description: 'You are not authorized to view or use this endpoint')
+        .toJson();
   }
 
   // get tarball for package
@@ -46,13 +47,13 @@ final handler = defineRequestHandler((event) async {
 
     if (!package.isSuccess) {
       setResponseCode(event, 404);
-      return {
-        'error': 'Package not found',
-        'message': 'The package $pkgName could not be found'
-      };
+      return common.NotFoundError(
+              error: 'Package not found',
+              message: 'The package $pkgName could not be found')
+          .toJson();
     }
 
-    final archive = await crs.ofs.get(package.body!.archive.path);
+    final archive = await crs.ofs.getPackage(package.body!.archive.path);
 
     return archive.data;
   } on CRSException {

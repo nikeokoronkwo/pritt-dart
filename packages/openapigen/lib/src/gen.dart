@@ -31,8 +31,12 @@ extension SchemaGen on OpenAPIGenResult {
       ..methods.addAll(generateMethods(schemas, methods)));
 
     final lib = Library((l) => l
-      ..ignoreForFile
-          .addAll(['non_constant_identifier_names', 'directives_ordering'])
+      ..ignoreForFile.addAll([
+        'non_constant_identifier_names',
+        'directives_ordering',
+        'constant_identifier_names',
+        'package_access'
+      ])
       ..directives
           .add(Directive.import('package:json_annotation/json_annotation.dart'))
       ..directives.add(Directive.part('interface.g.dart'))
@@ -44,7 +48,7 @@ extension SchemaGen on OpenAPIGenResult {
 
     return {
       'interface.dart':
-          '${lib.accept(DartEmitter.scoped(useNullSafetySyntax: true))}'
+          '${lib.accept(DartEmitter.scoped(useNullSafetySyntax: true, orderDirectives: true))}'
     };
   }
 }
@@ -71,11 +75,13 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
   }
 
   if (componentSpecs.containsKey(name)) {
-    return refer(switch (componentSpecs[name]!) {
-      Enum e => e.name,
-      Class c => c.name,
-      _ => throw Exception('Unknown')
-    });
+    return TypeReference((t) => t
+      ..symbol = switch (componentSpecs![name]) {
+        Enum e => e.name,
+        Class c => c.name,
+        _ => throw Exception('Unknown')
+      }
+      ..isNullable = !(required ?? true));
   }
 
   if (schema.hasProperty('oneOf'.toJS).toDart) {
@@ -155,7 +161,8 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
             valueSchema.getProperty('title'.toJS).dartify() as String? ??
                 "${name}Val",
             componentSpecs: componentSpecs)
-      ]));
+      ])
+      ..isNullable = !(required ?? true));
   }
 
   if (schema.hasProperty('type'.toJS).toDart) {
@@ -220,6 +227,7 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
     var type = _generateSpecFromSchema(
         obj, obj.getProperty('title'.toJS).dartify() as String? ?? name,
         componentSpecs: componentSpecs, required: propIsRequired);
+
     fields.add(Field((f) => f
       ..name = name
       ..modifier = FieldModifier.final$
@@ -237,7 +245,8 @@ Reference _generateSpecFromSchema<T extends Spec>(Schema schema, String name,
 
   final classForSchema = Class((c) => c
     // JSON serializable
-    ..annotations.add(refer('JsonSerializable').call([]))
+    ..annotations.add(
+        refer('JsonSerializable').call([], {'includeIfNull': literalFalse}))
     ..name = name
 
     // main constructor

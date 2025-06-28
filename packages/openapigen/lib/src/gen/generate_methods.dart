@@ -59,9 +59,9 @@ Iterable<Method> generateMethods(
         var type = 'string';
 
         if (param.schema.getProperty('type'.toJS).dartify() as String ==
-            'string')
+            'string') {
           type = 'string';
-        else if (param.schema.getProperty('type'.toJS).dartify() as String ==
+        } else if (param.schema.getProperty('type'.toJS).dartify() as String ==
             'number')
           type = 'number';
         else if (param.schema.getProperty('type'.toJS).dartify() as String ==

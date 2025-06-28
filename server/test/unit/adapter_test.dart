@@ -16,15 +16,14 @@ void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
     late MockCRSArchiveController mockArchiveController;
-    late MockJsonConvertible mockMetaResult;
+    MockJsonConvertible mockMetaResult = MockJsonConvertible();
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-      mockMetaResult = MockJsonConvertible();
     });
 
-    // TODO: More Tests
+    // TODO(nikeokoronkwo): More Tests, https://github.com/nikeokoronkwo/pritt-dart/pull/51
     group('Meta Adapter Result', () {
       when(mockMetaResult.toJson()).thenReturn({'name': 1, 'age': 2});
 

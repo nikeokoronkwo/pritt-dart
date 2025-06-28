@@ -1,8 +1,8 @@
 import 'package:pritt_common/interface.dart' as common;
 
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/utils/request_handler.dart';
-import 'package:pritt_server/src/utils/resolve.dart';
+import '../../../../pritt_server.dart';
+import '../../../utils/request_handler.dart';
+import '../../../utils/resolve.dart';
 
 final handler = defineRequestHandler((event) async {
   // TODO: In the future, we want to assert a device id is passed
@@ -13,7 +13,9 @@ final handler = defineRequestHandler((event) async {
 
   if (!userAgent.toString().toLowerCase().contains('pritt cli')) {
     setResponseCode(event, 401);
-    return common.UnauthorizedError(error: 'Unauthorized: You should not be accessing this').toJson();
+    return common.UnauthorizedError(
+            error: 'Unauthorized: You should not be accessing this')
+        .toJson();
   }
 
   try {

@@ -1,6 +1,6 @@
 import 'package:pritt_common/interface.dart' as common;
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/utils/request_handler.dart';
+import '../../../pritt_server.dart';
+import '../../utils/request_handler.dart';
 
 final pkgCap = 100;
 
@@ -26,8 +26,11 @@ final handler = defineRequestHandler((event) async {
 
     final resp = common.GetPackagesResponse(
         packages: (await pkgs.skip(index * 100).take(pkgCap).toList())
+            // TODO: More Package features:
+            // - keywords, - license
             .map((pkg) => common.Package(
                 name: pkg.name,
+                scope: pkg.scope,
                 description: pkg.description,
                 version: pkg.version,
                 author: common.Author(

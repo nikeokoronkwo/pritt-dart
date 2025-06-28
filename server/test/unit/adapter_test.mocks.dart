@@ -7,13 +7,13 @@ import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
+import 'package:pritt_common/version.dart' as _i9;
 import 'package:pritt_server/src/main/base/db/interface.dart' as _i2;
 import 'package:pritt_server/src/main/base/db/schema.dart' as _i7;
 import 'package:pritt_server/src/main/base/storage/interface.dart' as _i3;
 import 'package:pritt_server/src/main/crs/interfaces.dart' as _i4;
 import 'package:pritt_server/src/main/crs/response.dart' as _i6;
 import 'package:pritt_server/src/main/utils/mixins.dart' as _i10;
-import 'package:pritt_server/src/main/utils/version.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -40,8 +40,8 @@ class _FakePrittDatabaseInterface_0 extends _i1.SmartFake
         );
 }
 
-class _FakePrittStorageInterface_1 extends _i1.SmartFake
-    implements _i3.PrittStorageInterface {
+class _FakePrittStorageInterface_1<T> extends _i1.SmartFake
+    implements _i3.PrittStorageInterface<T> {
   _FakePrittStorageInterface_1(
     Object parent,
     Invocation parentInvocation,
@@ -268,13 +268,13 @@ class MockCRSArchiveController extends _i1.Mock
   }
 
   @override
-  _i3.PrittStorageInterface get ofs => (super.noSuchMethod(
+  _i3.PrittStorageInterface<dynamic> get ofs => (super.noSuchMethod(
         Invocation.getter(#ofs),
-        returnValue: _FakePrittStorageInterface_1(
+        returnValue: _FakePrittStorageInterface_1<dynamic>(
           this,
           Invocation.getter(#ofs),
         ),
-      ) as _i3.PrittStorageInterface);
+      ) as _i3.PrittStorageInterface<dynamic>);
 
   @override
   _i5.Future<_i6.CRSResponse<_i4.CRSArchive>> getArchiveWithVersion(

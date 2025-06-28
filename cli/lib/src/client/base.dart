@@ -1,15 +1,22 @@
 // ignore_for_file: constant_identifier_names
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:pritt_cli/src/client/authentication.dart';
 import 'package:http/http.dart' as http;
+import 'package:pritt_common/interface.dart';
+
+import 'authentication.dart';
 
 class ApiClient {
   final String url;
   Authentication? authentication;
 
   http.Client client = http.Client();
+
+  void close() {
+    client.close();
+  }
 
   final _headers = <String, String>{};
   Map<String, String> get headers => _headers;
@@ -42,7 +49,7 @@ class ApiClient {
     Method method,
     QueryParams queryParams,
     String? hash,
-    Object body, {
+    Object? body, {
     String? contentType,
     Map<String, String>? headerParams,
   }) async {
@@ -66,37 +73,51 @@ class ApiClient {
 
     headerParams.addAll(_headers);
     if (contentType != null) {
-      headerParams['Content-Type'] = contentType;
+      headerParams[HttpHeaders.contentTypeHeader] = contentType;
     }
 
     // handle request
     final stringifiedQueryParams = queryParams.isNotEmpty
-        ? '?${queryParams.entries.map((e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}').join('&')}'
+        ? '?${queryParams.entries.where((e) => e.value != null).map((e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value!)}').join('&')}'
         : '';
     final stringifiedHash = hash == null ? '' : '#${Uri.encodeComponent(hash)}';
     final uri = Uri.parse(
         '$url${path.startsWith('/') ? path.substring(1) : path}$stringifiedQueryParams$stringifiedHash');
 
     try {
-      // TODO: Handle stream requests
-      // TODO: Handle binary requests
+      if (body is StreamedContent) {
+        final req = http.StreamedRequest(method.name, uri)
+          ..headers.addAll(headerParams)
+          ..headers.update(
+              HttpHeaders.contentTypeHeader, (v) => body.contentType,
+              ifAbsent: () => body.contentType);
+
+        req.sink.addStream(body.data).then((_) {
+          return req.sink.close();
+        });
+
+        return await client.send(req);
+      }
+
       if (body is Stream<Uint8List> || body is Stream<List<int>>) {
         final req = http.StreamedRequest(method.name, uri)
+          ..headers.addAll(headerParams)
           ..sink.addStream(
               body is Stream<List<int>> ? body : (body as Stream<Uint8List>));
 
-        unawaited(req.sink.close());
         return await client.send(req);
       } else if (body is Uint8List || body is List<int>) {
         final req = http.StreamedRequest(method.name, uri)
+          ..headers.addAll(headerParams)
           ..sink.add(body as List<int>);
 
-        unawaited(req.sink.close());
+        await req.sink.close();
         return await client.send(req);
       }
 
       if (streamResponse) {
-        final req = http.Request(method.name, uri);
+        final req = http.Request(method.name, uri)
+          ..headers.addAll(headerParams);
         return await client.send(req);
       }
 

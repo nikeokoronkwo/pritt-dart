@@ -1,16 +1,16 @@
 <script setup lang="ts">
 /**
  * Publishing Status for User
- * 
- * 
+ *
+ *
  */
 definePageMeta({
-    middleware: 'auth'
-})
+  middleware: "auth",
+});
 </script>
 
 <template>
-    <div>
-        <div></div>
-    </div>
+  <div>
+    <div></div>
+  </div>
 </template>

@@ -30,34 +30,40 @@ class WGTStyleColours {
     this.background,
     this.text,
     required String accent,
-  }) : primary = generateTailwindColorScale(primary), accent = generateTailwindColorScale(accent);
+  })  : primary = generateTailwindColorScale(primary),
+        accent = generateTailwindColorScale(accent);
 
-  factory WGTStyleColours.fromJson(Map<String, dynamic> json) => _$WGTStyleColoursFromJson(json);
+  factory WGTStyleColours.fromJson(Map<String, dynamic> json) =>
+      _$WGTStyleColoursFromJson(json);
   Map<String, dynamic> toJson() => _$WGTStyleColoursToJson(this);
 }
 
 typedef WGTColourSpectrum = Map<int, String>;
+
 extension WGTCS on WGTColourSpectrum {
   static WGTColourSpectrum fromJson(dynamic json) {
-    if (json is String) return generateTailwindColorScale(json);
-    else if (json is Map<int, String>) return json;
+    if (json is String) {
+      return generateTailwindColorScale(json);
+    } else if (json is Map<int, String>)
+      return json;
     else if (json is Map<dynamic, String>) {
       return json.map((k, v) {
-        if (k is int) return MapEntry(k, v);
-        else if (k is String) {
+        if (k is int) {
+          return MapEntry(k, v);
+        } else if (k is String) {
           if (k.toLowerCase() == 'default') return MapEntry(-1, v);
           if (int.tryParse(k) != null) {
             return MapEntry(int.parse(k), v);
-          } 
+          }
         }
 
         return MapEntry(1000 * 100 + k.hashCode, v);
       });
-    }
-    else throw Exception();
+    } else
+      throw Exception();
   }
 
-  String get defaultColour => this[-1] ?? this.values.toList()[this.length ~/ 2];
+  String get defaultColour => this[-1] ?? values.toList()[length ~/ 2];
 }
 
 @JsonEnum(valueField: 'value')
@@ -84,18 +90,13 @@ class WGTStyleFont {
     weight: 400,
   );
   static const serifFont = WGTStyleFont(
-    family: 'Times New Roman',
-    size: 16,
-    weight: 400,
-    type: FontType.serif
-  );
+      family: 'Times New Roman', size: 16, weight: 400, type: FontType.serif);
 
-  const WGTStyleFont({
-    required this.family,
-    this.size,
-    this.weight,
-    this.type = FontType.sansSerif
-  });
+  const WGTStyleFont(
+      {required this.family,
+      this.size,
+      this.weight,
+      this.type = FontType.sansSerif});
 
   factory WGTStyleFont.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) {

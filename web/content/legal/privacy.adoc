@@ -1,0 +1,6 @@
+= Privacy Policy
+v1.0, 2025-06-11
+:showtitle: true
+:keywords: privacy
+:toc:
+

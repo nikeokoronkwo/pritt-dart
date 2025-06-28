@@ -1,16 +1,17 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:pritt_common/functions.dart';
+import 'package:pritt_common/version.dart';
 
-import '../utils/version.dart';
 import '../base/db.dart';
-import '../base/storage.dart';
 import '../base/db/interface.dart';
 import '../base/db/schema.dart';
-import 'exceptions.dart';
+import '../base/storage.dart';
 import '../base/storage/interface.dart';
+import 'exceptions.dart';
 import 'interfaces.dart';
 import 'response.dart';
 
@@ -105,15 +106,15 @@ class CoreRegistryService implements CRSController {
   static Future<CoreRegistryService> connect(
       {PrittDatabase? db, PrittStorage? storage}) async {
     db ??= await PrittDatabase.connect(
-      host: String.fromEnvironment('DATABASE_HOST'),
-      port: int.fromEnvironment('DATABASE_PORT', defaultValue: 5432),
-      database: String.fromEnvironment('DATABASE_NAME'),
-      username: String.fromEnvironment('DATABASE_USERNAME'),
-      password: String.fromEnvironment('DATABASE_PASSWORD'),
-      devMode: String.fromEnvironment('DATABASE_HOST') == 'localhost',
-    );
+        host: Platform.environment['DATABASE_HOST']!,
+        port: int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
+        database: Platform.environment['DATABASE_NAME']!,
+        username: Platform.environment['DATABASE_USERNAME']!,
+        password: Platform.environment['DATABASE_PASSWORD'] ??
+            String.fromEnvironment('DATABASE_PASSWORD'),
+        devMode: Platform.environment['DATABASE_HOST'] == 'localhost');
 
-    storage ??= await PrittStorage.connect(String.fromEnvironment('S3_URL'));
+    storage ??= await PrittStorage.connect(Platform.environment['S3_URL']!);
 
     return CoreRegistryService._(db, storage);
   }
@@ -128,11 +129,12 @@ class CoreRegistryService implements CRSController {
       {String? language, Map<String, dynamic>? env}) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final file = await ofs
-          .get('/${scope == null ? name : '$scope/$name'}/$version.tgz');
+      print('${scope == null ? name : '$scope/$name'}/$version.tar.gz');
+      final file = await ofs.getPackage(
+          '${scope == null ? name : '$scope/$name'}/$version.tar.gz');
       final archive = CRSArchive(
         '$packageName.tar.gz',
-        file.contentType ?? 'application/gzip',
+        'application/gzip',
         Stream.fromIterable([file.data]),
       );
       return CRSResponse.success(

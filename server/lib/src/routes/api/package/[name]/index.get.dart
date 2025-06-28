@@ -1,10 +1,10 @@
 import 'package:pritt_common/interface.dart' as common;
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
-import 'package:pritt_server/src/main/crs/exceptions.dart';
-import 'package:pritt_server/src/main/utils/version.dart';
-import 'package:pritt_server/src/server_utils/authorization.dart';
-import 'package:pritt_server/src/utils/request_handler.dart';
+import 'package:pritt_common/version.dart';
+import '../../../../../pritt_server.dart';
+import '../../../../main/base/db/schema.dart';
+import '../../../../main/crs/exceptions.dart';
+import '../../../../server_utils/authorization.dart';
+import '../../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
   // get pkg name
@@ -15,7 +15,9 @@ final handler = defineRequestHandler((event) async {
 
   // check authorization
   var authHeader = getHeader(event, 'Authorization');
-  final isAuthorized = await checkAuthorization(authHeader) != null;
+  final isAuthorized = authHeader == null
+      ? false
+      : (await checkAuthorization(authHeader) != null);
 
   try {
     // get the package
@@ -32,86 +34,102 @@ final handler = defineRequestHandler((event) async {
     // get contributors
     final contributors = await crs.db.getContributorsForPackage(pkgName);
 
-    var author = common.Author(name: pkg.author.name, email: pkg.author.email);
+    var author = common.Author(
+        name: pkg.author.name,
+        email: pkg.author.email,
+        avatar: pkg.author.avatarUrl);
 
     // return
     final resp = common.GetPackageResponse(
-        name: pkg.name,
-        latest_version: pkg.version,
-        latest: (() {
-          final latestPkg =
-              pkgVersions.firstWhere((pv) => pv.version == pkg.version);
-          return common.VerbosePackage(
-              name: pkg.name,
-              version: latestPkg.version,
-              author: author,
-              created_at: latestPkg.created.toIso8601String(),
-              info: latestPkg.info,
-              env: latestPkg.env,
-              metadata: latestPkg.metadata,
-              signatures: latestPkg.signatures
-                  .map((sig) => common.Signature(
-                      public_key_id: sig.publicKeyId,
-                      signature: sig.signature,
-                      created: sig.created.toIso8601String()))
-                  .toList(),
-              deprecated: (isAll == 'true' && isAuthorized)
-                  ? latestPkg.isDeprecated
-                  : null,
-              yanked: (isAll == 'true' && isAuthorized)
-                  ? latestPkg.isYanked
-                  : null);
-        })(),
-        versions: pkgVersions.asMap().map((index, pkgVer) {
-          return MapEntry(
-              pkgVer.version,
-              common.VerbosePackage(
-                  name: pkg.name,
-                  version: pkgVer.version,
-                  author: author,
-                  created_at: pkgVer.created.toIso8601String(),
-                  info: pkgVer.info,
-                  env: pkgVer.env,
-                  metadata: pkgVer.metadata,
-                  signatures: pkgVer.signatures
-                      .map((sig) => common.Signature(
-                          public_key_id: sig.publicKeyId,
-                          signature: sig.signature,
-                          created: sig.created.toIso8601String()))
-                      .toList(),
-                  deprecated: (isAll == 'true' && isAuthorized)
-                      ? pkgVer.isDeprecated
-                      : null,
-                  yanked: (isAll == 'true' && isAuthorized)
-                      ? pkgVer.isYanked
-                      : null));
-        }),
-        language: pkg.language,
-        created_at: pkg.created.toIso8601String(),
-        description: pkg.description,
-        author: author,
-        contributors: contributors.entries.map((e) {
-          return common.Contributor(
-              name: e.key.name,
-              email: e.key.email,
-              privileges: isAuthorized
-                  ? e.value.map((p) {
-                      return switch (p) {
-                        Privileges.read => common.Privilege.read,
-                        Privileges.write => common.Privilege.write,
-                        Privileges.publish => common.Privilege.publish,
-                        Privileges.ultimate => common.Privilege.ultimate,
-                      };
-                    }).toList()
-                  : null);
-        }).toList());
+      name: pkg.name,
+      latest_version: pkg.version,
+      latest: (() {
+        final latestPkg =
+            pkgVersions.firstWhere((pv) => pv.version == pkg.version);
+        return common.VerbosePackage(
+            name: pkg.name,
+            version: latestPkg.version,
+            author: author,
+            created_at: latestPkg.created.toIso8601String(),
+            info: latestPkg.info,
+            env: latestPkg.env,
+            readme: latestPkg.readme,
+            language: pkg.language,
+            metadata: latestPkg.metadata,
+            signatures: latestPkg.signatures
+                .map((sig) => common.Signature(
+                    public_key_id: sig.publicKeyId,
+                    signature: sig.signature,
+                    created: sig.created.toIso8601String()))
+                .toList(),
+            deprecated: (isAll == 'true' && isAuthorized)
+                ? latestPkg.isDeprecated
+                : null,
+            yanked:
+                (isAll == 'true' && isAuthorized) ? latestPkg.isYanked : null);
+      })(),
+      versions: pkgVersions.asMap().map((index, pkgVer) {
+        return MapEntry(
+            pkgVer.version,
+            common.VerbosePackage(
+                name: pkg.name,
+                version: pkgVer.version,
+                author: author,
+                created_at: pkgVer.created.toIso8601String(),
+                info: pkgVer.info,
+                env: pkgVer.env,
+                metadata: pkgVer.metadata,
+                signatures: pkgVer.signatures
+                    .map((sig) => common.Signature(
+                        public_key_id: sig.publicKeyId,
+                        signature: sig.signature,
+                        created: sig.created.toIso8601String()))
+                    .toList(),
+                deprecated: (isAll == 'true' && isAuthorized)
+                    ? pkgVer.isDeprecated
+                    : null,
+                yanked: (isAll == 'true' && isAuthorized)
+                    ? pkgVer.isYanked
+                    : null));
+      }),
+      language: pkg.language,
+      created_at: pkg.created.toIso8601String(),
+      updated_at: pkg.updated.toIso8601String(),
+      description: pkg.description,
+      author: author,
+      contributors: contributors.entries.map((e) {
+        return common.Contributor(
+            name: e.key.name,
+            email: e.key.email,
+            privileges: isAuthorized
+                ? e.value.map((p) {
+                    return switch (p) {
+                      Privileges.read => common.Privilege.read,
+                      Privileges.write => common.Privilege.write,
+                      Privileges.publish => common.Privilege.publish,
+                      Privileges.ultimate => common.Privilege.ultimate,
+                    };
+                  }).toList()
+                : null);
+      }).toList(),
+      license: pkg.license ?? 'Unknown',
+      vcs: switch (pkg.vcs) {
+        VCS.git => common.VCS.git,
+        VCS.svn => common.VCS.svn,
+        VCS.fossil => common.VCS.fossil,
+        VCS.mercurial => common.VCS.mercurial,
+        VCS.other => common.VCS.other,
+      },
+      vcs_url: pkg.vcsUrl.toString(),
+    );
 
     return resp.toJson();
 
     // if package not found, return 404
-  } on CRSException catch (e) {
+  } on CRSException catch (e, stack) {
     switch (e.type) {
       case CRSExceptionType.PACKAGE_NOT_FOUND:
+        print('${e.message} -- ${e.cause} : ${e.stackTrace} : \n$stack');
         setResponseCode(event, 404);
         return common.NotFoundError(
                 error: 'Package not found',
@@ -125,10 +143,11 @@ final handler = defineRequestHandler((event) async {
             .toJson();
       default:
         setResponseCode(event, 500);
-        return 'Internal server error';
+        return common.ServerError(error: e.message).toJson();
     }
-  } catch (e) {
+  } catch (e, stack) {
     setResponseCode(event, 500);
-    return 'Internal server error';
+    print('$e : $stack');
+    return common.ServerError(error: 'Internal Server Error').toJson();
   }
 });

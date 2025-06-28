@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:pritt_cli/src/cmd/package/publish.dart';
-import 'package:pritt_cli/src/cmd/package/unpack.dart';
-
+import '../cli/base.dart';
 import 'package/current.dart';
 import 'package/list.dart';
-
-import '../cli/base.dart';
+import 'package/publish.dart';
+import 'package/unpack.dart';
 
 class PackageCommand extends PrittCommand {
   @override

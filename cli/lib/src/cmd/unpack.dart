@@ -4,14 +4,13 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_cli/src/archive.dart';
 
-import 'package:pritt_cli/src/cli/progress_bar.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/package.dart';
-import 'package:pritt_cli/src/user_config.dart';
-
+import '../archive.dart';
 import '../cli/base.dart';
+import '../cli/progress_bar.dart';
+import '../client.dart';
+import '../config/user_config.dart';
+import '../pkg_name.dart';
 
 class UnpackCommand extends PrittCommand {
   @override
@@ -21,9 +20,6 @@ class UnpackCommand extends PrittCommand {
   String description =
       "Get a package locally and make modifications to the package";
 
-  @override
-  List<String> get aliases => ['unpack'];
-
   UnpackCommand() {
     argParser
       ..addFlag(
@@ -31,6 +27,7 @@ class UnpackCommand extends PrittCommand {
         abbr: 'f',
         help: 'Overwrite the target directory if it already exists.',
       )
+      ..addFlag('vcs', help: 'Unpack via VCS (Clone)', hide: true)
       ..addOption('output',
           abbr: 'o', help: 'The output directory to write this to');
   }
@@ -102,14 +99,17 @@ class UnpackCommand extends PrittCommand {
         sink.add(chunk);
         bytesReceived += chunk.length;
         progressBar.tick(bytesReceived, contentLength);
+        sleep(Duration(milliseconds: 10));
       },
       onDone: () async {
         await sink.close();
+        sleep(Duration(milliseconds: 100));
         progressBar.end();
         downloadCompleter.complete();
       },
       onError: (e, st) async {
         await sink.close();
+        sleep(Duration(milliseconds: 100));
         downloadCompleter.completeError(e, st);
       },
       cancelOnError: true,
@@ -118,12 +118,14 @@ class UnpackCommand extends PrittCommand {
     await downloadCompleter.future;
 
     // now deflate, and open
-    // TODO: Complete
 
     logger.info('Expanding Contents');
 
     // extract tar.gz and save to directory
     await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+
+    await sink.close();
+    await tarFile.delete();
 
     logger.stdout('Package $pkgName has been unpacked at $outName');
 

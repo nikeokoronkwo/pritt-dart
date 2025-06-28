@@ -1,4 +1,4 @@
-import 'package:pritt_cli/src/cli/base.dart';
+import '../cli/base.dart';
 
 class DeprecateCommand extends PrittCommand {
   @override

@@ -8,10 +8,19 @@ String generateTailwindMainCssFile(WGTStyle style) {
 
   // add css code
   buffer.writeAll([
-    '@theme {', 
-    ...style.colours.primary.map((k, v) => MapEntry(k == -1 ? '--color-primary' : '--color-primary-$k', v)).entries.map((e) => '${e.key}: ${e.value};'),
-    ...style.colours.accent.map((k, v) => MapEntry(k == -1 ? '--color-accent' : '--color-accent-$k', v)).entries.map((e) => '${e.key}: ${e.value};'), 
-    '--font-main: "${style.font.family}", ${style.font.type.value};', '}'
+    '@theme {',
+    ...style.colours.primary
+        .map((k, v) =>
+            MapEntry(k == -1 ? '--color-primary' : '--color-primary-$k', v))
+        .entries
+        .map((e) => '${e.key}: ${e.value};'),
+    ...style.colours.accent
+        .map((k, v) =>
+            MapEntry(k == -1 ? '--color-accent' : '--color-accent-$k', v))
+        .entries
+        .map((e) => '${e.key}: ${e.value};'),
+    '--font-main: "${style.font.family}", ${style.font.type.value};',
+    '}'
   ], '\n');
 
   // return

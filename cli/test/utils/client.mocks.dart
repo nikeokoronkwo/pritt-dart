@@ -3,15 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
+import 'dart:async' as _i8;
 
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
+import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:pritt_cli/src/client.dart' as _i4;
-import 'package:pritt_cli/src/client/authentication.dart' as _i6;
-import 'package:pritt_cli/src/client/base.dart' as _i8;
+import 'package:pritt_cli/src/client/authentication.dart' as _i7;
+import 'package:pritt_cli/src/client/base.dart' as _i9;
 import 'package:pritt_common/interface.dart' as _i3;
+import 'package:retry/retry.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -234,9 +235,20 @@ class _FakeUploadPackageResponse_18 extends _i1.SmartFake
         );
 }
 
-class _FakeAuthValidateResponse_19 extends _i1.SmartFake
+class _FakePublishPackageStatusResponse_19 extends _i1.SmartFake
+    implements _i3.PublishPackageStatusResponse {
+  _FakePublishPackageStatusResponse_19(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeAuthValidateResponse_20 extends _i1.SmartFake
     implements _i3.AuthValidateResponse {
-  _FakeAuthValidateResponse_19(
+  _FakeAuthValidateResponse_20(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -245,9 +257,9 @@ class _FakeAuthValidateResponse_19 extends _i1.SmartFake
         );
 }
 
-class _FakeYankAdapterResponse_20 extends _i1.SmartFake
+class _FakeYankAdapterResponse_21 extends _i1.SmartFake
     implements _i3.YankAdapterResponse {
-  _FakeYankAdapterResponse_20(
+  _FakeYankAdapterResponse_21(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -256,9 +268,9 @@ class _FakeYankAdapterResponse_20 extends _i1.SmartFake
         );
 }
 
-class _FakeYankPackageResponse_21 extends _i1.SmartFake
+class _FakeYankPackageResponse_22 extends _i1.SmartFake
     implements _i3.YankPackageResponse {
-  _FakeYankPackageResponse_21(
+  _FakeYankPackageResponse_22(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -267,9 +279,9 @@ class _FakeYankPackageResponse_21 extends _i1.SmartFake
         );
 }
 
-class _FakeYankPackageByVersionRequest_22 extends _i1.SmartFake
+class _FakeYankPackageByVersionRequest_23 extends _i1.SmartFake
     implements _i3.YankPackageByVersionRequest {
-  _FakeYankPackageByVersionRequest_22(
+  _FakeYankPackageByVersionRequest_23(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -278,8 +290,40 @@ class _FakeYankPackageByVersionRequest_22 extends _i1.SmartFake
         );
 }
 
-class _FakeBaseResponse_23 extends _i1.SmartFake implements _i2.BaseResponse {
-  _FakeBaseResponse_23(
+class _FakeAuthDetailsResponse_24 extends _i1.SmartFake
+    implements _i3.AuthDetailsResponse {
+  _FakeAuthDetailsResponse_24(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeResponse_25 extends _i1.SmartFake implements _i2.Response {
+  _FakeResponse_25(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeStreamedResponse_26 extends _i1.SmartFake
+    implements _i2.StreamedResponse {
+  _FakeStreamedResponse_26(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeBaseResponse_27 extends _i1.SmartFake implements _i2.BaseResponse {
+  _FakeBaseResponse_27(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -293,13 +337,26 @@ class _FakeBaseResponse_23 extends _i1.SmartFake implements _i2.BaseResponse {
 /// See the documentation for Mockito's code generation for more information.
 class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   @override
+  _i5.RetryOptions get retryClient => (super.noSuchMethod(
+        Invocation.getter(#retryClient),
+        returnValue: _i6.dummyValue<_i5.RetryOptions>(
+          this,
+          Invocation.getter(#retryClient),
+        ),
+        returnValueForMissingStub: _i6.dummyValue<_i5.RetryOptions>(
+          this,
+          Invocation.getter(#retryClient),
+        ),
+      ) as _i5.RetryOptions);
+
+  @override
   String get url => (super.noSuchMethod(
         Invocation.getter(#url),
-        returnValue: _i5.dummyValue<String>(
+        returnValue: _i6.dummyValue<String>(
           this,
           Invocation.getter(#url),
         ),
-        returnValueForMissingStub: _i5.dummyValue<String>(
+        returnValueForMissingStub: _i6.dummyValue<String>(
           this,
           Invocation.getter(#url),
         ),
@@ -326,7 +383,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
       ) as Map<String, String>);
 
   @override
-  set authentication(_i6.Authentication? _authentication) => super.noSuchMethod(
+  set authentication(_i7.Authentication? _authentication) => super.noSuchMethod(
         Invocation.setter(
           #authentication,
           _authentication,
@@ -344,7 +401,18 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
       );
 
   @override
-  _i7.FutureOr<_i3.AddAdapterResponse> addAdapterWithId(
+  _i8.Future<bool> healthCheck({bool? verbose = false}) => (super.noSuchMethod(
+        Invocation.method(
+          #healthCheck,
+          [],
+          {#verbose: verbose},
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+        returnValueForMissingStub: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
+
+  @override
+  _i8.FutureOr<_i3.AddAdapterResponse> addAdapterWithId(
     _i3.AddAdapterRequest? body, {
     required String? id,
   }) =>
@@ -355,7 +423,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue:
-            _i7.Future<_i3.AddAdapterResponse>.value(_FakeAddAdapterResponse_1(
+            _i8.Future<_i3.AddAdapterResponse>.value(_FakeAddAdapterResponse_1(
           this,
           Invocation.method(
             #addAdapterWithId,
@@ -364,7 +432,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.AddAdapterResponse>.value(_FakeAddAdapterResponse_1(
+            _i8.Future<_i3.AddAdapterResponse>.value(_FakeAddAdapterResponse_1(
           this,
           Invocation.method(
             #addAdapterWithId,
@@ -372,10 +440,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.AddAdapterResponse>);
+      ) as _i8.FutureOr<_i3.AddAdapterResponse>);
 
   @override
-  _i7.FutureOr<_i3.AddUserResponse> addUserById(
+  _i8.FutureOr<_i3.AddUserResponse> addUserById(
     _i3.AddUserRequest? body, {
     required String? id,
   }) =>
@@ -386,7 +454,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue:
-            _i7.Future<_i3.AddUserResponse>.value(_FakeAddUserResponse_2(
+            _i8.Future<_i3.AddUserResponse>.value(_FakeAddUserResponse_2(
           this,
           Invocation.method(
             #addUserById,
@@ -395,7 +463,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.AddUserResponse>.value(_FakeAddUserResponse_2(
+            _i8.Future<_i3.AddUserResponse>.value(_FakeAddUserResponse_2(
           this,
           Invocation.method(
             #addUserById,
@@ -403,17 +471,17 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.AddUserResponse>);
+      ) as _i8.FutureOr<_i3.AddUserResponse>);
 
   @override
-  _i7.FutureOr<_i3.AuthResponse> createNewAuthStatus({String? id}) =>
+  _i8.FutureOr<_i3.AuthResponse> createNewAuthStatus({String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #createNewAuthStatus,
           [],
           {#id: id},
         ),
-        returnValue: _i7.Future<_i3.AuthResponse>.value(_FakeAuthResponse_3(
+        returnValue: _i8.Future<_i3.AuthResponse>.value(_FakeAuthResponse_3(
           this,
           Invocation.method(
             #createNewAuthStatus,
@@ -422,7 +490,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.AuthResponse>.value(_FakeAuthResponse_3(
+            _i8.Future<_i3.AuthResponse>.value(_FakeAuthResponse_3(
           this,
           Invocation.method(
             #createNewAuthStatus,
@@ -430,10 +498,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.AuthResponse>);
+      ) as _i8.FutureOr<_i3.AuthResponse>);
 
   @override
-  _i7.FutureOr<_i3.StreamedContent> getAdapterArchiveWithName(
+  _i8.FutureOr<_i3.StreamedContent> getAdapterArchiveWithName(
           {required String? name}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -442,7 +510,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#name: name},
         ),
         returnValue:
-            _i7.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
+            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
           this,
           Invocation.method(
             #getAdapterArchiveWithName,
@@ -451,7 +519,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
+            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
           this,
           Invocation.method(
             #getAdapterArchiveWithName,
@@ -459,10 +527,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#name: name},
           ),
         )),
-      ) as _i7.FutureOr<_i3.StreamedContent>);
+      ) as _i8.FutureOr<_i3.StreamedContent>);
 
   @override
-  _i7.FutureOr<_i3.GetAdapterResponse> getAdapterById({required String? id}) =>
+  _i8.FutureOr<_i3.GetAdapterResponse> getAdapterById({required String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getAdapterById,
@@ -470,7 +538,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue:
-            _i7.Future<_i3.GetAdapterResponse>.value(_FakeGetAdapterResponse_5(
+            _i8.Future<_i3.GetAdapterResponse>.value(_FakeGetAdapterResponse_5(
           this,
           Invocation.method(
             #getAdapterById,
@@ -479,7 +547,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetAdapterResponse>.value(_FakeGetAdapterResponse_5(
+            _i8.Future<_i3.GetAdapterResponse>.value(_FakeGetAdapterResponse_5(
           this,
           Invocation.method(
             #getAdapterById,
@@ -487,15 +555,15 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetAdapterResponse>);
+      ) as _i8.FutureOr<_i3.GetAdapterResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetAdaptersResponse> getAdapters() => (super.noSuchMethod(
+  _i8.FutureOr<_i3.GetAdaptersResponse> getAdapters() => (super.noSuchMethod(
         Invocation.method(
           #getAdapters,
           [],
         ),
-        returnValue: _i7.Future<_i3.GetAdaptersResponse>.value(
+        returnValue: _i8.Future<_i3.GetAdaptersResponse>.value(
             _FakeGetAdaptersResponse_6(
           this,
           Invocation.method(
@@ -503,7 +571,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             [],
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.GetAdaptersResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.GetAdaptersResponse>.value(
             _FakeGetAdaptersResponse_6(
           this,
           Invocation.method(
@@ -511,16 +579,16 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             [],
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetAdaptersResponse>);
+      ) as _i8.FutureOr<_i3.GetAdaptersResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetAdaptersByLangResponse> getAdaptersByLang() =>
+  _i8.FutureOr<_i3.GetAdaptersByLangResponse> getAdaptersByLang() =>
       (super.noSuchMethod(
         Invocation.method(
           #getAdaptersByLang,
           [],
         ),
-        returnValue: _i7.Future<_i3.GetAdaptersByLangResponse>.value(
+        returnValue: _i8.Future<_i3.GetAdaptersByLangResponse>.value(
             _FakeGetAdaptersByLangResponse_7(
           this,
           Invocation.method(
@@ -529,7 +597,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetAdaptersByLangResponse>.value(
+            _i8.Future<_i3.GetAdaptersByLangResponse>.value(
                 _FakeGetAdaptersByLangResponse_7(
           this,
           Invocation.method(
@@ -537,10 +605,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             [],
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetAdaptersByLangResponse>);
+      ) as _i8.FutureOr<_i3.GetAdaptersByLangResponse>);
 
   @override
-  _i7.FutureOr<_i3.AuthPollResponse> getAuthStatus({String? id}) =>
+  _i8.FutureOr<_i3.AuthPollResponse> getAuthStatus({String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getAuthStatus,
@@ -548,7 +616,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue:
-            _i7.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
+            _i8.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
           this,
           Invocation.method(
             #getAuthStatus,
@@ -557,7 +625,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
+            _i8.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
           this,
           Invocation.method(
             #getAuthStatus,
@@ -565,10 +633,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.AuthPollResponse>);
+      ) as _i8.FutureOr<_i3.AuthPollResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetPackagesResponse> getOrgPackages(
+  _i8.FutureOr<_i3.GetPackagesResponse> getOrgPackages(
           {required String? scope}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -576,7 +644,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [],
           {#scope: scope},
         ),
-        returnValue: _i7.Future<_i3.GetPackagesResponse>.value(
+        returnValue: _i8.Future<_i3.GetPackagesResponse>.value(
             _FakeGetPackagesResponse_9(
           this,
           Invocation.method(
@@ -585,7 +653,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#scope: scope},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.GetPackagesResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.GetPackagesResponse>.value(
             _FakeGetPackagesResponse_9(
           this,
           Invocation.method(
@@ -594,10 +662,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#scope: scope},
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetPackagesResponse>);
+      ) as _i8.FutureOr<_i3.GetPackagesResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetScopeResponse> getOrganization(
+  _i8.FutureOr<_i3.GetScopeResponse> getOrganization(
           {required String? scope}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -606,7 +674,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#scope: scope},
         ),
         returnValue:
-            _i7.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
+            _i8.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
           this,
           Invocation.method(
             #getOrganization,
@@ -615,7 +683,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
+            _i8.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
           this,
           Invocation.method(
             #getOrganization,
@@ -623,10 +691,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#scope: scope},
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetScopeResponse>);
+      ) as _i8.FutureOr<_i3.GetScopeResponse>);
 
   @override
-  _i7.FutureOr<_i3.StreamedContent> getPackageArchiveWithName({
+  _i8.FutureOr<_i3.StreamedContent> getPackageArchiveWithName({
     required String? name,
     String? version,
   }) =>
@@ -640,7 +708,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           },
         ),
         returnValue:
-            _i7.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
+            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
           this,
           Invocation.method(
             #getPackageArchiveWithName,
@@ -652,7 +720,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
+            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
           this,
           Invocation.method(
             #getPackageArchiveWithName,
@@ -663,10 +731,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.StreamedContent>);
+      ) as _i8.FutureOr<_i3.StreamedContent>);
 
   @override
-  _i7.FutureOr<_i3.GetPackageResponse> getPackageByName({
+  _i8.Future<_i3.GetPackageResponse> getPackageByName({
     String? lang,
     bool? all,
     required String? name,
@@ -682,7 +750,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           },
         ),
         returnValue:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
+            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByName,
@@ -695,7 +763,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
+            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByName,
@@ -707,10 +775,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetPackageResponse>);
+      ) as _i8.Future<_i3.GetPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetPackageResponse> getPackageByNameWithScope({
+  _i8.Future<_i3.GetPackageResponse> getPackageByNameWithScope({
     String? lang,
     bool? all,
     required String? scope,
@@ -728,7 +796,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           },
         ),
         returnValue:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
+            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByNameWithScope,
@@ -742,7 +810,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
+            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
           this,
           Invocation.method(
             #getPackageByNameWithScope,
@@ -755,10 +823,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetPackageResponse>);
+      ) as _i8.Future<_i3.GetPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetPackageByVersionResponse>
+  _i8.Future<_i3.GetPackageByVersionResponse>
       getPackageByNameWithScopeAndVersion({
     String? lang,
     bool? all,
@@ -778,7 +846,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 #version: version,
               },
             ),
-            returnValue: _i7.Future<_i3.GetPackageByVersionResponse>.value(
+            returnValue: _i8.Future<_i3.GetPackageByVersionResponse>.value(
                 _FakeGetPackageByVersionResponse_12(
               this,
               Invocation.method(
@@ -794,7 +862,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
               ),
             )),
             returnValueForMissingStub:
-                _i7.Future<_i3.GetPackageByVersionResponse>.value(
+                _i8.Future<_i3.GetPackageByVersionResponse>.value(
                     _FakeGetPackageByVersionResponse_12(
               this,
               Invocation.method(
@@ -809,10 +877,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 },
               ),
             )),
-          ) as _i7.FutureOr<_i3.GetPackageByVersionResponse>);
+          ) as _i8.Future<_i3.GetPackageByVersionResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetPackageByVersionResponse> getPackageByNameWithVersion({
+  _i8.Future<_i3.GetPackageByVersionResponse> getPackageByNameWithVersion({
     String? lang,
     bool? all,
     required String? name,
@@ -829,7 +897,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #version: version,
           },
         ),
-        returnValue: _i7.Future<_i3.GetPackageByVersionResponse>.value(
+        returnValue: _i8.Future<_i3.GetPackageByVersionResponse>.value(
             _FakeGetPackageByVersionResponse_12(
           this,
           Invocation.method(
@@ -844,7 +912,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetPackageByVersionResponse>.value(
+            _i8.Future<_i3.GetPackageByVersionResponse>.value(
                 _FakeGetPackageByVersionResponse_12(
           this,
           Invocation.method(
@@ -858,10 +926,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetPackageByVersionResponse>);
+      ) as _i8.Future<_i3.GetPackageByVersionResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetPackagesResponse> getPackages({
+  _i8.FutureOr<_i3.GetPackagesResponse> getPackages({
     String? index,
     String? user,
   }) =>
@@ -874,7 +942,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #user: user,
           },
         ),
-        returnValue: _i7.Future<_i3.GetPackagesResponse>.value(
+        returnValue: _i8.Future<_i3.GetPackagesResponse>.value(
             _FakeGetPackagesResponse_9(
           this,
           Invocation.method(
@@ -886,7 +954,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.GetPackagesResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.GetPackagesResponse>.value(
             _FakeGetPackagesResponse_9(
           this,
           Invocation.method(
@@ -898,10 +966,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetPackagesResponse>);
+      ) as _i8.FutureOr<_i3.GetPackagesResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetUserResponse> getUserById({required String? id}) =>
+  _i8.FutureOr<_i3.GetUserResponse> getUserById({required String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUserById,
@@ -909,7 +977,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           {#id: id},
         ),
         returnValue:
-            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
+            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
           this,
           Invocation.method(
             #getUserById,
@@ -918,7 +986,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
+            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
           this,
           Invocation.method(
             #getUserById,
@@ -926,16 +994,16 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetUserResponse>);
+      ) as _i8.FutureOr<_i3.GetUserResponse>);
 
   @override
-  _i7.FutureOr<_i3.GetUsersResponse> getUsers() => (super.noSuchMethod(
+  _i8.FutureOr<_i3.GetUsersResponse> getUsers() => (super.noSuchMethod(
         Invocation.method(
           #getUsers,
           [],
         ),
         returnValue:
-            _i7.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
+            _i8.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
           this,
           Invocation.method(
             #getUsers,
@@ -943,17 +1011,17 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
+            _i8.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
           this,
           Invocation.method(
             #getUsers,
             [],
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetUsersResponse>);
+      ) as _i8.FutureOr<_i3.GetUsersResponse>);
 
   @override
-  _i7.FutureOr<_i3.PublishPackageResponse> publishPackage(
+  _i8.FutureOr<_i3.PublishPackageResponse> publishPackage(
     _i3.PublishPackageRequest? body, {
     required String? name,
   }) =>
@@ -963,7 +1031,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {#name: name},
         ),
-        returnValue: _i7.Future<_i3.PublishPackageResponse>.value(
+        returnValue: _i8.Future<_i3.PublishPackageResponse>.value(
             _FakePublishPackageResponse_15(
           this,
           Invocation.method(
@@ -972,7 +1040,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#name: name},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.PublishPackageResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.PublishPackageResponse>.value(
             _FakePublishPackageResponse_15(
           this,
           Invocation.method(
@@ -981,10 +1049,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#name: name},
           ),
         )),
-      ) as _i7.FutureOr<_i3.PublishPackageResponse>);
+      ) as _i8.FutureOr<_i3.PublishPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.PublishPackageByVersionResponse> publishPackageVersion(
+  _i8.FutureOr<_i3.PublishPackageByVersionResponse> publishPackageVersion(
     _i3.PublishPackageByVersionRequest? body, {
     required String? name,
     required String? version,
@@ -998,7 +1066,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #version: version,
           },
         ),
-        returnValue: _i7.Future<_i3.PublishPackageByVersionResponse>.value(
+        returnValue: _i8.Future<_i3.PublishPackageByVersionResponse>.value(
             _FakePublishPackageByVersionResponse_16(
           this,
           Invocation.method(
@@ -1011,7 +1079,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.PublishPackageByVersionResponse>.value(
+            _i8.Future<_i3.PublishPackageByVersionResponse>.value(
                 _FakePublishPackageByVersionResponse_16(
           this,
           Invocation.method(
@@ -1023,10 +1091,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.PublishPackageByVersionResponse>);
+      ) as _i8.FutureOr<_i3.PublishPackageByVersionResponse>);
 
   @override
-  _i7.FutureOr<_i3.PublishPackageResponse> publishPackageWithScope(
+  _i8.FutureOr<_i3.PublishPackageResponse> publishPackageWithScope(
     _i3.PublishPackageRequest? body, {
     required String? scope,
     required String? name,
@@ -1040,7 +1108,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #name: name,
           },
         ),
-        returnValue: _i7.Future<_i3.PublishPackageResponse>.value(
+        returnValue: _i8.Future<_i3.PublishPackageResponse>.value(
             _FakePublishPackageResponse_15(
           this,
           Invocation.method(
@@ -1052,7 +1120,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.PublishPackageResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.PublishPackageResponse>.value(
             _FakePublishPackageResponse_15(
           this,
           Invocation.method(
@@ -1064,10 +1132,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.PublishPackageResponse>);
+      ) as _i8.FutureOr<_i3.PublishPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.PublishPackageByVersionResponse>
+  _i8.FutureOr<_i3.PublishPackageByVersionResponse>
       publishPackageWithScopeAndVersion(
     _i3.PublishPackageByVersionRequest? body, {
     required String? scope,
@@ -1084,7 +1152,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 #version: version,
               },
             ),
-            returnValue: _i7.Future<_i3.PublishPackageByVersionResponse>.value(
+            returnValue: _i8.Future<_i3.PublishPackageByVersionResponse>.value(
                 _FakePublishPackageByVersionResponse_16(
               this,
               Invocation.method(
@@ -1098,7 +1166,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
               ),
             )),
             returnValueForMissingStub:
-                _i7.Future<_i3.PublishPackageByVersionResponse>.value(
+                _i8.Future<_i3.PublishPackageByVersionResponse>.value(
                     _FakePublishPackageByVersionResponse_16(
               this,
               Invocation.method(
@@ -1111,10 +1179,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 },
               ),
             )),
-          ) as _i7.FutureOr<_i3.PublishPackageByVersionResponse>);
+          ) as _i8.FutureOr<_i3.PublishPackageByVersionResponse>);
 
   @override
-  _i7.FutureOr<_i3.UploadAdapterResponse> uploadAdapterWithToken(
+  _i8.FutureOr<_i3.UploadAdapterResponse> uploadAdapterWithToken(
     _i3.StreamedContent? body, {
     String? id,
   }) =>
@@ -1124,7 +1192,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {#id: id},
         ),
-        returnValue: _i7.Future<_i3.UploadAdapterResponse>.value(
+        returnValue: _i8.Future<_i3.UploadAdapterResponse>.value(
             _FakeUploadAdapterResponse_17(
           this,
           Invocation.method(
@@ -1133,7 +1201,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.UploadAdapterResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.UploadAdapterResponse>.value(
             _FakeUploadAdapterResponse_17(
           this,
           Invocation.method(
@@ -1142,10 +1210,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.UploadAdapterResponse>);
+      ) as _i8.FutureOr<_i3.UploadAdapterResponse>);
 
   @override
-  _i7.FutureOr<_i3.UploadPackageResponse> uploadPackageWithToken(
+  _i8.Future<_i3.UploadPackageResponse> uploadPackageWithToken(
     _i3.StreamedContent? body, {
     String? id,
   }) =>
@@ -1155,7 +1223,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {#id: id},
         ),
-        returnValue: _i7.Future<_i3.UploadPackageResponse>.value(
+        returnValue: _i8.Future<_i3.UploadPackageResponse>.value(
             _FakeUploadPackageResponse_18(
           this,
           Invocation.method(
@@ -1164,7 +1232,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.UploadPackageResponse>.value(
+        returnValueForMissingStub: _i8.Future<_i3.UploadPackageResponse>.value(
             _FakeUploadPackageResponse_18(
           this,
           Invocation.method(
@@ -1173,10 +1241,40 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.UploadPackageResponse>);
+      ) as _i8.Future<_i3.UploadPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.AuthValidateResponse> validateAuthStatus(
+  _i8.FutureOr<_i3.PublishPackageStatusResponse> getPackagePubStatus(
+          {String? id}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPackagePubStatus,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i8.Future<_i3.PublishPackageStatusResponse>.value(
+            _FakePublishPackageStatusResponse_19(
+          this,
+          Invocation.method(
+            #getPackagePubStatus,
+            [],
+            {#id: id},
+          ),
+        )),
+        returnValueForMissingStub:
+            _i8.Future<_i3.PublishPackageStatusResponse>.value(
+                _FakePublishPackageStatusResponse_19(
+          this,
+          Invocation.method(
+            #getPackagePubStatus,
+            [],
+            {#id: id},
+          ),
+        )),
+      ) as _i8.FutureOr<_i3.PublishPackageStatusResponse>);
+
+  @override
+  _i8.FutureOr<_i3.AuthValidateResponse> validateAuthStatus(
     _i3.AuthValidateRequest? body, {
     String? token,
   }) =>
@@ -1186,8 +1284,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {#token: token},
         ),
-        returnValue: _i7.Future<_i3.AuthValidateResponse>.value(
-            _FakeAuthValidateResponse_19(
+        returnValue: _i8.Future<_i3.AuthValidateResponse>.value(
+            _FakeAuthValidateResponse_20(
           this,
           Invocation.method(
             #validateAuthStatus,
@@ -1195,8 +1293,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#token: token},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.AuthValidateResponse>.value(
-            _FakeAuthValidateResponse_19(
+        returnValueForMissingStub: _i8.Future<_i3.AuthValidateResponse>.value(
+            _FakeAuthValidateResponse_20(
           this,
           Invocation.method(
             #validateAuthStatus,
@@ -1204,10 +1302,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#token: token},
           ),
         )),
-      ) as _i7.FutureOr<_i3.AuthValidateResponse>);
+      ) as _i8.FutureOr<_i3.AuthValidateResponse>);
 
   @override
-  _i7.FutureOr<_i3.YankAdapterResponse> yankAdapterWithId(
+  _i8.FutureOr<_i3.YankAdapterResponse> yankAdapterWithId(
           {required String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1215,8 +1313,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [],
           {#id: id},
         ),
-        returnValue: _i7.Future<_i3.YankAdapterResponse>.value(
-            _FakeYankAdapterResponse_20(
+        returnValue: _i8.Future<_i3.YankAdapterResponse>.value(
+            _FakeYankAdapterResponse_21(
           this,
           Invocation.method(
             #yankAdapterWithId,
@@ -1224,8 +1322,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.YankAdapterResponse>.value(
-            _FakeYankAdapterResponse_20(
+        returnValueForMissingStub: _i8.Future<_i3.YankAdapterResponse>.value(
+            _FakeYankAdapterResponse_21(
           this,
           Invocation.method(
             #yankAdapterWithId,
@@ -1233,10 +1331,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#id: id},
           ),
         )),
-      ) as _i7.FutureOr<_i3.YankAdapterResponse>);
+      ) as _i8.FutureOr<_i3.YankAdapterResponse>);
 
   @override
-  _i7.FutureOr<_i3.YankPackageResponse> yankPackageByName(
+  _i8.FutureOr<_i3.YankPackageResponse> yankPackageByName(
     _i3.YankPackageRequest? body, {
     required String? name,
   }) =>
@@ -1246,8 +1344,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           [body],
           {#name: name},
         ),
-        returnValue: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_21(
+        returnValue: _i8.Future<_i3.YankPackageResponse>.value(
+            _FakeYankPackageResponse_22(
           this,
           Invocation.method(
             #yankPackageByName,
@@ -1255,8 +1353,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#name: name},
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_21(
+        returnValueForMissingStub: _i8.Future<_i3.YankPackageResponse>.value(
+            _FakeYankPackageResponse_22(
           this,
           Invocation.method(
             #yankPackageByName,
@@ -1264,10 +1362,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             {#name: name},
           ),
         )),
-      ) as _i7.FutureOr<_i3.YankPackageResponse>);
+      ) as _i8.FutureOr<_i3.YankPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.YankPackageResponse> yankPackageByNameWithScope(
+  _i8.FutureOr<_i3.YankPackageResponse> yankPackageByNameWithScope(
     _i3.YankPackageRequest? body, {
     required String? scope,
     required String? name,
@@ -1281,8 +1379,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #name: name,
           },
         ),
-        returnValue: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_21(
+        returnValue: _i8.Future<_i3.YankPackageResponse>.value(
+            _FakeYankPackageResponse_22(
           this,
           Invocation.method(
             #yankPackageByNameWithScope,
@@ -1293,8 +1391,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_21(
+        returnValueForMissingStub: _i8.Future<_i3.YankPackageResponse>.value(
+            _FakeYankPackageResponse_22(
           this,
           Invocation.method(
             #yankPackageByNameWithScope,
@@ -1305,10 +1403,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.YankPackageResponse>);
+      ) as _i8.FutureOr<_i3.YankPackageResponse>);
 
   @override
-  _i7.FutureOr<_i3.YankPackageByVersionRequest>
+  _i8.FutureOr<_i3.YankPackageByVersionRequest>
       yankPackageByNameWithScopeAndVersion(
     _i3.YankPackageByVersionResponse? body, {
     required String? scope,
@@ -1325,8 +1423,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 #version: version,
               },
             ),
-            returnValue: _i7.Future<_i3.YankPackageByVersionRequest>.value(
-                _FakeYankPackageByVersionRequest_22(
+            returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
+                _FakeYankPackageByVersionRequest_23(
               this,
               Invocation.method(
                 #yankPackageByNameWithScopeAndVersion,
@@ -1339,8 +1437,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
               ),
             )),
             returnValueForMissingStub:
-                _i7.Future<_i3.YankPackageByVersionRequest>.value(
-                    _FakeYankPackageByVersionRequest_22(
+                _i8.Future<_i3.YankPackageByVersionRequest>.value(
+                    _FakeYankPackageByVersionRequest_23(
               this,
               Invocation.method(
                 #yankPackageByNameWithScopeAndVersion,
@@ -1352,10 +1450,10 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
                 },
               ),
             )),
-          ) as _i7.FutureOr<_i3.YankPackageByVersionRequest>);
+          ) as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
 
   @override
-  _i7.FutureOr<_i3.YankPackageByVersionRequest> yankPackageVersionByName(
+  _i8.FutureOr<_i3.YankPackageByVersionRequest> yankPackageVersionByName(
     _i3.YankPackageByVersionResponse? body, {
     required String? name,
     required String? version,
@@ -1369,8 +1467,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #version: version,
           },
         ),
-        returnValue: _i7.Future<_i3.YankPackageByVersionRequest>.value(
-            _FakeYankPackageByVersionRequest_22(
+        returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
+            _FakeYankPackageByVersionRequest_23(
           this,
           Invocation.method(
             #yankPackageVersionByName,
@@ -1382,8 +1480,8 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.YankPackageByVersionRequest>.value(
-                _FakeYankPackageByVersionRequest_22(
+            _i8.Future<_i3.YankPackageByVersionRequest>.value(
+                _FakeYankPackageByVersionRequest_23(
           this,
           Invocation.method(
             #yankPackageVersionByName,
@@ -1394,16 +1492,16 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.FutureOr<_i3.YankPackageByVersionRequest>);
+      ) as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
 
   @override
-  _i7.FutureOr<_i3.GetUserResponse> getCurrentUser() => (super.noSuchMethod(
+  _i8.FutureOr<_i3.GetUserResponse> getCurrentUser() => (super.noSuchMethod(
         Invocation.method(
           #getCurrentUser,
           [],
         ),
         returnValue:
-            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
+            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
           this,
           Invocation.method(
             #getCurrentUser,
@@ -1411,14 +1509,52 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
+            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
           this,
           Invocation.method(
             #getCurrentUser,
             [],
           ),
         )),
-      ) as _i7.FutureOr<_i3.GetUserResponse>);
+      ) as _i8.FutureOr<_i3.GetUserResponse>);
+
+  @override
+  _i8.FutureOr<_i3.AuthDetailsResponse> getAuthDetailsById(
+          {required String? id}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAuthDetailsById,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i8.Future<_i3.AuthDetailsResponse>.value(
+            _FakeAuthDetailsResponse_24(
+          this,
+          Invocation.method(
+            #getAuthDetailsById,
+            [],
+            {#id: id},
+          ),
+        )),
+        returnValueForMissingStub: _i8.Future<_i3.AuthDetailsResponse>.value(
+            _FakeAuthDetailsResponse_24(
+          this,
+          Invocation.method(
+            #getAuthDetailsById,
+            [],
+            {#id: id},
+          ),
+        )),
+      ) as _i8.FutureOr<_i3.AuthDetailsResponse>);
+
+  @override
+  void close() => super.noSuchMethod(
+        Invocation.method(
+          #close,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addHeaderEntry(
@@ -1437,10 +1573,135 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
       );
 
   @override
-  _i7.Future<_i2.BaseResponse> request(
+  _i8.Future<_i2.Response> requestBasic(
     String? path,
-    _i8.Method? method,
-    Map<String, String>? queryParams,
+    _i9.Method? method,
+    Map<String, String?>? queryParams,
+    String? hash,
+    Object? body, {
+    String? contentType,
+    Map<String, String>? headerParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #requestBasic,
+          [
+            path,
+            method,
+            queryParams,
+            hash,
+            body,
+          ],
+          {
+            #contentType: contentType,
+            #headerParams: headerParams,
+          },
+        ),
+        returnValue: _i8.Future<_i2.Response>.value(_FakeResponse_25(
+          this,
+          Invocation.method(
+            #requestBasic,
+            [
+              path,
+              method,
+              queryParams,
+              hash,
+              body,
+            ],
+            {
+              #contentType: contentType,
+              #headerParams: headerParams,
+            },
+          ),
+        )),
+        returnValueForMissingStub:
+            _i8.Future<_i2.Response>.value(_FakeResponse_25(
+          this,
+          Invocation.method(
+            #requestBasic,
+            [
+              path,
+              method,
+              queryParams,
+              hash,
+              body,
+            ],
+            {
+              #contentType: contentType,
+              #headerParams: headerParams,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i2.Response>);
+
+  @override
+  _i8.Future<_i2.StreamedResponse> requestStreamed(
+    String? path,
+    _i9.Method? method,
+    Map<String, String?>? queryParams,
+    String? hash,
+    Object? body, {
+    String? contentType,
+    Map<String, String>? headerParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #requestStreamed,
+          [
+            path,
+            method,
+            queryParams,
+            hash,
+            body,
+          ],
+          {
+            #contentType: contentType,
+            #headerParams: headerParams,
+          },
+        ),
+        returnValue:
+            _i8.Future<_i2.StreamedResponse>.value(_FakeStreamedResponse_26(
+          this,
+          Invocation.method(
+            #requestStreamed,
+            [
+              path,
+              method,
+              queryParams,
+              hash,
+              body,
+            ],
+            {
+              #contentType: contentType,
+              #headerParams: headerParams,
+            },
+          ),
+        )),
+        returnValueForMissingStub:
+            _i8.Future<_i2.StreamedResponse>.value(_FakeStreamedResponse_26(
+          this,
+          Invocation.method(
+            #requestStreamed,
+            [
+              path,
+              method,
+              queryParams,
+              hash,
+              body,
+            ],
+            {
+              #contentType: contentType,
+              #headerParams: headerParams,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i2.StreamedResponse>);
+
+  @override
+  _i8.Future<_i2.BaseResponse> request(
+    String? path,
+    _i9.Method? method,
+    Map<String, String?>? queryParams,
     String? hash,
     Object? body, {
     String? contentType,
@@ -1465,7 +1726,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             #formParams: formParams,
           },
         ),
-        returnValue: _i7.Future<_i2.BaseResponse>.value(_FakeBaseResponse_23(
+        returnValue: _i8.Future<_i2.BaseResponse>.value(_FakeBaseResponse_27(
           this,
           Invocation.method(
             #request,
@@ -1485,7 +1746,7 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i2.BaseResponse>.value(_FakeBaseResponse_23(
+            _i8.Future<_i2.BaseResponse>.value(_FakeBaseResponse_27(
           this,
           Invocation.method(
             #request,
@@ -1504,5 +1765,5 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
             },
           ),
         )),
-      ) as _i7.Future<_i2.BaseResponse>);
+      ) as _i8.Future<_i2.BaseResponse>);
 }

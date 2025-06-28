@@ -1,0 +1,9 @@
+module InvalidTarballError
+
+extends "../Error/schema.pkl"
+
+description: String
+
+sanction: Boolean
+
+violations_remaining: Int?

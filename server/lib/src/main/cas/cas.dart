@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
-import 'package:pritt_server/src/main/adapter/adapter/request_options.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/adapter/adapter/result.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
-import 'package:pritt_server/src/main/cas/client.dart';
-import 'package:pritt_server/src/main/cas/services/sorter.dart';
-import 'package:pritt_server/src/main/crs/interfaces.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../adapter/adapter/interface.dart';
+import '../adapter/adapter/request_options.dart';
+import '../adapter/adapter/resolve.dart';
+import '../adapter/adapter/result.dart';
 import '../adapter/adapter_registry.dart';
+import '../base/db/schema.dart';
+import '../crs/interfaces.dart';
+import 'client.dart';
+import 'services/sorter.dart';
 
 /// The Custom Adapter Service
 ///
@@ -139,7 +139,7 @@ class CustomAdapter implements AdapterInterface {
     });
   }
 
-  sendRequest() {}
+  void sendRequest() {}
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {

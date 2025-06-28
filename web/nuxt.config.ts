@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import mdx from "@mdx-js/rollup";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -14,25 +15,40 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/test-utils",
     "@scalar/nuxt",
-    "@nuxtjs/color-mode"
+    "@nuxtjs/color-mode",
+    "@pinia/nuxt",
+    "reka-ui/nuxt",
   ],
 
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   vite: {
     plugins: [
       tailwindcss(),
+      mdx({
+        jsxImportSource: "vue",
+      }),
     ],
   },
 
   runtimeConfig: {
-    databaseUrl: '',
+    databaseName: "",
+    databaseUsername: "",
+    databasePassword: "",
+    databaseHost: "",
+    databasePort: "",
     public: {
-      apiUrl: ''
-    }
+      apiUrl: "",
+    },
   },
 
   icon: {
-    mode: 'css',
-    cssLayer: 'base'
-  }
+    mode: "css",
+    cssLayer: "base",
+  },
+
+  content: {
+    build: {
+      transformers: ["./transformers/asciidoc"],
+    },
+  },
 });

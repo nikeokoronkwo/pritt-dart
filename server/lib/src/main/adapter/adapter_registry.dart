@@ -1,20 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:path/path.dart' as p;
-import 'package:pritt_server/src/main/adapter/adapter/exception.dart';
-import 'package:pritt_server/src/main/adapter/adapter/interface.dart';
-import 'package:pritt_server/src/main/adapter/adapter/resolve.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
-import 'package:pritt_server/src/main/base/storage/interface.dart';
-import 'package:pritt_server/src/main/cas/cas.dart';
-import 'package:pritt_server/src/main/base/db.dart';
-import 'package:pritt_server/src/main/base/db/interface.dart';
-import 'package:pritt_server/src/main/cas/db.dart';
-import 'package:tar/tar.dart';
 
+import '../base/db.dart';
+import '../base/db/interface.dart';
+import '../base/db/schema.dart';
+import '../base/storage/interface.dart';
+import '../cas/cas.dart';
+import '../cas/db.dart';
 import 'adapter.dart';
+import 'adapter/exception.dart';
+import 'adapter/interface.dart';
+import 'adapter/resolve.dart';
 import 'core/dart.dart';
 import 'core/npm.dart';
 
@@ -52,7 +51,9 @@ class AdapterRegistry {
   ///
   /// This function must be called before any other function on this, else an error will be thrown to connect the database first.
   static Future<AdapterRegistry> connect(
-      {Object? db, PrittStorageInterface? storage, required Uri runnerUri}) async {
+      {Object? db,
+      PrittStorageInterface? storage,
+      required Uri runnerUri}) async {
     if (service != null) {
       return AdapterRegistry._();
     }
@@ -102,10 +103,9 @@ class AdapterRegistry {
       } else {
         // open tarball
         final tarballOfPluginResult =
-            await storage!.get(plugin.archive.toFilePath());
-        final tarballOfPlugin = TarReader(
-            Stream.value(tarballOfPluginResult.data.toList())
-                .transform(gzip.decoder));
+            await storage!.getPackage(plugin.archive.toFilePath());
+        final tarballOfPlugin = TarDecoder()
+            .decodeBytes(GZipDecoder().decodeBytes(tarballOfPluginResult.data));
 
         // get the files
         final files = <String, String>{};
@@ -126,14 +126,24 @@ class AdapterRegistry {
           PluginArchiveType.single => ['plugin.js'],
         };
 
-        while (await tarballOfPlugin.moveNext()) {
-          if (approvedNames.contains(tarballOfPlugin.current.name)) {
-            files[p.basenameWithoutExtension(tarballOfPlugin.current.name)] =
-                (await tarballOfPlugin.current.contents
-                    .transform(utf8.decoder)
-                    .first);
+        // while (await tarballOfPlugin.moveNext()) {
+        //   if (approvedNames.contains(tarballOfPlugin.current.name)) {
+        //     files[p.basenameWithoutExtension(tarballOfPlugin.current.name)] =
+        //         (await tarballOfPlugin.current.contents
+        //             .transform(utf8.decoder)
+        //             .first);
+        //   }
+        //   // check if files are complete
+        //   if (files.length >= approvedNames.length) break;
+        // }
+        for (final tarballFile in tarballOfPlugin) {
+          if (tarballFile.isFile) {
+            if (approvedNames.contains(tarballFile.name)) {
+              files[p.basenameWithoutExtension(tarballFile.name)] =
+                  utf8.decode(tarballFile.content as List<int>);
+            }
           }
-          // check if files are complete
+
           if (files.length >= approvedNames.length) break;
         }
 

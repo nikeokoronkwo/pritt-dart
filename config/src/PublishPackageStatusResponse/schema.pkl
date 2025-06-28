@@ -1,0 +1,15 @@
+module PublishPackageStatusResponse
+
+import "../../lib/shared.pkl" as s
+
+status: s.PublishingStatus
+
+error: String?
+
+description: String?
+
+name: String
+
+scope: String?
+
+version: s.Version

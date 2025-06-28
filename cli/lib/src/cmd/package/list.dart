@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:io/ansi.dart';
-import 'package:pritt_cli/src/client.dart';
-import 'package:pritt_cli/src/csv.dart';
-import 'package:pritt_cli/src/list.dart';
-import 'package:pritt_cli/src/output.dart';
-import 'package:pritt_cli/src/user_config.dart';
+import 'package:pritt_common/interface.dart';
 
 import '../../cli/base.dart';
+import '../../client.dart';
+import '../../config/user_config.dart';
+import '../../csv.dart';
+import '../../list.dart';
+import '../../output.dart';
 
 class PackageListCommand extends PrittCommand {
   @override
@@ -54,7 +55,7 @@ class PackageListCommand extends PrittCommand {
           url: userCredentials.uri.toString(),
           accessToken: userCredentials.accessToken);
 
-      var pkgs;
+      GetPackagesResponse pkgs;
 
       if (allPackages) {
         // get packages
@@ -75,7 +76,7 @@ class PackageListCommand extends PrittCommand {
 
       switch (format) {
         case OutputFormat.text:
-          listPackageInfo(pkgs.packages!);
+          logger.stdout(listPackageInfo(pkgs.packages!));
         case OutputFormat.csv:
           final jsonOutput = pkgs.packages!.map((p) => p.toJson());
           await File(argResults?['csv'] ?? 'results.csv')
@@ -85,6 +86,8 @@ class PackageListCommand extends PrittCommand {
           await File(argResults?['json'] ?? 'results.json')
               .writeAsString(jsonEncode(jsonOutput));
       }
+
+      exit(0);
     } on ClientException catch (e) {
       logger.severe(
           'Failed to connect to Pritt Instance at ${e.uri?.removeFragment().replace(

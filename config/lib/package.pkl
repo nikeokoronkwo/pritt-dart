@@ -21,6 +21,8 @@ class GetSchemaPackage extends ImplPackage {
 open class Package extends ImplPackage {
     name: String
 
+    scope: String?
+
     description: String?
     
     version: s.Version
@@ -34,10 +36,13 @@ open class Package extends ImplPackage {
     updated_at: String?
 }
 
-class VerbosePackage extends Package {
+open class VerbosePackage extends Package {
+    /// readme info
+    readme: String?
+
     /// info 
     info: Mapping<String, Any>
-    
+
     /// env
     env: Mapping<String, Any>
 
@@ -54,6 +59,7 @@ class VerbosePackage extends Package {
     yanked: Boolean?
 }
 
+
 class Signature {
     /// public key id
     public_key_id: String
@@ -68,6 +74,7 @@ class Signature {
 open class Author {
     name: String
     email: String
+    avatar: String?
 }
 
 class Contributor extends Author {

@@ -85,7 +85,7 @@ class WGTStyle {
   static final defaultStyle = WGTStyle(
     colours: WGTStyleColours(
       primary: {
-        50:  '#e6e6e6',
+        50: '#e6e6e6',
         100: '#cccccc',
         200: '#999999',
         300: '#666666',

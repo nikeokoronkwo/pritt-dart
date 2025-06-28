@@ -1,5 +1,5 @@
 import 'package:io/ansi.dart';
-import 'package:pritt_cli/src/utils/extensions.dart';
+import '../utils/extensions.dart';
 
 enum Indentation { left, center, right }
 
@@ -31,8 +31,6 @@ class Table {
         List.generate(allLines.map((l) => l.length).first, (i) {
       return allLines.map((l) => l[i]);
     }).map((col) => col.map((v) => v.length).max + 2).toList();
-
-    print(lineSpacings);
 
     // draw up border
     sink.writeln(_writeLine(List.filled(rows, ''),

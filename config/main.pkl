@@ -163,6 +163,14 @@ paths {
                         }
                     }
                 }
+                ["400"] {
+                    description = "Bad Request"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("Error")
+                        }
+                    }
+                }
                 ["401"] {
                     description = "Unauthorized Response"
                     content {
@@ -205,6 +213,14 @@ paths {
                     content {
                         ["application/json"] {
                             schema = schemaRef("UnauthorizedError")
+                        }
+                    }
+                }
+                ["402"] {
+                    description = "Package Already Exists"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("ExistsError")
                         }
                     }
                 }
@@ -687,7 +703,7 @@ paths {
           }
         }
         description = "Upload a package to the Pritt Server: This API Endpoint is called after a subsequent call to /api/package/{name}(/{version})"
-        post {
+        put {
             summary = "Upload a package to the Pritt Server"
             description = "This API Endpoint is used to upload the tarball for the package"
             operationId = "uploadPackageWithToken"
@@ -729,6 +745,14 @@ paths {
                   }
                 }
               }
+                ["403"] {
+                    description = "Invalid Tarball"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("InvalidTarballError")
+                        }
+                    }
+                }
               ["404"] {
                 description = "Not Found Response"
                 content {
@@ -743,6 +767,39 @@ paths {
               new {
                 ["bearerAuth"] {}
               }
+            }
+        }
+    }
+    ["/api/publish/status"] {
+        parameters {
+            new {
+                name = "id"
+                `in` = "query"
+                required = true
+                description = "The Package Publishing ID"
+                schema {
+                    type = "string"
+                }
+            }
+        }
+        get {
+            summary = "Get the publishing status for a package"
+            description = "Get the publishing status for a package being published, given the status id"
+            operationId = "getPackagePubStatus"
+            responses {
+                ["200"] {
+                    description = "OK Response"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("PublishPackageStatusResponse")
+                        }
+                    }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
             }
         }
     }
@@ -916,6 +973,11 @@ paths {
                     }
                 }
             }
+            security {
+                new {
+                    ["bearerAuth"] {}
+                }
+            }
         }
     }
     ["/api/adapters"] {
@@ -1033,7 +1095,7 @@ paths {
             }
           }
         }
-        post {
+        put {
             summary = "Upload an adapter to the Pritt Server"
             description = "This API Endpoint is used to upload the tarball for the processed adapter"
             operationId = "uploadAdapterWithToken"
@@ -1056,6 +1118,11 @@ paths {
                             schema = schemaRef("UploadAdapterResponse")
                         }
                     }
+                }
+            }
+            security {
+                new {
+                    ["bearerAuth"] {}
                 }
             }
         }
@@ -1150,7 +1217,7 @@ paths {
                     description = "Not Found Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("NotFoundResponse")
+                            schema = schemaRef("NotFoundError")
                         }
                     }
                 }

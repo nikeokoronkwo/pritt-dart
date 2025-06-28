@@ -1,4 +1,4 @@
-import 'package:pritt_server/src/main/utils/mixins.dart';
+import '../../../utils/mixins.dart';
 
 class NpmError with JsonConvertible {
   final String? error;
@@ -14,7 +14,7 @@ class NpmError with JsonConvertible {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'error': error,
+      if (error != null) 'error': error,
     };
   }
 }

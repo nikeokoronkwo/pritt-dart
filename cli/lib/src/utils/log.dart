@@ -8,14 +8,17 @@ const l.Level VERBOSE = l.Level('VERBOSE', 100);
 class Logger {
   factory Logger.verbose() = VerboseLogger;
 
+  final _messageDuration = const Duration(milliseconds: 100);
+
   Logger();
 
-  stderr(Object msg) {
+  void stderr(Object msg) {
     io.stderr.writeln(msg);
   }
 
   void stdout(Object msg) {
     io.stdout.writeln(msg);
+    io.sleep(_messageDuration);
   }
 
   void severe(Object msg, {bool stderr = true, Object? error}) {
@@ -25,10 +28,16 @@ class Logger {
 
   void fine(Object msg) {
     io.stdout.writeln(green.wrap(msg.toString()));
+    io.sleep(_messageDuration * 2);
   }
 
   void info(Object msg) {
     io.stdout.writeln(blue.wrap(msg.toString()));
+    io.sleep(_messageDuration);
+  }
+
+  void warn(Object msg, {bool warnKey = false}) {
+    io.stdout.writeln((warnKey ? 'WARN:' : '') + yellow.wrap(msg.toString())!);
   }
 
   void verbose(Object msg) {}
@@ -38,13 +47,21 @@ class VerboseLogger implements Logger {
   final l.Logger _logger;
 
   @override
-  fine(Object msg) {
+  final _messageDuration = const Duration(milliseconds: 100);
+
+  @override
+  void fine(Object msg) {
     _logger.fine(green.wrap(msg.toString()));
   }
 
   @override
-  info(Object msg) {
+  void info(Object msg) {
     _logger.info(blue.wrap(msg.toString()));
+  }
+
+  @override
+  void warn(Object msg, {bool warnKey = false}) {
+    _logger.warning(yellow.wrap(msg.toString()));
   }
 
   @override
@@ -63,7 +80,7 @@ class VerboseLogger implements Logger {
   }
 
   @override
-  verbose(Object msg) {
+  void verbose(Object msg) {
     _logger.log(VERBOSE, styleDim.wrap(msg.toString()));
   }
 

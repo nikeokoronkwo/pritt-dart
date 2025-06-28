@@ -1,10 +1,10 @@
-import * as t from "@babel/types";
+import * as t from '@babel/types';
 // @ts-ignore
-import * as templ from "@babel/template";
-import { generate } from "@babel/generator";
-import { AuthOptions } from "./types";
+import * as templ from '@babel/template';
+import { generate } from '@babel/generator';
+import { AuthOptions } from './types';
 
-const template = templ.default.default;
+const template = templ.default.default ?? templ.default;
 
 /**
  *
@@ -25,7 +25,13 @@ export function generateAuthConfig(options: AuthOptions): {
   const serverImports = generateAuthImports(options);
   const serverConfig = generateAuthExport(options, serverImports);
 
-  const serverAst = t.program([...serverImports, serverConfig]);
+  const serverProgramParts: t.Declaration[] = [...serverImports, serverConfig];
+
+  if (options.magicLink) {
+    serverProgramParts.push(nodeMailerCode);
+  }
+
+  const serverAst = t.program(serverProgramParts);
 
   const { code: authFileCode } = generate(serverAst);
 
@@ -35,12 +41,12 @@ export function generateAuthConfig(options: AuthOptions): {
 
   return [
     {
-      filename: "server/utils/auth.ts",
+      filename: 'server/utils/auth.ts',
       code: authFileCode,
-      name: "auth",
+      name: 'auth',
     },
     {
-      filename: "utils/client.ts",
+      filename: 'utils/client.ts',
       code: authClientCode,
     },
   ];
@@ -69,12 +75,12 @@ function generateAuthClient(options: AuthOptions): t.Program {
          */
     authClientPluginImportSpecifiers.push(
       t.importSpecifier(
-        t.identifier("magicLinkClient"),
-        t.identifier("magicLinkClient"),
+        t.identifier('magicLinkClient'),
+        t.identifier('magicLinkClient'),
       ),
     );
     authClientPlugins.push(
-      t.callExpression(t.identifier("magicLinkClient"), []),
+      t.callExpression(t.identifier('magicLinkClient'), []),
     );
   }
   if (options.passkey) {
@@ -102,11 +108,11 @@ function generateAuthClient(options: AuthOptions): t.Program {
          */
     authClientPluginImportSpecifiers.push(
       t.importSpecifier(
-        t.identifier("passkeyClient"),
-        t.identifier("passkeyClient"),
+        t.identifier('passkeyClient'),
+        t.identifier('passkeyClient'),
       ),
     );
-    authClientPlugins.push(t.callExpression(t.identifier("passkeyClient"), []));
+    authClientPlugins.push(t.callExpression(t.identifier('passkeyClient'), []));
   }
   if (options.admin) {
     /**
@@ -115,11 +121,11 @@ function generateAuthClient(options: AuthOptions): t.Program {
      */
     authClientPluginImportSpecifiers.push(
       t.importSpecifier(
-        t.identifier("adminClient"),
-        t.identifier("adminClient"),
+        t.identifier('adminClient'),
+        t.identifier('adminClient'),
       ),
     );
-    authClientPlugins.push(t.callExpression(t.identifier("adminClient"), []));
+    authClientPlugins.push(t.callExpression(t.identifier('adminClient'), []));
   }
   if (options.orgs) {
     /**
@@ -127,12 +133,12 @@ function generateAuthClient(options: AuthOptions): t.Program {
      */
     authClientPluginImportSpecifiers.push(
       t.importSpecifier(
-        t.identifier("organizationClient"),
-        t.identifier("organizationClient"),
+        t.identifier('organizationClient'),
+        t.identifier('organizationClient'),
       ),
     );
     authClientPlugins.push(
-      t.callExpression(t.identifier("organizationClient"), []),
+      t.callExpression(t.identifier('organizationClient'), []),
     );
   }
 
@@ -140,26 +146,26 @@ function generateAuthClient(options: AuthOptions): t.Program {
     t.importDeclaration(
       [
         t.importSpecifier(
-          t.identifier("createAuthClient"),
-          t.identifier("createAuthClient"),
+          t.identifier('createAuthClient'),
+          t.identifier('createAuthClient'),
         ),
       ],
-      t.stringLiteral("better-auth/vue"),
+      t.stringLiteral('better-auth/vue'),
     ),
     t.importDeclaration(
       authClientPluginImportSpecifiers,
-      t.stringLiteral("better-auth/client/plugins"),
+      t.stringLiteral('better-auth/client/plugins'),
     ),
   ];
 
   const authClientExport = t.exportNamedDeclaration(
-    t.variableDeclaration("const", [
+    t.variableDeclaration('const', [
       t.variableDeclarator(
-        t.identifier("authClient"),
-        t.callExpression(t.identifier("createAuthClient"), [
+        t.identifier('authClient'),
+        t.callExpression(t.identifier('createAuthClient'), [
           t.objectExpression([
             t.objectProperty(
-              t.identifier("plugins"),
+              t.identifier('plugins'),
               t.arrayExpression(authClientPlugins),
             ),
           ]),
@@ -174,64 +180,70 @@ function generateAuthClient(options: AuthOptions): t.Program {
 function generateAuthImports(options: AuthOptions): t.ImportDeclaration[] {
   // import { betterAuth } from "better-auth";
   const betterAuthSpecifiers = [
-    t.importSpecifier(t.identifier("betterAuth"), t.identifier("betterAuth")),
+    t.importSpecifier(t.identifier('betterAuth'), t.identifier('betterAuth')),
   ];
   // import { drizzleAdapter } from "better-auth/adapters/drizzle";
   const betterAuthDrizzleAdapterSpecifiers = [
     t.importSpecifier(
-      t.identifier("drizzleAdapter"),
-      t.identifier("drizzleAdapter"),
+      t.identifier('drizzleAdapter'),
+      t.identifier('drizzleAdapter'),
     ),
   ];
 
-  const otherImports = [
-
-  ];
+  const otherImports = [];
   //
   const betterAuthPluginSpecifiers = [];
-  if (options.magicLink)
+  if (options.magicLink) {
     betterAuthPluginSpecifiers.push(
-      t.importSpecifier(t.identifier("magicLink"), t.identifier("magicLink")),
+      t.importSpecifier(t.identifier('magicLink'), t.identifier('magicLink')),
     );
+    otherImports.push(
+      t.importDeclaration(
+        [t.importDefaultSpecifier(t.identifier('nodemailer'))],
+        t.stringLiteral('nodemailer'),
+      ),
+    );
+  }
   if (options.passkey)
     otherImports.push(
       t.importDeclaration(
-        [t.importSpecifier(t.identifier("passkey"), t.identifier("passkey"))],
-        t.stringLiteral("better-auth/plugins/passkey"),
+        [t.importSpecifier(t.identifier('passkey'), t.identifier('passkey'))],
+        t.stringLiteral('better-auth/plugins/passkey'),
       ),
     );
   if (options.admin)
     betterAuthPluginSpecifiers.push(
-      t.importSpecifier(t.identifier("admin"), t.identifier("admin")),
+      t.importSpecifier(t.identifier('admin'), t.identifier('admin')),
     );
   if (options.orgs)
     betterAuthPluginSpecifiers.push(
       t.importSpecifier(
-        t.identifier("organization"),
-        t.identifier("organization"),
+        t.identifier('organization'),
+        t.identifier('organization'),
       ),
     );
 
   return [
+    t.importDeclaration([], t.stringLiteral('dotenv/config')),
     // better auth
-    t.importDeclaration(betterAuthSpecifiers, t.stringLiteral("better-auth")),
+    t.importDeclaration(betterAuthSpecifiers, t.stringLiteral('better-auth')),
     // better auth drizzle adapter
     t.importDeclaration(
       betterAuthDrizzleAdapterSpecifiers,
-      t.stringLiteral("better-auth/adapters/drizzle"),
+      t.stringLiteral('better-auth/adapters/drizzle'),
     ),
     // db and schema
     t.importDeclaration(
       [
-        t.importSpecifier(t.identifier("db"), t.identifier("db")),
-        t.importSpecifier(t.identifier("schema"), t.identifier("schema")),
+        t.importSpecifier(t.identifier('db'), t.identifier('db')),
+        t.importSpecifier(t.identifier('schema'), t.identifier('schema')),
       ],
-      t.stringLiteral("../db/index"),
+      t.stringLiteral('../db/index'),
     ),
     // plugins
     t.importDeclaration(
       betterAuthPluginSpecifiers,
-      t.stringLiteral("better-auth/plugins"),
+      t.stringLiteral('better-auth/plugins'),
     ),
     ...otherImports,
   ];
@@ -245,36 +257,37 @@ function generateAuthExport(
 
   if (options.magicLink) {
     authPlugins.push(
-      t.callExpression(t.identifier("magicLink"), [
+      t.callExpression(t.identifier('magicLink'), [
         t.objectExpression([
           t.objectProperty(
-            t.identifier("sendMagicLink"),
+            t.identifier('sendMagicLink'),
             t.arrowFunctionExpression(
               [
                 t.objectPattern([
                   t.objectProperty(
-                    t.identifier("email"),
-                    t.identifier("email"),
+                    t.identifier('email'),
+                    t.identifier('email'),
                     false,
                     true,
                   ),
                   t.objectProperty(
-                    t.identifier("token"),
-                    t.identifier("token"),
+                    t.identifier('token'),
+                    t.identifier('token'),
                     false,
                     true,
                   ),
                   t.objectProperty(
-                    t.identifier("url"),
-                    t.identifier("url"),
+                    t.identifier('url'),
+                    t.identifier('url'),
                     false,
                     true,
                   ),
                 ]),
-                t.identifier("request"),
+                t.identifier('request'),
               ],
               // magicLinkCode() as t.BlockStatement,
-              t.blockStatement(magicLinkCode()),
+              // t.blockStatement(magicLinkCode()),
+              mlc,
               true,
             ),
           ),
@@ -284,11 +297,11 @@ function generateAuthExport(
   }
   if (options.passkey) {
     authPlugins.push(
-      t.callExpression(t.identifier("passkey"), [
+      t.callExpression(t.identifier('passkey'), [
         t.objectExpression([
-          t.objectProperty(t.identifier("rpID"), t.stringLiteral(options.name)),
+          t.objectProperty(t.identifier('rpID'), t.stringLiteral(options.name)),
           t.objectProperty(
-            t.identifier("rpName"),
+            t.identifier('rpName'),
             t.stringLiteral(options.title),
           ),
         ]),
@@ -297,14 +310,14 @@ function generateAuthExport(
   }
   if (options.admin) {
     authPlugins.push(
-      t.callExpression(t.identifier("admin"), [
+      t.callExpression(t.identifier('admin'), [
         // TODO: Admin User IDs -> adminUserIds: ["user_id_1", "user_id_2"]
       ]),
     );
   }
   if (options.orgs) {
     authPlugins.push(
-      t.callExpression(t.identifier("organization"), [
+      t.callExpression(t.identifier('organization'), [
         // TODO: Admin User IDs -> adminUserIds: ["user_id_1", "user_id_2"]
       ]),
     );
@@ -315,37 +328,37 @@ function generateAuthExport(
   // oauth
   betterAuthOpts.push(
     t.objectProperty(
-      t.identifier("socialProviders"),
+      t.identifier('socialProviders'),
       t.objectExpression([
         ...(options.oauth.github
           ? [
               t.objectProperty(
-                t.identifier("github"),
+                t.identifier('github'),
                 t.objectExpression([
                   t.objectProperty(
-                    t.identifier("clientId"),
+                    t.identifier('clientId'),
                     t.tsAsExpression(
                       t.memberExpression(
                         t.memberExpression(
-                          t.identifier("process"), // process
-                          t.identifier("env"), // process.env
+                          t.identifier('process'), // process
+                          t.identifier('env'), // process.env
                         ),
-                        t.identifier("GITHUB_CLIENT_ID"),
+                        t.identifier('GITHUB_CLIENT_ID'),
                       ),
-                      t.tsTypeReference(t.identifier("string")),
+                      t.tsTypeReference(t.identifier('string')),
                     ),
                   ),
                   t.objectProperty(
-                    t.identifier("clientSecret"),
+                    t.identifier('clientSecret'),
                     t.tsAsExpression(
                       t.memberExpression(
                         t.memberExpression(
-                          t.identifier("process"), // process
-                          t.identifier("env"), // process.env
+                          t.identifier('process'), // process
+                          t.identifier('env'), // process.env
                         ),
-                        t.identifier("GITHUB_CLIENT_SECRET"),
+                        t.identifier('GITHUB_CLIENT_SECRET'),
                       ),
-                      t.tsTypeReference(t.identifier("string")),
+                      t.tsTypeReference(t.identifier('string')),
                     ),
                   ),
                 ]),
@@ -355,32 +368,32 @@ function generateAuthExport(
         ...(options.oauth.google
           ? [
               t.objectProperty(
-                t.identifier("google"),
+                t.identifier('google'),
                 t.objectExpression([
                   t.objectProperty(
-                    t.identifier("clientId"),
+                    t.identifier('clientId'),
                     t.tsAsExpression(
                       t.memberExpression(
                         t.memberExpression(
-                          t.identifier("process"), // process
-                          t.identifier("env"), // process.env
+                          t.identifier('process'), // process
+                          t.identifier('env'), // process.env
                         ),
-                        t.identifier("GOOGLE_CLIENT_ID"),
+                        t.identifier('GOOGLE_CLIENT_ID'),
                       ),
-                      t.tsTypeReference(t.identifier("string")),
+                      t.tsTypeReference(t.identifier('string')),
                     ),
                   ),
                   t.objectProperty(
-                    t.identifier("clientSecret"),
+                    t.identifier('clientSecret'),
                     t.tsAsExpression(
                       t.memberExpression(
                         t.memberExpression(
-                          t.identifier("process"), // process
-                          t.identifier("env"), // process.env
+                          t.identifier('process'), // process
+                          t.identifier('env'), // process.env
                         ),
-                        t.identifier("GOOGLE_CLIENT_SECRET"),
+                        t.identifier('GOOGLE_CLIENT_SECRET'),
                       ),
-                      t.tsTypeReference(t.identifier("string")),
+                      t.tsTypeReference(t.identifier('string')),
                     ),
                   ),
                 ]),
@@ -391,47 +404,100 @@ function generateAuthExport(
     ),
   );
 
-  
   betterAuthOpts.push(
     // drizzle
     t.objectProperty(
-      t.identifier("database"),
-      t.callExpression(t.identifier("drizzleAdapter"), [
-        t.identifier("db"),
+      t.identifier('database'),
+      t.callExpression(t.identifier('drizzleAdapter'), [
+        t.identifier('db'),
         t.objectExpression([
-          t.objectProperty(t.identifier("provider"), t.stringLiteral("pg")),
+          t.objectProperty(t.identifier('provider'), t.stringLiteral('pg')),
           t.objectProperty(
-            t.identifier("schema"),
-            t.objectExpression([t.spreadElement(t.identifier("schema"))]),
+            t.identifier('schema'),
+            t.objectExpression([t.spreadElement(t.identifier('schema'))]),
           ),
         ]),
       ]),
     ),
     // user
-    t.objectProperty(t.identifier('user'), t.objectExpression([
-      t.objectProperty(t.identifier('modelName'), t.stringLiteral('auth_user')),
-      t.objectProperty(t.identifier('additionalFields'), t.objectExpression([
-        t.objectProperty(t.identifier('user_id'), t.objectExpression([
-          t.objectProperty(t.identifier('required'), t.booleanLiteral(true)),
-          t.objectProperty(t.identifier('type'), t.stringLiteral('string')),
-          t.objectProperty(t.identifier('references'), t.objectExpression([
-            t.objectProperty(t.identifier('model'), t.stringLiteral('users')),
-            t.objectProperty(t.identifier('field'), t.stringLiteral('id')),
-            t.objectProperty(t.identifier('onDelete'), t.stringLiteral('cascade'))
-          ]))
-        ]))
-      ]))
-    ])),
+    t.objectProperty(
+      t.identifier('user'),
+      t.objectExpression([
+        t.objectProperty(
+          t.identifier('modelName'),
+          t.stringLiteral('auth_user'),
+        ),
+        t.objectProperty(
+          t.identifier('additionalFields'),
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('user_id'),
+              t.objectExpression([
+                t.objectProperty(
+                  t.identifier('required'),
+                  t.booleanLiteral(true),
+                ),
+                t.objectProperty(
+                  t.identifier('type'),
+                  t.stringLiteral('string'),
+                ),
+                t.objectProperty(
+                  t.identifier('references'),
+                  t.objectExpression([
+                    t.objectProperty(
+                      t.identifier('model'),
+                      t.stringLiteral('users'),
+                    ),
+                    t.objectProperty(
+                      t.identifier('field'),
+                      t.stringLiteral('id'),
+                    ),
+                    t.objectProperty(
+                      t.identifier('onDelete'),
+                      t.stringLiteral('cascade'),
+                    ),
+                  ]),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
+    // user hooks for db
+    t.objectProperty(
+      t.identifier('databaseHooks'),
+      t.objectExpression([
+        t.objectProperty(
+          t.identifier('user'),
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('create'),
+              t.objectExpression([
+                t.objectMethod(
+                  'method',
+                  t.identifier('before'),
+                  [t.identifier('user'), t.identifier('context')],
+                  t.blockStatement(databaseHookCode()),
+                  undefined,
+                  undefined,
+                  true,
+                ),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
     // plugins
-    t.objectProperty(t.identifier("plugins"), t.arrayExpression(authPlugins)),
-
+    t.objectProperty(t.identifier('plugins'), t.arrayExpression(authPlugins)),
   );
 
   return t.exportNamedDeclaration(
-    t.variableDeclaration("const", [
+    t.variableDeclaration('const', [
       t.variableDeclarator(
-        t.identifier("auth"),
-        t.callExpression(t.identifier("betterAuth"), [
+        t.identifier('auth'),
+        t.callExpression(t.identifier('betterAuth'), [
           t.objectExpression(betterAuthOpts),
         ]),
       ),
@@ -439,8 +505,107 @@ function generateAuthExport(
   );
 }
 
-const magicLinkCode = template(`
-    // code...
-    const o = 9;
-    const f = 9;
+function processEnvExpression(name: string) {
+  return t.memberExpression(
+    t.memberExpression(t.identifier('process'), t.identifier('env')),
+    t.identifier(name),
+  );
+}
+
+export const nodeMailerCode = t.variableDeclaration('const', [
+  t.variableDeclarator(
+    t.identifier('transporter'),
+    t.callExpression(t.identifier('nodemailer.createTransport'), [
+      t.objectExpression([
+        t.objectProperty(
+          t.identifier('host'),
+          processEnvExpression('SMTP_HOST'),
+        ),
+        t.objectProperty(
+          t.identifier('port'),
+          t.callExpression(t.identifier('parseInt'), [
+            t.logicalExpression(
+              '??',
+              processEnvExpression('SMTP_PORT'),
+              t.stringLiteral('587'),
+            ),
+          ]),
+        ),
+        t.objectProperty(
+          t.identifier('auth'),
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('user'),
+              processEnvExpression('SMTP_USER'),
+            ),
+            t.objectProperty(
+              t.identifier('pass'),
+              processEnvExpression('SMTP_PASS'),
+            ),
+          ]),
+        ),
+      ]),
+    ]),
+  ),
+]);
+
+export const mlc = t.blockStatement([
+  t.expressionStatement(
+    t.awaitExpression(t.callExpression(t.identifier('transporter.verify'), [])),
+  ),
+  t.variableDeclaration('const', [
+    t.variableDeclarator(
+      t.identifier('info'),
+      t.awaitExpression(
+        t.callExpression(t.identifier('transporter.sendMail'), [
+          t.objectExpression([
+            t.objectProperty(
+              t.identifier('from'),
+              t.logicalExpression(
+                '??',
+                processEnvExpression('SMTP_EMAIL'),
+                processEnvExpression('SMTP_USER'),
+              ),
+            ),
+            t.objectProperty(t.identifier('to'), t.identifier('email')),
+            // TODO: Subject and Email references
+            t.objectProperty(
+              t.identifier('subject'),
+              t.stringLiteral('Pritt: Verify Email Address'),
+            ),
+            // For now it is: `We received a login request from you. Verify this login request by using <a href="${url}" target="_blank">this link</a>`
+            t.objectProperty(
+              t.identifier('html'),
+              t.templateLiteral(
+                [
+                  t.templateElement({
+                    raw: `We received a login request from you. Verify this login request by using <a href="`,
+                  }),
+                  t.templateElement({
+                    raw: `" target="_blank">this link</a>`,
+                  }),
+                ],
+                [t.identifier('url')],
+              ),
+            ),
+          ]),
+        ]),
+      ),
+    ),
+  ]),
+]);
+
+const databaseHookCode = template(`
+  const [u] = await db.insert(users).values({
+    id: nanoid(),
+    name: user.name,
+    email: user.email,
+  }).returning();
+
+  return {
+    data: {
+      ...user,
+      user_id: u.id
+    }
+  }
 `);

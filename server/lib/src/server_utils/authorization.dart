@@ -1,6 +1,6 @@
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/base/db.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
+import '../../pritt_server.dart';
+import '../main/base/db.dart';
+import '../main/base/db/schema.dart';
 
 Future<User?> checkAuthorization(String authHeader,
     {bool throwExceptions = false}) async {

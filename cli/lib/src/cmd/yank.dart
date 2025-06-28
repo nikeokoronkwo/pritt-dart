@@ -7,7 +7,7 @@ class YankCommand extends PrittCommand {
   String name = "yank";
 
   @override
-  String description = "Yank ('remove') a package from Pritt";
+  String description = "Yank (remove) a package from Pritt";
 
   @override
   FutureOr? run() {

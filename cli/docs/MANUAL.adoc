@@ -1,0 +1,57 @@
+= pritt(1)
+Nike Okoronkwo <nikechukwu@gmail.com>
+v0.0.1
+:doctype: manpage
+:manmanual: Pritt
+:mansource: Pritt
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+
+pritt - The Pritt CLI tool for managing packages and Pritt instances
+
+== Synopsis
+
+*pritt* <command> [...subcommands] [flags]
+
+Some commands have subcommands, while some do not.
+You can run *pritt help <command>* to find out more about a command.
+
+== Description
+
+== Core Categories
+
+=== Developing Packages
+
+=== Working with Packages
+
+=== Others
+
+== Exit Codes
+
+*0*::
+  Success.
+  Command ran successfully
+
+*1*::
+  Failure.
+
+*2*::
+  Unknown fail
+
+== Example
+
+$ pritt login
+$ pritt publish
+$ pritt configure
+$ pritt unpack <pkg>
+$ pritt add <pkg>
+
+
+== Resources
+
+
+== Copying
+Copyright (C) 2025 {author}. +
+Free use of this software and manual is granted under the terms of the license found in the LICENSE file of the tool.
+For more information, see https://github.com/nikeokoronkwo/pritt-dart/tree/main/LICENSE[the license].

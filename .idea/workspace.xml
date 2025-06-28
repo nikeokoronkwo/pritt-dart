@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="[server] Updated Package Responses">
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" beforeDir="false" afterPath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="feature/system-testing" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -34,6 +36,17 @@
     &quot;state&quot;: &quot;OPEN&quot;,
     &quot;assignee&quot;: &quot;nikeokoronkwo&quot;
   }
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOOm7w1c6cKwyO&quot;,
+        &quot;number&quot;: 51
+      },
+      &quot;lastSeen&quot;: 1750972833616
+    }
+  ]
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
@@ -86,21 +99,24 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.editor",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/common/test" />
       <recent name="$PROJECT_DIR$/config/src/AuthValidateResponse" />
       <recent name="$PROJECT_DIR$/cli/lib/src/cmd/adapter" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server/test/mocks" />
+      <recent name="$PROJECT_DIR$/server/lib/src/routes/api/auth/details" />
       <recent name="$PROJECT_DIR$/config/src" />
       <recent name="$PROJECT_DIR$/cli/lib/src/cli" />
     </key>
   </component>
-  <component name="RunManager" selected="Dart Command Line App.Server">
+  <component name="RunManager" selected="Docker.Compose (services only)">
     <configuration name="CSV Encoding Testing in csv_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
       <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/csv_test.dart" />
       <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
@@ -137,9 +153,10 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
-        <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+        <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
         <item itemvalue="Dart Test.Table Testing in table_test.dart" />
+        <item itemvalue="Dart Test.Client Testing in list_test.dart" />
+        <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
         <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
       </list>
     </recent_temporary>
@@ -264,7 +281,143 @@
       <option name="project" value="LOCAL" />
       <updated>1748752084026</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="[server] Access Token and Auth Session Implementation">
+      <option name="closed" value="true" />
+      <created>1748754986856</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1748754986856</updated>
+    </task>
+    <task id="LOCAL-00017" summary="[cli] Implemented `login`: awaiting testing">
+      <option name="closed" value="true" />
+      <created>1748758464890</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1748758464890</updated>
+    </task>
+    <task id="LOCAL-00018" summary="[cli] Completed `login` command flow&#10;&#10;- added `ApiException` for handling exceptions to API&#10;- added functionality for describing `ApiException`s&#10;- added first client request">
+      <option name="closed" value="true" />
+      <created>1748808569190</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1748808569190</updated>
+    </task>
+    <task id="LOCAL-00019" summary="[web] Added index page code (index.vue.hbs)">
+      <option name="closed" value="true" />
+      <created>1748836849467</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1748836849467</updated>
+    </task>
+    <task id="LOCAL-00020" summary="[web] Added entry layout code (entry.vue.hbs)">
+      <option name="closed" value="true" />
+      <created>1748837335972</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1748837335972</updated>
+    </task>
+    <task id="LOCAL-00021" summary="[web] Updated Layouts and Views, and added Tailwind Theme Generator">
+      <option name="closed" value="true" />
+      <created>1748842718404</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1748842718404</updated>
+    </task>
+    <task id="LOCAL-00022" summary="[server] Minor Change">
+      <option name="closed" value="true" />
+      <created>1749708140012</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1749708140012</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Working on publish command @ publish.dart">
+      <option name="closed" value="true" />
+      <created>1749755785152</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1749755785153</updated>
+    </task>
+    <task id="LOCAL-00024" summary="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well">
+      <option name="closed" value="true" />
+      <created>1749756491247</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1749756491247</updated>
+    </task>
+    <task id="LOCAL-00025" summary="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well">
+      <option name="closed" value="true" />
+      <created>1749756699513</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1749756699513</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Added logging in and handler validation to the publish command">
+      <option name="closed" value="true" />
+      <created>1749759350949</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1749759350949</updated>
+    </task>
+    <task id="LOCAL-00027" summary="wip: get config">
+      <option name="closed" value="true" />
+      <created>1749759639093</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1749759639093</updated>
+    </task>
+    <task id="LOCAL-00028" summary="[cli] Publishing System in CLI">
+      <option name="closed" value="true" />
+      <created>1749846632289</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1749846632289</updated>
+    </task>
+    <task id="LOCAL-00029" summary="wip: [server] Working on publishing pipeline and added task worker and runnners">
+      <option name="closed" value="true" />
+      <created>1749923729896</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1749923729896</updated>
+    </task>
+    <task id="LOCAL-00030" summary="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)">
+      <option name="closed" value="true" />
+      <created>1749959859285</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1749959859285</updated>
+    </task>
+    <task id="LOCAL-00031" summary="[infra] Formatting">
+      <option name="closed" value="true" />
+      <created>1749959921354</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1749959921354</updated>
+    </task>
+    <task id="LOCAL-00032" summary="[idea] workspace.xml">
+      <option name="closed" value="true" />
+      <created>1750978199143</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1750978199143</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -279,13 +432,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Idea" />
-    <MESSAGE value="redoing this" />
-    <MESSAGE value="added Idea" />
-    <MESSAGE value="CLI: Implement Mock Testing and Table Functionality" />
-    <MESSAGE value="CLI Updtes (with some server ones as well)&#10;&#10;CLI:&#10;- Completed Table Listing&#10;&#10;Others:&#10;- Updated schema.pkl for various schemas&#10;- Added pkl testing to IntelliJ&#10;- Formatting" />
-    <MESSAGE value="CLI: Implement `adapter list` and `package list`" />
-    <MESSAGE value="CLI: Implemented `info`" />
     <MESSAGE value="CLI: Implement `info`" />
     <MESSAGE value="CLI: Migrated Command Implementations" />
     <MESSAGE value="WIP: [cli] Implementing `unpack` command" />
@@ -293,7 +439,24 @@
     <MESSAGE value="added .gitattributes for generated files" />
     <MESSAGE value="added new SQL table" />
     <MESSAGE value="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql" />
+    <MESSAGE value="[server] Completed Access Token Updates and Auth Session Integration" />
     <MESSAGE value="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT" />
-    <option name="LAST_COMMIT_MESSAGE" value="[server, web] Updated Auth for Access Tokens to use Crypto rather than JWT" />
+    <MESSAGE value="[server] Access Token and Auth Session Implementation" />
+    <MESSAGE value="[cli] Implemented `login`: awaiting testing" />
+    <MESSAGE value="[cli] Completed `login` command flow&#10;&#10;- added `ApiException` for handling exceptions to API&#10;- added functionality for describing `ApiException`s&#10;- added first client request" />
+    <MESSAGE value="[web] Added index page code (index.vue.hbs)" />
+    <MESSAGE value="[web] Added entry layout code (entry.vue.hbs)" />
+    <MESSAGE value="[web] Updated Layouts and Views, and added Tailwind Theme Generator" />
+    <MESSAGE value="[server] Minor Change" />
+    <MESSAGE value="Working on publish command @ publish.dart" />
+    <MESSAGE value="[infra] Linting, Formatting and Fixing Dart Code&#10;&#10;Updated analysis_options.yaml and imported it into pkgs to use. &#10;Fixed some linting and formatting issues as well" />
+    <MESSAGE value="Added logging in and handler validation to the publish command" />
+    <MESSAGE value="wip: get config" />
+    <MESSAGE value="[cli] Publishing System in CLI" />
+    <MESSAGE value="wip: [server] Working on publishing pipeline and added task worker and runnners" />
+    <MESSAGE value="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)" />
+    <MESSAGE value="[infra] Formatting" />
+    <MESSAGE value="[idea] workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="[idea] workspace.xml" />
   </component>
 </project>

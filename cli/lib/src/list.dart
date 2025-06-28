@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:pritt_cli/src/cli/table.dart';
 import 'package:pritt_common/interface.dart';
+
+import 'cli/table.dart';
 
 enum TerminalSize {
   small,
@@ -11,10 +12,11 @@ enum TerminalSize {
   static TerminalSize fromSize(int col) {
     if (col > 120) {
       return large;
-    } else if (col >= 100)
+    } else if (col >= 100) {
       return medium;
-    else
+    } else {
       return small;
+    }
   }
 }
 

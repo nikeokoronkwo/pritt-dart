@@ -13,32 +13,46 @@ services:
 
   server:
     build:
+      secrets:
+        - db-password
+        - s3-access-key
+        - s3-secret-key
       context: .
       dockerfile: server/Dockerfile
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       PORT: 8080
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: 5432
+      DATABASE_HOST: db
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
-      S3_URL: ${S3_URL}
-      PRITT_RUNNER_URL: ${PRITT_RUNNER_URL}
+      # S3_CREDENTIALS_FILE: /secrets/env
+      S3_URL: http://filestorage:9000
+      PRITT_RUNNER_URL: http://runner:8000
     env_file:
       - .env
     depends_on:
-      - db
-      - filestorage
-  
+      runner:
+        condition: service_started
+      db:
+        condition: service_healthy
+      filestorage:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server
+          target: /app/server
+
   filestorage:
     image: quay.io/minio/minio
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - '9000:9000'
+      - '9001:9001'
     environment:
       MINIO_ROOT_USER: ${MINIO_USERNAME}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
@@ -47,6 +61,11 @@ services:
     volumes:
       - fs-data:/data
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   db:
     image: postgres:17
@@ -54,11 +73,29 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     ports:
-      - "${DATABASE_PORT}:5432"
+      - '${DATABASE_PORT}:5432'
     env_file:
       - .env
+    # volumes:
+    #   - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'pg_isready',
+          '-U',
+          '${DATABASE_USERNAME}',
+          '-d',
+          '${DATABASE_NAME}',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    secrets:
+      - db-password
 
   migrate:
     image: flyway/flyway:latest
@@ -66,15 +103,27 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     volumes:
       - ./server/sql:/flyway/sql
     depends_on:
-      - db
-    restart: "no"
+      db:
+        condition: service_healthy
+    restart: 'no'
+    secrets:
+      - db-password
     env_file:
       - .env
 
 volumes:
+  shared-secrets:
   fs-data:
-    name: "pritt_fs_data"
+
+secrets:
+  db-password:
+    file: ./docker/secrets/db_password.txt
+  s3-access-key:
+    file: ./docker/secrets/s3_access_key.txt
+  s3-secret-key:
+    file: ./docker/secrets/s3_secret_key.txt

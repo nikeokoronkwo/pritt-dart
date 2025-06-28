@@ -1,11 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_server/src/main/utils/mixins.dart';
+import '../../../utils/mixins.dart';
 import 'package_json.dart';
 
 part 'result.g.dart';
 
 /// The result of a dart meta (i.e [AdapterResolveType.meta]) request
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class NpmMetaResult with JsonConvertible {
   /// The id
   @JsonKey(name: '_id')
@@ -76,7 +76,7 @@ class NpmMetaResult with JsonConvertible {
   Map<String, dynamic> toJson() => _$NpmMetaResultToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class NpmAuthor {
   /// The name of the author
   final String name;
@@ -108,7 +108,7 @@ class NpmAuthor {
 //   "next": "19.2.0-canary-21fdf308-20250508",
 //   "canary": "19.2.0-canary-21fdf308-20250508"
 // },
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class NpmDistTags {
   /// The beta version
   final String? beta;
@@ -201,7 +201,7 @@ class NpmDistTags {
 
 //   }
 // }
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class NpmPackage extends PackageJson {
   /// The id of the package
   @JsonKey(name: '_id')
@@ -331,7 +331,7 @@ class NpmPackage extends PackageJson {
   Map<String, dynamic> toJson() => _$NpmPackageToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class NpmDist {
   /// The shasum of the package
   final String shasum;

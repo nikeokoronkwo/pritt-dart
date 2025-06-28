@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/src/main/base/db/schema.dart';
-import 'package:pritt_server/src/utils/request_handler.dart';
 import 'package:pritt_common/interface.dart' as common;
+import '../../../../pritt_server.dart';
+import '../../../main/base/db/schema.dart';
+import '../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
   try {
@@ -13,8 +13,10 @@ final handler = defineRequestHandler((event) async {
         (body) => common.AuthValidateRequest.fromJson(json.decode(body)));
 
     // update the status
-    final session = await crs.db
-        .completeAuthSession(sessionId: body.session_id, userId: body.user_id);
+    final session = await crs.db.completeAuthSession(
+        sessionId: body.session_id,
+        userId: body.user_id,
+        newStatus: TaskStatus.success);
 
     // check status
     switch (session.status) {
@@ -37,7 +39,7 @@ final handler = defineRequestHandler((event) async {
           'status': session.status.name
         };
     }
-  } on TypeError catch (e) {
+  } on TypeError {
     setResponseCode(event, 400);
     return {'name': 'Invalid Request', 'error': 'Invalid Body for Request'};
   }
