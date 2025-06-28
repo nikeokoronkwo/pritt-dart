@@ -14,7 +14,8 @@ pritt - The Pritt CLI tool for managing packages and Pritt instances
 
 *pritt* <command> [...subcommands] [flags]
 
-Some commands have subcommands, while some do not. You can run *pritt help <command>* to find out more about a command.
+Some commands have subcommands, while some do not.
+You can run *pritt help <command>* to find out more about a command.
 
 == Description
 
@@ -34,6 +35,9 @@ Some commands have subcommands, while some do not. You can run *pritt help <comm
 
 *1*::
   Failure.
+
+*2*::
+  Unknown fail
 
 == Example
 

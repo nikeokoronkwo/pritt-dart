@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/server/test/unit/custom_adapter_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/openapigen/lib/src/gen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/packages/openapigen/lib/src/gen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/test/integration/integration_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/test/integration/integration_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/test/unit/adapter_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/test/unit/adapter_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/test/unit/adapter_test.mocks.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/test/mocks/adapter_test.mocks.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/test/unit/crs_storage_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/server/test/unit/crs_storage_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" beforeDir="false" afterPath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/publish" />
+        <entry key="$PROJECT_DIR$" value="feature/system-testing" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,17 +37,17 @@
     &quot;assignee&quot;: &quot;nikeokoronkwo&quot;
   }
 }</component>
-  <component name="GitHubPullRequestState"><![CDATA[{
-  "prStates": [
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
     {
-      "id": {
-        "id": "PR_kwDOOm7w1c6cKwyO",
-        "number": 51
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOOm7w1c6cKwyO&quot;,
+        &quot;number&quot;: 51
       },
-      "lastSeen": 1750972833616
+      &quot;lastSeen&quot;: 1750972833616
     }
   ]
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/nikeokoronkwo/pritt-dart.git&quot;,
@@ -101,12 +94,12 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Shell Script.PKL Testing.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "#51 on feature/system-testing",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "preferences.editor",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
@@ -416,7 +409,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749959921354</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="[idea] workspace.xml">
+      <option name="closed" value="true" />
+      <created>1750978199143</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1750978199143</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +432,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLI: Implemented `info`" />
     <MESSAGE value="CLI: Implement `info`" />
     <MESSAGE value="CLI: Migrated Command Implementations" />
     <MESSAGE value="WIP: [cli] Implementing `unpack` command" />
@@ -456,6 +456,7 @@
     <MESSAGE value="wip: [server] Working on publishing pipeline and added task worker and runnners" />
     <MESSAGE value="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)" />
     <MESSAGE value="[infra] Formatting" />
-    <option name="LAST_COMMIT_MESSAGE" value="[infra] Formatting" />
+    <MESSAGE value="[idea] workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="[idea] workspace.xml" />
   </component>
 </project>
