@@ -15,20 +15,25 @@ packages in multiple languages.
 
 To learn more, check out the [docs](./docs).
 
-## Installing
+## Development
+Pritt requires Dart (at least 3.6) to build the server and CLI. 
 
-Pritt can be installed as a docker image
+The CLI can be built with:
+```bash
+cd cli
+dart compile exe bin/pritt.dart
+```
+
+The Server requires a few more dependencies:
+- PostgreSQL
+- An S3 Compatible Storage: We use MinIO for development
+
+Start PostgreSQL 
 
 ## Building
+Pritt can be built as a Docker image. 
 
-In order to build pritt from source, and get a development version running your
-system, you will need to have
-
-- rust and cargo: for the API server
-- Postgres: for the database
-- Docker: to get the file storage running
-
-## Deploying
-
-Pritt has different deployment cases suited for different needs. For more
-information check out the [infra](./infra) directory.
+### Compose Setup
+```bash
+docker compose up
+```
