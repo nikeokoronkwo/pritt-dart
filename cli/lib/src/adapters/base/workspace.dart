@@ -21,20 +21,19 @@ class PackageWorkspace extends Workspace {
       {required super.config, required super.directory, required super.name});
 }
 
-/// TODO: This is a stub for a future feature, not used at the moment
+/// NOTE: This is a stub for a future feature, not used at the moment
 class MonorepoWorkspace extends Workspace {
   MonorepoWorkspace(
       {required super.config, required super.directory, required super.name});
 }
 
-/// TODO: Add better support for adding, removing packages
-/// TODO: Add support for (maybe publishing) packages
+// TODO(nikeokoronkwo): Add better support for adding, removing packages, https://github.com/nikeokoronkwo/pritt-dart/issues/53
 class PackageManager {
   String name;
   List<String> args;
 
-  /// TODO: For now, packages are added one-by-one unless packages are only passed with name and version
-  /// Fix this to add multiple packages at once
+  // TODO(nikeokoronkwo): For now, packages are added one-by-one unless packages are only passed with name and version
+  //  Fix this to add multiple packages at once, https://github.com/nikeokoronkwo/pritt-dart/issues/53
   PackageCmdArgs Function() onAdd;
   List<String> Function(String name) onRemove;
   List<String> Function(String name)? onPublish;

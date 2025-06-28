@@ -17,7 +17,6 @@ class AdapterUnpackCommand extends PrittCommand {
   String get description => "Downloads an adapter from Pritt to use in-place";
 
   @override
-  // TODO: implement invocation
   String get invocation => 'pritt adapter unpack <name> [flags]';
 
   AdapterUnpackCommand() {
@@ -108,7 +107,6 @@ class AdapterUnpackCommand extends PrittCommand {
     await downloadCompleter.future;
 
     // now deflate, and open
-    // TODO: Complete
 
     logger.info('Expanding Contents');
 

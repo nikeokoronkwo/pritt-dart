@@ -17,7 +17,7 @@ import 'vcs.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
 ///
-/// TODO: Monorepo support
+// TODO(nikeokoronkwo): Monorepo support, https://github.com/nikeokoronkwo/pritt-dart/issues/10
 class Project {
   /// Handlers for the current project
   final List<Handler> handlers;
@@ -74,7 +74,7 @@ class Project {
       IgnoreMatcher? matcher,
       required PrittControllerManager manager})
       :
-        // TODO: Add support for multiple handlers
+        // TODO(unknown): Add support for multiple handlers, https://github.com/nikeokoronkwo/pritt-dart/issues/56
         assert(handlers.length <= 1,
             "Unsupported: Multiple handlers is not supported"),
         _manager = manager,

@@ -104,7 +104,6 @@ class PackageJsonConfig extends Config {
   }
 
   @override
-  // TODO: implement configMetadata
   Map<String, dynamic> get configMetadata => {};
 
   @override

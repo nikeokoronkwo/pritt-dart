@@ -1,8 +1,7 @@
 import 'package:file/file.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:pritt_server/src/main/crs/interfaces.dart';
 import 'package:pritt_server/src/main/base/storage.dart';
+import 'package:pritt_server/src/main/crs/interfaces.dart';
 import 'package:test/scaffolding.dart';
 
 @GenerateMocks([CRSArchiveController, PrittStorage])

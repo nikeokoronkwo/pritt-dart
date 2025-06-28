@@ -50,7 +50,6 @@ class ConfigureCommand extends PrittCommand {
         config: argResults?['config'], client: prittClient);
     if (project.handlers.isEmpty) {
       logger.warn('Could not find a suitable handler for the given project.');
-      // TODO: Links to go to
       logger.verbose(
           'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
       exit(1);

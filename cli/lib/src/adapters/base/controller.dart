@@ -16,12 +16,12 @@ abstract interface class PrittLocalConfigUnawareController {
 
   /// Get the current user, and return the user object
   ///
-  /// TODO: Cache consistent calls
+  // TODO(nikeokoronkwo): Cache consistent calls, https://github.com/nikeokoronkwo/pritt-dart/issues/31
   FutureOr<User> getCurrentUser();
 
   /// Get the current user as an [common.Author] object
   ///
-  /// TODO: Cache consistent calls
+  // TODO(nikeokoronkwo): Cache consistent calls, https://github.com/nikeokoronkwo/pritt-dart/issues/31
   FutureOr<common.Author> getCurrentAuthor();
 
   /// List files in a directory as a [Stream]
@@ -52,7 +52,6 @@ abstract interface class PrittLocalConfigUnawareController {
       Map<String, String>? environment});
 }
 
-/// TODO: Get more functions for configuring
 abstract interface class PrittLocalController<T>
     extends PrittLocalConfigUnawareController {
   /// Get the configuration from a project

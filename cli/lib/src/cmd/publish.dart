@@ -57,7 +57,7 @@ class PublishCommand extends PrittCommand {
               'If project contains multiple languages, this specifies the primary language to publish/select handlers for.');
   }
 
-  // TODO: Key Signing from User
+  // TODO(nikeokoronkwo): Key Signing Pipeline from User, https://github.com/nikeokoronkwo/pritt-dart/issues/58
   @override
   FutureOr? run() async {
     // get arguments
@@ -113,7 +113,6 @@ class PublishCommand extends PrittCommand {
     // check for a handler to use
     if (project.handlers.isEmpty) {
       logger.severe('Could not find a suitable handler for the given project.');
-      // TODO: Links to go to
       logger.stderr(
           'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
       exit(1);
@@ -175,7 +174,7 @@ class PublishCommand extends PrittCommand {
 
       basePackage = pkg;
 
-      final pkgVersion = await (scope == null
+      await (scope == null
           ? client.getPackageByNameWithVersion(name: name, version: version)
           : client.getPackageByNameWithScopeAndVersion(
               scope: scope, name: name, version: version));
@@ -191,7 +190,7 @@ class PublishCommand extends PrittCommand {
 
     // now the publishing routine
     if (project.primaryHandler.publisher == PublishManager.pm) {
-      // TODO: Implement Package Manager Publishing
+      // TODO(nikeokoronkwo): Implement Package Manager Publishing, https://github.com/nikeokoronkwo/pritt-dart/issues/55
       logger.stderr('ERROR: Package Manager Publishing is not yet implemented');
 
       return;

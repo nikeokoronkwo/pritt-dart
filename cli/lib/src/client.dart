@@ -1,3 +1,5 @@
+// ignore_for_file: flutter_style_todos
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -10,7 +12,6 @@ import 'client/base.dart';
 import 'constants.dart';
 import 'utils/log.dart';
 
-/// TODO: Add support for streamed content monitoring
 class PrittClient extends ApiClient implements PrittInterface {
   final retryClient = RetryOptions(maxAttempts: 3);
   Map<String, String> get _prittHeaders =>
@@ -24,7 +25,6 @@ class PrittClient extends ApiClient implements PrittInterface {
 
   Future<bool> healthCheck({bool verbose = false}) async {
     try {
-      // TODO: Retry
       int counter = 0;
       await retryClient.retry(() {
         if (verbose) {

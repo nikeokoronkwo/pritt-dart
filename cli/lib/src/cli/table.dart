@@ -90,12 +90,9 @@ class Table {
 
       // print(char.isEmpty ? ifEmpty * pad : char.padLeft(char.length + sidePad).padRight(char.length + pad));
       final charOutput = switch (indentation) {
-        // TODO: Handle this case.
         Indentation.left => ' ${char.padRight(pad - 1)}',
-        // TODO: Handle this case.
         Indentation.center =>
           char.padLeft((char.length / 2).round() + sidePad).padRight(pad),
-        // TODO: Handle this case.
         Indentation.right => '${char.padLeft(pad - 1)} ',
       };
 

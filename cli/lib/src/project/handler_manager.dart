@@ -7,12 +7,9 @@ import 'controller.dart';
 /// A manager used for managing handlers (aka client adapters) and perform searching for the needed handler
 ///
 /// This is similar to a client adapter registry
+// TODO(nikeokoronkwo): Implement worker architecture, https://github.com/nikeokoronkwo/pritt-dart/issues/24
 class HandlerManager {
   final List<Handler> _coreHandlers = [npmHandler, dartHandler];
-
-  /// A list of workers
-  /// TODO: Workers
-  // final Map _activeWorkers = {};
 
   final PrittControllerManager controllerHandler;
 

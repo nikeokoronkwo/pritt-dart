@@ -9,8 +9,8 @@ import '../../cli/base.dart';
 import '../../client.dart';
 import '../../config/user_config.dart';
 import '../../csv.dart';
-import '../../list.dart';
 import '../../output.dart';
+import '../../table_output.dart';
 
 class PackageListCommand extends PrittCommand {
   @override
@@ -29,6 +29,7 @@ class PackageListCommand extends PrittCommand {
       ..addFlag('all',
           abbr: 'a',
           negatable: false,
+          hide: true,
           help: 'Write all packages, rather than those owned by a user');
   }
 

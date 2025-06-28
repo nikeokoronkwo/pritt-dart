@@ -80,7 +80,6 @@ class GoModConfig extends Config {
   }
 
   @override
-  // TODO: implement configMetadata
   Map<String, dynamic> get configMetadata => {'go': goVersion};
 
   @override

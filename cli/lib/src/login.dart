@@ -61,8 +61,8 @@ Future<UserCredentials> loginUser(
         id = authPollResponse['id'];
       } else {
         final details = await client.getAuthDetailsById(id: authRequest.token);
-        id = details.user_id ??
-            'unknown'; // TODO: Exception, rather than 'unknown'
+        if (details.user_id == null) throw Exception('Could not get user ID');
+        id = details.user_id!;
       }
 
       return await UserCredentials.create(
@@ -76,17 +76,14 @@ Future<UserCredentials> loginUser(
               .difference(DateTime.now())
               .inSeconds);
     case PollStatus.fail:
-      // TODO: Handle this case.
       throw Exception('Login Failed');
     case PollStatus.error:
-      // TODO: Handle this case.
       throw Exception('Error Occured During Login: $authPollResponse');
-    case PollStatus.expired:
-      // TODO: Handle this case.
+    case PollStatus.expired
+        when authPollResponse.containsKey('access_token_expires_at'):
       throw ExpiredError(
           expired_time: authPollResponse['access_token_expires_at']);
-    case PollStatus.pending:
-      // TODO: Handle this case.
+    default:
       throw Exception();
   }
 }

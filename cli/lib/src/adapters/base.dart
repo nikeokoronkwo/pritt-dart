@@ -12,10 +12,6 @@ typedef OnCheckWorkspaceFunc = FutureOr<bool> Function(String workspace);
 /// They are usually coupled with an adapter
 ///
 /// NOTE: A Workspace might have various handlers (multi-language projects)
-///
-/// TODO(https://github.com/nikeokoronkwo/pritt-dart/issues/6): Migrate
-///
-/// TODO: Infer LICENSE
 class Handler<T extends Config> {
   /// The name of the handler
   final String name;

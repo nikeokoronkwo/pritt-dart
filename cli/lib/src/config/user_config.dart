@@ -75,7 +75,7 @@ class UserCredentials {
 
   /// get user credentials from the user system
   ///
-  /// TODO: Should we encrypt/encode this file?
+  // TODO(nikeokoronkwo): Consider secure way of storing information, https://github.com/nikeokoronkwo/pritt-dart/issues/57
   static Future<UserCredentials?> fetch() async {
     if (await _file.exists()) {
       return UserCredentials.fromJson(json.decode(await _file.readAsString()));
@@ -135,7 +135,7 @@ class UserCredentials {
     return this;
   }
 
-  UserCredentials replaceSync(
+  void replaceSync(
       {Uri? uri, String? accessToken, DateTime? accessTokenExpires}) {
     if (uri != null) this.uri = uri;
     if (accessToken != null) this.accessToken = accessToken;
@@ -144,8 +144,6 @@ class UserCredentials {
     }
 
     updateSync();
-
-    return this;
   }
 
   bool get isExpired => accessTokenExpires.isBefore(DateTime.now());

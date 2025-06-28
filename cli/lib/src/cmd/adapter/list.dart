@@ -9,15 +9,14 @@ import '../../client.dart';
 import '../../config/user_config.dart';
 import '../../constants.dart';
 import '../../csv.dart';
-import '../../list.dart';
 import '../../output.dart';
+import '../../table_output.dart';
 
 class AdapterListCommand extends PrittCommand {
   @override
   String name = "list";
 
   @override
-  // TODO: implement description
   String get description =>
       "List all the adapters at the current pritt endpoint";
 

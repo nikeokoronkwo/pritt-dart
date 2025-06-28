@@ -1049,7 +1049,6 @@ RETURNING *''', parameters: [
       TaskStatus? newStatus}) async {
     // run transaction
     final result = await _pool.runTx((session) async {
-      final hash;
       // get current status of session
       final rs = await session.execute(
           r'''SELECT expires_at, status, device_id FROM authorization_sessions WHERE session_id = $1''',
@@ -1482,8 +1481,6 @@ RETURNING *
       List<String> contributorIds = const []}) async {
     task ??= await getPublishingTaskById(id);
 
-    final pkg =
-        await getPackage(task.name, scope: task.scope, language: task.language);
     final author = await getUser(task.user);
 
     final pkgVer = await addNewVersionOfPackage(
@@ -1595,11 +1592,11 @@ RETURNING *
 
 extension Authorization on PrittDatabase {
   /// Check for the authorization of a user
-  /// TODO: Implement a better way to check for authorization, maybe put this behind a cache
+  // TODO(nikeokoronkwo): Implement a better way to check for authorization, maybe put this behind a cache, https://github.com/nikeokoronkwo/pritt-dart/issues/31
   @Cacheable()
   Future<User?> checkAuthorization(String accessToken,
       {AccessTokenType? tokenType}) async {
-    bool noToken;
+    bool noToken = false;
 
     // validate access token expiration
     if (accessToken.isEmpty) {
@@ -1625,11 +1622,7 @@ WHERE a.hash = @accessToken'''),
       }
     });
 
-    if (result == null) {
-      throw UnauthorizedException('Invalid access token',
-          type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
-    }
-    if (result.isEmpty) {
+    if (result == null || result.isEmpty || noToken) {
       throw UnauthorizedException('Invalid access token',
           type: UnauthorizedExceptionType.INVALID_TOKEN, token: accessToken);
     }
@@ -1682,10 +1675,10 @@ String generateRandomCode({int length = 8, String? seed}) {
     input = encodedSeed.split('').where((c) => characters.contains(c)).join('');
   }
 
-  String output = '';
+  StringBuffer output = StringBuffer();
   for (int i = 0; i < length; ++i) {
-    output += characters[random.nextInt(characters.length - 1)];
+    output.write(input[random.nextInt(characters.length - 1)]);
   }
 
-  return output;
+  return output.toString();
 }

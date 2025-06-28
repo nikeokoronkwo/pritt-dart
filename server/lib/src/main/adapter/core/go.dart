@@ -146,9 +146,6 @@ final goAdapter = Adapter(
       var version = versionWithExtension.replaceAll(extension, '');
       if (version.startsWith('v')) version = version.substring(1);
 
-      // get the archive as a tarball
-      List<int> tarBytes;
-
       final archiveResult = await crs.getArchiveWithVersion(pkgName, version,
           env: {'module_name': moduleName});
 

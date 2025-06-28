@@ -63,28 +63,24 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     final r = RetryOptions(maxAttempts: 8);
 
     // let's perform a health check
+    // prefer to do one request rather than three HEAD requests
     final s3BucketsResponse = await r.retry(() => s3!.listBuckets(),
         retryIf: (e) => e is http.ClientException || e is SocketException);
 
     var s3Buckets = s3BucketsResponse.buckets ?? [];
 
     // check if needed buckets already exist
-    // TODO: Might be lighter work to do HEAD work instead: s3.headBucket
-    bool recallListBuckets = false;
     if (!s3Buckets.any((b) => b.name == 'pritt-packages')) {
-      recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-packages',
       );
     }
     if (!s3Buckets.any((b) => b.name == 'pritt-publishing-archives')) {
-      recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-publishing-archives',
       );
     }
     if (!s3Buckets.any((b) => b.name == 'pritt-adapters')) {
-      recallListBuckets = true;
       await s3!.createBucket(
         bucket: 'pritt-adapters',
       );

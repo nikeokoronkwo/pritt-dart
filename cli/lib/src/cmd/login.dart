@@ -95,7 +95,7 @@ class LoginCommand extends PrittCommand {
 
       // get user info from login details
       final user = await client.getUserById(id: userCredentials.userId);
-      // TODO: Cache user
+      // TODO(nikeokoronkwo): Cache user, https://github.com/nikeokoronkwo/pritt-dart/issues/31
 
       // display user log in info
       logger.fine('Logged in as: ${user.name}');
