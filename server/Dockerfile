@@ -20,7 +20,7 @@ COPY . .
 WORKDIR /app/server
 RUN dart pub get --offline
 
-# RUN dart pub get
+# Build executable
 RUN --mount=type=secret,id=s3-access-key,env=S3_SECRET_KEY \
     --mount=type=secret,id=s3-secret-key,env=S3_ACCESS_KEY \
     --mount=type=secret,id=db-password,env=DATABASE_PASSWORD \

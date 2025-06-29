@@ -13,9 +13,6 @@ RUN pnpm i --frozen-lockfile
 # Copy the entire project
 COPY . ./
 
-# Push DB Changes
-RUN pnpm run db:push
-
 # Build the project
 RUN pnpm run build
 
