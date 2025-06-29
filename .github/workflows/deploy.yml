@@ -1,0 +1,54 @@
+name: Pritt Deploy
+on:
+  push:
+    branches:
+      - stable
+  workflow_dispatch:
+
+jobs:
+  docker:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    uses: ./.github/workflows/docker.yml
+    secrets: inherit
+
+  # TODO: Split up jobs
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Pkl
+        uses: pkl-community/setup-pkl@v0.0.8
+        with:
+          pkl-version: 0.28.2
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          run_install: true
+      
+      - name: Build Website
+        run: pnpm gen:web
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+      
+      - name: Prepare Infra
+        run: |
+          pnpm tf:init
+          pnpm tf:plan
+
+      - name: Apply Infra
+        run: |
+          pnpm tf:apply
+      
+      # TODO: Migration plan
+      
+      

@@ -22,7 +22,6 @@ jobs:
       - name: Setup Pkl
         uses: pkl-community/setup-pkl@v0.0.8
         with:
-          # The Pkl version to install.
           pkl-version: 0.28.2
 
       - name: Test Pkl Code

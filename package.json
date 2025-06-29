@@ -13,13 +13,16 @@
     "format:dart": "dart format .",
     "format:js": "prettier . --write",
     "format": "pnpm format:dart && pnpm format:js; cd web; pnpm format; cd -",
-    "server": "./tools/denv.dart --cwd server -- dart run bin/server.dart",
-    "build:server": "",
-    "docker:server": "exit 1 && docker build pritt-server",
-    "docker:server-run": "docker run --rm --env-file .env pritt-server ",
-    "compose:setup": "",
+    "dev:server": "./tool/denv.dart --cwd server -- dart run bin/server.dart",
+    "dev:web": "cd web-ref && pnpm dev",
+    "build:server": "./tool/denv.dart --cwd server -- dart compile exe bin/server.dart",
     "gen:common": "pnpm schema:generate && ./scripts/openapigen ./config/out/openapi.yaml -o ./common",
-    "gen:web": "./scripts/webgen"
+    "gen:web": "./scripts/webgen",
+    "tool:migrate:server": "./tool/denv.dart --cwd server -- dart tool/migrate.dart",
+
+    "tf:init": "cd infra && tofu init",
+    "tf:plan": "cd infra && tofu plan -var-file=infra.tfvars -out=infra.tfplan",
+    "tf:apply": "cd infra && tofu apply -input=false infra.tfplan"
   },
   "packageManager": "pnpm@9.15.2+sha256.022309bb31359142b65bfa889e0406d2eebd5acfffca47e6944acf29d9d6a66b",
   "pnpm": {

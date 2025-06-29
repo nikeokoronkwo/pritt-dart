@@ -1,16 +1,16 @@
 name: pritt
 
 services:
-  web:
-    build: web-ref
-    ports:
-      - "3000:3000"
-    environment:
-      NUXT_PUBLIC_API_URL: ${API_URL}
-      DATABASE_URL: ${DATABASE_URL}
-    env_file:
-      - .env
-
+  # web:
+  #   build: web-ref
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NUXT_PUBLIC_API_URL: ${API_URL}
+  #     DATABASE_URL: ${DATABASE_URL}
+  #   env_file:
+  #     - .env
+    
   server:
     build:
       secrets:
@@ -63,8 +63,8 @@ services:
     command: server /data --console-address ":9001"
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
-      interval: 30s
-      timeout: 10s
+      interval: 10s
+      timeout: 5s
       retries: 5
 
   db:
@@ -91,7 +91,7 @@ services:
           '-d',
           '${DATABASE_NAME}',
         ]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
     secrets:

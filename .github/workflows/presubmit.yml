@@ -1,0 +1,79 @@
+name: Main Presubmit Code (Check State, etc)
+on:
+  pull_request:
+    branches: ["main", "stable"]
+    paths:
+      - "*.sql"
+      - "web/"
+      - "./server/sql/**"
+
+jobs:
+  drizzle_check:
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          run_install: true
+      
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -p 5432 -U postgres && break
+            sleep 2
+          done
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+      
+      - name: Run Dart server migrations
+        run: |
+          cd server
+          dart pub get
+          DATABASE_URL= dart run tool/migrate.dart
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          run_install: true
+
+      - name: Install Node and Drizzle dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install web dependencies
+        run: |
+          cd web
+          pnpm install
+
+      - name: Pull updated schema from DB
+        run: |
+          cd web
+          pnpx drizzle-kit pull
+
+      - name: Check for schema diffs
+        run: |
+          git diff --exit-code
+        working-directory: website

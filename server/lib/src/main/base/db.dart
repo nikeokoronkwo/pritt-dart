@@ -75,6 +75,8 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
                       ? SslMode.verifyFull
                       : SslMode.disable));
 
+      // run migrations
+      
       _preparePool(pool);
 
       db = PrittDatabase._(pool: pool);

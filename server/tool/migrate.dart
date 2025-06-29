@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:postgres/postgres.dart';
 
 final argParser = ArgParser(allowTrailingOptions: true)
-  ..addOption('dirctory', abbr: 'd', help: 'The migrations directory', defaultsTo: 'sql')
+  ..addOption('directory', abbr: 'd', help: 'The migrations directory', defaultsTo: 'sql')
   ..addOption('table', help: 'The name of the SQL migration table name', defaultsTo: '_migrations')
   ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help information');
 
@@ -32,12 +32,15 @@ void main(List<String> args) async {
           Platform.environment['DATABASE_USERNAME'])!,
       password: (dbUri?.userInfo.split(':').last ??
           Platform.environment['DATABASE_PASSWORD'] ??
-          String.fromEnvironment('DATABASE_PASSWORD')),
+          String.fromEnvironment('DATABASE_PASSWORD')
+      ),
+    ), settings: ConnectionSettings(
+      sslMode: SslMode.disable
     )
   );
 
   // set up migrations table
-  print('Setting up migrations table...');
+  print('Setting up migrations table ${argResults['table']}...');
   await db.execute('''
 CREATE TABLE IF NOT EXISTS ${argResults['table']} (
   id SERIAL PRIMARY KEY,
@@ -80,7 +83,7 @@ SELECT (filename) FROM ${argResults['table']} WHERE filename = @filename;
     await db.runTx((session) async {
       await session.execute(contents, queryMode: QueryMode.simple);
       await session.execute(Sql.named('''
-'INSERT INTO ${argResults['table']} (filename) VALUES (@filename)'
+INSERT INTO ${argResults['table']} (filename) VALUES (@filename)
 '''), parameters: {'filename': filename});
     });
   }
