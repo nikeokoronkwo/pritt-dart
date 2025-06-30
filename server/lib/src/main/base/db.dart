@@ -1399,6 +1399,7 @@ RETURNING *
         id: columnMap['id'] as String,
         status: TaskStatus.fromString(
             (columnMap['status'] as UndecodedBytes).asString),
+            message: columnMap['message'] as String?,
         name: name,
         scope: scope,
         user: user.id,
@@ -1510,7 +1511,7 @@ RETURNING *
   FutureOr<PublishingTask> getPublishingTaskById(String id) async {
     if (_statements['getPublishingTaskById'] == null) {
       _statements['getPublishingTaskById'] = await _pool.prepare(Sql.named('''
-SELECT id, status, user_id, name, scope, version, new, language, config, config_map, metadata, env, vcs, vcs_url, updated_at, created_at, expires_at
+SELECT id, status, user_id, name, scope, version, new, language, config, config_map, metadata, env, vcs, vcs_url, updated_at, created_at, expires_at, message
 FROM package_publishing_tasks
 WHERE id = @id
 '''));
@@ -1528,6 +1529,7 @@ WHERE id = @id
           scope: columnMap['scope'] as String?,
           status: TaskStatus.fromString(
               (columnMap['status'] as UndecodedBytes).asString),
+          message: columnMap['message'] as String?,
           user: columnMap['user_id'] as String,
           version: columnMap['version'] as String,
           $new: columnMap['new'] as bool,
@@ -1550,19 +1552,19 @@ WHERE id = @id
 
   @override
   FutureOr<PublishingTask> updatePublishingTaskStatus(String id,
-      {required TaskStatus status}) async {
+      {required TaskStatus status, String? message}) async {
     if (_statements['updatePublishingTaskStatus'] == null) {
       _statements['updatePublishingTaskStatus'] =
           await _pool.prepare(Sql.named('''
 UPDATE package_publishing_tasks
-SET status = @status, updated_at = @updatedAt
+SET status = @status, updated_at = @updatedAt, message = @message
 WHERE id = @id
 RETURNING *
 '''));
     }
 
     final result = await _statements['updatePublishingTaskStatus']!
-        .run({'status': status.name, 'id': id, 'updatedAt': DateTime.now()});
+        .run({'status': status.name, 'id': id, 'updatedAt': DateTime.now(), 'message': message});
 
     final columnMap = result.first.toColumnMap();
     final vcsUrl = columnMap['vcs_url'] as String?;
@@ -1571,6 +1573,7 @@ RETURNING *
         id: columnMap['id'] as String,
         name: columnMap['name'] as String,
         scope: columnMap['scope'] as String?,
+        message: columnMap['message'] as String?,
         status: TaskStatus.fromString(
             (columnMap['status'] as UndecodedBytes).asString),
         user: columnMap['user_id'] as String,

@@ -48,12 +48,14 @@ final goHandler = Handler<GoModConfig>(
 
 class GoModConfig extends Config {
   final String goVersion;
+  final String moduleName;
 
   const GoModConfig(
       {required super.name,
       required super.version,
       required super.author,
-      required this.goVersion});
+      required this.goVersion,
+      required this.moduleName});
 
   factory GoModConfig.fromGoModJson(Map<String, dynamic> json, Author author) {
     final module = json['Module']['Path'] as String;
@@ -65,22 +67,51 @@ class GoModConfig extends Config {
     final String version;
     final String name;
 
-    if (lastModulePart.startsWith('v') &&
-        Version.tryParse(lastModulePart.substring(1)) != null) {
-      // last part is version
-      version = lastModulePart.substring(1);
-      name = moduleParts.sublist(1, moduleParts.length - 1).join('/');
-    } else {
-      version = '1.0.0';
-      name = lastModulePart;
+    switch (moduleParts.skip(1)) {
+      case [String moduleScope, String moduleName, String moduleVersion]
+          when moduleVersion.startsWith('v') &&
+              Version.tryParse(moduleVersion.substring(1)) != null:
+        name = '@$moduleScope/$moduleName';
+        version = moduleVersion;
+        break;
+      case [String moduleName, String moduleVersion]
+          when moduleVersion.startsWith('v') &&
+              Version.tryParse(moduleVersion.substring(1)) != null:
+        name = moduleName;
+        version = moduleVersion;
+        break;
+      case [String moduleScope, String moduleName]:
+        name = '@$moduleScope/$moduleName';
+        version = '1.0.0';
+        break;
+      case [String moduleName]:
+        name = moduleName;
+        version = '1.0.0';
+        break;
+      default:
+        if (lastModulePart.startsWith('v') &&
+            Version.tryParse(lastModulePart.substring(1)) != null) {
+          // last part is version
+          version = lastModulePart.substring(1);
+          name = moduleParts.sublist(1, moduleParts.length - 1).join('/');
+        } else {
+          version = '1.0.0';
+          name = lastModulePart;
+        }
+        break;
     }
 
     return GoModConfig(
-        name: name, version: version, author: author, goVersion: goVersion);
+        name: name,
+        version: version,
+        author: author,
+        goVersion: goVersion,
+        moduleName: module);
   }
 
   @override
-  Map<String, dynamic> get configMetadata => {'go': goVersion};
+  Map<String, dynamic> get configMetadata =>
+      {'go': goVersion, 'module_name': moduleName};
 
   @override
   Map<String, dynamic>? get rawConfig => null;

@@ -1,5 +1,6 @@
 import '../adapters/base.dart';
 import '../adapters/dart.dart';
+import '../adapters/go.dart';
 import '../adapters/npm.dart';
 import '../client.dart';
 import 'controller.dart';
@@ -9,7 +10,7 @@ import 'controller.dart';
 /// This is similar to a client adapter registry
 // TODO(nikeokoronkwo): Implement worker architecture, https://github.com/nikeokoronkwo/pritt-dart/issues/24
 class HandlerManager {
-  final List<Handler> _coreHandlers = [npmHandler, dartHandler];
+  final List<Handler> _coreHandlers = [npmHandler, dartHandler, goHandler];
 
   final PrittControllerManager controllerHandler;
 

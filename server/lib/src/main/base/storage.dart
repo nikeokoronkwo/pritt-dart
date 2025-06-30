@@ -345,14 +345,18 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
   @override
   FutureOr<bool> pubArchiveExists(String path) async {
-    final pkgStatus = await s3Instance.headObject(
+    try {
+      final pkgStatus = await s3Instance.headObject(
         bucket: publishingBucket.name ?? 'pritt-publishing-archives',
         key: path);
 
-    print(
-        'Archive Details: ${pkgStatus.contentLength} ${pkgStatus.contentType} ${pkgStatus.lastModified} ${pkgStatus.metadata} $pkgStatus');
+      print(
+          'Archive Details: ${pkgStatus.contentLength} ${pkgStatus.contentType} ${pkgStatus.lastModified} ${pkgStatus.metadata} $pkgStatus');
 
-    return pkgStatus.metadata != null;
+      return pkgStatus.metadata != null;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override

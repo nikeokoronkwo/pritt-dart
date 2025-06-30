@@ -16,6 +16,8 @@ import 'src/utils/xml.dart';
 Handler adapterHandler(CoreRegistryService crs) {
   return (Request req) async {
     try {
+      print(req.headers);
+      print(req.headersAll);
       final adapterResolve = getAdapterResolveObject(req);
 
       // check through the core adapters first
@@ -52,23 +54,31 @@ Handler adapterHandler(CoreRegistryService crs) {
               body: switch (result.responseType) {
                 ResponseType.json => jsonEncode(result.error.toJson()),
                 ResponseType.xml => mapToXml(result.error.toJson()),
-                _ => result.error.toString(),
+                _ => switch (result.error) {
+                  String s => s,
+                  Map<String, dynamic> map => jsonEncode(map),
+                  List<Map<String, dynamic>> map => jsonEncode(map),
+                  _ => result.error.toString()
+                },
               },
               headers: {
                 HttpHeaders.contentTypeHeader: result.responseType.mimeType,
               }),
         AdapterMetaResult() => Response.ok(
-              result is AdapterMetaJsonResult
-                  ? jsonEncode(result.body.toJson())
-                  : switch (result.responseType) {
-                      ResponseType.json => jsonEncode(result.body.toJson()),
-                      ResponseType.xml => mapToXml(result.body.toJson()),
-                      _ => result.body.toString()
-                    },
+              switch (result) {
+                AdapterMetaJsonResult() => jsonEncode(result.body.toJson()),
+                _ => switch (result.responseType) {
+                  ResponseType.json => jsonEncode(result.body),
+                  ResponseType.xml => mapToXml(result.body.toJson()),
+                  _ => result.body.toString()
+                }
+              },
+              
               headers: {
-                HttpHeaders.contentTypeHeader: result is AdapterMetaJsonResult
-                    ? result.contentType
-                    : result.responseType.contentType,
+                HttpHeaders.contentTypeHeader: result is AdapterMetaJsonResult ? result.contentType : switch (result.body) {
+                  Map<String, dynamic>() || List<Map<String, dynamic>>() => 'application/json',
+                  _ => result.responseType.contentType,
+                }
               }),
         AdapterArchiveResult() => Response.ok(result.archive, headers: {
             HttpHeaders.contentTypeHeader: result.contentType,

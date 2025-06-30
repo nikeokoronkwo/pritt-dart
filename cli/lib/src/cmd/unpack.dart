@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:args/command_runner.dart';
+import 'package:chunked_stream/chunked_stream.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
 
@@ -87,8 +90,9 @@ class UnpackCommand extends PrittCommand {
       await directory.create(recursive: true);
     }
 
-    final File tarFile = await File(outName + '.tar.gz').create();
-    final sink = tarFile.openWrite();
+    // final File tarFile = await File(outName + '.tar.gz').create();
+    // final sink = tarFile.openWrite();
+    final controller = StreamController<List<int>>();
 
     int bytesReceived = 0;
 
@@ -96,19 +100,19 @@ class UnpackCommand extends PrittCommand {
 
     content.data.listen(
       (chunk) {
-        sink.add(chunk);
+        controller.add(chunk);
         bytesReceived += chunk.length;
         progressBar.tick(bytesReceived, contentLength);
         sleep(Duration(milliseconds: 10));
       },
       onDone: () async {
-        await sink.close();
+        await controller.close();
         sleep(Duration(milliseconds: 100));
         progressBar.end();
         downloadCompleter.complete();
       },
       onError: (e, st) async {
-        await sink.close();
+        await controller.close();
         sleep(Duration(milliseconds: 100));
         downloadCompleter.completeError(e, st);
       },
@@ -122,10 +126,16 @@ class UnpackCommand extends PrittCommand {
     logger.info('Expanding Contents');
 
     // extract tar.gz and save to directory
-    await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+    // await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+    final Archive archive = TarDecoder().decodeBytes(
+      GZipDecoder().decodeBytes(
+        await readByteStream(controller.stream)
+      )
+    );
 
-    await sink.close();
-    await tarFile.delete();
+    await extractArchiveToDisk(archive, directory.path);
+
+    await controller.close();
 
     logger.stdout('Package $pkgName has been unpacked at $outName');
 

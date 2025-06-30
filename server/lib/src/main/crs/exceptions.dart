@@ -49,7 +49,10 @@ enum CRSExceptionType {
   USER_NOT_FOUND,
 
   /// The item is not found (something other than a package or tarball)
-  ITEM_NOT_FOUND
+  ITEM_NOT_FOUND,
+
+  /// The scope does not exist
+  SCOPE_NOT_FOUND
 }
 
 class UnauthorizedException implements Exception {

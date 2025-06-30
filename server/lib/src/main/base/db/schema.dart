@@ -533,6 +533,9 @@ class PublishingTask {
   /// If a URL was specified, get the tarball associated with this request from there
   Uri? tarball;
 
+  /// Any description for error or success
+  String? message;
+
   PublishingTask(
       {required this.id,
       required this.name,
@@ -550,7 +553,7 @@ class PublishingTask {
       this.vcsUrl,
       required this.createdAt,
       required this.updatedAt,
-      required this.expiresAt})
+      required this.expiresAt, required this.message})
       : assert(
             expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
 

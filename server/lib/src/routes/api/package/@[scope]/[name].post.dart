@@ -5,6 +5,7 @@ import 'package:pritt_common/interface.dart' as common;
 
 import '../../../../../pritt_server.dart';
 import '../../../../main/base/db/schema.dart';
+import '../../../../main/crs/exceptions.dart';
 import '../../../../main/publishing/interfaces.dart';
 import '../../../../main/publishing/tasks.dart';
 import '../../../../server_utils/authorization.dart';
@@ -94,12 +95,21 @@ final handler = defineRequestHandler((event) async {
   } on AssertionError catch (e) {
     setResponseCode(event, 400);
     return common.UnauthorizedError(
-            error: e.message.toString() ?? 'InvalidRequest',
+            error: e.message.toString(),
             reason: common.UnauthorizedReason.org)
         .toJson();
   } on TypeError {
     setResponseCode(event, 400);
     return common.Error(error: 'InvalidBody').toJson();
+  } on CRSException catch (e) {
+    switch (e.type) {
+      case CRSExceptionType.SCOPE_NOT_FOUND:
+        setResponseCode(event, 404);
+        return common.NotFoundError(error: 'The given scope $pkgScope could not be found. You will need to create the scope first');
+      default:
+        setResponseCode(event, 500);
+        return common.ServerError(error: 'Server Error').toJson();
+    }
   } catch (e) {
     setResponseCode(event, 500);
     return common.ServerError(error: 'Server Error').toJson();

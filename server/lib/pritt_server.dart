@@ -52,7 +52,12 @@ Future<void> startPrittServices(
     storage = await PrittStorage.connect(ofsUrl);
   }
 
-  crs = await CoreRegistryService.connect(db: db, storage: storage);
+  // TODO: Late Initialization Check
+  try {
+    final _ = crs;
+  } catch (e) {
+    crs = await CoreRegistryService.connect(db: db, storage: storage);
+  }
 
   if (customAdapters)
     registry = await AdapterRegistry.connect(

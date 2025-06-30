@@ -257,8 +257,7 @@ class PublishCommand extends PrittCommand {
 
     // given url and stuff, lets zip up and upload
     logger.info('Zipping Up Package...');
-    final archive = await createArchiveFromDirectory(project.files(),
-        rootDir: project.directory);
+    final archive = await createArchiveFromFiles(project.files(), rootDir: project.directory, includeDirName: false);
     final tarball = GZipEncoder().encode(TarEncoder().encode(archive))!;
     logger.fine('Completed Zipping Package!');
 
@@ -416,4 +415,24 @@ common.PublishPackageByVersionRequest assemblePubVerRequest({
       config: common.Configuration(path: configFile, config: config.rawConfig),
       env: env,
       info: config.configMetadata);
+}
+
+Future<Archive> createArchiveFromFiles(Stream<File> files,
+    {bool includeDirName = true, required String rootDir}) async {
+  final archive = Archive();
+
+  final dirName = p.basename(rootDir);
+  await for (var file in files) {
+    var filename = p.relative(file.path, from: rootDir);
+    filename = includeDirName ? ('$dirName/$filename') : filename;
+
+    final fileStream = InputFileStream(file.path);
+    final af = ArchiveFile.stream(filename, file.lengthSync(), fileStream);
+    af.lastModTime = file.lastModifiedSync().millisecondsSinceEpoch ~/ 1000;
+    af.mode = file.statSync().mode;
+
+    archive.addFile(af);
+  }
+
+  return archive;
 }

@@ -186,6 +186,7 @@ CREATE TABLE package_publishing_tasks (
     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     scope TEXT,
+    message TEXT,
     version TEXT NOT NULL,
     new BOOLEAN NOT NULL,
     language TEXT NOT NULL,

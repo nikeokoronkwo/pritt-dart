@@ -81,7 +81,9 @@ FutureOr<void> processTarball(
   // TODO: Temporary fix for isolate discovery of variables
   // in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
   // which would require a reworking of the worker's serialization
+
   await startPrittServices(customAdapters: false);
+  
   // get task info
   final taskInfo = await item.task.taskInfo;
 

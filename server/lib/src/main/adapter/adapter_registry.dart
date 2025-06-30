@@ -15,6 +15,7 @@ import 'adapter/exception.dart';
 import 'adapter/interface.dart';
 import 'adapter/resolve.dart';
 import 'core/dart.dart';
+import 'core/go.dart';
 import 'core/npm.dart';
 
 /// An adapter registry implementation
@@ -30,7 +31,7 @@ class AdapterRegistry {
   static CustomAdapterService? service;
 
   /// The core adapters
-  final List<Adapter> _coreAdapters = [dartAdapter, npmAdapter];
+  final List<Adapter> _coreAdapters = [dartAdapter, npmAdapter, goAdapter];
 
   /// Get the total number of adapters available
   Stream<Adapter> get adapters async* {

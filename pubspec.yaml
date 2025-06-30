@@ -7,4 +7,4 @@ workspace:
   - common
   - server
 dev_dependencies:
-  lints: ^5.1.1
+  lints: ^6.0.0

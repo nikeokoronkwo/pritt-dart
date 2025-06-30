@@ -32,9 +32,8 @@ final handler = defineRequestHandler((event) async {
             name: pubTask.name,
             version: pubTask.version,
             scope: pubTask.scope,
-            // TODO: Describe the error in more detail...
-            error: pubTask.status == TaskStatus.fail
-                ? 'Publishing Task Failed'
+            error: pubTask.status == TaskStatus.fail || pubTask.status == TaskStatus.error
+                ? pubTask.message ?? 'Publishing task failed: unknown error'
                 : null)
         .toJson();
   } catch (e, st) {

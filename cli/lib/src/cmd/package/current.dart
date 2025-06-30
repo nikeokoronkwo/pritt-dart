@@ -71,7 +71,7 @@ class PackageCurrentCommand extends PrittCommand {
       };
 
       await File(argResults?['json'] ?? 'results.json')
-              .writeAsString(jsonEncode(projectJson));
+          .writeAsString(jsonEncode(projectJson));
     } else {
       logger.info('Info for project at ${project.directory}');
       // table output

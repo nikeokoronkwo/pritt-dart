@@ -73,8 +73,19 @@ Future<String> listProjectInfo(Project project) async {
 
   final items = [
     ['Name', config.name, ''],
-    ['Language', project.primaryHandler.language, 'Deduced from handler #${project.primaryHandler.id}'],
-    ['Package Manager', config.packageManager?.name ?? 'none', if (config.packageManager?.name == null) 'No package manager associated with #${project.primaryHandler.id}' else ''],
+    [
+      'Language',
+      project.primaryHandler.language,
+      'Deduced from handler #${project.primaryHandler.id}'
+    ],
+    [
+      'Package Manager',
+      config.packageManager?.name ?? 'none',
+      if (config.packageManager?.name == null)
+        'No package manager associated with #${project.primaryHandler.id}'
+      else
+        ''
+    ],
     ['VCS', project.vcs.name, ''],
   ];
 

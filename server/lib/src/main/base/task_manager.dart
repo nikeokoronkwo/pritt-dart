@@ -11,7 +11,7 @@ import 'db/schema.dart';
 abstract class TaskBase {
   abstract final String id;
   TaskStatus get status;
-  FutureOr<void> updateStatus(TaskStatus newStatus);
+  FutureOr<void> updateStatus(TaskStatus newStatus, {String? message});
   void updateError(Object error);
 
   TaskBase();
@@ -72,9 +72,6 @@ enum TaskRunnerMode {
 ///
 /// -----------------------------------------------------
 ///
-/// TODO: onCheck is only implemented in [idleTasks]. We should consider implementing this in the main loop as well
-/// TODO: Clear out prints from code
-/// TODO: Testing
 /// TODO: Handling running outside the main loop
 class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
     Ctx extends Object> {
@@ -137,9 +134,12 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
         retryInterval = retryInterval ?? Duration(milliseconds: 150) {
     if (!hierarchicalLoggingEnabled) hierarchicalLoggingEnabled = true;
     _logger?.level = Level.ALL;
+    
     _logger?.onRecord.listen((record) {
       print(
           'LOG ${record.loggerName}:: ${record.level.name}: ${record.time}: ${record.message} :: Logged at ${record.time}');
+      if (record.error case final err?) print('ERROR ${record.loggerName}:: ${record.level.name}: ${record.time}: $err');
+      if (record.stackTrace case final stack?) print('STACK TRACE ${record.loggerName}:: ${record.level.name}: ${record.time}: $stack');
     });
 
     _logger?.shout(
@@ -210,7 +210,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
 
         if (eagerWorkerAssets.containsKey(nextTask.id)) {
           _logger?.info(
-              'Task. of id ${nextTask.id} contains eager resource loaded from idle task map');
+              'Task of id ${nextTask.id} contains eager resource loaded from idle task map');
           resource = eagerWorkerAssets[nextTask.id];
         } else {
           _logger?.info('Finding resource...');
@@ -256,6 +256,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
             }
 
             resource ??= await onRetrieve(nextTask);
+            _logger?.fine('Found resource: $resource');
           } else {
             var resource = await onRetrieve(nextTask);
             while (resource == null) {
@@ -272,6 +273,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
               }
               resource = await onRetrieve(nextTask);
             }
+
+            _logger?.fine('Found resource: $resource');
           }
         }
 
@@ -290,14 +293,20 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
             await nextTask.updateStatus(TaskStatus.success);
             _logger?.fine('Task is now ended');
             return completedTasks[nextTask.id] = v;
+          })
+          .catchError((e, stack) async {
+            _logger?.severe('Task of id ${nextTask.id} failed with an error', e, stack);
+            nextTask.updateError(e);
+            await nextTask.updateStatus(TaskStatus.fail);
           });
         }
 
         _logger?.info('Next loop');
-      } catch (e) {
-        _logger?.severe('Task of id ${nextTask.id} contains error');
+      } catch (e, stackTrace) {
+        // if the worker causes an error:
+        _logger?.severe('Task of id ${nextTask.id} contains error', e, stackTrace);
         nextTask.updateError(e);
-        await nextTask.updateStatus(TaskStatus.fail);
+        await nextTask.updateStatus(TaskStatus.error);
       }
 
       await Future.delayed(pollInterval);
@@ -379,4 +388,10 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
   void addTask(Task task) {
     queue.addLast(task);
   }
+}
+
+class WorkerException implements Exception {
+  Object? cause;
+
+  WorkerException(this.cause) : assert(cause is Exception || cause is Error, "cause must be an exception or error"), super();
 }
