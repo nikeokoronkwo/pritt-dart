@@ -33,16 +33,16 @@ body:
       label: Package Manager Associated With
       description: If the given language has a package manager associated with it which will be used for installing packages from Pritt, please specify
    - type: checkboxes
-    id: requirements
-    attributes:
-      label: Adapter Requirements
-      description: Select all that apply
-      options:
-        - label: Authentication
-        - label: Web API
-        - label: Supports Publishing
-        - label: Supports Artifacts (specify artifacts in description below)
-        - label: Supports Scoping (if not by default, specify how scoping would work in description below)
+     id: requirements
+     attributes:
+       label: Adapter Requirements
+       description: Select all that apply
+       options:
+         - label: Authentication
+         - label: Web API
+         - label: Supports Publishing
+         - label: Supports Artifacts (specify artifacts in description below)
+         - label: Supports Scoping (if not by default, specify how scoping would work in description below)
   - type: textarea
     id: description
     attributes:
