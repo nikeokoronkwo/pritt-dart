@@ -1,7 +1,5 @@
 name: Adapter Proposal
 description: Propose support for a new built in adapter. Make sure to check if a given adapter has already been proposed for before adding support.
-assignees: 
-  - nikeokoronkwo
 labels: ["adapter"]
 title: " [proposal] PA: "
 
@@ -38,11 +36,11 @@ body:
       label: Adapter Requirements
       description: Select all that apply
       options:
-        - label: Authentication
-        - label: Web API
+        - label: Supports Authentication
         - label: Supports Publishing
         - label: Supports Artifacts (specify artifacts in description below)
         - label: Supports Scoping (if not by default, specify how scoping would work in description below)
+        - label: Supports Caching of Requests
   - type: textarea
     id: description
     attributes:
