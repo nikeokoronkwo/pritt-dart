@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:pritt_common/config.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
@@ -9,7 +10,6 @@ import '../adapters/base.dart';
 import '../adapters/base/context.dart';
 import '../adapters/base/workspace.dart';
 import '../client.dart';
-import '../config/config.dart';
 import '../project/controller.dart';
 import '../project/handler_manager.dart';
 import 'ignore.dart';
