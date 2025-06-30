@@ -38,6 +38,7 @@ Map<String, dynamic> _$PublishingTaskToJson(PublishingTask instance) =>
       'updatedAt': instance.updatedAt.toIso8601String(),
       'expiresAt': instance.expiresAt.toIso8601String(),
       'tarball': instance.tarball?.toString(),
+      'message': instance.message,
     };
 
 const _$TaskStatusEnumMap = {

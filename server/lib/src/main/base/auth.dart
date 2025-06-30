@@ -99,6 +99,7 @@ class PrittAccessTokenGenerator {
       }
       final additional =
           base64Encode(additionalBytes).replaceAll(RegExp(r'[+/=]'), '');
+      // ignore: use_string_buffers
       randomPart += additional;
     }
 

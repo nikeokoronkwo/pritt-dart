@@ -40,6 +40,8 @@ class CASMessage {
       _ => _$CASMessageFromJson(json)
     };
   }
+
+  Map<String, dynamic> toJson() => _$CASMessageToJson(this);
 }
 
 // @JsonSerializable()
@@ -63,8 +65,28 @@ class CASRequest extends CASMessage {
 }
 
 /// Responses sent from the API to CAS to return the result of async function calls
+@JsonSerializable()
+class CASResponse extends CASMessage {
+  final String id;
+  final Map<String, dynamic> data;
+  final String? error;
+
+  static Map<String, dynamic> tToJson<T extends Jsonable>(T data) =>
+      data.toJson();
+
+  const CASResponse({required this.id, required this.data, this.error})
+      : super(messageType: CASMessageType.crsResponse);
+  
+  factory CASResponse.fromJson(Map<String, dynamic> json) => _$CASResponseFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$CASResponseToJson(this);
+
+  CASBuiltResponse<T> build<T extends Jsonable>({required T Function(Map<String, dynamic>) convertData}) => CASBuiltResponse(id: id, data: convertData(data), error: error);
+}
+
 @JsonSerializable(genericArgumentFactories: true)
-class CASResponse<T extends Jsonable> extends CASMessage {
+class CASBuiltResponse<T extends Jsonable> extends CASMessage {
   final String id;
   @JsonKey(
     toJson: tToJson,
@@ -75,16 +97,20 @@ class CASResponse<T extends Jsonable> extends CASMessage {
   static Map<String, dynamic> tToJson<T extends Jsonable>(T data) =>
       data.toJson();
 
-  const CASResponse({required this.id, required this.data, this.error})
+  const CASBuiltResponse({required this.id, required this.data, this.error})
       : super(messageType: CASMessageType.crsResponse);
 
-  Map<String, dynamic> toJson() => _$CASResponseToJson(this, (t) => t.toJson());
+  
+  factory CASBuiltResponse.fromJson(Map<String, dynamic> json, {required T Function(Object?) convert}) => _$CASBuiltResponseFromJson(json, convert);
+
+  @override
+  Map<String, dynamic> toJson() => _$CASBuiltResponseToJson(this, (t) => t.toJson());
 }
 
 /// Response sent from CAS to indicate completed adapter processing
 @JsonSerializable(createFactory: false)
 class CustomAdapterCompleteResponse<T extends CustomAdapterResult>
-    extends CASResponse<T> {
+    extends CASBuiltResponse<T> {
   CustomAdapterCompleteResponse(
       {required super.id, required super.data, super.error});
 

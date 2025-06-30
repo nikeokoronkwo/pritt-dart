@@ -127,12 +127,13 @@ class CustomAdapter implements AdapterInterface {
     channel.stream.listen((event) {
       final msg = json.decode(event) as Map<String, dynamic>;
 
+      // TODO(nikeokoronkwo): Complete Custom Adapter Implementation, https://github.com/nikeokoronkwo/pritt-dart/issues/62
       if (msg.containsKey('message_type')) {
         // actual message to process
         final message = CASMessage.fromJson(msg);
         if (message is CASRequest) {
           // prcess cas request
-        } else if (message == null) {
+        } else {
           // complete completer
         }
       }

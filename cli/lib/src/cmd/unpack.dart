@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import 'package:args/command_runner.dart';
 import 'package:chunked_stream/chunked_stream.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
 
-import '../archive.dart';
 import '../cli/base.dart';
 import '../cli/progress_bar.dart';
 import '../client.dart';
@@ -128,10 +126,7 @@ class UnpackCommand extends PrittCommand {
     // extract tar.gz and save to directory
     // await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
     final Archive archive = TarDecoder().decodeBytes(
-      GZipDecoder().decodeBytes(
-        await readByteStream(controller.stream)
-      )
-    );
+        GZipDecoder().decodeBytes(await readByteStream(controller.stream)));
 
     await extractArchiveToDisk(archive, directory.path);
 

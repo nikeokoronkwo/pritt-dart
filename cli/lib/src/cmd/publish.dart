@@ -257,7 +257,8 @@ class PublishCommand extends PrittCommand {
 
     // given url and stuff, lets zip up and upload
     logger.info('Zipping Up Package...');
-    final archive = await createArchiveFromFiles(project.files(), rootDir: project.directory, includeDirName: false);
+    final archive = await createArchiveFromFiles(project.files(),
+        rootDir: project.directory, includeDirName: false);
     final tarball = GZipEncoder().encode(TarEncoder().encode(archive))!;
     logger.fine('Completed Zipping Package!');
 

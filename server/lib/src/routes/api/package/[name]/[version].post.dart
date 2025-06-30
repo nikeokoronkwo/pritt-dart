@@ -56,7 +56,7 @@ final handler = defineRequestHandler((event) async {
 
     // check if package exists
     try {
-      final pkg = await crs.db.getPackageWithVersion(pkgName, pkgVer);
+      final _ = await crs.db.getPackageWithVersion(pkgName, pkgVer);
 
       // package exists
       // if it does, throw error
@@ -102,7 +102,7 @@ final handler = defineRequestHandler((event) async {
   } on AssertionError catch (e) {
     setResponseCode(event, 400);
     return common.UnauthorizedError(
-            error: e.message.toString() ?? 'InvalidRequest',
+            error: e.message.toString(),
             reason: common.UnauthorizedReason.org)
         .toJson();
   } on TypeError {

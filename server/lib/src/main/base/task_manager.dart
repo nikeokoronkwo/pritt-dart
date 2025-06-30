@@ -292,7 +292,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
             _logger?.fine('Task ${nextTask.id} completed successfully');
             await nextTask.updateStatus(TaskStatus.success);
             _logger?.fine('Task is now ended');
-            return completedTasks[nextTask.id] = v;
+            completedTasks[nextTask.id] = v;
           })
           .catchError((e, stack) async {
             _logger?.severe('Task of id ${nextTask.id} failed with an error', e, stack);

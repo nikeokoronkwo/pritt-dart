@@ -11,15 +11,15 @@ final handler = defineRequestHandler((event) async {
 
     final user = await crs.db.getUser(id);
 
-    // TODO: What of packages he/she contributes to?
+    // TODO(nikeokoronkwo): What of packages he/she contributes to?, https://github.com/nikeokoronkwo/pritt-dart/issues/63
     final packages = crs.db.getPackagesForUserStream(id);
 
-    bool isAuthorized = false;
+    // bool isAuthorized = false;
 
-    var authHeader = getHeader(event, 'Authorization');
-    isAuthorized = authHeader == null
-        ? false
-        : (await checkAuthorization(authHeader) != null);
+    // var authHeader = getHeader(event, 'Authorization');
+    // isAuthorized = authHeader == null
+    //     ? false
+    //     : (await checkAuthorization(authHeader) != null);
 
     return GetUserResponse(
             name: user.name,

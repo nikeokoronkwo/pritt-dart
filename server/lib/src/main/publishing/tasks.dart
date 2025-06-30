@@ -6,7 +6,6 @@ import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
 
 import '../../../pritt_server.dart';
@@ -18,7 +17,7 @@ final publishingTaskRunner =
     TaskRunner<PubTaskItem, Archive, void, Map<String, dynamic>>(
         debug: true,
         retryInterval:
-            Duration(seconds: 1), // TODO: Get better time via testing
+            Duration(milliseconds: 800), 
         onRetrieve: getTarballForTask,
         workAction: processTarball,
         onCheck: checkTarballStatus,
@@ -78,10 +77,9 @@ final publishingTaskRunner =
 /// Processes the tarball
 FutureOr<void> processTarball(
     WorkerItem<PubTaskItem, Archive, Map<String, dynamic>> item) async {
-  // TODO: Temporary fix for isolate discovery of variables
-  // in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
-  // which would require a reworking of the worker's serialization
-
+  // TODO(nikeokoronkwo): Temporary fix for isolate discovery of variables
+  //  in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
+  //  which would require a reworking of the worker's serialization
   await startPrittServices(customAdapters: false);
   
   // get task info
@@ -90,20 +88,16 @@ FutureOr<void> processTarball(
   // open tarball archive
   final archive = item.resource;
   final configName = taskInfo.config.toLowerCase();
-  final pkgName = scopedName(taskInfo.name, taskInfo.scope);
 
   if (archive.isEmpty) {
     throw Exception('Empty tarball');
   }
 
-  // check tarball size is on limits (double check)
-  // TODO: such check should be done on upload side
   ArchiveFile? readme;
   ArchiveFile configFile = archive.firstWhere((f) =>
       f.isFile && p.basename(f.name.toLowerCase()) == configName.toLowerCase());
-  ArchiveFile? changelog;
-  ArchiveFile? license;
-  ArchiveFile? prittConfig;
+  // TODO(nikeokoronkwo): Incorporate files and file checks: changelog (changelog map), license, pritt config (contributors)
+  // ArchiveFile? changelog, license, prittConfig;
 
   for (final file in archive) {
     if (!file.isFile) break;
@@ -114,13 +108,13 @@ FutureOr<void> processTarball(
         readme = file;
         break;
       case 'changelog':
-        changelog = file;
+        // changelog = file;
         break;
       case 'license':
-        license = file;
+        // license = file;
         break;
       case 'pritt':
-        prittConfig = file;
+        // prittConfig = file;
         break;
       default:
         if (p.basenameWithoutExtension(fileName.toLowerCase()) == configName) {
@@ -162,8 +156,7 @@ FutureOr<void> processTarball(
 
   if (taskInfo.$new) {
     // create new package, if not exists
-    final (Package pkg, PackageVersions pkgVer) =
-        await crs.db.createPackageFromPublishingTask(
+    await crs.db.createPackageFromPublishingTask(
       item.task.id,
       license: 'not detected',
       readme: readme?.content == null
@@ -176,7 +169,7 @@ FutureOr<void> processTarball(
     );
   } else {
     // create new package version
-    final pkgVer = await crs.db.createPackageVersionFromPublishingTask(
+    await crs.db.createPackageVersionFromPublishingTask(
       item.task.id,
       readme: readme?.content == null
           ? null
@@ -202,8 +195,8 @@ FutureOr<void> processTarball(
   });
 }
 
-// TODO: The call to `getPublishingTaskById` is marked with `@Cacheable`
-//  caching this call would be very helpful
+// TODO(nikeokoronkwo): The call to `getPublishingTaskById` is marked with `@Cacheable`
+//  caching this call would be very helpful, https://github.com/nikeokoronkwo/pritt-dart/issues/31
 FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
   // get task details from db
   final taskInfo = await item.taskInfo;

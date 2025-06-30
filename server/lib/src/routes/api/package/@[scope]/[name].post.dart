@@ -46,7 +46,7 @@ final handler = defineRequestHandler((event) async {
 
     // check if package exists
     try {
-      final pkg = await crs.db
+      final _ = await crs.db
           .getPackage(pkgName, scope: pkgScope, language: body.language);
 
       // package exists

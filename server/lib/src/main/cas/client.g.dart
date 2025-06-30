@@ -30,23 +30,36 @@ CASRequest _$CASRequestFromJson(Map json) => CASRequest(
       params: Map<String, dynamic>.from(json['params'] as Map),
     );
 
-CASResponse<T> _$CASResponseFromJson<T extends Jsonable>(
+CASResponse _$CASResponseFromJson(Map json) => CASResponse(
+      id: json['id'] as String,
+      data: Map<String, dynamic>.from(json['data'] as Map),
+      error: json['error'] as String?,
+    );
+
+Map<String, dynamic> _$CASResponseToJson(CASResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'data': instance.data,
+      'error': instance.error,
+    };
+
+CASBuiltResponse<T> _$CASBuiltResponseFromJson<T extends Jsonable>(
   Map json,
   T Function(Object? json) fromJsonT,
 ) =>
-    CASResponse<T>(
+    CASBuiltResponse<T>(
       id: json['id'] as String,
       data: fromJsonT(json['data']),
       error: json['error'] as String?,
     );
 
-Map<String, dynamic> _$CASResponseToJson<T extends Jsonable>(
-  CASResponse<T> instance,
+Map<String, dynamic> _$CASBuiltResponseToJson<T extends Jsonable>(
+  CASBuiltResponse<T> instance,
   Object? Function(T value) toJsonT,
 ) =>
     <String, dynamic>{
       'id': instance.id,
-      'data': CASResponse.tToJson(instance.data),
+      'data': CASBuiltResponse.tToJson(instance.data),
       'error': instance.error,
     };
 
@@ -55,7 +68,7 @@ Map<String, dynamic>
             CustomAdapterCompleteResponse<T> instance) =>
         <String, dynamic>{
           'id': instance.id,
-          'data': CASResponse.tToJson(instance.data),
+          'data': CASBuiltResponse.tToJson(instance.data),
           'error': instance.error,
           'message_type': _$CASMessageTypeEnumMap[instance.messageType]!,
         };

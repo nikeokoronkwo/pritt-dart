@@ -52,7 +52,10 @@ enum CRSExceptionType {
   ITEM_NOT_FOUND,
 
   /// The scope does not exist
-  SCOPE_NOT_FOUND
+  SCOPE_NOT_FOUND,
+
+  /// Critical error in the system
+  CRITICAL_ERROR
 }
 
 class UnauthorizedException implements Exception {

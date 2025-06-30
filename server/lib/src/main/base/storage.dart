@@ -156,7 +156,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     );
 
     // Create the object in the bucket
-    final upload = await s3Instance.putObject(
+    final _ = await s3Instance.putObject(
       bucket: pkgBucket.name ?? "pritt-packages",
       key: to,
       body: object.body,
@@ -170,35 +170,48 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   @override
   Future<bool> createPackage(String path, Uint8List data, String sha,
       {String? contentType, Map<String, String>? metadata}) async {
-    // upload the file to the S3 bucket
-
     // Create the object in the bucket
-    final upload = await s3Instance.putObject(
-      bucket: pkgBucket.name ?? "pritt-packages",
-      key: path,
-      body: data,
-      contentType: contentType,
-      metadata: {
-        'sha256': sha,
-      }..addAll(metadata ?? {}),
-    );
+    try {
+      final _ = await s3Instance.putObject(
+        bucket: pkgBucket.name ?? "pritt-packages",
+        key: path,
+        body: data,
+        contentType: contentType,
+        metadata: {
+          'sha256': sha,
+        }..addAll(metadata ?? {}),
+      );
 
-    return true;
+      return true;
+    } on NoSuchBucket catch (e) {
+      throw CRSException(CRSExceptionType.CRITICAL_ERROR, e.message ?? 'The bucket for pritt packages does not exist');
+    } on Exception {
+      return false;
+    }
+    
   }
 
   @override
   Future<CRSFile?> findPackage(String path) async {
     // list all objects in the bucket at a directory
-    final list = await s3Instance.listObjectsV2(
-      bucket: pkgBucket.name ?? "pritt-packages",
-      prefix: path,
-    );
+    try {
+      final list = await s3Instance.listObjectsV2(
+        bucket: pkgBucket.name ?? "pritt-packages",
+        prefix: path,
+      );
 
-    var file = list.contents?.firstWhere((e) => e.key == path);
-    return file == null
-        ? null
-        : CRSFile(
-            path: path, lastModified: file.lastModified, size: file.size ?? 0);
+      var file = list.contents?.firstWhere((e) => e.key == path);
+      return file == null
+          ? null
+          : CRSFile(
+              path: path, lastModified: file.lastModified, size: file.size ?? 0);
+    } on StateError catch (e) {
+      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND, "The archive at the given path could not be found", e);
+    } on NoSuchKey catch (e) {
+      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND, "The archive at the given path could not be found", e);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -232,7 +245,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   @override
   FutureOr removePackage(String path) async {
     // remove the object from the bucket
-    final deletion = await s3Instance.deleteObject(
+    await s3Instance.deleteObject(
       bucket: pkgBucket.name ?? "pritt-packages",
       key: path,
     );
@@ -240,20 +253,24 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
   @override
   FutureOr updatePackage(String path, Uint8List data) async {
-    final original = await s3Instance.getObject(
-      bucket: pkgBucket.name ?? "pritt-packages",
-      key: path,
-    );
+    try {
+      final original = await s3Instance.getObject(
+        bucket: pkgBucket.name ?? "pritt-packages",
+        key: path,
+      );
 
-    final upload = await s3Instance.putObject(
-      bucket: pkgBucket.name ?? "pritt-packages",
-      key: path,
-      body: data,
-      contentType: original.contentType,
-      metadata: original.metadata,
-    );
-    // TODO: implement update
-    throw UnimplementedError();
+      await s3Instance.putObject(
+        bucket: pkgBucket.name ?? "pritt-packages",
+        key: path,
+        body: data,
+        contentType: original.contentType,
+        metadata: original.metadata,
+      );
+    } on NoSuchKey catch (e) {
+      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND, "The archive at the given path could not be found", e);
+    } catch (e) {
+      throw CRSException(CRSExceptionType.ITEM_NOT_FOUND, e.toString(), e);
+    }
   }
 
   @override
@@ -283,21 +300,23 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   }
 
   @override
-  FutureOr createPubArchive(String path, Uint8List data,
+  FutureOr<bool> createPubArchive(String path, Uint8List data,
       {String? contentType, Map<String, String>? metadata}) async {
-    print(
-        '|----------- CONTENT LENGTH: ${data.lengthInBytes} ----------------|');
 
     // Create the object in the bucket
-    final upload = await s3Instance.putObject(
-      bucket: publishingBucket.name ?? 'pritt-publishing-archives',
-      key: path,
-      body: data,
-      // contentLength: ,
-      contentType: contentType,
-    );
+    try {
+      await s3Instance.putObject(
+        bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+        key: path,
+        body: data,
+        // contentLength: ,
+        contentType: contentType,
+      );
 
-    return true;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
@@ -334,7 +353,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     );
 
     // Create the object in the bucket
-    final upload = await s3Instance.putObject(
+    await s3Instance.putObject(
       bucket: pkgBucket.name ?? "pritt-packages",
       key: to,
       body: object.body,
@@ -350,9 +369,6 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         bucket: publishingBucket.name ?? 'pritt-publishing-archives',
         key: path);
 
-      print(
-          'Archive Details: ${pkgStatus.contentLength} ${pkgStatus.contentType} ${pkgStatus.lastModified} ${pkgStatus.metadata} $pkgStatus');
-
       return pkgStatus.metadata != null;
     } catch (e) {
       return false;
@@ -361,7 +377,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
   @override
   FutureOr removePubArchive(String path) async {
-    final deletion = await s3Instance.deleteObject(
+    await s3Instance.deleteObject(
       bucket: publishingBucket.name ?? 'pritt-publishing-archives',
       key: path,
     );

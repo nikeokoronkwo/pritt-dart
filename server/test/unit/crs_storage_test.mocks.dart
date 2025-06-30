@@ -374,23 +374,26 @@ class MockPrittStorage extends _i1.Mock implements _i9.PrittStorage {
       ) as _i6.Future<_i2.CRSFileOutputStream>);
 
   @override
-  _i6.FutureOr<dynamic> createPubArchive(
+  _i6.FutureOr<bool> createPubArchive(
     String? path,
     _i10.Uint8List? data, {
     String? contentType,
     Map<String, String>? metadata,
   }) =>
-      (super.noSuchMethod(Invocation.method(
-        #createPubArchive,
-        [
-          path,
-          data,
-        ],
-        {
-          #contentType: contentType,
-          #metadata: metadata,
-        },
-      )) as _i6.FutureOr<dynamic>);
+      (super.noSuchMethod(
+        Invocation.method(
+          #createPubArchive,
+          [
+            path,
+            data,
+          ],
+          {
+            #contentType: contentType,
+            #metadata: metadata,
+          },
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.FutureOr<bool>);
 
   @override
   _i6.FutureOr<_i2.CRSFileOutputStream> getPubArchive(String? path) =>
