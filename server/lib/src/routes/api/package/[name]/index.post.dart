@@ -87,8 +87,7 @@ final handler = defineRequestHandler((event) async {
   } on AssertionError catch (e) {
     setResponseCode(event, 400);
     return common.UnauthorizedError(
-            error: e.message.toString(),
-            reason: common.UnauthorizedReason.org)
+            error: e.message.toString(), reason: common.UnauthorizedReason.org)
         .toJson();
   } on TypeError {
     setResponseCode(event, 400);

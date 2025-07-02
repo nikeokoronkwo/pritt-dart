@@ -1399,7 +1399,7 @@ RETURNING *
         id: columnMap['id'] as String,
         status: TaskStatus.fromString(
             (columnMap['status'] as UndecodedBytes).asString),
-            message: columnMap['message'] as String?,
+        message: columnMap['message'] as String?,
         name: name,
         scope: scope,
         user: user.id,
@@ -1563,8 +1563,12 @@ RETURNING *
 '''));
     }
 
-    final result = await _statements['updatePublishingTaskStatus']!
-        .run({'status': status.name, 'id': id, 'updatedAt': DateTime.now(), 'message': message});
+    final result = await _statements['updatePublishingTaskStatus']!.run({
+      'status': status.name,
+      'id': id,
+      'updatedAt': DateTime.now(),
+      'message': message
+    });
 
     final columnMap = result.first.toColumnMap();
     final vcsUrl = columnMap['vcs_url'] as String?;

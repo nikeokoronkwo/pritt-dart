@@ -134,12 +134,16 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
         retryInterval = retryInterval ?? Duration(milliseconds: 150) {
     if (!hierarchicalLoggingEnabled) hierarchicalLoggingEnabled = true;
     _logger?.level = Level.ALL;
-    
+
     _logger?.onRecord.listen((record) {
       print(
           'LOG ${record.loggerName}:: ${record.level.name}: ${record.time}: ${record.message} :: Logged at ${record.time}');
-      if (record.error case final err?) print('ERROR ${record.loggerName}:: ${record.level.name}: ${record.time}: $err');
-      if (record.stackTrace case final stack?) print('STACK TRACE ${record.loggerName}:: ${record.level.name}: ${record.time}: $stack');
+      if (record.error case final err?)
+        print(
+            'ERROR ${record.loggerName}:: ${record.level.name}: ${record.time}: $err');
+      if (record.stackTrace case final stack?)
+        print(
+            'STACK TRACE ${record.loggerName}:: ${record.level.name}: ${record.time}: $stack');
     });
 
     _logger?.shout(
@@ -293,9 +297,9 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
             await nextTask.updateStatus(TaskStatus.success);
             _logger?.fine('Task is now ended');
             completedTasks[nextTask.id] = v;
-          })
-          .catchError((e, stack) async {
-            _logger?.severe('Task of id ${nextTask.id} failed with an error', e, stack);
+          }).catchError((e, stack) async {
+            _logger?.severe(
+                'Task of id ${nextTask.id} failed with an error', e, stack);
             nextTask.updateError(e);
             await nextTask.updateStatus(TaskStatus.fail);
           });
@@ -304,7 +308,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
         _logger?.info('Next loop');
       } catch (e, stackTrace) {
         // if the worker causes an error:
-        _logger?.severe('Task of id ${nextTask.id} contains error', e, stackTrace);
+        _logger?.severe(
+            'Task of id ${nextTask.id} contains error', e, stackTrace);
         nextTask.updateError(e);
         await nextTask.updateStatus(TaskStatus.error);
       }
@@ -393,5 +398,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
 class WorkerException implements Exception {
   Object? cause;
 
-  WorkerException(this.cause) : assert(cause is Exception || cause is Error, "cause must be an exception or error"), super();
+  WorkerException(this.cause)
+      : assert(cause is Exception || cause is Error,
+            "cause must be an exception or error"),
+        super();
 }

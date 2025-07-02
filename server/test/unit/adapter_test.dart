@@ -15,12 +15,14 @@ import 'adapter_test.mocks.dart';
 void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
+    // ignore: unused_local_variable
     late MockCRSArchiveController mockArchiveController;
     MockJsonConvertible mockMetaResult = MockJsonConvertible();
 
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
+
     });
 
     // TODO(nikeokoronkwo): More Tests, https://github.com/nikeokoronkwo/pritt-dart/pull/51

@@ -91,7 +91,8 @@ final goAdapter = Adapter(
           // get all versions
           // for now we do not support this
           // TODO: throw
-          return AdapterErrorResult('bad request: unsupported', statusCode: 404, responseType: ResponseType.plainText);
+          return AdapterErrorResult('bad request: unsupported',
+              statusCode: 404, responseType: ResponseType.plainText);
         }
         final [base, ...parts] = segments.sublist(0, positionOfAtV);
         final requestRequirements = segments.sublist(positionOfAtV + 1).first;
@@ -121,9 +122,15 @@ final goAdapter = Adapter(
 
           return AdapterMetaResult(await versions.join('\n'),
               responseType: ResponseType.plainText);
-        } else if ([requestRequirements.replaceFirst(p.extension(requestRequirements), ''), p.extension(requestRequirements).substring(1)]
+        } else if ([
+          requestRequirements.replaceFirst(
+              p.extension(requestRequirements), ''),
+          p.extension(requestRequirements).substring(1)
+        ]
             case [String version, String type]
-            when Version.tryParse(version.startsWith('v') ? version.substring(1) : version) != null) {
+            when Version.tryParse(
+                    version.startsWith('v') ? version.substring(1) : version) !=
+                null) {
           version = version.startsWith('v') ? version.substring(1) : version;
           final pkgVerResult =
               await crs.getPackageWithVersion(scopedName(name, scope), version);
@@ -139,9 +146,7 @@ final goAdapter = Adapter(
               // get name and pub
               final pkgVerResult = await crs.getPackageWithVersion(
                   scopedName(name, scope), version);
-              if (!pkgVerResult.isSuccess) {
-
-              }
+              if (!pkgVerResult.isSuccess) {}
               var metaResult = {
                 'Version': 'v$version',
                 'Time': pkgVerResult.body!.created.toIso8601String(),
@@ -159,7 +164,8 @@ final goAdapter = Adapter(
           }
         } else {
           return AdapterErrorResult(
-              'not found: $requestRequirements is a known non-module', responseType: ResponseType.plainText);
+              'not found: $requestRequirements is a known non-module',
+              responseType: ResponseType.plainText);
         }
       }
       return AdapterErrorResult('bad request',
@@ -174,7 +180,8 @@ final goAdapter = Adapter(
       final [base, ...parts] = segments.sublist(0, positionOfAtV);
       final requestRequirements = segments.sublist(positionOfAtV + 1).first;
 
-      assert(requestRequirements.toLowerCase().endsWith('.zip'), "Route meant for archive, should be <version>.zip");
+      assert(requestRequirements.toLowerCase().endsWith('.zip'),
+          "Route meant for archive, should be <version>.zip");
 
       // get name
       final (name, scope) = switch (parts) {
@@ -183,11 +190,13 @@ final goAdapter = Adapter(
         _ => (parts.last, parts.first == parts.last ? null : parts.first)
       };
 
-      var version = requestRequirements.replaceFirst(p.extension(requestRequirements), '');
+      var version = requestRequirements.replaceFirst(
+          p.extension(requestRequirements), '');
       version = version.startsWith('v') ? version.substring(1) : version;
 
       var moduleName = [base, ...parts].join('/');
-      final archiveResult = await crs.getArchiveWithVersion(scopedName(name, scope), version,
+      final archiveResult = await crs.getArchiveWithVersion(
+          scopedName(name, scope), version,
           env: {'module_name': moduleName});
 
       if (!archiveResult.isSuccess) {
@@ -198,31 +207,28 @@ final goAdapter = Adapter(
       }
       final archive = TarDecoder().decodeBytes(GZipDecoder()
           .decodeBytes(await ByteStream(archiveResult.body!.data).toBytes()));
-      
+
       print(archive.length);
       print(archive.map((a) => a.name));
 
       final Archive outArchive = Archive();
 
       for (final archiveFile in archive) {
-        outArchive.addFile(
-          ArchiveFile(
+        outArchive.addFile(ArchiveFile(
             [
               base,
-              if (scope case final s?) s, 
-              '$name@v$version', 
+              if (scope case final s?) s,
+              '$name@v$version',
               // name,
               archiveFile.name
             ].join('/'),
             archiveFile.size,
             archiveFile.content,
-            archiveFile.compressionType
-          )
-        );
+            archiveFile.compressionType));
       }
 
       final zipArchive = ZipEncoder().encode(outArchive);
       return AdapterArchiveResult(
-          ByteStream.fromBytes(zipArchive ?? []), '$moduleName@$version', contentType: 'application/zip');
-      
+          ByteStream.fromBytes(zipArchive ?? []), '$moduleName@$version',
+          contentType: 'application/zip');
     });

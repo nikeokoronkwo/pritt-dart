@@ -16,8 +16,7 @@ import 'interfaces.dart';
 final publishingTaskRunner =
     TaskRunner<PubTaskItem, Archive, void, Map<String, dynamic>>(
         debug: true,
-        retryInterval:
-            Duration(milliseconds: 800), 
+        retryInterval: Duration(milliseconds: 800),
         onRetrieve: getTarballForTask,
         workAction: processTarball,
         onCheck: checkTarballStatus,
@@ -81,7 +80,7 @@ FutureOr<void> processTarball(
   //  in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
   //  which would require a reworking of the worker's serialization
   await startPrittServices(customAdapters: false);
-  
+
   // get task info
   final taskInfo = await item.task.taskInfo;
 

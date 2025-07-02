@@ -553,7 +553,8 @@ class PublishingTask {
       this.vcsUrl,
       required this.createdAt,
       required this.updatedAt,
-      required this.expiresAt, required this.message})
+      required this.expiresAt,
+      required this.message})
       : assert(
             expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
 

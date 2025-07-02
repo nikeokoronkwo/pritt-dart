@@ -55,11 +55,11 @@ Handler adapterHandler(CoreRegistryService crs) {
                 ResponseType.json => jsonEncode(result.error.toJson()),
                 ResponseType.xml => mapToXml(result.error.toJson()),
                 _ => switch (result.error) {
-                  String s => s,
-                  Map<String, dynamic> map => jsonEncode(map),
-                  List<Map<String, dynamic>> map => jsonEncode(map),
-                  _ => result.error.toString()
-                },
+                    String s => s,
+                    Map<String, dynamic> map => jsonEncode(map),
+                    List<Map<String, dynamic>> map => jsonEncode(map),
+                    _ => result.error.toString()
+                  },
               },
               headers: {
                 HttpHeaders.contentTypeHeader: result.responseType.mimeType,
@@ -68,17 +68,20 @@ Handler adapterHandler(CoreRegistryService crs) {
               switch (result) {
                 AdapterMetaJsonResult() => jsonEncode(result.body.toJson()),
                 _ => switch (result.responseType) {
-                  ResponseType.json => jsonEncode(result.body),
-                  ResponseType.xml => mapToXml(result.body.toJson()),
-                  _ => result.body.toString()
-                }
+                    ResponseType.json => jsonEncode(result.body),
+                    ResponseType.xml => mapToXml(result.body.toJson()),
+                    _ => result.body.toString()
+                  }
               },
-              
               headers: {
-                HttpHeaders.contentTypeHeader: result is AdapterMetaJsonResult ? result.contentType : switch (result.body) {
-                  Map<String, dynamic>() || List<Map<String, dynamic>>() => 'application/json',
-                  _ => result.responseType.contentType,
-                }
+                HttpHeaders.contentTypeHeader: result is AdapterMetaJsonResult
+                    ? result.contentType
+                    : switch (result.body) {
+                        Map<String, dynamic>() ||
+                        List<Map<String, dynamic>>() =>
+                          'application/json',
+                        _ => result.responseType.contentType,
+                      }
               }),
         AdapterArchiveResult() => Response.ok(result.archive, headers: {
             HttpHeaders.contentTypeHeader: result.contentType,

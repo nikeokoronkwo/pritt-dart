@@ -184,11 +184,11 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
 
       return true;
     } on NoSuchBucket catch (e) {
-      throw CRSException(CRSExceptionType.CRITICAL_ERROR, e.message ?? 'The bucket for pritt packages does not exist');
+      throw CRSException(CRSExceptionType.CRITICAL_ERROR,
+          e.message ?? 'The bucket for pritt packages does not exist');
     } on Exception {
       return false;
     }
-    
   }
 
   @override
@@ -204,11 +204,15 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       return file == null
           ? null
           : CRSFile(
-              path: path, lastModified: file.lastModified, size: file.size ?? 0);
+              path: path,
+              lastModified: file.lastModified,
+              size: file.size ?? 0);
     } on StateError catch (e) {
-      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND, "The archive at the given path could not be found", e);
+      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND,
+          "The archive at the given path could not be found", e);
     } on NoSuchKey catch (e) {
-      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND, "The archive at the given path could not be found", e);
+      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND,
+          "The archive at the given path could not be found", e);
     } catch (e) {
       return null;
     }
@@ -267,7 +271,8 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         metadata: original.metadata,
       );
     } on NoSuchKey catch (e) {
-      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND, "The archive at the given path could not be found", e);
+      throw CRSException(CRSExceptionType.PACKAGE_NOT_FOUND,
+          "The archive at the given path could not be found", e);
     } catch (e) {
       throw CRSException(CRSExceptionType.ITEM_NOT_FOUND, e.toString(), e);
     }
@@ -302,7 +307,6 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   @override
   FutureOr<bool> createPubArchive(String path, Uint8List data,
       {String? contentType, Map<String, String>? metadata}) async {
-
     // Create the object in the bucket
     try {
       await s3Instance.putObject(
@@ -366,8 +370,8 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
   FutureOr<bool> pubArchiveExists(String path) async {
     try {
       final pkgStatus = await s3Instance.headObject(
-        bucket: publishingBucket.name ?? 'pritt-publishing-archives',
-        key: path);
+          bucket: publishingBucket.name ?? 'pritt-publishing-archives',
+          key: path);
 
       return pkgStatus.metadata != null;
     } catch (e) {

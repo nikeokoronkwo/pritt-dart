@@ -20,7 +20,8 @@ class PubTaskItem extends TaskBase {
 
   @override
   FutureOr<void> updateStatus(TaskStatus newStatus, {String? message}) async {
-    _savedTask = await crs.db.updatePublishingTaskStatus(id, status: newStatus, message: message);
+    _savedTask = await crs.db
+        .updatePublishingTaskStatus(id, status: newStatus, message: message);
     _status = newStatus;
   }
 

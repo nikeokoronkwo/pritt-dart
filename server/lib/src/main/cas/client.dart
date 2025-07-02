@@ -76,13 +76,16 @@ class CASResponse extends CASMessage {
 
   const CASResponse({required this.id, required this.data, this.error})
       : super(messageType: CASMessageType.crsResponse);
-  
-  factory CASResponse.fromJson(Map<String, dynamic> json) => _$CASResponseFromJson(json);
+
+  factory CASResponse.fromJson(Map<String, dynamic> json) =>
+      _$CASResponseFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$CASResponseToJson(this);
 
-  CASBuiltResponse<T> build<T extends Jsonable>({required T Function(Map<String, dynamic>) convertData}) => CASBuiltResponse(id: id, data: convertData(data), error: error);
+  CASBuiltResponse<T> build<T extends Jsonable>(
+          {required T Function(Map<String, dynamic>) convertData}) =>
+      CASBuiltResponse(id: id, data: convertData(data), error: error);
 }
 
 @JsonSerializable(genericArgumentFactories: true)
@@ -100,11 +103,13 @@ class CASBuiltResponse<T extends Jsonable> extends CASMessage {
   const CASBuiltResponse({required this.id, required this.data, this.error})
       : super(messageType: CASMessageType.crsResponse);
 
-  
-  factory CASBuiltResponse.fromJson(Map<String, dynamic> json, {required T Function(Object?) convert}) => _$CASBuiltResponseFromJson(json, convert);
+  factory CASBuiltResponse.fromJson(Map<String, dynamic> json,
+          {required T Function(Object?) convert}) =>
+      _$CASBuiltResponseFromJson(json, convert);
 
   @override
-  Map<String, dynamic> toJson() => _$CASBuiltResponseToJson(this, (t) => t.toJson());
+  Map<String, dynamic> toJson() =>
+      _$CASBuiltResponseToJson(this, (t) => t.toJson());
 }
 
 /// Response sent from CAS to indicate completed adapter processing

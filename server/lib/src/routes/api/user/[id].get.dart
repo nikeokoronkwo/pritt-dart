@@ -2,7 +2,6 @@ import 'package:pritt_common/interface.dart';
 
 import '../../../../pritt_server.dart';
 import '../../../main/crs/exceptions.dart';
-import '../../../server_utils/authorization.dart';
 import '../../../utils/request_handler.dart';
 
 final handler = defineRequestHandler((event) async {
