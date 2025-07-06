@@ -44,10 +44,14 @@ Handler serverHandler() {
     ..post('/api/package/<name>/<version>', packageNameVersionPost.handler)
     ..get('/api/package/@<scope>/<name>', packageScopeNameGet.handler)
     ..post('/api/package/@<scope>/<name>', packageScopeNamePost.handler)
-    ..get('/api/package/@<scope>/<name>/<version>',
-        packageScopeNameVersionGet.handler)
-    ..post('/api/package/@<scope>/<name>/<version>',
-        packageScopeNameVersionPost.handler)
+    ..get(
+      '/api/package/@<scope>/<name>/<version>',
+      packageScopeNameVersionGet.handler,
+    )
+    ..post(
+      '/api/package/@<scope>/<name>/<version>',
+      packageScopeNameVersionPost.handler,
+    )
     ..put('/api/package/upload', packageUploadPut.handler)
     ..post('/api/publish/status', publishStatusPost.handler)
     ..get('/api/auth/new', authNewGet.handler)
@@ -59,9 +63,7 @@ Handler serverHandler() {
 }
 
 // TODO: Work on OPTIONS until web requests work!
-Handler optionsWithCors({
-  required List<String> allowedMethods,
-}) {
+Handler optionsWithCors({required List<String> allowedMethods}) {
   return (Request request) async {
     final corsHeaders = {
       HttpHeaders.accessControlAllowMethodsHeader: allowedMethods.join(', '),
@@ -69,7 +71,7 @@ Handler optionsWithCors({
       HttpHeaders.accessControlAllowOriginHeader:
           request.headers['origin'] ?? '*',
       HttpHeaders.allowHeader: allowedMethods.join(', '),
-      HttpHeaders.dateHeader: DateTime.now().toIso8601String()
+      HttpHeaders.dateHeader: DateTime.now().toIso8601String(),
     };
 
     print(corsHeaders);
@@ -85,7 +87,9 @@ Handler preFlightHandler() {
   final router = Router()
     ..options('/', optionsWithCors(allowedMethods: ['GET']))
     ..options(
-        '/api/auth/details/<id>', optionsWithCors(allowedMethods: ['GET']))
+      '/api/auth/details/<id>',
+      optionsWithCors(allowedMethods: ['GET']),
+    )
     ..options('/api/auth/validate', optionsWithCors(allowedMethods: ['POST']));
   return router.call;
 }

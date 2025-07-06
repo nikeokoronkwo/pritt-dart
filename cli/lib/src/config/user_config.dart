@@ -40,32 +40,34 @@ class UserCredentials {
 
   String get path => _file.path;
 
-  UserCredentials(
-      {Uri? uri,
-      required this.accessToken,
-      required this.accessTokenExpires,
-      required this.userId,
-      required this.deviceId})
-      : uri = uri ?? Uri.parse(mainPrittInstance);
+  UserCredentials({
+    Uri? uri,
+    required this.accessToken,
+    required this.accessTokenExpires,
+    required this.userId,
+    required this.deviceId,
+  }) : uri = uri ?? Uri.parse(mainPrittInstance);
 
   /// [duration] in seconds
-  factory UserCredentials.fromExpirationDuration(
-      {required String accessToken,
-      required int duration,
-      Uri? uri,
-      required String id,
-      required String deviceId}) {
+  factory UserCredentials.fromExpirationDuration({
+    required String accessToken,
+    required int duration,
+    Uri? uri,
+    required String id,
+    required String deviceId,
+  }) {
     uri ??= Uri.parse(mainPrittInstance);
 
     final timeNow = DateTime.now();
     final timeExpiration = timeNow.add(Duration(seconds: duration));
 
     return UserCredentials(
-        uri: uri,
-        userId: id,
-        accessToken: accessToken,
-        accessTokenExpires: timeExpiration,
-        deviceId: deviceId);
+      uri: uri,
+      userId: id,
+      accessToken: accessToken,
+      accessTokenExpires: timeExpiration,
+      deviceId: deviceId,
+    );
   }
 
   factory UserCredentials.fromJson(Map<String, dynamic> json) =>
@@ -75,7 +77,7 @@ class UserCredentials {
 
   /// get user credentials from the user system
   ///
-  /// TODO: Should we encrypt/encode this file?
+  // TODO(nikeokoronkwo): Consider secure way of storing information, https://github.com/nikeokoronkwo/pritt-dart/issues/57
   static Future<UserCredentials?> fetch() async {
     if (await _file.exists()) {
       return UserCredentials.fromJson(json.decode(await _file.readAsString()));
@@ -83,22 +85,25 @@ class UserCredentials {
     return null;
   }
 
-  static Future<UserCredentials> create(String accessToken,
-      {Uri? uri,
-      int? accessTokenDuration,
-      required String id,
-      String? deviceId}) async {
+  static Future<UserCredentials> create(
+    String accessToken, {
+    Uri? uri,
+    int? accessTokenDuration,
+    required String id,
+    String? deviceId,
+  }) async {
     // give default duration of 3 months, in secs
     accessTokenDuration ??= (7 * 4 * 3) * (24 * 3600);
 
     // create or overwrite configuration file
     try {
       final credentialsObject = UserCredentials.fromExpirationDuration(
-          accessToken: accessToken,
-          duration: accessTokenDuration,
-          uri: uri,
-          id: id,
-          deviceId: deviceId ?? await getDeviceId());
+        accessToken: accessToken,
+        duration: accessTokenDuration,
+        uri: uri,
+        id: id,
+        deviceId: deviceId ?? await getDeviceId(),
+      );
 
       if (!(await _file.parent.exists())) {
         await _file.parent.create(recursive: true);
@@ -122,8 +127,11 @@ class UserCredentials {
   }
 
   /// replace user credentials with new credentials
-  Future<UserCredentials> replace(
-      {Uri? uri, String? accessToken, DateTime? accessTokenExpires}) async {
+  Future<UserCredentials> replace({
+    Uri? uri,
+    String? accessToken,
+    DateTime? accessTokenExpires,
+  }) async {
     if (uri != null) this.uri = uri;
     if (accessToken != null) this.accessToken = accessToken;
     if (accessTokenExpires != null) {
@@ -135,8 +143,11 @@ class UserCredentials {
     return this;
   }
 
-  UserCredentials replaceSync(
-      {Uri? uri, String? accessToken, DateTime? accessTokenExpires}) {
+  void replaceSync({
+    Uri? uri,
+    String? accessToken,
+    DateTime? accessTokenExpires,
+  }) {
     if (uri != null) this.uri = uri;
     if (accessToken != null) this.accessToken = accessToken;
     if (accessTokenExpires != null) {
@@ -144,8 +155,6 @@ class UserCredentials {
     }
 
     updateSync();
-
-    return this;
   }
 
   bool get isExpired => accessTokenExpires.isBefore(DateTime.now());

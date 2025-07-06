@@ -15,14 +15,14 @@ enum CASMessageType {
   archiveResponse;
 
   static CASMessageType? fromString(String s) => switch (s) {
-        'crsRequest' => CASMessageType.crsRequest,
-        'crsResponse' => CASMessageType.crsResponse,
-        'metaRequest' => CASMessageType.metaRequest,
-        'metaResponse' => CASMessageType.metaResponse,
-        'archiveRequest' => CASMessageType.archiveRequest,
-        'archiveResponse' => CASMessageType.archiveResponse,
-        _ => null
-      };
+    'crsRequest' => CASMessageType.crsRequest,
+    'crsResponse' => CASMessageType.crsResponse,
+    'metaRequest' => CASMessageType.metaRequest,
+    'metaResponse' => CASMessageType.metaResponse,
+    'archiveRequest' => CASMessageType.archiveRequest,
+    'archiveResponse' => CASMessageType.archiveResponse,
+    _ => null,
+  };
 }
 
 @JsonSerializable()
@@ -30,16 +30,16 @@ class CASMessage {
   @JsonKey(name: 'message_type')
   final CASMessageType messageType;
 
-  const CASMessage({
-    required this.messageType,
-  });
+  const CASMessage({required this.messageType});
 
   factory CASMessage.fromJson(Map<String, dynamic> json) {
     return switch (CASMessageType.fromString(json['messageType'])) {
       CASMessageType.crsRequest => _$CASRequestFromJson(json),
-      _ => _$CASMessageFromJson(json)
+      _ => _$CASMessageFromJson(json),
     };
   }
+
+  Map<String, dynamic> toJson() => _$CASMessageToJson(this);
 }
 
 // @JsonSerializable()
@@ -54,45 +54,78 @@ class CASRequest extends CASMessage {
   final String method;
   final Map<String, dynamic> params;
 
-  const CASRequest(
-      {required this.id, required this.method, required this.params})
-      : super(messageType: CASMessageType.crsRequest);
+  const CASRequest({
+    required this.id,
+    required this.method,
+    required this.params,
+  }) : super(messageType: CASMessageType.crsRequest);
 
   factory CASRequest.fromJson(Map<String, dynamic> json) =>
       _$CASRequestFromJson(json);
 }
 
 /// Responses sent from the API to CAS to return the result of async function calls
-@JsonSerializable(genericArgumentFactories: true)
-class CASResponse<T extends Jsonable> extends CASMessage {
+@JsonSerializable()
+class CASResponse extends CASMessage {
   final String id;
-  @JsonKey(
-    toJson: tToJson,
-  )
-  final T data;
+  final Map<String, dynamic> data;
   final String? error;
 
   static Map<String, dynamic> tToJson<T extends Jsonable>(T data) =>
       data.toJson();
 
   const CASResponse({required this.id, required this.data, this.error})
-      : super(messageType: CASMessageType.crsResponse);
+    : super(messageType: CASMessageType.crsResponse);
 
-  Map<String, dynamic> toJson() => _$CASResponseToJson(this, (t) => t.toJson());
+  factory CASResponse.fromJson(Map<String, dynamic> json) =>
+      _$CASResponseFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$CASResponseToJson(this);
+
+  CASBuiltResponse<T> build<T extends Jsonable>({
+    required T Function(Map<String, dynamic>) convertData,
+  }) => CASBuiltResponse(id: id, data: convertData(data), error: error);
+}
+
+@JsonSerializable(genericArgumentFactories: true)
+class CASBuiltResponse<T extends Jsonable> extends CASMessage {
+  final String id;
+  @JsonKey(toJson: tToJson)
+  final T data;
+  final String? error;
+
+  static Map<String, dynamic> tToJson<T extends Jsonable>(T data) =>
+      data.toJson();
+
+  const CASBuiltResponse({required this.id, required this.data, this.error})
+    : super(messageType: CASMessageType.crsResponse);
+
+  factory CASBuiltResponse.fromJson(
+    Map<String, dynamic> json, {
+    required T Function(Object?) convert,
+  }) => _$CASBuiltResponseFromJson(json, convert);
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CASBuiltResponseToJson(this, (t) => t.toJson());
 }
 
 /// Response sent from CAS to indicate completed adapter processing
 @JsonSerializable(createFactory: false)
 class CustomAdapterCompleteResponse<T extends CustomAdapterResult>
-    extends CASResponse<T> {
-  CustomAdapterCompleteResponse(
-      {required super.id, required super.data, super.error});
+    extends CASBuiltResponse<T> {
+  CustomAdapterCompleteResponse({
+    required super.id,
+    required super.data,
+    super.error,
+  });
 
   @override
   CASMessageType get messageType => switch (T) {
-        CustomAdapterMetaResult() => CASMessageType.metaResponse,
-        _ => throw Exception('Must either be meta or archive')
-      };
+    CustomAdapterMetaResult() => CASMessageType.metaResponse,
+    _ => throw Exception('Must either be meta or archive'),
+  };
 
   @override
   Map<String, dynamic> toJson() => _$CustomAdapterCompleteResponseToJson(this);

@@ -25,19 +25,24 @@ class CustomAdapterService {
   Uri url;
   Map<String, Plugin> adapters;
 
-  CustomAdapterService(
-      {required this.url, Client? client, required this.adapters})
-      : _client = client ?? Client();
+  CustomAdapterService({
+    required this.url,
+    Client? client,
+    required this.adapters,
+  }) : _client = client ?? Client();
 
-  static Future<CustomAdapterService> connect(Uri uri,
-      {List<Plugin> plugins = const [],
-      Map<String, Map<String, String>> pluginCodeMap = const {}}) async {
+  static Future<CustomAdapterService> connect(
+    Uri uri, {
+    List<Plugin> plugins = const [],
+    Map<String, Map<String, String>> pluginCodeMap = const {},
+  }) async {
     final client = Client();
 
     final cas = CustomAdapterService(
-        url: uri,
-        client: client,
-        adapters: plugins.asMap().map((k, v) => MapEntry(v.id, v)));
+      url: uri,
+      client: client,
+      adapters: plugins.asMap().map((k, v) => MapEntry(v.id, v)),
+    );
 
     // load adapters
     await cas._loadAdapters(plugins: plugins, pluginCodeMap: pluginCodeMap);
@@ -46,9 +51,10 @@ class CustomAdapterService {
   }
 
   // TODO: Can we make the plugin code map typed?
-  Future _loadAdapters(
-      {required List<Plugin> plugins,
-      required Map<String, Map<String, String>> pluginCodeMap}) async {
+  Future _loadAdapters({
+    required List<Plugin> plugins,
+    required Map<String, Map<String, String>> pluginCodeMap,
+  }) async {
     // process the code
     final pluginBodyMap = [];
 
@@ -57,8 +63,11 @@ class CustomAdapterService {
       if (map != null) {
         if (map.length == 1) {
           // default
-          pluginBodyMap.add(
-              {'type': 'default', 'code': map.values.first, 'id': plugin.id});
+          pluginBodyMap.add({
+            'type': 'default',
+            'code': map.values.first,
+            'id': plugin.id,
+          });
         } else {
           // multiple
           pluginBodyMap.add({
@@ -67,16 +76,18 @@ class CustomAdapterService {
             'code': {
               'resolve': map['plugin_adapter_on'],
               'metaRequest': map['plugin_adapter_meta_req'],
-              'archiveRequest': map['plugin_adapter_archive_req']
-            }
+              'archiveRequest': map['plugin_adapter_archive_req'],
+            },
           });
         }
       }
     }
 
-    final response = await _client.post(url.replace(path: 'start'),
-        body: json.encode({'adapters': pluginBodyMap}),
-        headers: {HttpHeaders.contentTypeHeader: 'application/json'});
+    final response = await _client.post(
+      url.replace(path: 'start'),
+      body: json.encode({'adapters': pluginBodyMap}),
+      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+    );
 
     if (response.statusCode != 200) {
       throw ClientException('Failed to load adapters: ${response.body}');
@@ -85,16 +96,17 @@ class CustomAdapterService {
 
   /// Runs the sorter and finds an adapter
   Future<({CustomAdapter? adapter, AdapterResolveType type})> findAdapter(
-      AdapterResolveObject obj) async {
+    AdapterResolveObject obj,
+  ) async {
     // send request to sorter to find adapter
-    final response = await _client.post(url.replace(path: 'find'),
-        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
-        body: json.encode({'resolveObject': obj.toJson()}));
+    final response = await _client.post(
+      url.replace(path: 'find'),
+      headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+      body: json.encode({'resolveObject': obj.toJson()}),
+    );
 
     if (response.statusCode != 200) {
-      throw ClientException(
-        'Failed to find adapter: ${response.body}',
-      );
+      throw ClientException('Failed to find adapter: ${response.body}');
     }
 
     print(response.body);
@@ -107,8 +119,9 @@ class CustomAdapterService {
     }
 
     // send request to start worker for adapter
-    final wsConn =
-        WebSocketChannel.connect(url.replace(path: '/load/${body.workerId}'));
+    final wsConn = WebSocketChannel.connect(
+      url.replace(path: '/load/${body.workerId}'),
+    );
 
     await wsConn.ready;
 
@@ -127,12 +140,13 @@ class CustomAdapter implements AdapterInterface {
     channel.stream.listen((event) {
       final msg = json.decode(event) as Map<String, dynamic>;
 
+      // TODO(nikeokoronkwo): Complete Custom Adapter Implementation, https://github.com/nikeokoronkwo/pritt-dart/issues/62
       if (msg.containsKey('message_type')) {
         // actual message to process
         final message = CASMessage.fromJson(msg);
         if (message is CASRequest) {
           // prcess cas request
-        } else if (message == null) {
+        } else {
           // complete completer
         }
       }

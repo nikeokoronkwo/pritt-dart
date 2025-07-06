@@ -1,5 +1,6 @@
 import '../adapters/base.dart';
 import '../adapters/dart.dart';
+import '../adapters/go.dart';
 import '../adapters/npm.dart';
 import '../client.dart';
 import 'controller.dart';
@@ -7,33 +8,34 @@ import 'controller.dart';
 /// A manager used for managing handlers (aka client adapters) and perform searching for the needed handler
 ///
 /// This is similar to a client adapter registry
+// TODO(nikeokoronkwo): Implement worker architecture, https://github.com/nikeokoronkwo/pritt-dart/issues/24
 class HandlerManager {
-  final List<Handler> _coreHandlers = [npmHandler, dartHandler];
-
-  /// A list of workers
-  /// TODO: Workers
-  // final Map _activeWorkers = {};
+  final List<Handler> _coreHandlers = [npmHandler, dartHandler, goHandler];
 
   final PrittControllerManager controllerHandler;
 
-  HandlerManager(
-      {int startWorkers = 1,
-      int maxWorkers = 4,
-      PrittClient? apiClient,
-      String? directory})
-      : controllerHandler =
-            PrittControllerManager(apiClient: apiClient, dir: directory);
+  HandlerManager({
+    int startWorkers = 1,
+    int maxWorkers = 4,
+    PrittClient? apiClient,
+    String? directory,
+  }) : controllerHandler = PrittControllerManager(
+         apiClient: apiClient,
+         dir: directory,
+       );
 
   /// Find the adapter for a given project workspace, given its directory
   ///
   /// Adapters will be searched for on a first
   Future<Iterable<Handler>> find(String directory) async {
     // start workers
-    final results = await Future.wait(_coreHandlers.map((c) async {
-      final controller = controllerHandler.makeConfigUnawareController(c);
-      return await (c.onCheckWorkspace?.call(directory, controller) ??
-          controller.fileExists(controller.configFileName()));
-    }));
+    final results = await Future.wait(
+      _coreHandlers.map((c) async {
+        final controller = controllerHandler.makeConfigUnawareController(c);
+        return await (c.onCheckWorkspace?.call(directory, controller) ??
+            controller.fileExists(controller.configFileName()));
+      }),
+    );
     if (!results.any((r) => r)) {
       return [];
     } else {
@@ -46,11 +48,13 @@ class HandlerManager {
 
   Future<Handler?> findFirst(String directory) async {
     // start workers
-    final results = await Future.wait(_coreHandlers.map((c) async {
-      final controller = controllerHandler.makeConfigUnawareController(c);
-      return await (c.onCheckWorkspace?.call(directory, controller) ??
-          controller.fileExists(controller.configFileName()));
-    }));
+    final results = await Future.wait(
+      _coreHandlers.map((c) async {
+        final controller = controllerHandler.makeConfigUnawareController(c);
+        return await (c.onCheckWorkspace?.call(directory, controller) ??
+            controller.fileExists(controller.configFileName()));
+      }),
+    );
     if (!results.any((r) => r)) {
       return null;
     } else {

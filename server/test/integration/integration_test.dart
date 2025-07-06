@@ -31,61 +31,69 @@ void main() {
 
     setUpAll(() async {
       // Read .env and prepare environment map
-      env = readEnvFile(p.normalize(p.dirname(p.current)));
+      env = readEnvFile(p.normalize(p.dirname(p.current)))
+        ..addAll({'PRITT_IGNORE_CUSTOM_ADAPTERS': '1'});
 
       // Start Postgres (example, adjust as needed)
-      postgresProcess = await Process.start(
-        'docker',
-        [
-          'run',
-          '--rm',
-          '-e',
-          'POSTGRES_DB=${env['DATABASE_NAME']}',
-          '-e',
-          'POSTGRES_USER=${env['DATABASE_USERNAME']}',
-          '-e',
-          'POSTGRES_PASSWORD=${env['DATABASE_PASSWORD']}',
-          '-p',
-          '${env['DATABASE_PORT']}:5432',
-          '--name',
-          'test-postgres',
-          'postgres:17'
-        ],
-        mode: ProcessStartMode.detached,
-      );
+      postgresProcess = await Process.start('docker', [
+        'run',
+        '--rm',
+        '-e',
+        'POSTGRES_DB=${env['DATABASE_NAME']}',
+        '-e',
+        'POSTGRES_USER=${env['DATABASE_USERNAME']}',
+        '-e',
+        'POSTGRES_PASSWORD=${env['DATABASE_PASSWORD']}',
+        '-p',
+        '${env['DATABASE_PORT']}:5432',
+        '--name',
+        'test-postgres',
+        'postgres:17',
+      ], mode: ProcessStartMode.detached);
 
       // Start MinIO (example, adjust as needed)
-      minioProcess = await Process.start(
-        'docker',
-        [
-          'run',
-          '--rm',
-          '-e',
-          'MINIO_ROOT_USER=${env['MINIO_USERNAME']}',
-          '-e',
-          'MINIO_ROOT_PASSWORD=${env['MINIO_PASSWORD']}',
-          '-p',
-          '9000:9000',
-          '-p',
-          '9001:9001',
-          '--name',
-          'test-minio',
-          'quay.io/minio/minio',
-          'server',
-          '/data'
-        ],
-        mode: ProcessStartMode.detached,
-      );
+      minioProcess = await Process.start('docker', [
+        'run',
+        '--rm',
+        '-e',
+        'MINIO_ROOT_USER=${env['MINIO_USERNAME']}',
+        '-e',
+        'MINIO_ROOT_PASSWORD=${env['MINIO_PASSWORD']}',
+        '-p',
+        '9000:9000',
+        '-p',
+        '9001:9001',
+        '--name',
+        'test-minio',
+        'quay.io/minio/minio',
+        'server',
+        '/data',
+      ], mode: ProcessStartMode.detached);
 
-      // Start your Dart server
-      serverProcess = await Process.start(
-        'dart',
-        ['run', 'bin/server.dart'],
-        environment: env,
-      );
+      serverProcess =
+          await Process.start('dart', [
+            'run',
+            'tool/migrate.dart',
+          ], environment: env).then((p) async {
+            // Start your Dart server
+            if (await p.exitCode == 0)
+              return await Process.start('dart', [
+                'run',
+                'bin/server.dart',
+              ], environment: env);
+            else
+              throw Exception(
+                'Migration did not succeed: ${(await serverProcess.stderr.transform(utf8.decoder).join('\n'))}',
+              );
+          });
 
-      // Wait for server to be ready (implement a better check in real code)
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: 40)).then((_) {
+        serverProcess.stderr.listen((event) async {
+          throw Exception(
+            'Server did not start successfully: ${(await serverProcess.stderr.transform(utf8.decoder).join('\n'))}',
+          );
+        });
+      });
     });
 
     tearDownAll(() async {
@@ -101,11 +109,14 @@ void main() {
     });
 
     test('GET /api/packages returns 200 and empty', () async {
-      final response =
-          await http.get(Uri.parse('http://localhost:8080/api/packages'));
+      final response = await http.get(
+        Uri.parse('http://localhost:8080/api/packages'),
+      );
       expect(response.statusCode, equals(200));
-      expect(response.headers[HttpHeaders.contentTypeHeader],
-          equalsIgnoringCase('application/json'));
+      expect(
+        response.headers[HttpHeaders.contentTypeHeader],
+        equalsIgnoringCase('application/json'),
+      );
       expect(response.body, isNotEmpty);
 
       final body = jsonDecode(response.body);
@@ -113,35 +124,47 @@ void main() {
       expect(structuredBody.packages, isEmpty);
     });
 
-    test('GET /api/package/:name returns 200 and pkg from previous add',
-        () async {});
+    test(
+      'GET /api/package/:name returns 200 and pkg from previous add',
+      () async {},
+    );
 
-    group('Adding Packages Manipulation', () async {
-      setUp(() {});
+    group(
+      'Adding Packages Manipulation',
+      () {
+        setUp(() {});
 
-      tearDown(() {});
+        tearDown(() {});
 
-      test('GET /api/package/:name returns 200 for existing package', () async {
-        // add pritt
+        test(
+          'GET /api/package/:name returns 200 for existing package',
+          () async {
+            // add pritt
 
-        // run
-        final packageName = 'pritt'; // adjust as needed for your test data
-        final response = await http
-            .get(Uri.parse('http://localhost:8080/api/package/$packageName'));
-        expect(response.statusCode, 200);
-      });
-    }, skip: 'Postgres Implementation not supported yet');
+            // run
+            final packageName = 'pritt'; // adjust as needed for your test data
+            final response = await http.get(
+              Uri.parse('http://localhost:8080/api/package/$packageName'),
+            );
+            expect(response.statusCode, 200);
+          },
+        );
+      },
+      skip: 'Postgres Implementation not supported yet',
+    );
 
     test('GET /api/auth/new returns 401 because it is not Pritt', () async {
-      final response =
-          await http.get(Uri.parse('http://localhost:8080/api/auth/new'));
+      final response = await http.get(
+        Uri.parse('http://localhost:8080/api/auth/new'),
+      );
       expect(response.statusCode, 401);
     });
 
     test('GET /api/auth/new returns 200 when pritt', () async {
       final response = await http.get(
-          Uri.parse('http://localhost:8080/api/auth/new'),
-          headers: {HttpHeaders.userAgentHeader: 'pritt cli'});
+        Uri.parse('http://localhost:8080/api/auth/new'),
+        headers: {HttpHeaders.userAgentHeader: 'pritt cli'},
+      );
       expect(response.statusCode, 200);
     });
 
@@ -172,12 +195,15 @@ void main() {
       expect([401, 400, 404], contains(response.statusCode));
     });
 
-    test('GET /api/package/:name/:version returns 404 with package not found',
-        () async {
-      final response = await http
-          .get(Uri.parse('http://localhost:8080/api/package/pritt/0.1.0'));
-      expect([404], contains(response.statusCode));
-    });
+    test(
+      'GET /api/package/:name/:version returns 404 with package not found',
+      () async {
+        final response = await http.get(
+          Uri.parse('http://localhost:8080/api/package/pritt/0.1.0'),
+        );
+        expect([404], contains(response.statusCode));
+      },
+    );
 
     test('POST /api/package/:name/:version returns 401 without auth', () async {
       final response = await http.post(
@@ -189,8 +215,9 @@ void main() {
     });
 
     test('GET /api/package/@:scope/:name returns 200 or 404', () async {
-      final response = await http
-          .get(Uri.parse('http://localhost:8080/api/package/@pritt/pritt'));
+      final response = await http.get(
+        Uri.parse('http://localhost:8080/api/package/@pritt/pritt'),
+      );
       expect([200, 404], contains(response.statusCode));
     });
 
@@ -203,22 +230,27 @@ void main() {
       expect([401, 400, 404], contains(response.statusCode));
     });
 
-    test('GET /api/package/@:scope/:name/:version returns 200 or 404',
-        () async {
-      final response = await http.get(
-          Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'));
-      expect([200, 404], contains(response.statusCode));
-    });
+    test(
+      'GET /api/package/@:scope/:name/:version returns 200 or 404',
+      () async {
+        final response = await http.get(
+          Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'),
+        );
+        expect([200, 404], contains(response.statusCode));
+      },
+    );
 
-    test('POST /api/package/@:scope/:name/:version returns 401 without auth',
-        () async {
-      final response = await http.post(
-        Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'),
-        headers: {'Content-Type': 'application/json'},
-        body: '{}',
-      );
-      expect([401, 400, 404], contains(response.statusCode));
-    });
+    test(
+      'POST /api/package/@:scope/:name/:version returns 401 without auth',
+      () async {
+        final response = await http.post(
+          Uri.parse('http://localhost:8080/api/package/@pritt/pritt/0.1.0'),
+          headers: {'Content-Type': 'application/json'},
+          body: '{}',
+        );
+        expect([401, 400, 404], contains(response.statusCode));
+      },
+    );
 
     test('POST /api/package/{name} returns 401 without auth', () async {
       final packageName = 'pritt';
@@ -231,5 +263,5 @@ void main() {
     });
 
     // Add more tests for other endpoints and workflows
-  });
+  }, skip: 'Implement all');
 }

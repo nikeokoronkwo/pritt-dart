@@ -29,133 +29,73 @@ import 'package:retry/retry.dart' as _i5;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeClient_0 extends _i1.SmartFake implements _i2.Client {
-  _FakeClient_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeClient_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAddAdapterResponse_1 extends _i1.SmartFake
     implements _i3.AddAdapterResponse {
-  _FakeAddAdapterResponse_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAddAdapterResponse_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAddUserResponse_2 extends _i1.SmartFake
     implements _i3.AddUserResponse {
-  _FakeAddUserResponse_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAddUserResponse_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAuthResponse_3 extends _i1.SmartFake implements _i3.AuthResponse {
-  _FakeAuthResponse_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAuthResponse_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeStreamedContent_4 extends _i1.SmartFake
     implements _i3.StreamedContent {
-  _FakeStreamedContent_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeStreamedContent_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetAdapterResponse_5 extends _i1.SmartFake
     implements _i3.GetAdapterResponse {
-  _FakeGetAdapterResponse_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetAdapterResponse_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetAdaptersResponse_6 extends _i1.SmartFake
     implements _i3.GetAdaptersResponse {
-  _FakeGetAdaptersResponse_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetAdaptersResponse_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetAdaptersByLangResponse_7 extends _i1.SmartFake
     implements _i3.GetAdaptersByLangResponse {
-  _FakeGetAdaptersByLangResponse_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetAdaptersByLangResponse_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAuthPollResponse_8 extends _i1.SmartFake
     implements _i3.AuthPollResponse {
-  _FakeAuthPollResponse_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAuthPollResponse_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetPackagesResponse_9 extends _i1.SmartFake
     implements _i3.GetPackagesResponse {
-  _FakeGetPackagesResponse_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetPackagesResponse_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetScopeResponse_10 extends _i1.SmartFake
     implements _i3.GetScopeResponse {
-  _FakeGetScopeResponse_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetScopeResponse_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetPackageResponse_11 extends _i1.SmartFake
     implements _i3.GetPackageResponse {
-  _FakeGetPackageResponse_11(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetPackageResponse_11(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetPackageByVersionResponse_12 extends _i1.SmartFake
@@ -163,43 +103,25 @@ class _FakeGetPackageByVersionResponse_12 extends _i1.SmartFake
   _FakeGetPackageByVersionResponse_12(
     Object parent,
     Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  ) : super(parent, parentInvocation);
 }
 
 class _FakeGetUserResponse_13 extends _i1.SmartFake
     implements _i3.GetUserResponse {
-  _FakeGetUserResponse_13(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetUserResponse_13(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGetUsersResponse_14 extends _i1.SmartFake
     implements _i3.GetUsersResponse {
-  _FakeGetUsersResponse_14(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeGetUsersResponse_14(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePublishPackageResponse_15 extends _i1.SmartFake
     implements _i3.PublishPackageResponse {
-  _FakePublishPackageResponse_15(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePublishPackageResponse_15(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePublishPackageByVersionResponse_16 extends _i1.SmartFake
@@ -207,32 +129,19 @@ class _FakePublishPackageByVersionResponse_16 extends _i1.SmartFake
   _FakePublishPackageByVersionResponse_16(
     Object parent,
     Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  ) : super(parent, parentInvocation);
 }
 
 class _FakeUploadAdapterResponse_17 extends _i1.SmartFake
     implements _i3.UploadAdapterResponse {
-  _FakeUploadAdapterResponse_17(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUploadAdapterResponse_17(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUploadPackageResponse_18 extends _i1.SmartFake
     implements _i3.UploadPackageResponse {
-  _FakeUploadPackageResponse_18(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUploadPackageResponse_18(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePublishPackageStatusResponse_19 extends _i1.SmartFake
@@ -240,43 +149,25 @@ class _FakePublishPackageStatusResponse_19 extends _i1.SmartFake
   _FakePublishPackageStatusResponse_19(
     Object parent,
     Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  ) : super(parent, parentInvocation);
 }
 
 class _FakeAuthValidateResponse_20 extends _i1.SmartFake
     implements _i3.AuthValidateResponse {
-  _FakeAuthValidateResponse_20(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAuthValidateResponse_20(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeYankAdapterResponse_21 extends _i1.SmartFake
     implements _i3.YankAdapterResponse {
-  _FakeYankAdapterResponse_21(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeYankAdapterResponse_21(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeYankPackageResponse_22 extends _i1.SmartFake
     implements _i3.YankPackageResponse {
-  _FakeYankPackageResponse_22(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeYankPackageResponse_22(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeYankPackageByVersionRequest_23 extends _i1.SmartFake
@@ -284,52 +175,29 @@ class _FakeYankPackageByVersionRequest_23 extends _i1.SmartFake
   _FakeYankPackageByVersionRequest_23(
     Object parent,
     Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  ) : super(parent, parentInvocation);
 }
 
 class _FakeAuthDetailsResponse_24 extends _i1.SmartFake
     implements _i3.AuthDetailsResponse {
-  _FakeAuthDetailsResponse_24(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAuthDetailsResponse_24(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeResponse_25 extends _i1.SmartFake implements _i2.Response {
-  _FakeResponse_25(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeResponse_25(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeStreamedResponse_26 extends _i1.SmartFake
     implements _i2.StreamedResponse {
-  _FakeStreamedResponse_26(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeStreamedResponse_26(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBaseResponse_27 extends _i1.SmartFake implements _i2.BaseResponse {
-  _FakeBaseResponse_27(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBaseResponse_27(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [PrittClient].
@@ -337,79 +205,73 @@ class _FakeBaseResponse_27 extends _i1.SmartFake implements _i2.BaseResponse {
 /// See the documentation for Mockito's code generation for more information.
 class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
   @override
-  _i5.RetryOptions get retryClient => (super.noSuchMethod(
-        Invocation.getter(#retryClient),
-        returnValue: _i6.dummyValue<_i5.RetryOptions>(
-          this,
-          Invocation.getter(#retryClient),
-        ),
-        returnValueForMissingStub: _i6.dummyValue<_i5.RetryOptions>(
-          this,
-          Invocation.getter(#retryClient),
-        ),
-      ) as _i5.RetryOptions);
+  _i5.RetryOptions get retryClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#retryClient),
+            returnValue: _i6.dummyValue<_i5.RetryOptions>(
+              this,
+              Invocation.getter(#retryClient),
+            ),
+            returnValueForMissingStub: _i6.dummyValue<_i5.RetryOptions>(
+              this,
+              Invocation.getter(#retryClient),
+            ),
+          )
+          as _i5.RetryOptions);
 
   @override
-  String get url => (super.noSuchMethod(
-        Invocation.getter(#url),
-        returnValue: _i6.dummyValue<String>(
-          this,
-          Invocation.getter(#url),
-        ),
-        returnValueForMissingStub: _i6.dummyValue<String>(
-          this,
-          Invocation.getter(#url),
-        ),
-      ) as String);
+  String get url =>
+      (super.noSuchMethod(
+            Invocation.getter(#url),
+            returnValue: _i6.dummyValue<String>(this, Invocation.getter(#url)),
+            returnValueForMissingStub: _i6.dummyValue<String>(
+              this,
+              Invocation.getter(#url),
+            ),
+          )
+          as String);
 
   @override
-  _i2.Client get client => (super.noSuchMethod(
-        Invocation.getter(#client),
-        returnValue: _FakeClient_0(
-          this,
-          Invocation.getter(#client),
-        ),
-        returnValueForMissingStub: _FakeClient_0(
-          this,
-          Invocation.getter(#client),
-        ),
-      ) as _i2.Client);
+  _i2.Client get client =>
+      (super.noSuchMethod(
+            Invocation.getter(#client),
+            returnValue: _FakeClient_0(this, Invocation.getter(#client)),
+            returnValueForMissingStub: _FakeClient_0(
+              this,
+              Invocation.getter(#client),
+            ),
+          )
+          as _i2.Client);
 
   @override
-  Map<String, String> get headers => (super.noSuchMethod(
-        Invocation.getter(#headers),
-        returnValue: <String, String>{},
-        returnValueForMissingStub: <String, String>{},
-      ) as Map<String, String>);
+  Map<String, String> get headers =>
+      (super.noSuchMethod(
+            Invocation.getter(#headers),
+            returnValue: <String, String>{},
+            returnValueForMissingStub: <String, String>{},
+          )
+          as Map<String, String>);
 
   @override
   set authentication(_i7.Authentication? _authentication) => super.noSuchMethod(
-        Invocation.setter(
-          #authentication,
-          _authentication,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#authentication, _authentication),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set client(_i2.Client? _client) => super.noSuchMethod(
-        Invocation.setter(
-          #client,
-          _client,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#client, _client),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i8.Future<bool> healthCheck({bool? verbose = false}) => (super.noSuchMethod(
-        Invocation.method(
-          #healthCheck,
-          [],
-          {#verbose: verbose},
-        ),
-        returnValue: _i8.Future<bool>.value(false),
-        returnValueForMissingStub: _i8.Future<bool>.value(false),
-      ) as _i8.Future<bool>);
+  _i8.Future<bool> healthCheck({bool? verbose = false}) =>
+      (super.noSuchMethod(
+            Invocation.method(#healthCheck, [], {#verbose: verbose}),
+            returnValue: _i8.Future<bool>.value(false),
+            returnValueForMissingStub: _i8.Future<bool>.value(false),
+          )
+          as _i8.Future<bool>);
 
   @override
   _i8.FutureOr<_i3.AddAdapterResponse> addAdapterWithId(
@@ -417,30 +279,21 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #addAdapterWithId,
-          [body],
-          {#id: id},
-        ),
-        returnValue:
-            _i8.Future<_i3.AddAdapterResponse>.value(_FakeAddAdapterResponse_1(
-          this,
-          Invocation.method(
-            #addAdapterWithId,
-            [body],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.AddAdapterResponse>.value(_FakeAddAdapterResponse_1(
-          this,
-          Invocation.method(
-            #addAdapterWithId,
-            [body],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.AddAdapterResponse>);
+            Invocation.method(#addAdapterWithId, [body], {#id: id}),
+            returnValue: _i8.Future<_i3.AddAdapterResponse>.value(
+              _FakeAddAdapterResponse_1(
+                this,
+                Invocation.method(#addAdapterWithId, [body], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.AddAdapterResponse>.value(
+              _FakeAddAdapterResponse_1(
+                this,
+                Invocation.method(#addAdapterWithId, [body], {#id: id}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.AddAdapterResponse>);
 
   @override
   _i8.FutureOr<_i3.AddUserResponse> addUserById(
@@ -448,250 +301,186 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #addUserById,
-          [body],
-          {#id: id},
-        ),
-        returnValue:
-            _i8.Future<_i3.AddUserResponse>.value(_FakeAddUserResponse_2(
-          this,
-          Invocation.method(
-            #addUserById,
-            [body],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.AddUserResponse>.value(_FakeAddUserResponse_2(
-          this,
-          Invocation.method(
-            #addUserById,
-            [body],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.AddUserResponse>);
+            Invocation.method(#addUserById, [body], {#id: id}),
+            returnValue: _i8.Future<_i3.AddUserResponse>.value(
+              _FakeAddUserResponse_2(
+                this,
+                Invocation.method(#addUserById, [body], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.AddUserResponse>.value(
+              _FakeAddUserResponse_2(
+                this,
+                Invocation.method(#addUserById, [body], {#id: id}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.AddUserResponse>);
 
   @override
   _i8.FutureOr<_i3.AuthResponse> createNewAuthStatus({String? id}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createNewAuthStatus,
-          [],
-          {#id: id},
-        ),
-        returnValue: _i8.Future<_i3.AuthResponse>.value(_FakeAuthResponse_3(
-          this,
-          Invocation.method(
-            #createNewAuthStatus,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.AuthResponse>.value(_FakeAuthResponse_3(
-          this,
-          Invocation.method(
-            #createNewAuthStatus,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.AuthResponse>);
+            Invocation.method(#createNewAuthStatus, [], {#id: id}),
+            returnValue: _i8.Future<_i3.AuthResponse>.value(
+              _FakeAuthResponse_3(
+                this,
+                Invocation.method(#createNewAuthStatus, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.AuthResponse>.value(
+              _FakeAuthResponse_3(
+                this,
+                Invocation.method(#createNewAuthStatus, [], {#id: id}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.AuthResponse>);
 
   @override
-  _i8.FutureOr<_i3.StreamedContent> getAdapterArchiveWithName(
-          {required String? name}) =>
+  _i8.FutureOr<_i3.StreamedContent> getAdapterArchiveWithName({
+    required String? name,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAdapterArchiveWithName,
-          [],
-          {#name: name},
-        ),
-        returnValue:
-            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
-          this,
-          Invocation.method(
-            #getAdapterArchiveWithName,
-            [],
-            {#name: name},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
-          this,
-          Invocation.method(
-            #getAdapterArchiveWithName,
-            [],
-            {#name: name},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.StreamedContent>);
+            Invocation.method(#getAdapterArchiveWithName, [], {#name: name}),
+            returnValue: _i8.Future<_i3.StreamedContent>.value(
+              _FakeStreamedContent_4(
+                this,
+                Invocation.method(#getAdapterArchiveWithName, [], {
+                  #name: name,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.StreamedContent>.value(
+              _FakeStreamedContent_4(
+                this,
+                Invocation.method(#getAdapterArchiveWithName, [], {
+                  #name: name,
+                }),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.StreamedContent>);
 
   @override
   _i8.FutureOr<_i3.GetAdapterResponse> getAdapterById({required String? id}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAdapterById,
-          [],
-          {#id: id},
-        ),
-        returnValue:
-            _i8.Future<_i3.GetAdapterResponse>.value(_FakeGetAdapterResponse_5(
-          this,
-          Invocation.method(
-            #getAdapterById,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetAdapterResponse>.value(_FakeGetAdapterResponse_5(
-          this,
-          Invocation.method(
-            #getAdapterById,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetAdapterResponse>);
+            Invocation.method(#getAdapterById, [], {#id: id}),
+            returnValue: _i8.Future<_i3.GetAdapterResponse>.value(
+              _FakeGetAdapterResponse_5(
+                this,
+                Invocation.method(#getAdapterById, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetAdapterResponse>.value(
+              _FakeGetAdapterResponse_5(
+                this,
+                Invocation.method(#getAdapterById, [], {#id: id}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.GetAdapterResponse>);
 
   @override
-  _i8.FutureOr<_i3.GetAdaptersResponse> getAdapters() => (super.noSuchMethod(
-        Invocation.method(
-          #getAdapters,
-          [],
-        ),
-        returnValue: _i8.Future<_i3.GetAdaptersResponse>.value(
-            _FakeGetAdaptersResponse_6(
-          this,
-          Invocation.method(
-            #getAdapters,
-            [],
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.GetAdaptersResponse>.value(
-            _FakeGetAdaptersResponse_6(
-          this,
-          Invocation.method(
-            #getAdapters,
-            [],
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetAdaptersResponse>);
+  _i8.FutureOr<_i3.GetAdaptersResponse> getAdapters() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAdapters, []),
+            returnValue: _i8.Future<_i3.GetAdaptersResponse>.value(
+              _FakeGetAdaptersResponse_6(
+                this,
+                Invocation.method(#getAdapters, []),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.GetAdaptersResponse>.value(
+                  _FakeGetAdaptersResponse_6(
+                    this,
+                    Invocation.method(#getAdapters, []),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.GetAdaptersResponse>);
 
   @override
   _i8.FutureOr<_i3.GetAdaptersByLangResponse> getAdaptersByLang() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAdaptersByLang,
-          [],
-        ),
-        returnValue: _i8.Future<_i3.GetAdaptersByLangResponse>.value(
-            _FakeGetAdaptersByLangResponse_7(
-          this,
-          Invocation.method(
-            #getAdaptersByLang,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetAdaptersByLangResponse>.value(
-                _FakeGetAdaptersByLangResponse_7(
-          this,
-          Invocation.method(
-            #getAdaptersByLang,
-            [],
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetAdaptersByLangResponse>);
+            Invocation.method(#getAdaptersByLang, []),
+            returnValue: _i8.Future<_i3.GetAdaptersByLangResponse>.value(
+              _FakeGetAdaptersByLangResponse_7(
+                this,
+                Invocation.method(#getAdaptersByLang, []),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.GetAdaptersByLangResponse>.value(
+                  _FakeGetAdaptersByLangResponse_7(
+                    this,
+                    Invocation.method(#getAdaptersByLang, []),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.GetAdaptersByLangResponse>);
 
   @override
   _i8.FutureOr<_i3.AuthPollResponse> getAuthStatus({String? id}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAuthStatus,
-          [],
-          {#id: id},
-        ),
-        returnValue:
-            _i8.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
-          this,
-          Invocation.method(
-            #getAuthStatus,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.AuthPollResponse>.value(_FakeAuthPollResponse_8(
-          this,
-          Invocation.method(
-            #getAuthStatus,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.AuthPollResponse>);
+            Invocation.method(#getAuthStatus, [], {#id: id}),
+            returnValue: _i8.Future<_i3.AuthPollResponse>.value(
+              _FakeAuthPollResponse_8(
+                this,
+                Invocation.method(#getAuthStatus, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.AuthPollResponse>.value(
+              _FakeAuthPollResponse_8(
+                this,
+                Invocation.method(#getAuthStatus, [], {#id: id}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.AuthPollResponse>);
 
   @override
-  _i8.FutureOr<_i3.GetPackagesResponse> getOrgPackages(
-          {required String? scope}) =>
+  _i8.FutureOr<_i3.GetPackagesResponse> getOrgPackages({
+    required String? scope,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getOrgPackages,
-          [],
-          {#scope: scope},
-        ),
-        returnValue: _i8.Future<_i3.GetPackagesResponse>.value(
-            _FakeGetPackagesResponse_9(
-          this,
-          Invocation.method(
-            #getOrgPackages,
-            [],
-            {#scope: scope},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.GetPackagesResponse>.value(
-            _FakeGetPackagesResponse_9(
-          this,
-          Invocation.method(
-            #getOrgPackages,
-            [],
-            {#scope: scope},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetPackagesResponse>);
+            Invocation.method(#getOrgPackages, [], {#scope: scope}),
+            returnValue: _i8.Future<_i3.GetPackagesResponse>.value(
+              _FakeGetPackagesResponse_9(
+                this,
+                Invocation.method(#getOrgPackages, [], {#scope: scope}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.GetPackagesResponse>.value(
+                  _FakeGetPackagesResponse_9(
+                    this,
+                    Invocation.method(#getOrgPackages, [], {#scope: scope}),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.GetPackagesResponse>);
 
   @override
-  _i8.FutureOr<_i3.GetScopeResponse> getOrganization(
-          {required String? scope}) =>
+  _i8.FutureOr<_i3.GetScopeResponse> getOrganization({
+    required String? scope,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getOrganization,
-          [],
-          {#scope: scope},
-        ),
-        returnValue:
-            _i8.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
-          this,
-          Invocation.method(
-            #getOrganization,
-            [],
-            {#scope: scope},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetScopeResponse>.value(_FakeGetScopeResponse_10(
-          this,
-          Invocation.method(
-            #getOrganization,
-            [],
-            {#scope: scope},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetScopeResponse>);
+            Invocation.method(#getOrganization, [], {#scope: scope}),
+            returnValue: _i8.Future<_i3.GetScopeResponse>.value(
+              _FakeGetScopeResponse_10(
+                this,
+                Invocation.method(#getOrganization, [], {#scope: scope}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetScopeResponse>.value(
+              _FakeGetScopeResponse_10(
+                this,
+                Invocation.method(#getOrganization, [], {#scope: scope}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.GetScopeResponse>);
 
   @override
   _i8.FutureOr<_i3.StreamedContent> getPackageArchiveWithName({
@@ -699,39 +488,30 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     String? version,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackageArchiveWithName,
-          [],
-          {
-            #name: name,
-            #version: version,
-          },
-        ),
-        returnValue:
-            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
-          this,
-          Invocation.method(
-            #getPackageArchiveWithName,
-            [],
-            {
+            Invocation.method(#getPackageArchiveWithName, [], {
               #name: name,
               #version: version,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.StreamedContent>.value(_FakeStreamedContent_4(
-          this,
-          Invocation.method(
-            #getPackageArchiveWithName,
-            [],
-            {
-              #name: name,
-              #version: version,
-            },
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.StreamedContent>);
+            }),
+            returnValue: _i8.Future<_i3.StreamedContent>.value(
+              _FakeStreamedContent_4(
+                this,
+                Invocation.method(#getPackageArchiveWithName, [], {
+                  #name: name,
+                  #version: version,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.StreamedContent>.value(
+              _FakeStreamedContent_4(
+                this,
+                Invocation.method(#getPackageArchiveWithName, [], {
+                  #name: name,
+                  #version: version,
+                }),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.StreamedContent>);
 
   @override
   _i8.Future<_i3.GetPackageResponse> getPackageByName({
@@ -740,42 +520,33 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? name,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackageByName,
-          [],
-          {
-            #lang: lang,
-            #all: all,
-            #name: name,
-          },
-        ),
-        returnValue:
-            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
-          this,
-          Invocation.method(
-            #getPackageByName,
-            [],
-            {
+            Invocation.method(#getPackageByName, [], {
               #lang: lang,
               #all: all,
               #name: name,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
-          this,
-          Invocation.method(
-            #getPackageByName,
-            [],
-            {
-              #lang: lang,
-              #all: all,
-              #name: name,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i3.GetPackageResponse>);
+            }),
+            returnValue: _i8.Future<_i3.GetPackageResponse>.value(
+              _FakeGetPackageResponse_11(
+                this,
+                Invocation.method(#getPackageByName, [], {
+                  #lang: lang,
+                  #all: all,
+                  #name: name,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetPackageResponse>.value(
+              _FakeGetPackageResponse_11(
+                this,
+                Invocation.method(#getPackageByName, [], {
+                  #lang: lang,
+                  #all: all,
+                  #name: name,
+                }),
+              ),
+            ),
+          )
+          as _i8.Future<_i3.GetPackageResponse>);
 
   @override
   _i8.Future<_i3.GetPackageResponse> getPackageByNameWithScope({
@@ -785,99 +556,85 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? name,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackageByNameWithScope,
-          [],
-          {
-            #lang: lang,
-            #all: all,
-            #scope: scope,
-            #name: name,
-          },
-        ),
-        returnValue:
-            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
-          this,
-          Invocation.method(
-            #getPackageByNameWithScope,
-            [],
-            {
+            Invocation.method(#getPackageByNameWithScope, [], {
               #lang: lang,
               #all: all,
               #scope: scope,
               #name: name,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetPackageResponse>.value(_FakeGetPackageResponse_11(
-          this,
-          Invocation.method(
-            #getPackageByNameWithScope,
-            [],
-            {
-              #lang: lang,
-              #all: all,
-              #scope: scope,
-              #name: name,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i3.GetPackageResponse>);
+            }),
+            returnValue: _i8.Future<_i3.GetPackageResponse>.value(
+              _FakeGetPackageResponse_11(
+                this,
+                Invocation.method(#getPackageByNameWithScope, [], {
+                  #lang: lang,
+                  #all: all,
+                  #scope: scope,
+                  #name: name,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetPackageResponse>.value(
+              _FakeGetPackageResponse_11(
+                this,
+                Invocation.method(#getPackageByNameWithScope, [], {
+                  #lang: lang,
+                  #all: all,
+                  #scope: scope,
+                  #name: name,
+                }),
+              ),
+            ),
+          )
+          as _i8.Future<_i3.GetPackageResponse>);
 
   @override
   _i8.Future<_i3.GetPackageByVersionResponse>
-      getPackageByNameWithScopeAndVersion({
+  getPackageByNameWithScopeAndVersion({
     String? lang,
     bool? all,
     required String? scope,
     required String? name,
     required String? version,
   }) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #getPackageByNameWithScopeAndVersion,
-              [],
-              {
-                #lang: lang,
-                #all: all,
-                #scope: scope,
-                #name: name,
-                #version: version,
-              },
-            ),
+      (super.noSuchMethod(
+            Invocation.method(#getPackageByNameWithScopeAndVersion, [], {
+              #lang: lang,
+              #all: all,
+              #scope: scope,
+              #name: name,
+              #version: version,
+            }),
             returnValue: _i8.Future<_i3.GetPackageByVersionResponse>.value(
-                _FakeGetPackageByVersionResponse_12(
-              this,
-              Invocation.method(
-                #getPackageByNameWithScopeAndVersion,
-                [],
-                {
+              _FakeGetPackageByVersionResponse_12(
+                this,
+                Invocation.method(#getPackageByNameWithScopeAndVersion, [], {
                   #lang: lang,
                   #all: all,
                   #scope: scope,
                   #name: name,
                   #version: version,
-                },
+                }),
               ),
-            )),
+            ),
             returnValueForMissingStub:
                 _i8.Future<_i3.GetPackageByVersionResponse>.value(
-                    _FakeGetPackageByVersionResponse_12(
-              this,
-              Invocation.method(
-                #getPackageByNameWithScopeAndVersion,
-                [],
-                {
-                  #lang: lang,
-                  #all: all,
-                  #scope: scope,
-                  #name: name,
-                  #version: version,
-                },
-              ),
-            )),
-          ) as _i8.Future<_i3.GetPackageByVersionResponse>);
+                  _FakeGetPackageByVersionResponse_12(
+                    this,
+                    Invocation.method(
+                      #getPackageByNameWithScopeAndVersion,
+                      [],
+                      {
+                        #lang: lang,
+                        #all: all,
+                        #scope: scope,
+                        #name: name,
+                        #version: version,
+                      },
+                    ),
+                  ),
+                ),
+          )
+          as _i8.Future<_i3.GetPackageByVersionResponse>);
 
   @override
   _i8.Future<_i3.GetPackageByVersionResponse> getPackageByNameWithVersion({
@@ -887,46 +644,37 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? version,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackageByNameWithVersion,
-          [],
-          {
-            #lang: lang,
-            #all: all,
-            #name: name,
-            #version: version,
-          },
-        ),
-        returnValue: _i8.Future<_i3.GetPackageByVersionResponse>.value(
-            _FakeGetPackageByVersionResponse_12(
-          this,
-          Invocation.method(
-            #getPackageByNameWithVersion,
-            [],
-            {
+            Invocation.method(#getPackageByNameWithVersion, [], {
               #lang: lang,
               #all: all,
               #name: name,
               #version: version,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetPackageByVersionResponse>.value(
-                _FakeGetPackageByVersionResponse_12(
-          this,
-          Invocation.method(
-            #getPackageByNameWithVersion,
-            [],
-            {
-              #lang: lang,
-              #all: all,
-              #name: name,
-              #version: version,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i3.GetPackageByVersionResponse>);
+            }),
+            returnValue: _i8.Future<_i3.GetPackageByVersionResponse>.value(
+              _FakeGetPackageByVersionResponse_12(
+                this,
+                Invocation.method(#getPackageByNameWithVersion, [], {
+                  #lang: lang,
+                  #all: all,
+                  #name: name,
+                  #version: version,
+                }),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.GetPackageByVersionResponse>.value(
+                  _FakeGetPackageByVersionResponse_12(
+                    this,
+                    Invocation.method(#getPackageByNameWithVersion, [], {
+                      #lang: lang,
+                      #all: all,
+                      #name: name,
+                      #version: version,
+                    }),
+                  ),
+                ),
+          )
+          as _i8.Future<_i3.GetPackageByVersionResponse>);
 
   @override
   _i8.FutureOr<_i3.GetPackagesResponse> getPackages({
@@ -934,91 +682,60 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     String? user,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackages,
-          [],
-          {
-            #index: index,
-            #user: user,
-          },
-        ),
-        returnValue: _i8.Future<_i3.GetPackagesResponse>.value(
-            _FakeGetPackagesResponse_9(
-          this,
-          Invocation.method(
-            #getPackages,
-            [],
-            {
-              #index: index,
-              #user: user,
-            },
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.GetPackagesResponse>.value(
-            _FakeGetPackagesResponse_9(
-          this,
-          Invocation.method(
-            #getPackages,
-            [],
-            {
-              #index: index,
-              #user: user,
-            },
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetPackagesResponse>);
+            Invocation.method(#getPackages, [], {#index: index, #user: user}),
+            returnValue: _i8.Future<_i3.GetPackagesResponse>.value(
+              _FakeGetPackagesResponse_9(
+                this,
+                Invocation.method(#getPackages, [], {
+                  #index: index,
+                  #user: user,
+                }),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.GetPackagesResponse>.value(
+                  _FakeGetPackagesResponse_9(
+                    this,
+                    Invocation.method(#getPackages, [], {
+                      #index: index,
+                      #user: user,
+                    }),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.GetPackagesResponse>);
 
   @override
   _i8.FutureOr<_i3.GetUserResponse> getUserById({required String? id}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getUserById,
-          [],
-          {#id: id},
-        ),
-        returnValue:
-            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
-          this,
-          Invocation.method(
-            #getUserById,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
-          this,
-          Invocation.method(
-            #getUserById,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetUserResponse>);
+            Invocation.method(#getUserById, [], {#id: id}),
+            returnValue: _i8.Future<_i3.GetUserResponse>.value(
+              _FakeGetUserResponse_13(
+                this,
+                Invocation.method(#getUserById, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetUserResponse>.value(
+              _FakeGetUserResponse_13(
+                this,
+                Invocation.method(#getUserById, [], {#id: id}),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.GetUserResponse>);
 
   @override
-  _i8.FutureOr<_i3.GetUsersResponse> getUsers() => (super.noSuchMethod(
-        Invocation.method(
-          #getUsers,
-          [],
-        ),
-        returnValue:
-            _i8.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
-          this,
-          Invocation.method(
-            #getUsers,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetUsersResponse>.value(_FakeGetUsersResponse_14(
-          this,
-          Invocation.method(
-            #getUsers,
-            [],
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetUsersResponse>);
+  _i8.FutureOr<_i3.GetUsersResponse> getUsers() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUsers, []),
+            returnValue: _i8.Future<_i3.GetUsersResponse>.value(
+              _FakeGetUsersResponse_14(this, Invocation.method(#getUsers, [])),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetUsersResponse>.value(
+              _FakeGetUsersResponse_14(this, Invocation.method(#getUsers, [])),
+            ),
+          )
+          as _i8.FutureOr<_i3.GetUsersResponse>);
 
   @override
   _i8.FutureOr<_i3.PublishPackageResponse> publishPackage(
@@ -1026,30 +743,22 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? name,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #publishPackage,
-          [body],
-          {#name: name},
-        ),
-        returnValue: _i8.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_15(
-          this,
-          Invocation.method(
-            #publishPackage,
-            [body],
-            {#name: name},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_15(
-          this,
-          Invocation.method(
-            #publishPackage,
-            [body],
-            {#name: name},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.PublishPackageResponse>);
+            Invocation.method(#publishPackage, [body], {#name: name}),
+            returnValue: _i8.Future<_i3.PublishPackageResponse>.value(
+              _FakePublishPackageResponse_15(
+                this,
+                Invocation.method(#publishPackage, [body], {#name: name}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.PublishPackageResponse>.value(
+                  _FakePublishPackageResponse_15(
+                    this,
+                    Invocation.method(#publishPackage, [body], {#name: name}),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.PublishPackageResponse>);
 
   @override
   _i8.FutureOr<_i3.PublishPackageByVersionResponse> publishPackageVersion(
@@ -1058,40 +767,34 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? version,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #publishPackageVersion,
-          [body],
-          {
-            #name: name,
-            #version: version,
-          },
-        ),
-        returnValue: _i8.Future<_i3.PublishPackageByVersionResponse>.value(
-            _FakePublishPackageByVersionResponse_16(
-          this,
-          Invocation.method(
-            #publishPackageVersion,
-            [body],
-            {
-              #name: name,
-              #version: version,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.PublishPackageByVersionResponse>.value(
-                _FakePublishPackageByVersionResponse_16(
-          this,
-          Invocation.method(
-            #publishPackageVersion,
-            [body],
-            {
-              #name: name,
-              #version: version,
-            },
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.PublishPackageByVersionResponse>);
+            Invocation.method(
+              #publishPackageVersion,
+              [body],
+              {#name: name, #version: version},
+            ),
+            returnValue: _i8.Future<_i3.PublishPackageByVersionResponse>.value(
+              _FakePublishPackageByVersionResponse_16(
+                this,
+                Invocation.method(
+                  #publishPackageVersion,
+                  [body],
+                  {#name: name, #version: version},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.PublishPackageByVersionResponse>.value(
+                  _FakePublishPackageByVersionResponse_16(
+                    this,
+                    Invocation.method(
+                      #publishPackageVersion,
+                      [body],
+                      {#name: name, #version: version},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.PublishPackageByVersionResponse>);
 
   @override
   _i8.FutureOr<_i3.PublishPackageResponse> publishPackageWithScope(
@@ -1100,86 +803,72 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? name,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #publishPackageWithScope,
-          [body],
-          {
-            #scope: scope,
-            #name: name,
-          },
-        ),
-        returnValue: _i8.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_15(
-          this,
-          Invocation.method(
-            #publishPackageWithScope,
-            [body],
-            {
-              #scope: scope,
-              #name: name,
-            },
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.PublishPackageResponse>.value(
-            _FakePublishPackageResponse_15(
-          this,
-          Invocation.method(
-            #publishPackageWithScope,
-            [body],
-            {
-              #scope: scope,
-              #name: name,
-            },
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.PublishPackageResponse>);
+            Invocation.method(
+              #publishPackageWithScope,
+              [body],
+              {#scope: scope, #name: name},
+            ),
+            returnValue: _i8.Future<_i3.PublishPackageResponse>.value(
+              _FakePublishPackageResponse_15(
+                this,
+                Invocation.method(
+                  #publishPackageWithScope,
+                  [body],
+                  {#scope: scope, #name: name},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.PublishPackageResponse>.value(
+                  _FakePublishPackageResponse_15(
+                    this,
+                    Invocation.method(
+                      #publishPackageWithScope,
+                      [body],
+                      {#scope: scope, #name: name},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.PublishPackageResponse>);
 
   @override
   _i8.FutureOr<_i3.PublishPackageByVersionResponse>
-      publishPackageWithScopeAndVersion(
+  publishPackageWithScopeAndVersion(
     _i3.PublishPackageByVersionRequest? body, {
     required String? scope,
     required String? name,
     required String? version,
   }) =>
-          (super.noSuchMethod(
+      (super.noSuchMethod(
             Invocation.method(
               #publishPackageWithScopeAndVersion,
               [body],
-              {
-                #scope: scope,
-                #name: name,
-                #version: version,
-              },
+              {#scope: scope, #name: name, #version: version},
             ),
             returnValue: _i8.Future<_i3.PublishPackageByVersionResponse>.value(
-                _FakePublishPackageByVersionResponse_16(
-              this,
-              Invocation.method(
-                #publishPackageWithScopeAndVersion,
-                [body],
-                {
-                  #scope: scope,
-                  #name: name,
-                  #version: version,
-                },
+              _FakePublishPackageByVersionResponse_16(
+                this,
+                Invocation.method(
+                  #publishPackageWithScopeAndVersion,
+                  [body],
+                  {#scope: scope, #name: name, #version: version},
+                ),
               ),
-            )),
+            ),
             returnValueForMissingStub:
                 _i8.Future<_i3.PublishPackageByVersionResponse>.value(
-                    _FakePublishPackageByVersionResponse_16(
-              this,
-              Invocation.method(
-                #publishPackageWithScopeAndVersion,
-                [body],
-                {
-                  #scope: scope,
-                  #name: name,
-                  #version: version,
-                },
-              ),
-            )),
-          ) as _i8.FutureOr<_i3.PublishPackageByVersionResponse>);
+                  _FakePublishPackageByVersionResponse_16(
+                    this,
+                    Invocation.method(
+                      #publishPackageWithScopeAndVersion,
+                      [body],
+                      {#scope: scope, #name: name, #version: version},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.PublishPackageByVersionResponse>);
 
   @override
   _i8.FutureOr<_i3.UploadAdapterResponse> uploadAdapterWithToken(
@@ -1187,30 +876,26 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     String? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #uploadAdapterWithToken,
-          [body],
-          {#id: id},
-        ),
-        returnValue: _i8.Future<_i3.UploadAdapterResponse>.value(
-            _FakeUploadAdapterResponse_17(
-          this,
-          Invocation.method(
-            #uploadAdapterWithToken,
-            [body],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.UploadAdapterResponse>.value(
-            _FakeUploadAdapterResponse_17(
-          this,
-          Invocation.method(
-            #uploadAdapterWithToken,
-            [body],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.UploadAdapterResponse>);
+            Invocation.method(#uploadAdapterWithToken, [body], {#id: id}),
+            returnValue: _i8.Future<_i3.UploadAdapterResponse>.value(
+              _FakeUploadAdapterResponse_17(
+                this,
+                Invocation.method(#uploadAdapterWithToken, [body], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.UploadAdapterResponse>.value(
+                  _FakeUploadAdapterResponse_17(
+                    this,
+                    Invocation.method(
+                      #uploadAdapterWithToken,
+                      [body],
+                      {#id: id},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.UploadAdapterResponse>);
 
   @override
   _i8.Future<_i3.UploadPackageResponse> uploadPackageWithToken(
@@ -1218,60 +903,48 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     String? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #uploadPackageWithToken,
-          [body],
-          {#id: id},
-        ),
-        returnValue: _i8.Future<_i3.UploadPackageResponse>.value(
-            _FakeUploadPackageResponse_18(
-          this,
-          Invocation.method(
-            #uploadPackageWithToken,
-            [body],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.UploadPackageResponse>.value(
-            _FakeUploadPackageResponse_18(
-          this,
-          Invocation.method(
-            #uploadPackageWithToken,
-            [body],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.Future<_i3.UploadPackageResponse>);
+            Invocation.method(#uploadPackageWithToken, [body], {#id: id}),
+            returnValue: _i8.Future<_i3.UploadPackageResponse>.value(
+              _FakeUploadPackageResponse_18(
+                this,
+                Invocation.method(#uploadPackageWithToken, [body], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.UploadPackageResponse>.value(
+                  _FakeUploadPackageResponse_18(
+                    this,
+                    Invocation.method(
+                      #uploadPackageWithToken,
+                      [body],
+                      {#id: id},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.Future<_i3.UploadPackageResponse>);
 
   @override
-  _i8.FutureOr<_i3.PublishPackageStatusResponse> getPackagePubStatus(
-          {String? id}) =>
+  _i8.FutureOr<_i3.PublishPackageStatusResponse> getPackagePubStatus({
+    String? id,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackagePubStatus,
-          [],
-          {#id: id},
-        ),
-        returnValue: _i8.Future<_i3.PublishPackageStatusResponse>.value(
-            _FakePublishPackageStatusResponse_19(
-          this,
-          Invocation.method(
-            #getPackagePubStatus,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.PublishPackageStatusResponse>.value(
-                _FakePublishPackageStatusResponse_19(
-          this,
-          Invocation.method(
-            #getPackagePubStatus,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.PublishPackageStatusResponse>);
+            Invocation.method(#getPackagePubStatus, [], {#id: id}),
+            returnValue: _i8.Future<_i3.PublishPackageStatusResponse>.value(
+              _FakePublishPackageStatusResponse_19(
+                this,
+                Invocation.method(#getPackagePubStatus, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.PublishPackageStatusResponse>.value(
+                  _FakePublishPackageStatusResponse_19(
+                    this,
+                    Invocation.method(#getPackagePubStatus, [], {#id: id}),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.PublishPackageStatusResponse>);
 
   @override
   _i8.FutureOr<_i3.AuthValidateResponse> validateAuthStatus(
@@ -1279,59 +952,48 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     String? token,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #validateAuthStatus,
-          [body],
-          {#token: token},
-        ),
-        returnValue: _i8.Future<_i3.AuthValidateResponse>.value(
-            _FakeAuthValidateResponse_20(
-          this,
-          Invocation.method(
-            #validateAuthStatus,
-            [body],
-            {#token: token},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.AuthValidateResponse>.value(
-            _FakeAuthValidateResponse_20(
-          this,
-          Invocation.method(
-            #validateAuthStatus,
-            [body],
-            {#token: token},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.AuthValidateResponse>);
+            Invocation.method(#validateAuthStatus, [body], {#token: token}),
+            returnValue: _i8.Future<_i3.AuthValidateResponse>.value(
+              _FakeAuthValidateResponse_20(
+                this,
+                Invocation.method(#validateAuthStatus, [body], {#token: token}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.AuthValidateResponse>.value(
+                  _FakeAuthValidateResponse_20(
+                    this,
+                    Invocation.method(
+                      #validateAuthStatus,
+                      [body],
+                      {#token: token},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.AuthValidateResponse>);
 
   @override
-  _i8.FutureOr<_i3.YankAdapterResponse> yankAdapterWithId(
-          {required String? id}) =>
+  _i8.FutureOr<_i3.YankAdapterResponse> yankAdapterWithId({
+    required String? id,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #yankAdapterWithId,
-          [],
-          {#id: id},
-        ),
-        returnValue: _i8.Future<_i3.YankAdapterResponse>.value(
-            _FakeYankAdapterResponse_21(
-          this,
-          Invocation.method(
-            #yankAdapterWithId,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.YankAdapterResponse>.value(
-            _FakeYankAdapterResponse_21(
-          this,
-          Invocation.method(
-            #yankAdapterWithId,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.YankAdapterResponse>);
+            Invocation.method(#yankAdapterWithId, [], {#id: id}),
+            returnValue: _i8.Future<_i3.YankAdapterResponse>.value(
+              _FakeYankAdapterResponse_21(
+                this,
+                Invocation.method(#yankAdapterWithId, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.YankAdapterResponse>.value(
+                  _FakeYankAdapterResponse_21(
+                    this,
+                    Invocation.method(#yankAdapterWithId, [], {#id: id}),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.YankAdapterResponse>);
 
   @override
   _i8.FutureOr<_i3.YankPackageResponse> yankPackageByName(
@@ -1339,30 +1001,26 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? name,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #yankPackageByName,
-          [body],
-          {#name: name},
-        ),
-        returnValue: _i8.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_22(
-          this,
-          Invocation.method(
-            #yankPackageByName,
-            [body],
-            {#name: name},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_22(
-          this,
-          Invocation.method(
-            #yankPackageByName,
-            [body],
-            {#name: name},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.YankPackageResponse>);
+            Invocation.method(#yankPackageByName, [body], {#name: name}),
+            returnValue: _i8.Future<_i3.YankPackageResponse>.value(
+              _FakeYankPackageResponse_22(
+                this,
+                Invocation.method(#yankPackageByName, [body], {#name: name}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.YankPackageResponse>.value(
+                  _FakeYankPackageResponse_22(
+                    this,
+                    Invocation.method(
+                      #yankPackageByName,
+                      [body],
+                      {#name: name},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.YankPackageResponse>);
 
   @override
   _i8.FutureOr<_i3.YankPackageResponse> yankPackageByNameWithScope(
@@ -1371,86 +1029,72 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? name,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #yankPackageByNameWithScope,
-          [body],
-          {
-            #scope: scope,
-            #name: name,
-          },
-        ),
-        returnValue: _i8.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_22(
-          this,
-          Invocation.method(
-            #yankPackageByNameWithScope,
-            [body],
-            {
-              #scope: scope,
-              #name: name,
-            },
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.YankPackageResponse>.value(
-            _FakeYankPackageResponse_22(
-          this,
-          Invocation.method(
-            #yankPackageByNameWithScope,
-            [body],
-            {
-              #scope: scope,
-              #name: name,
-            },
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.YankPackageResponse>);
+            Invocation.method(
+              #yankPackageByNameWithScope,
+              [body],
+              {#scope: scope, #name: name},
+            ),
+            returnValue: _i8.Future<_i3.YankPackageResponse>.value(
+              _FakeYankPackageResponse_22(
+                this,
+                Invocation.method(
+                  #yankPackageByNameWithScope,
+                  [body],
+                  {#scope: scope, #name: name},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.YankPackageResponse>.value(
+                  _FakeYankPackageResponse_22(
+                    this,
+                    Invocation.method(
+                      #yankPackageByNameWithScope,
+                      [body],
+                      {#scope: scope, #name: name},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.YankPackageResponse>);
 
   @override
   _i8.FutureOr<_i3.YankPackageByVersionRequest>
-      yankPackageByNameWithScopeAndVersion(
+  yankPackageByNameWithScopeAndVersion(
     _i3.YankPackageByVersionResponse? body, {
     required String? scope,
     required String? name,
     required String? version,
   }) =>
-          (super.noSuchMethod(
+      (super.noSuchMethod(
             Invocation.method(
               #yankPackageByNameWithScopeAndVersion,
               [body],
-              {
-                #scope: scope,
-                #name: name,
-                #version: version,
-              },
+              {#scope: scope, #name: name, #version: version},
             ),
             returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
-                _FakeYankPackageByVersionRequest_23(
-              this,
-              Invocation.method(
-                #yankPackageByNameWithScopeAndVersion,
-                [body],
-                {
-                  #scope: scope,
-                  #name: name,
-                  #version: version,
-                },
+              _FakeYankPackageByVersionRequest_23(
+                this,
+                Invocation.method(
+                  #yankPackageByNameWithScopeAndVersion,
+                  [body],
+                  {#scope: scope, #name: name, #version: version},
+                ),
               ),
-            )),
+            ),
             returnValueForMissingStub:
                 _i8.Future<_i3.YankPackageByVersionRequest>.value(
-                    _FakeYankPackageByVersionRequest_23(
-              this,
-              Invocation.method(
-                #yankPackageByNameWithScopeAndVersion,
-                [body],
-                {
-                  #scope: scope,
-                  #name: name,
-                  #version: version,
-                },
-              ),
-            )),
-          ) as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
+                  _FakeYankPackageByVersionRequest_23(
+                    this,
+                    Invocation.method(
+                      #yankPackageByNameWithScopeAndVersion,
+                      [body],
+                      {#scope: scope, #name: name, #version: version},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
 
   @override
   _i8.FutureOr<_i3.YankPackageByVersionRequest> yankPackageVersionByName(
@@ -1459,118 +1103,87 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     required String? version,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #yankPackageVersionByName,
-          [body],
-          {
-            #name: name,
-            #version: version,
-          },
-        ),
-        returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
-            _FakeYankPackageByVersionRequest_23(
-          this,
-          Invocation.method(
-            #yankPackageVersionByName,
-            [body],
-            {
-              #name: name,
-              #version: version,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.YankPackageByVersionRequest>.value(
-                _FakeYankPackageByVersionRequest_23(
-          this,
-          Invocation.method(
-            #yankPackageVersionByName,
-            [body],
-            {
-              #name: name,
-              #version: version,
-            },
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
+            Invocation.method(
+              #yankPackageVersionByName,
+              [body],
+              {#name: name, #version: version},
+            ),
+            returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
+              _FakeYankPackageByVersionRequest_23(
+                this,
+                Invocation.method(
+                  #yankPackageVersionByName,
+                  [body],
+                  {#name: name, #version: version},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.YankPackageByVersionRequest>.value(
+                  _FakeYankPackageByVersionRequest_23(
+                    this,
+                    Invocation.method(
+                      #yankPackageVersionByName,
+                      [body],
+                      {#name: name, #version: version},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
 
   @override
-  _i8.FutureOr<_i3.GetUserResponse> getCurrentUser() => (super.noSuchMethod(
-        Invocation.method(
-          #getCurrentUser,
-          [],
-        ),
-        returnValue:
-            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
-          this,
-          Invocation.method(
-            #getCurrentUser,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i3.GetUserResponse>.value(_FakeGetUserResponse_13(
-          this,
-          Invocation.method(
-            #getCurrentUser,
-            [],
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.GetUserResponse>);
-
-  @override
-  _i8.FutureOr<_i3.AuthDetailsResponse> getAuthDetailsById(
-          {required String? id}) =>
+  _i8.FutureOr<_i3.GetUserResponse> getCurrentUser() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAuthDetailsById,
-          [],
-          {#id: id},
-        ),
-        returnValue: _i8.Future<_i3.AuthDetailsResponse>.value(
-            _FakeAuthDetailsResponse_24(
-          this,
-          Invocation.method(
-            #getAuthDetailsById,
-            [],
-            {#id: id},
-          ),
-        )),
-        returnValueForMissingStub: _i8.Future<_i3.AuthDetailsResponse>.value(
-            _FakeAuthDetailsResponse_24(
-          this,
-          Invocation.method(
-            #getAuthDetailsById,
-            [],
-            {#id: id},
-          ),
-        )),
-      ) as _i8.FutureOr<_i3.AuthDetailsResponse>);
+            Invocation.method(#getCurrentUser, []),
+            returnValue: _i8.Future<_i3.GetUserResponse>.value(
+              _FakeGetUserResponse_13(
+                this,
+                Invocation.method(#getCurrentUser, []),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetUserResponse>.value(
+              _FakeGetUserResponse_13(
+                this,
+                Invocation.method(#getCurrentUser, []),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.GetUserResponse>);
+
+  @override
+  _i8.FutureOr<_i3.AuthDetailsResponse> getAuthDetailsById({
+    required String? id,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAuthDetailsById, [], {#id: id}),
+            returnValue: _i8.Future<_i3.AuthDetailsResponse>.value(
+              _FakeAuthDetailsResponse_24(
+                this,
+                Invocation.method(#getAuthDetailsById, [], {#id: id}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.AuthDetailsResponse>.value(
+                  _FakeAuthDetailsResponse_24(
+                    this,
+                    Invocation.method(#getAuthDetailsById, [], {#id: id}),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.AuthDetailsResponse>);
 
   @override
   void close() => super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#close, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addHeaderEntry(
-    String? key,
-    String? value,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addHeaderEntry,
-          [
-            key,
-            value,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addHeaderEntry(String? key, String? value) => super.noSuchMethod(
+    Invocation.method(#addHeaderEntry, [key, value]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i8.Future<_i2.Response> requestBasic(
@@ -1583,56 +1196,33 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     Map<String, String>? headerParams,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #requestBasic,
-          [
-            path,
-            method,
-            queryParams,
-            hash,
-            body,
-          ],
-          {
-            #contentType: contentType,
-            #headerParams: headerParams,
-          },
-        ),
-        returnValue: _i8.Future<_i2.Response>.value(_FakeResponse_25(
-          this,
-          Invocation.method(
-            #requestBasic,
-            [
-              path,
-              method,
-              queryParams,
-              hash,
-              body,
-            ],
-            {
-              #contentType: contentType,
-              #headerParams: headerParams,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i2.Response>.value(_FakeResponse_25(
-          this,
-          Invocation.method(
-            #requestBasic,
-            [
-              path,
-              method,
-              queryParams,
-              hash,
-              body,
-            ],
-            {
-              #contentType: contentType,
-              #headerParams: headerParams,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i2.Response>);
+            Invocation.method(
+              #requestBasic,
+              [path, method, queryParams, hash, body],
+              {#contentType: contentType, #headerParams: headerParams},
+            ),
+            returnValue: _i8.Future<_i2.Response>.value(
+              _FakeResponse_25(
+                this,
+                Invocation.method(
+                  #requestBasic,
+                  [path, method, queryParams, hash, body],
+                  {#contentType: contentType, #headerParams: headerParams},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i2.Response>.value(
+              _FakeResponse_25(
+                this,
+                Invocation.method(
+                  #requestBasic,
+                  [path, method, queryParams, hash, body],
+                  {#contentType: contentType, #headerParams: headerParams},
+                ),
+              ),
+            ),
+          )
+          as _i8.Future<_i2.Response>);
 
   @override
   _i8.Future<_i2.StreamedResponse> requestStreamed(
@@ -1645,57 +1235,33 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     Map<String, String>? headerParams,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #requestStreamed,
-          [
-            path,
-            method,
-            queryParams,
-            hash,
-            body,
-          ],
-          {
-            #contentType: contentType,
-            #headerParams: headerParams,
-          },
-        ),
-        returnValue:
-            _i8.Future<_i2.StreamedResponse>.value(_FakeStreamedResponse_26(
-          this,
-          Invocation.method(
-            #requestStreamed,
-            [
-              path,
-              method,
-              queryParams,
-              hash,
-              body,
-            ],
-            {
-              #contentType: contentType,
-              #headerParams: headerParams,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i2.StreamedResponse>.value(_FakeStreamedResponse_26(
-          this,
-          Invocation.method(
-            #requestStreamed,
-            [
-              path,
-              method,
-              queryParams,
-              hash,
-              body,
-            ],
-            {
-              #contentType: contentType,
-              #headerParams: headerParams,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i2.StreamedResponse>);
+            Invocation.method(
+              #requestStreamed,
+              [path, method, queryParams, hash, body],
+              {#contentType: contentType, #headerParams: headerParams},
+            ),
+            returnValue: _i8.Future<_i2.StreamedResponse>.value(
+              _FakeStreamedResponse_26(
+                this,
+                Invocation.method(
+                  #requestStreamed,
+                  [path, method, queryParams, hash, body],
+                  {#contentType: contentType, #headerParams: headerParams},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i2.StreamedResponse>.value(
+              _FakeStreamedResponse_26(
+                this,
+                Invocation.method(
+                  #requestStreamed,
+                  [path, method, queryParams, hash, body],
+                  {#contentType: contentType, #headerParams: headerParams},
+                ),
+              ),
+            ),
+          )
+          as _i8.Future<_i2.StreamedResponse>);
 
   @override
   _i8.Future<_i2.BaseResponse> request(
@@ -1710,60 +1276,46 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
     Map<String, String>? formParams,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #request,
-          [
-            path,
-            method,
-            queryParams,
-            hash,
-            body,
-          ],
-          {
-            #contentType: contentType,
-            #streamResponse: streamResponse,
-            #headerParams: headerParams,
-            #formParams: formParams,
-          },
-        ),
-        returnValue: _i8.Future<_i2.BaseResponse>.value(_FakeBaseResponse_27(
-          this,
-          Invocation.method(
-            #request,
-            [
-              path,
-              method,
-              queryParams,
-              hash,
-              body,
-            ],
-            {
-              #contentType: contentType,
-              #streamResponse: streamResponse,
-              #headerParams: headerParams,
-              #formParams: formParams,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i8.Future<_i2.BaseResponse>.value(_FakeBaseResponse_27(
-          this,
-          Invocation.method(
-            #request,
-            [
-              path,
-              method,
-              queryParams,
-              hash,
-              body,
-            ],
-            {
-              #contentType: contentType,
-              #streamResponse: streamResponse,
-              #headerParams: headerParams,
-              #formParams: formParams,
-            },
-          ),
-        )),
-      ) as _i8.Future<_i2.BaseResponse>);
+            Invocation.method(
+              #request,
+              [path, method, queryParams, hash, body],
+              {
+                #contentType: contentType,
+                #streamResponse: streamResponse,
+                #headerParams: headerParams,
+                #formParams: formParams,
+              },
+            ),
+            returnValue: _i8.Future<_i2.BaseResponse>.value(
+              _FakeBaseResponse_27(
+                this,
+                Invocation.method(
+                  #request,
+                  [path, method, queryParams, hash, body],
+                  {
+                    #contentType: contentType,
+                    #streamResponse: streamResponse,
+                    #headerParams: headerParams,
+                    #formParams: formParams,
+                  },
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i2.BaseResponse>.value(
+              _FakeBaseResponse_27(
+                this,
+                Invocation.method(
+                  #request,
+                  [path, method, queryParams, hash, body],
+                  {
+                    #contentType: contentType,
+                    #streamResponse: streamResponse,
+                    #headerParams: headerParams,
+                    #formParams: formParams,
+                  },
+                ),
+              ),
+            ),
+          )
+          as _i8.Future<_i2.BaseResponse>);
 }

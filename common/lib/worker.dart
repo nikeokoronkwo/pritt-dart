@@ -34,9 +34,10 @@ class Worker<P, R> {
   ///
   /// If [onCleanup] is passed, once all tasks are complete, [onCleanup] is called on the tasks.
   /// It is recommended to only pass [onCleanup] if working on single task mode.
-  static Future<Worker<P, R>> spawn<P, R>(
-      {required FutureOr<R> Function(P) work,
-      void Function()? onCleanup}) async {
+  static Future<Worker<P, R>> spawn<P, R>({
+    required FutureOr<R> Function(P) work,
+    void Function()? onCleanup,
+  }) async {
     // Create a receive port and add its initial message handler
     final initPort = RawReceivePort();
     final connection = Completer<(ReceivePort, SendPort)>.sync();
@@ -63,7 +64,7 @@ class Worker<P, R> {
   }
 
   Worker._(this._responses, this._commands, {void Function()? onCleanup})
-      : _onCleanup = onCleanup {
+    : _onCleanup = onCleanup {
     _responses.listen(_handleResponsesFromIsolate);
   }
 
@@ -113,7 +114,8 @@ class Worker<P, R> {
   }
 
   static void Function(SendPort) _startRemoteIsolate<P, R>(
-      FutureOr<R> Function(P) work) {
+    FutureOr<R> Function(P) work,
+  ) {
     return (sendPort) {
       final receivePort = ReceivePort();
       sendPort.send(receivePort.sendPort);
@@ -146,6 +148,4 @@ class Worker<P, R> {
   }
 }
 
-enum WorkerTask {
-  shutdown;
-}
+enum WorkerTask { shutdown }

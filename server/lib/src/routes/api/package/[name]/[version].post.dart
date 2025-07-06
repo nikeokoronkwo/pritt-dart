@@ -36,17 +36,21 @@ final handler = defineRequestHandler((event) async {
         // unauthorized
         setResponseCode(event, 401);
         return common.UnauthorizedError(
-                error: 'UnauthorizedError',
-                reason: common.UnauthorizedReason.package_access)
-            .toJson();
+          error: 'UnauthorizedError',
+          reason: common.UnauthorizedReason.package_access,
+        ).toJson();
       }
     }
 
-    final body = await getBody(event,
-        (s) => common.PublishPackageByVersionRequest.fromJson(json.decode(s)));
+    final body = await getBody(
+      event,
+      (s) => common.PublishPackageByVersionRequest.fromJson(json.decode(s)),
+    );
 
-    assert(body.scope == null,
-        "Use /api/package/@:scope/:name/:version for scoped packages");
+    assert(
+      body.scope == null,
+      "Use /api/package/@:scope/:name/:version for scoped packages",
+    );
 
     // from info...
     // get pkg name, pkg version
@@ -56,7 +60,7 @@ final handler = defineRequestHandler((event) async {
 
     // check if package exists
     try {
-      final pkg = await crs.db.getPackageWithVersion(pkgName, pkgVer);
+      final _ = await crs.db.getPackageWithVersion(pkgName, pkgVer);
 
       // package exists
       // if it does, throw error
@@ -68,26 +72,26 @@ final handler = defineRequestHandler((event) async {
 
     // TODO: Contributors
     final pubTask = await crs.db.createNewPublishingTask(
-        name: pkgName,
-        version: pkgVer.toString(),
-        user: user,
-        language: body.language,
-        newPkg: true,
-        config: body.config.path,
-        configData: body.config.config ?? {},
-        metadata: body.info,
-        env: body.env
-            ?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
-        vcs: body.vcs == null
-            ? null
-            : switch (body.vcs!.name) {
-                common.VCS.git => VCS.git,
-                common.VCS.svn => VCS.svn,
-                common.VCS.fossil => VCS.fossil,
-                common.VCS.mercurial => VCS.mercurial,
-                common.VCS.other => VCS.other,
-              },
-        vcsUrl: body.vcs?.url);
+      name: pkgName,
+      version: pkgVer.toString(),
+      user: user,
+      language: body.language,
+      newPkg: true,
+      config: body.config.path,
+      configData: body.config.config ?? {},
+      metadata: body.info,
+      env: body.env?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
+      vcs: body.vcs == null
+          ? null
+          : switch (body.vcs!.name) {
+              common.VCS.git => VCS.git,
+              common.VCS.svn => VCS.svn,
+              common.VCS.fossil => VCS.fossil,
+              common.VCS.mercurial => VCS.mercurial,
+              common.VCS.other => VCS.other,
+            },
+      vcsUrl: body.vcs?.url,
+    );
 
     // add package queue task
     publishingTaskRunner.addTask(PubTaskItem(pubTask.id));
@@ -96,15 +100,17 @@ final handler = defineRequestHandler((event) async {
 
     // send details down
     return common.PublishPackageResponse(
-            queue: common.Queue(
-                id: pubTask.id, status: common.PublishingStatus.queue))
-        .toJson();
+      queue: common.Queue(
+        id: pubTask.id,
+        status: common.PublishingStatus.queue,
+      ),
+    ).toJson();
   } on AssertionError catch (e) {
     setResponseCode(event, 400);
     return common.UnauthorizedError(
-            error: e.message.toString() ?? 'InvalidRequest',
-            reason: common.UnauthorizedReason.org)
-        .toJson();
+      error: e.message.toString(),
+      reason: common.UnauthorizedReason.org,
+    ).toJson();
   } on TypeError {
     setResponseCode(event, 400);
     return common.Error(error: 'InvalidBody').toJson();
@@ -113,8 +119,9 @@ final handler = defineRequestHandler((event) async {
       case CRSExceptionType.PACKAGE_NOT_FOUND:
         setResponseCode(event, 403);
         print('${e.stackTrace} :: $st');
-        return common.Error(error: 'Error: ${e.message}: Instead, call')
-            .toJson();
+        return common.Error(
+          error: 'Error: ${e.message}: Instead, call',
+        ).toJson();
       default:
     }
   } catch (e, st) {

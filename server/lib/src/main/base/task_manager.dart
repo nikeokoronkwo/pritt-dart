@@ -11,7 +11,7 @@ import 'db/schema.dart';
 abstract class TaskBase {
   abstract final String id;
   TaskStatus get status;
-  FutureOr<void> updateStatus(TaskStatus newStatus);
+  FutureOr<void> updateStatus(TaskStatus newStatus, {String? message});
   void updateError(Object error);
 
   TaskBase();
@@ -36,7 +36,7 @@ enum TaskRunnerMode {
   singleTask,
 
   /// Workers can queue tasks and handle them, preventing the main task runner loop from blocking
-  multiTask
+  multiTask,
 }
 
 /// The task runner service
@@ -72,12 +72,13 @@ enum TaskRunnerMode {
 ///
 /// -----------------------------------------------------
 ///
-/// TODO: onCheck is only implemented in [idleTasks]. We should consider implementing this in the main loop as well
-/// TODO: Clear out prints from code
-/// TODO: Testing
 /// TODO: Handling running outside the main loop
-class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
-    Ctx extends Object> {
+class TaskRunner<
+  Task extends TaskBase,
+  Res extends Object,
+  Ret,
+  Ctx extends Object
+> {
   final Logger? _logger;
   static final int _maximumWorkers = 2;
 
@@ -124,52 +125,64 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
   bool get complete => empty && workers.values.every((w) => !w.isBusy);
 
   /// if [onRetrieve] returns null, then the resource associated with the queue task is not available
-  TaskRunner(
-      {this.pollInterval = const Duration(milliseconds: 150),
-      Duration? retryInterval,
-      required this.onRetrieve,
-      required this.workAction,
-      this.mode = TaskRunnerMode.singleTask,
-      this.onCheck,
-      this.context,
-      bool debug = false})
-      : _logger = debug ? Logger('PRITT TASK RUNNER') : null,
-        retryInterval = retryInterval ?? Duration(milliseconds: 150) {
+  TaskRunner({
+    this.pollInterval = const Duration(milliseconds: 150),
+    Duration? retryInterval,
+    required this.onRetrieve,
+    required this.workAction,
+    this.mode = TaskRunnerMode.singleTask,
+    this.onCheck,
+    this.context,
+    bool debug = false,
+  }) : _logger = debug ? Logger('PRITT TASK RUNNER') : null,
+       retryInterval = retryInterval ?? Duration(milliseconds: 150) {
     if (!hierarchicalLoggingEnabled) hierarchicalLoggingEnabled = true;
     _logger?.level = Level.ALL;
+
     _logger?.onRecord.listen((record) {
       print(
-          'LOG ${record.loggerName}:: ${record.level.name}: ${record.time}: ${record.message} :: Logged at ${record.time}');
+        'LOG ${record.loggerName}:: ${record.level.name}: ${record.time}: ${record.message} :: Logged at ${record.time}',
+      );
+      if (record.error case final err?)
+        print(
+          'ERROR ${record.loggerName}:: ${record.level.name}: ${record.time}: $err',
+        );
+      if (record.stackTrace case final stack?)
+        print(
+          'STACK TRACE ${record.loggerName}:: ${record.level.name}: ${record.time}: $stack',
+        );
     });
 
     _logger?.shout(
-        'TEST MESSAGE: This ensures the logger is active if set active');
+      'TEST MESSAGE: This ensures the logger is active if set active',
+    );
 
     idleTasks = RetryMap(
-        retry: this.retryInterval,
-        onRetry: (key, value) async {
-          if (this.onCheck != null) {
-            if (await this.onCheck!.call(value)) {
-              _logger?.info('Queue item ${value.id} released from idle');
+      retry: this.retryInterval,
+      onRetry: (key, value) async {
+        if (this.onCheck != null) {
+          if (await this.onCheck!.call(value)) {
+            _logger?.info('Queue item ${value.id} released from idle');
 
-              await value.updateStatus(TaskStatus.queue);
-              // add value back to queue beginning
-              queue.addFirst(value);
-              return true;
-            } else
-              return false;
-          } else {
-            final resource = await onRetrieve(value);
-            if (resource != null) {
-              _logger?.info('Queue item ${value.id} released from idle');
+            await value.updateStatus(TaskStatus.queue);
+            // add value back to queue beginning
+            queue.addFirst(value);
+            return true;
+          } else
+            return false;
+        } else {
+          final resource = await onRetrieve(value);
+          if (resource != null) {
+            _logger?.info('Queue item ${value.id} released from idle');
 
-              eagerWorkerAssets[key] = resource;
-              queue.addFirst(value);
-              return true;
-            } else
-              return false;
-          }
-        });
+            eagerWorkerAssets[key] = resource;
+            queue.addFirst(value);
+            return true;
+          } else
+            return false;
+        }
+      },
+    );
   }
 
   /// Starts the task runner
@@ -210,7 +223,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
 
         if (eagerWorkerAssets.containsKey(nextTask.id)) {
           _logger?.info(
-              'Task. of id ${nextTask.id} contains eager resource loaded from idle task map');
+            'Task of id ${nextTask.id} contains eager resource loaded from idle task map',
+          );
           resource = eagerWorkerAssets[nextTask.id];
         } else {
           _logger?.info('Finding resource...');
@@ -221,8 +235,9 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
             if (resourceIsAvailable) {
               resource = await onRetrieve(nextTask);
               if (resource == null) {
-                _logger
-                    ?.info('Omor: The check is true, but no resource is found');
+                _logger?.info(
+                  'Omor: The check is true, but no resource is found',
+                );
                 resourceIsAvailable = false;
               } else {
                 resourceIsAvailable = true;
@@ -246,7 +261,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
                 resource = await onRetrieve(nextTask);
                 if (resource == null) {
                   _logger?.info(
-                      'Omor: The check is true, but no resource is found');
+                    'Omor: The check is true, but no resource is found',
+                  );
                   resourceIsAvailable = false;
                 } else {
                   _logger?.fine(resource);
@@ -256,6 +272,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
             }
 
             resource ??= await onRetrieve(nextTask);
+            _logger?.fine('Found resource: $resource');
           } else {
             var resource = await onRetrieve(nextTask);
             while (resource == null) {
@@ -272,6 +289,8 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
               }
               resource = await onRetrieve(nextTask);
             }
+
+            _logger?.fine('Found resource: $resource');
           }
         }
 
@@ -286,18 +305,32 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
           nextWorker
               .run(nextTask.upgrade(resource, context: context))
               .then((v) async {
-            _logger?.fine('Task ${nextTask.id} completed successfully');
-            await nextTask.updateStatus(TaskStatus.success);
-            _logger?.fine('Task is now ended');
-            return completedTasks[nextTask.id] = v;
-          });
+                _logger?.fine('Task ${nextTask.id} completed successfully');
+                await nextTask.updateStatus(TaskStatus.success);
+                _logger?.fine('Task is now ended');
+                completedTasks[nextTask.id] = v;
+              })
+              .catchError((e, stack) async {
+                _logger?.severe(
+                  'Task of id ${nextTask.id} failed with an error',
+                  e,
+                  stack,
+                );
+                nextTask.updateError(e);
+                await nextTask.updateStatus(TaskStatus.fail);
+              });
         }
 
         _logger?.info('Next loop');
-      } catch (e) {
-        _logger?.severe('Task of id ${nextTask.id} contains error');
+      } catch (e, stackTrace) {
+        // if the worker causes an error:
+        _logger?.severe(
+          'Task of id ${nextTask.id} contains error',
+          e,
+          stackTrace,
+        );
         nextTask.updateError(e);
-        await nextTask.updateStatus(TaskStatus.fail);
+        await nextTask.updateStatus(TaskStatus.error);
       }
 
       await Future.delayed(pollInterval);
@@ -307,7 +340,9 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
   Future<Worker<WorkerItem<Task, Res, Ctx>, Ret>> _getLeastBusyWorker() async {
     if (workers.length < _maximumWorkers) {
       final worker = await Worker.spawn<WorkerItem<Task, Res, Ctx>, Ret>(
-          work: workAction, onCleanup: notifyAvailability);
+        work: workAction,
+        onCleanup: notifyAvailability,
+      );
       workers[Slugid.nice().uuid()] = worker;
       // return new worker spawned
       return worker;
@@ -322,7 +357,9 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
   Future<Worker<WorkerItem<Task, Res, Ctx>, Ret>> _getNextWorker() async {
     if (workers.length < _maximumWorkers) {
       final worker = await Worker.spawn<WorkerItem<Task, Res, Ctx>, Ret>(
-          work: workAction, onCleanup: notifyAvailability);
+        work: workAction,
+        onCleanup: notifyAvailability,
+      );
       workers[Slugid.nice().uuid()] = worker;
       // return new worker spawned
       return worker;
@@ -330,9 +367,7 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
 
     // if not, wait for worker active
     while (true) {
-      final freeWorkers = workers.values.where(
-        (w) => !w.isBusy,
-      );
+      final freeWorkers = workers.values.where((w) => !w.isBusy);
 
       if (freeWorkers.isNotEmpty) {
         return freeWorkers.first;
@@ -379,4 +414,15 @@ class TaskRunner<Task extends TaskBase, Res extends Object, Ret,
   void addTask(Task task) {
     queue.addLast(task);
   }
+}
+
+class WorkerException implements Exception {
+  Object? cause;
+
+  WorkerException(this.cause)
+    : assert(
+        cause is Exception || cause is Error,
+        "cause must be an exception or error",
+      ),
+      super();
 }

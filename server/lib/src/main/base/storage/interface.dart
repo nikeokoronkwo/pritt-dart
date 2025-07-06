@@ -18,8 +18,13 @@ abstract interface class PrittStorageInterface<T> {
   /// Add a new package file to the CRS OFS (package bucket)
   ///
   /// [path] represents the path of the new file, to which [data] is stored as bytes.
-  FutureOr createPackage(String path, Uint8List data, String sha,
-      {String? contentType, Map<String, String>? metadata});
+  FutureOr createPackage(
+    String path,
+    Uint8List data,
+    String sha, {
+    String? contentType,
+    Map<String, String>? metadata,
+  });
 
   /// Remove a package file located at [path] from the CRS OFS
   FutureOr removePackage(String path);
@@ -49,8 +54,12 @@ abstract interface class PrittStorageInterface<T> {
   FutureOr<CRSFileOutputStream> getPubArchive(String path);
 
   /// Add a publishing archive to the pub archive bucket
-  FutureOr createPubArchive(String path, Uint8List data,
-      {String? contentType, Map<String, String>? metadata});
+  FutureOr createPubArchive(
+    String path,
+    Uint8List data, {
+    String? contentType,
+    Map<String, String>? metadata,
+  });
 
   /// Remove a publishing archive file located at [path] from the CRS OFS
   FutureOr removePubArchive(String path);

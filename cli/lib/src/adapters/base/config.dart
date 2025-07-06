@@ -12,11 +12,12 @@ abstract class Config {
   Map<String, dynamic> get configMetadata;
   abstract final Map<String, dynamic>? rawConfig;
 
-  const Config(
-      {required this.name,
-      required this.version,
-      this.description,
-      required this.author,
-      this.license,
-      this.private = false});
+  const Config({
+    required this.name,
+    required this.version,
+    this.description,
+    required this.author,
+    this.license,
+    this.private = false,
+  });
 }

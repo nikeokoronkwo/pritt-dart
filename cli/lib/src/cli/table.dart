@@ -17,68 +17,92 @@ class Table {
 
   Table(this.array, {List<String>? header}) : _header = header;
 
-  String write(
-      {String sep = '|',
-      String headerLine = '=',
-      String ifEmpty = '_',
-      Indentation indentation = Indentation.center}) {
+  String write({
+    String sep = '|',
+    String headerLine = '=',
+    String ifEmpty = '_',
+    Indentation indentation = Indentation.center,
+  }) {
     StringBuffer sink = StringBuffer();
 
     final allLines = _header != null ? [...array, _header] : array;
 
     // index lengths to use as
-    final lineSpacings =
-        List.generate(allLines.map((l) => l.length).first, (i) {
+    final lineSpacings = List.generate(allLines.map((l) => l.length).first, (
+      i,
+    ) {
       return allLines.map((l) => l[i]);
     }).map((col) => col.map((v) => v.length).max + 2).toList();
 
     // draw up border
-    sink.writeln(_writeLine(List.filled(rows, ''),
+    sink.writeln(
+      _writeLine(
+        List.filled(rows, ''),
         sep: '+',
         ifEmpty: '-',
         lineSpacings: lineSpacings,
-        indentation: indentation));
+        indentation: indentation,
+      ),
+    );
 
     // write header lines
-    sink.writeln(_writeLine(header,
+    sink.writeln(
+      _writeLine(
+        header,
         sep: sep,
         ifEmpty: ifEmpty,
         lineSpacings: lineSpacings,
         indentation: indentation,
-        format: (hdr) => styleBold.wrap(hdr)!));
+        format: (hdr) => styleBold.wrap(hdr)!,
+      ),
+    );
 
     // border again
-    sink.writeln(_writeLine(List.filled(rows, ''),
+    sink.writeln(
+      _writeLine(
+        List.filled(rows, ''),
         sep: '+',
         ifEmpty: '-',
         lineSpacings: lineSpacings,
-        indentation: indentation));
+        indentation: indentation,
+      ),
+    );
 
     for (final line in lines) {
-      sink.writeln(_writeLine(line,
+      sink.writeln(
+        _writeLine(
+          line,
           sep: sep,
           ifEmpty: ifEmpty,
           lineSpacings: lineSpacings,
-          indentation: indentation));
+          indentation: indentation,
+        ),
+      );
     }
     // bottom border
     if (lines.isNotEmpty) {
-      sink.writeln(_writeLine(List.filled(rows, ''),
+      sink.writeln(
+        _writeLine(
+          List.filled(rows, ''),
           sep: '+',
           ifEmpty: '-',
           lineSpacings: lineSpacings,
-          indentation: indentation));
+          indentation: indentation,
+        ),
+      );
     }
 
     return sink.toString();
   }
 
-  String _writeLine(List<String> items,
-      {required String sep,
-      required String ifEmpty,
-      required List<int> lineSpacings,
-      Indentation indentation = Indentation.center,
-      String Function(String)? format}) {
+  String _writeLine(
+    List<String> items, {
+    required String sep,
+    required String ifEmpty,
+    required List<int> lineSpacings,
+    Indentation indentation = Indentation.center,
+    String Function(String)? format,
+  }) {
     final resultList = [];
 
     for (int i = 0; i < items.length; ++i) {
@@ -90,18 +114,17 @@ class Table {
 
       // print(char.isEmpty ? ifEmpty * pad : char.padLeft(char.length + sidePad).padRight(char.length + pad));
       final charOutput = switch (indentation) {
-        // TODO: Handle this case.
         Indentation.left => ' ${char.padRight(pad - 1)}',
-        // TODO: Handle this case.
         Indentation.center =>
           char.padLeft((char.length / 2).round() + sidePad).padRight(pad),
-        // TODO: Handle this case.
         Indentation.right => '${char.padLeft(pad - 1)} ',
       };
 
-      resultList.add(char.isEmpty
-          ? ifEmpty * pad
-          : (format == null ? charOutput : format(charOutput)));
+      resultList.add(
+        char.isEmpty
+            ? ifEmpty * pad
+            : (format == null ? charOutput : format(charOutput)),
+      );
     }
 
     // left and right

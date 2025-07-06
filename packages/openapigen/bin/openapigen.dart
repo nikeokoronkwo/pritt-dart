@@ -5,10 +5,12 @@ import 'package:pritt_openapi_gen/src/js.dart';
 import 'package:pritt_openapi_gen/src/node_helpers.dart';
 
 final argParser = ArgParser()
-  ..addOption('js-parser-file',
-      abbr: 'j',
-      defaultsTo: './main.js',
-      help: 'The JS File containing the parsing logic')
+  ..addOption(
+    'js-parser-file',
+    abbr: 'j',
+    defaultsTo: './main.js',
+    help: 'The JS File containing the parsing logic',
+  )
   ..addOption('out', abbr: 'o', help: 'The output directory')
   ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help');
 
@@ -50,8 +52,9 @@ void main(List<String> args) async {
     for (final fileMapEntry in fileMap.entries) {
       final (fileName, fileContents) = (fileMapEntry.key, fileMapEntry.value);
 
-      File(join(results['out'] ?? '.', fileName))
-          .writeAsStringSync(fileContents);
+      File(
+        join(results['out'] ?? '.', fileName),
+      ).writeAsStringSync(fileContents);
     }
 
     print("Generated types at ${results['out'] ?? '.'}");

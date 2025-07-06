@@ -39,7 +39,6 @@ services:
       DATABASE_HOST: db
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
-      # S3_CREDENTIALS_FILE: /secrets/env
       S3_URL: http://filestorage:9000
       PRITT_RUNNER_URL: http://runner:8000
     env_file:
@@ -82,7 +81,6 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     ports:
       - '${DATABASE_PORT}:5432'
@@ -112,7 +110,6 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     volumes:
       - ./server/sql:/flyway/sql

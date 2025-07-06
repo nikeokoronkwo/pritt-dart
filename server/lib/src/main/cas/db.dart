@@ -6,10 +6,14 @@ import '../base/db/schema.dart';
 class CASLocalDatabase implements PrittAdapterDatabaseInterface {
   CASLocalDatabase._();
 
-  static Future<CASLocalDatabase> connect(
-      {String? url, bool local = false}) async {
-    assert(local || url != null,
-        "Either sqlite db is local or uri must be passed");
+  static Future<CASLocalDatabase> connect({
+    String? url,
+    bool local = false,
+  }) async {
+    assert(
+      local || url != null,
+      "Either sqlite db is local or uri must be passed",
+    );
 
     return CASLocalDatabase._();
   }

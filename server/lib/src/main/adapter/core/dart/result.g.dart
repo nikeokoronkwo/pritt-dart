@@ -7,13 +7,14 @@ part of 'result.dart';
 // **************************************************************************
 
 DartMetaResult _$DartMetaResultFromJson(Map json) => DartMetaResult(
-      name: json['name'] as String,
-      latest: DartPackage.fromJson(
-          Map<String, dynamic>.from(json['latest'] as Map)),
-      versions: (json['versions'] as List<dynamic>)
-          .map((e) => DartPackage.fromJson(Map<String, dynamic>.from(e as Map)))
-          .toList(),
-    );
+  name: json['name'] as String,
+  latest: DartPackage.fromJson(
+    Map<String, dynamic>.from(json['latest'] as Map),
+  ),
+  versions: (json['versions'] as List<dynamic>)
+      .map((e) => DartPackage.fromJson(Map<String, dynamic>.from(e as Map)))
+      .toList(),
+);
 
 Map<String, dynamic> _$DartMetaResultToJson(DartMetaResult instance) =>
     <String, dynamic>{
@@ -23,13 +24,12 @@ Map<String, dynamic> _$DartMetaResultToJson(DartMetaResult instance) =>
     };
 
 DartPackage _$DartPackageFromJson(Map json) => DartPackage(
-      version: json['version'] as String,
-      pubspec:
-          PubSpec.fromJson(Map<String, dynamic>.from(json['pubspec'] as Map)),
-      archiveUrl: json['archive_url'] as String,
-      archiveHash: json['archive_sha256'] as String,
-      published: DateTime.parse(json['published'] as String),
-    );
+  version: json['version'] as String,
+  pubspec: PubSpec.fromJson(Map<String, dynamic>.from(json['pubspec'] as Map)),
+  archiveUrl: json['archive_url'] as String,
+  archiveHash: json['archive_sha256'] as String,
+  published: DateTime.parse(json['published'] as String),
+);
 
 Map<String, dynamic> _$DartPackageToJson(DartPackage instance) =>
     <String, dynamic>{

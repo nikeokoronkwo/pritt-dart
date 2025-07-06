@@ -5,7 +5,8 @@ import 'js_helpers.dart';
 extension type JSLibrary._(JSObject _) implements JSObject {
   @JS('parseOpenAPIDocumentSource')
   external JSPromise<OpenAPIGenResult> _parseOpenAPIDocumentSource(
-      JSString source);
+    JSString source,
+  );
 
   Future<OpenAPIGenResult> parseOpenAPIDocumentSource(String source) {
     return _parseOpenAPIDocumentSource(source.toJS).toDart;

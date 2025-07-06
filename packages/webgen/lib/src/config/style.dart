@@ -30,8 +30,8 @@ class WGTStyleColours {
     this.background,
     this.text,
     required String accent,
-  })  : primary = generateTailwindColorScale(primary),
-        accent = generateTailwindColorScale(accent);
+  }) : primary = generateTailwindColorScale(primary),
+       accent = generateTailwindColorScale(accent);
 
   factory WGTStyleColours.fromJson(Map<String, dynamic> json) =>
       _$WGTStyleColoursFromJson(json);
@@ -44,9 +44,9 @@ extension WGTCS on WGTColourSpectrum {
   static WGTColourSpectrum fromJson(dynamic json) {
     if (json is String) {
       return generateTailwindColorScale(json);
-    } else if (json is Map<int, String>)
+    } else if (json is Map<int, String>) {
       return json;
-    else if (json is Map<dynamic, String>) {
+    } else if (json is Map<dynamic, String>) {
       return json.map((k, v) {
         if (k is int) {
           return MapEntry(k, v);
@@ -59,8 +59,9 @@ extension WGTCS on WGTColourSpectrum {
 
         return MapEntry(1000 * 100 + k.hashCode, v);
       });
-    } else
+    } else {
       throw Exception();
+    }
   }
 
   String get defaultColour => this[-1] ?? values.toList()[length ~/ 2];
@@ -90,13 +91,18 @@ class WGTStyleFont {
     weight: 400,
   );
   static const serifFont = WGTStyleFont(
-      family: 'Times New Roman', size: 16, weight: 400, type: FontType.serif);
+    family: 'Times New Roman',
+    size: 16,
+    weight: 400,
+    type: FontType.serif,
+  );
 
-  const WGTStyleFont(
-      {required this.family,
-      this.size,
-      this.weight,
-      this.type = FontType.sansSerif});
+  const WGTStyleFont({
+    required this.family,
+    this.size,
+    this.weight,
+    this.type = FontType.sansSerif,
+  });
 
   factory WGTStyleFont.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) {

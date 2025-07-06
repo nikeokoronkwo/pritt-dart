@@ -25,23 +25,29 @@ final handler = defineRequestHandler((event) async {
     }
 
     final resp = common.GetPackagesResponse(
-        packages: (await pkgs.skip(index * 100).take(pkgCap).toList())
-            // TODO: More Package features:
-            // - keywords, - license
-            .map((pkg) => common.Package(
-                name: pkg.name,
-                scope: pkg.scope,
-                description: pkg.description,
-                version: pkg.version,
-                author: common.Author(
-                    name: pkg.author.name, email: pkg.author.email),
-                created_at: pkg.created.toIso8601String(),
-                updated_at: pkg.updated.toIso8601String(),
-                language: pkg.language))
-            .toList(),
-        next_url: (index * 100 - pkgCount > 20)
-            ? getUrl(event).replace(query: 'index=${index + 1}').toString()
-            : null);
+      packages: (await pkgs.skip(index * 100).take(pkgCap).toList())
+          // TODO: More Package features:
+          // - keywords, - license
+          .map(
+            (pkg) => common.Package(
+              name: pkg.name,
+              scope: pkg.scope,
+              description: pkg.description,
+              version: pkg.version,
+              author: common.Author(
+                name: pkg.author.name,
+                email: pkg.author.email,
+              ),
+              created_at: pkg.created.toIso8601String(),
+              updated_at: pkg.updated.toIso8601String(),
+              language: pkg.language,
+            ),
+          )
+          .toList(),
+      next_url: (index * 100 - pkgCount > 20)
+          ? getUrl(event).replace(query: 'index=${index + 1}').toString()
+          : null,
+    );
 
     return resp.toJson();
   } else {
@@ -49,16 +55,18 @@ final handler = defineRequestHandler((event) async {
     final pkgs = await crs.db.getPackages();
 
     final resp = common.GetPackagesResponse(
-        packages: pkgs.map((pkg) {
-      return common.Package(
+      packages: pkgs.map((pkg) {
+        return common.Package(
           name: pkg.name,
           description: pkg.description,
           version: pkg.version,
           author: common.Author(name: pkg.author.name, email: pkg.author.email),
           created_at: pkg.created.toIso8601String(),
           updated_at: pkg.updated.toIso8601String(),
-          language: pkg.language);
-    }).toList());
+          language: pkg.language,
+        );
+      }).toList(),
+    );
     return resp.toJson();
   }
 });

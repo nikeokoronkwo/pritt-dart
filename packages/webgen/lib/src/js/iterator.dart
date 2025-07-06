@@ -33,7 +33,6 @@ class JSStreamIterator<T extends JSAny> implements StreamIterator<T> {
   }
 
   @override
-  // TODO: implement current
   T get current {
     if (isDone) {
       throw Exception('Stream Iterator Done');

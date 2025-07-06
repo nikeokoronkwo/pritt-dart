@@ -36,12 +36,21 @@ class ApiClient {
     String? contentType,
     Map<String, String>? headerParams,
   }) async {
-    assert(body is! Stream && body is! List<int>,
-        'For Streamed Requests, use the normal request');
-    return await request(path, method, queryParams, hash, body,
-        streamResponse: false,
-        headerParams: headerParams,
-        contentType: contentType) as http.Response;
+    assert(
+      body is! Stream && body is! List<int>,
+      'For Streamed Requests, use the normal request',
+    );
+    return await request(
+          path,
+          method,
+          queryParams,
+          hash,
+          body,
+          streamResponse: false,
+          headerParams: headerParams,
+          contentType: contentType,
+        )
+        as http.Response;
   }
 
   Future<http.StreamedResponse> requestStreamed(
@@ -53,8 +62,15 @@ class ApiClient {
     String? contentType,
     Map<String, String>? headerParams,
   }) async {
-    return await request(path, method, queryParams, hash, body,
-        streamResponse: true) as http.StreamedResponse;
+    return await request(
+          path,
+          method,
+          queryParams,
+          hash,
+          body,
+          streamResponse: true,
+        )
+        as http.StreamedResponse;
   }
 
   Future<http.BaseResponse> request(
@@ -82,15 +98,18 @@ class ApiClient {
         : '';
     final stringifiedHash = hash == null ? '' : '#${Uri.encodeComponent(hash)}';
     final uri = Uri.parse(
-        '$url${path.startsWith('/') ? path.substring(1) : path}$stringifiedQueryParams$stringifiedHash');
+      '$url${path.startsWith('/') ? path.substring(1) : path}$stringifiedQueryParams$stringifiedHash',
+    );
 
     try {
       if (body is StreamedContent) {
         final req = http.StreamedRequest(method.name, uri)
           ..headers.addAll(headerParams)
           ..headers.update(
-              HttpHeaders.contentTypeHeader, (v) => body.contentType,
-              ifAbsent: () => body.contentType);
+            HttpHeaders.contentTypeHeader,
+            (v) => body.contentType,
+            ifAbsent: () => body.contentType,
+          );
 
         req.sink.addStream(body.data).then((_) {
           return req.sink.close();
@@ -103,7 +122,8 @@ class ApiClient {
         final req = http.StreamedRequest(method.name, uri)
           ..headers.addAll(headerParams)
           ..sink.addStream(
-              body is Stream<List<int>> ? body : (body as Stream<Uint8List>));
+            body is Stream<List<int>> ? body : (body as Stream<Uint8List>),
+          );
 
         return await client.send(req);
       } else if (body is Uint8List || body is List<int>) {
@@ -140,8 +160,10 @@ class ApiException<T> implements Exception {
   int statusCode;
 
   ApiException(this.body, {this.statusCode = 400})
-      : assert(100 <= statusCode && statusCode < 600,
-            'Status Code should between 100 and 600 to be valid');
+    : assert(
+        100 <= statusCode && statusCode < 600,
+        'Status Code should between 100 and 600 to be valid',
+      );
   ApiException.internalServerError(this.body) : statusCode = 500;
   ApiException.notFound(this.body) : statusCode = 404;
 }

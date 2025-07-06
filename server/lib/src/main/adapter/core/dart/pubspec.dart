@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'pubspec.g.dart';
@@ -118,10 +120,12 @@ class PubSpec {
     this.screenshots,
     this.topics,
     this.version,
-  })  : assert(environment['sdk'] != null, "Environment SDK is required"),
-        assert(name.isNotEmpty, "Name is required"),
-        assert(version != null || publishTo == null,
-            "Version is required if publishTo is not null");
+  }) : assert(environment['sdk'] != null, "Environment SDK is required"),
+       assert(name.isNotEmpty, "Name is required"),
+       assert(
+         version != null || publishTo == null,
+         "Version is required if publishTo is not null",
+       );
 
   factory PubSpec.fromJson(Map<String, dynamic> json) =>
       _$PubSpecFromJson(json);
@@ -146,13 +150,7 @@ class Dependency {
   @JsonKey(name: "path")
   final String? path;
 
-  Dependency({
-    this.sdk,
-    this.version,
-    this.hosted,
-    this.git,
-    this.path,
-  });
+  Dependency({this.sdk, this.version, this.hosted, this.git, this.path});
 
   factory Dependency.fromJson(Map<String, dynamic> json) =>
       _$DependencyFromJson(json);
@@ -174,11 +172,7 @@ class GitClass {
   @JsonKey(name: "url")
   final String? url;
 
-  GitClass({
-    this.path,
-    this.ref,
-    this.url,
-  });
+  GitClass({this.path, this.ref, this.url});
 
   factory GitClass.fromJson(Map<String, dynamic> json) =>
       _$GitClassFromJson(json);
@@ -195,10 +189,7 @@ class HostedClass {
   @JsonKey(name: "url")
   final String url;
 
-  HostedClass({
-    this.name,
-    required this.url,
-  });
+  HostedClass({this.name, required this.url});
 
   factory HostedClass.fromJson(Map<String, dynamic> json) =>
       _$HostedClassFromJson(json);
@@ -264,11 +255,7 @@ class AssetClass {
   @JsonKey(name: "transformers")
   final List<AssetTransformer>? transformers;
 
-  AssetClass({
-    this.flavors,
-    required this.path,
-    this.transformers,
-  });
+  AssetClass({this.flavors, required this.path, this.transformers});
 
   factory AssetClass.fromJson(Map<String, dynamic> json) =>
       _$AssetClassFromJson(json);
@@ -287,10 +274,7 @@ class AssetTransformer {
   @JsonKey(name: "package")
   final String package;
 
-  AssetTransformer({
-    this.args,
-    required this.package,
-  });
+  AssetTransformer({this.args, required this.package});
 
   factory AssetTransformer.fromJson(Map<String, dynamic> json) =>
       _$AssetTransformerFromJson(json);
@@ -307,10 +291,7 @@ class Font {
   @JsonKey(name: "fonts")
   final List<FontFont> fonts;
 
-  Font({
-    required this.family,
-    required this.fonts,
-  });
+  Font({required this.family, required this.fonts});
 
   factory Font.fromJson(Map<String, dynamic> json) => _$FontFromJson(json);
 
@@ -339,11 +320,7 @@ class FontFont {
   @JsonKey(name: "weight")
   final int? weight;
 
-  FontFont({
-    required this.asset,
-    this.style,
-    this.weight,
-  });
+  FontFont({required this.asset, this.style, this.weight});
 
   factory FontFont.fromJson(Map<String, dynamic> json) =>
       _$FontFontFromJson(json);
@@ -359,7 +336,7 @@ enum Style {
   @JsonValue("italic")
   ITALIC,
   @JsonValue("normal")
-  NORMAL
+  NORMAL,
 }
 
 ///The platforms field specifies which platforms the package supports. [Learn
@@ -401,10 +378,7 @@ class Screenshot {
   @JsonKey(name: "path")
   final String path;
 
-  Screenshot({
-    required this.description,
-    required this.path,
-  });
+  Screenshot({required this.description, required this.path});
 
   factory Screenshot.fromJson(Map<String, dynamic> json) =>
       _$ScreenshotFromJson(json);

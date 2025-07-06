@@ -8,8 +8,10 @@ class UpdateCommand extends Command {
   String description = "Updates the Pritt CLI";
 
   UpdateCommand() {
-    argParser.addFlag('auto',
-        negatable: false,
-        help: "Configure Pritt to auto-update whenever you log into shell");
+    argParser.addFlag(
+      'auto',
+      negatable: false,
+      help: "Configure Pritt to auto-update whenever you log into shell",
+    );
   }
 }

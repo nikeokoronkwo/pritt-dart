@@ -7,16 +7,16 @@ part of 'schema.dart';
 // **************************************************************************
 
 Signature _$SignatureFromJson(Map json) => Signature(
-      publicKeyId: json['publicKeyId'] as String,
-      signature: json['signature'] as String,
-      created: DateTime.parse(json['created'] as String),
-    );
+  publicKeyId: json['publicKeyId'] as String,
+  signature: json['signature'] as String,
+  created: DateTime.parse(json['created'] as String),
+);
 
 Map<String, dynamic> _$SignatureToJson(Signature instance) => <String, dynamic>{
-      'publicKeyId': instance.publicKeyId,
-      'signature': instance.signature,
-      'created': instance.created.toIso8601String(),
-    };
+  'publicKeyId': instance.publicKeyId,
+  'signature': instance.signature,
+  'created': instance.created.toIso8601String(),
+};
 
 Map<String, dynamic> _$PublishingTaskToJson(PublishingTask instance) =>
     <String, dynamic>{
@@ -38,6 +38,7 @@ Map<String, dynamic> _$PublishingTaskToJson(PublishingTask instance) =>
       'updatedAt': instance.updatedAt.toIso8601String(),
       'expiresAt': instance.expiresAt.toIso8601String(),
       'tarball': instance.tarball?.toString(),
+      'message': instance.message,
     };
 
 const _$TaskStatusEnumMap = {

@@ -6,15 +6,11 @@ class NpmError with JsonConvertible {
   NpmError({this.error});
 
   factory NpmError.fromJson(Map<String, dynamic> json) {
-    return NpmError(
-      error: json['error'] as String?,
-    );
+    return NpmError(error: json['error'] as String?);
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      if (error != null) 'error': error,
-    };
+    return {if (error != null) 'error': error};
   }
 }

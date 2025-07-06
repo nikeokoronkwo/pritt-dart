@@ -24,10 +24,14 @@ final handler = defineRequestHandler((event) async {
     }
 
     final body = await getBody(
-        event, (s) => common.PublishPackageRequest.fromJson(json.decode(s)));
+      event,
+      (s) => common.PublishPackageRequest.fromJson(json.decode(s)),
+    );
 
-    assert(body.scope == null,
-        "Use /api/package/@:scope/:name for scoped packages");
+    assert(
+      body.scope == null,
+      "Use /api/package/@:scope/:name for scoped packages",
+    );
 
     // from info...
     // get pkg name, pkg version
@@ -37,7 +41,7 @@ final handler = defineRequestHandler((event) async {
 
     // check if package exists
     try {
-      final pkg = await crs.db.getPackage(pkgName, language: body.language);
+      final _ = await crs.db.getPackage(pkgName, language: body.language);
 
       // package exists
       // if it does, throw error
@@ -49,26 +53,26 @@ final handler = defineRequestHandler((event) async {
 
     // TODO: Contributors
     final pubTask = await crs.db.createNewPublishingTask(
-        name: pkgName,
-        version: body.version,
-        user: user,
-        language: body.language,
-        newPkg: true,
-        config: body.config.path,
-        configData: body.config.config ?? {},
-        metadata: body.info,
-        env: body.env
-            ?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
-        vcs: body.vcs == null
-            ? VCS.other
-            : switch (body.vcs!.name) {
-                common.VCS.git => VCS.git,
-                common.VCS.svn => VCS.svn,
-                common.VCS.fossil => VCS.fossil,
-                common.VCS.mercurial => VCS.mercurial,
-                common.VCS.other => VCS.other,
-              },
-        vcsUrl: body.vcs?.url);
+      name: pkgName,
+      version: body.version,
+      user: user,
+      language: body.language,
+      newPkg: true,
+      config: body.config.path,
+      configData: body.config.config ?? {},
+      metadata: body.info,
+      env: body.env?.map((k, v) => MapEntry(k, v is String ? v : v.toString())),
+      vcs: body.vcs == null
+          ? VCS.other
+          : switch (body.vcs!.name) {
+              common.VCS.git => VCS.git,
+              common.VCS.svn => VCS.svn,
+              common.VCS.fossil => VCS.fossil,
+              common.VCS.mercurial => VCS.mercurial,
+              common.VCS.other => VCS.other,
+            },
+      vcsUrl: body.vcs?.url,
+    );
 
     print(pubTask.toJson());
 
@@ -81,15 +85,17 @@ final handler = defineRequestHandler((event) async {
 
     // send details down
     return common.PublishPackageResponse(
-            queue: common.Queue(
-                id: pubTask.id, status: common.PublishingStatus.queue))
-        .toJson();
+      queue: common.Queue(
+        id: pubTask.id,
+        status: common.PublishingStatus.queue,
+      ),
+    ).toJson();
   } on AssertionError catch (e) {
     setResponseCode(event, 400);
     return common.UnauthorizedError(
-            error: e.message.toString() ?? 'InvalidRequest',
-            reason: common.UnauthorizedReason.org)
-        .toJson();
+      error: e.message.toString(),
+      reason: common.UnauthorizedReason.org,
+    ).toJson();
   } on TypeError {
     setResponseCode(event, 400);
     return common.Error(error: 'InvalidBody').toJson();

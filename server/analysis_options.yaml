@@ -3,3 +3,4 @@ include: ../analysis_options.yaml
 linter:
   rules:
     curly_braces_in_flow_control_structures: false
+    flutter_style_todos: false # TODO: We should remove this in production

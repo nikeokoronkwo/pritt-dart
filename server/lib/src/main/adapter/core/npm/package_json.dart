@@ -134,23 +134,28 @@ class PackageJson {
     this.private = false,
     this.readme,
     this.readmeFilename,
-  })  : assert(
-            author is PackageJsonAuthor? ||
-                author is String? ||
-                author is Map<String, String>?,
-            'author must be a PackageJsonAuthor, String or Map<String, String>'),
-        assert(
-            funding is PackageJsonFunding? ||
-                funding is String? ||
-                funding is Map<String, String>?,
-            'funding must be a PackageJsonFunding, String or Map<String, String>'),
-        assert(contributors == null || contributors is List<PackageJsonAuthor?>,
-            'contributors must be a List<PackageJsonAuthor>'),
-        assert(
-            repository is PackageJsonRepository? ||
-                repository is String? ||
-                repository is Map<String, String>?,
-            'repository must be a PackageJsonRepository, String or Map<String, String>');
+  }) : assert(
+         author is PackageJsonAuthor? ||
+             author is String? ||
+             author is Map<String, String>?,
+         'author must be a PackageJsonAuthor, String or Map<String, String>',
+       ),
+       assert(
+         funding is PackageJsonFunding? ||
+             funding is String? ||
+             funding is Map<String, String>?,
+         'funding must be a PackageJsonFunding, String or Map<String, String>',
+       ),
+       assert(
+         contributors == null || contributors is List<PackageJsonAuthor?>,
+         'contributors must be a List<PackageJsonAuthor>',
+       ),
+       assert(
+         repository is PackageJsonRepository? ||
+             repository is String? ||
+             repository is Map<String, String>?,
+         'repository must be a PackageJsonRepository, String or Map<String, String>',
+       );
 
   factory PackageJson.fromJson(Map<String, dynamic> json) =>
       _$PackageJsonFromJson(json);
@@ -169,11 +174,7 @@ class PackageJsonDirectories {
   /// doc
   final String? doc;
 
-  const PackageJsonDirectories({
-    this.man,
-    this.lib,
-    this.doc,
-  });
+  const PackageJsonDirectories({this.man, this.lib, this.doc});
 
   factory PackageJsonDirectories.fromJson(Map<String, dynamic> json) =>
       _$PackageJsonDirectoriesFromJson(json);
@@ -189,10 +190,7 @@ class PackageJsonFunding {
   /// The url of the funding
   final String? url;
 
-  const PackageJsonFunding({
-    this.type,
-    this.url,
-  });
+  const PackageJsonFunding({this.type, this.url});
 
   factory PackageJsonFunding.fromJson(Map<String, dynamic> json) =>
       _$PackageJsonFundingFromJson(json);
@@ -211,11 +209,7 @@ class PackageJsonAuthor {
   /// The url of the author
   final String? url;
 
-  const PackageJsonAuthor({
-    this.name,
-    this.email,
-    this.url,
-  });
+  const PackageJsonAuthor({this.name, this.email, this.url});
 
   factory PackageJsonAuthor.fromJson(Map<String, dynamic> json) =>
       _$PackageJsonAuthorFromJson(json);
@@ -231,10 +225,7 @@ class PackageJsonRepository {
   /// The url of the repository
   final String? url;
 
-  const PackageJsonRepository({
-    this.type,
-    this.url,
-  });
+  const PackageJsonRepository({this.type, this.url});
 
   factory PackageJsonRepository.fromJson(Map<String, dynamic> json) =>
       _$PackageJsonRepositoryFromJson(json);
