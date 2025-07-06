@@ -38,12 +38,13 @@ void main() {
       return runner.run(['package', 'current']);
     });
     expect(
-        currentOutput,
-        anyOf([
-          contains('Current package'),
-          contains('No package'),
-          contains('not found')
-        ]));
+      currentOutput,
+      anyOf([
+        contains('Current package'),
+        contains('No package'),
+        contains('not found'),
+      ]),
+    );
   });
 
   test('publish then package info', () async {
@@ -52,22 +53,23 @@ void main() {
       return runner.run(['publish']);
     });
     expect(
-        publishOutput,
-        anyOf([
-          contains('publish'),
-          contains('not logged in'),
-          contains('error'),
-          contains('success')
-        ]));
+      publishOutput,
+      anyOf([
+        contains('publish'),
+        contains('not logged in'),
+        contains('error'),
+        contains('success'),
+      ]),
+    );
 
     // Now run package info (should not error)
     final infoOutput = await runWithOutput(() {
       return runner.run(['package', 'info', 'pritt']);
     });
     expect(
-        infoOutput,
-        anyOf(
-            [contains('info'), contains('not found'), contains('No package')]));
+      infoOutput,
+      anyOf([contains('info'), contains('not found'), contains('No package')]),
+    );
   });
 
   test('unpack command', () async {
@@ -75,12 +77,13 @@ void main() {
       return runner.run(['unpack', 'pritt']);
     });
     expect(
-        unpackOutput,
-        anyOf([
-          contains('unpack'),
-          contains('not found'),
-          contains('No package')
-        ]));
+      unpackOutput,
+      anyOf([
+        contains('unpack'),
+        contains('not found'),
+        contains('No package'),
+      ]),
+    );
   });
 
   test('adapter list command', () async {
@@ -88,13 +91,14 @@ void main() {
       return runner.run(['adapter', 'list']);
     });
     expect(
-        output,
-        anyOf([
-          contains('adapters'),
-          contains('not logged in'),
-          contains('no adapters'),
-          contains('You are not logged in to Pritt'),
-        ]));
+      output,
+      anyOf([
+        contains('adapters'),
+        contains('not logged in'),
+        contains('no adapters'),
+        contains('You are not logged in to Pritt'),
+      ]),
+    );
   });
 
   test('adapter unpack command', () async {
@@ -102,14 +106,15 @@ void main() {
       return runner.run(['adapter', 'unpack', 'pritt']);
     });
     expect(
-        output,
-        anyOf([
-          contains('Fetching Adapter'),
-          contains('not logged in'),
-          contains('Argument for package required'),
-          contains('No package'),
-          contains('Directory already exists.'),
-        ]));
+      output,
+      anyOf([
+        contains('Fetching Adapter'),
+        contains('not logged in'),
+        contains('Argument for package required'),
+        contains('No package'),
+        contains('Directory already exists.'),
+      ]),
+    );
   });
 
   test('yank command', () async {
@@ -117,13 +122,14 @@ void main() {
       return runner.run(['yank', 'pritt']);
     });
     expect(
-        output,
-        anyOf([
-          contains('yank'),
-          contains('not logged in'),
-          contains('No package'),
-          contains('error'),
-        ]));
+      output,
+      anyOf([
+        contains('yank'),
+        contains('not logged in'),
+        contains('No package'),
+        contains('error'),
+      ]),
+    );
   });
 
   test('remove command', () async {
@@ -131,13 +137,14 @@ void main() {
       return runner.run(['remove', 'pritt']);
     });
     expect(
-        output,
-        anyOf([
-          contains('remove'),
-          contains('not logged in'),
-          contains('No package'),
-          contains('error'),
-        ]));
+      output,
+      anyOf([
+        contains('remove'),
+        contains('not logged in'),
+        contains('No package'),
+        contains('error'),
+      ]),
+    );
   });
 
   test('info command', () async {
@@ -145,13 +152,14 @@ void main() {
       return runner.run(['info']);
     });
     expect(
-        output,
-        anyOf([
-          contains('User Information'),
-          contains('not logged in'),
-          contains('Your login session has expired'),
-          contains('To log in, run:'),
-        ]));
+      output,
+      anyOf([
+        contains('User Information'),
+        contains('not logged in'),
+        contains('Your login session has expired'),
+        contains('To log in, run:'),
+      ]),
+    );
   });
 
   test('publish with url option (success)', () async {
@@ -166,13 +174,14 @@ void main() {
       return runner.run(['package', 'current', '--output', 'stdout']);
     });
     expect(
-        output,
-        anyOf([
-          contains('Current package'),
-          contains('{'),
-          contains('No package'),
-          contains('not found')
-        ]));
+      output,
+      anyOf([
+        contains('Current package'),
+        contains('{'),
+        contains('No package'),
+        contains('not found'),
+      ]),
+    );
   });
 
   test('package info with valid package (success)', () async {
@@ -180,13 +189,14 @@ void main() {
       return runner.run(['package', 'info', 'pritt']);
     });
     expect(
-        output,
-        anyOf([
-          contains('info'),
-          contains('pritt'),
-          contains('not found'),
-          contains('No package')
-        ]));
+      output,
+      anyOf([
+        contains('info'),
+        contains('pritt'),
+        contains('not found'),
+        contains('No package'),
+      ]),
+    );
   });
 
   test('configure with config option (success)', () async {
@@ -201,13 +211,14 @@ void main() {
       return runner.run(['unpack', 'pritt', '--output', 'stdout']);
     });
     expect(
-        output,
-        anyOf([
-          contains('Fetching Package'),
-          contains('Downloading Package'),
-          contains('No package'),
-          contains('not logged in')
-        ]));
+      output,
+      anyOf([
+        contains('Fetching Package'),
+        contains('Downloading Package'),
+        contains('No package'),
+        contains('not logged in'),
+      ]),
+    );
   });
 }
 

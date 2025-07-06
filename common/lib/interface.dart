@@ -63,7 +63,8 @@ class StreamedContent extends Content {
 
   @override
   List<int> get raw => throw Exception(
-      'Do not call raw on streamed content: Use `data` instead');
+    'Do not call raw on streamed content: Use `data` instead',
+  );
 }
 
 @JsonSerializable(includeIfNull: false)
@@ -150,10 +151,7 @@ class AuthDetailsResponse {
 
 @JsonSerializable(includeIfNull: false)
 class AuthError {
-  AuthError({
-    this.error,
-    required this.status,
-  });
+  AuthError({this.error, required this.status});
 
   factory AuthError.fromJson(Map<String, dynamic> json) =>
       _$AuthErrorFromJson(json);
@@ -167,10 +165,7 @@ class AuthError {
 
 @JsonSerializable(includeIfNull: false)
 class AuthPollResponse {
-  AuthPollResponse({
-    required this.status,
-    this.response,
-  });
+  AuthPollResponse({required this.status, this.response});
 
   factory AuthPollResponse.fromJson(Map<String, dynamic> json) =>
       _$AuthPollResponseFromJson(json);
@@ -267,10 +262,7 @@ class Error {
 
 @JsonSerializable(includeIfNull: false)
 class ExistsError {
-  ExistsError({
-    this.error,
-    required this.name,
-  });
+  ExistsError({this.error, required this.name});
 
   factory ExistsError.fromJson(Map<String, dynamic> json) =>
       _$ExistsErrorFromJson(json);
@@ -284,10 +276,7 @@ class ExistsError {
 
 @JsonSerializable(includeIfNull: false)
 class ExpiredError {
-  ExpiredError({
-    this.error,
-    required this.expired_time,
-  });
+  ExpiredError({this.error, required this.expired_time});
 
   factory ExpiredError.fromJson(Map<String, dynamic> json) =>
       _$ExpiredErrorFromJson(json);
@@ -451,11 +440,7 @@ class GetCurrentUserResponse {
 
 @JsonSerializable(includeIfNull: false)
 class Author {
-  Author({
-    required this.name,
-    required this.email,
-    this.avatar,
-  });
+  Author({required this.name, required this.email, this.avatar});
 
   factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 
@@ -513,10 +498,7 @@ class Signature {
 
 @JsonSerializable(includeIfNull: false)
 class ConfigFile {
-  ConfigFile({
-    required this.name,
-    required this.data,
-  });
+  ConfigFile({required this.name, required this.data});
 
   factory ConfigFile.fromJson(Map<String, dynamic> json) =>
       _$ConfigFileFromJson(json);
@@ -752,10 +734,7 @@ class Package {
 
 @JsonSerializable(includeIfNull: false)
 class GetPackagesResponse {
-  GetPackagesResponse({
-    this.next_url,
-    required this.packages,
-  });
+  GetPackagesResponse({this.next_url, required this.packages});
 
   factory GetPackagesResponse.fromJson(Map<String, dynamic> json) =>
       _$GetPackagesResponseFromJson(json);
@@ -769,10 +748,7 @@ class GetPackagesResponse {
 
 @JsonSerializable(includeIfNull: false)
 class GetScopeResponse {
-  GetScopeResponse({
-    required this.name,
-    required this.is_member,
-  });
+  GetScopeResponse({required this.name, required this.is_member});
 
   factory GetScopeResponse.fromJson(Map<String, dynamic> json) =>
       _$GetScopeResponseFromJson(json);
@@ -822,11 +798,7 @@ class GetUsersResponse {
 
 @JsonSerializable(includeIfNull: false)
 class InvalidError {
-  InvalidError({
-    this.error,
-    this.description,
-    this.redirect,
-  });
+  InvalidError({this.error, this.description, this.redirect});
 
   factory InvalidError.fromJson(Map<String, dynamic> json) =>
       _$InvalidErrorFromJson(json);
@@ -865,10 +837,7 @@ class InvalidTarballError {
 
 @JsonSerializable(includeIfNull: false)
 class NotFoundError {
-  NotFoundError({
-    this.error,
-    this.message,
-  });
+  NotFoundError({this.error, this.message});
 
   factory NotFoundError.fromJson(Map<String, dynamic> json) =>
       _$NotFoundErrorFromJson(json);
@@ -882,10 +851,7 @@ class NotFoundError {
 
 @JsonSerializable(includeIfNull: false)
 class Configuration {
-  Configuration({
-    required this.path,
-    this.config,
-  });
+  Configuration({required this.path, this.config});
 
   factory Configuration.fromJson(Map<String, dynamic> json) =>
       _$ConfigurationFromJson(json);
@@ -899,10 +865,7 @@ class Configuration {
 
 @JsonSerializable(includeIfNull: false)
 class VersionControlSystem {
-  VersionControlSystem({
-    required this.name,
-    this.url,
-  });
+  VersionControlSystem({required this.name, this.url});
 
   factory VersionControlSystem.fromJson(Map<String, dynamic> json) =>
       _$VersionControlSystemFromJson(json);
@@ -964,10 +927,7 @@ enum PublishingStatus {
 
 @JsonSerializable(includeIfNull: false)
 class Queue {
-  Queue({
-    required this.id,
-    required this.status,
-  });
+  Queue({required this.id, required this.status});
 
   factory Queue.fromJson(Map<String, dynamic> json) => _$QueueFromJson(json);
 
@@ -980,10 +940,7 @@ class Queue {
 
 @JsonSerializable(includeIfNull: false)
 class PublishPackageByVersionResponse {
-  PublishPackageByVersionResponse({
-    this.url,
-    required this.queue,
-  });
+  PublishPackageByVersionResponse({this.url, required this.queue});
 
   factory PublishPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageByVersionResponseFromJson(json);
@@ -1033,10 +990,7 @@ class PublishPackageRequest {
 
 @JsonSerializable(includeIfNull: false)
 class PublishPackageResponse {
-  PublishPackageResponse({
-    this.url,
-    required this.queue,
-  });
+  PublishPackageResponse({this.url, required this.queue});
 
   factory PublishPackageResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageResponseFromJson(json);
@@ -1103,11 +1057,7 @@ enum UnauthorizedReason {
 
 @JsonSerializable(includeIfNull: false)
 class UnauthorizedError {
-  UnauthorizedError({
-    this.error,
-    this.reason,
-    this.description,
-  });
+  UnauthorizedError({this.error, this.reason, this.description});
 
   factory UnauthorizedError.fromJson(Map<String, dynamic> json) =>
       _$UnauthorizedErrorFromJson(json);
@@ -1200,10 +1150,7 @@ abstract interface class PrittInterface {
   /// GET /api/packages
   ///
   /// This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
-  _i3.FutureOr<GetPackagesResponse> getPackages({
-    String index,
-    String user,
-  });
+  _i3.FutureOr<GetPackagesResponse> getPackages({String index, String user});
 
   /// **Get a package from the Pritt Server with the given name**
   /// GET /api/package/{name}
@@ -1321,7 +1268,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<GetPackageByVersionResponse>
-      getPackageByNameWithScopeAndVersion({
+  getPackageByNameWithScopeAndVersion({
     String lang,
     bool all,
     required String scope,
@@ -1336,7 +1283,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   _i3.FutureOr<PublishPackageByVersionResponse>
-      publishPackageWithScopeAndVersion(
+  publishPackageWithScopeAndVersion(
     PublishPackageByVersionRequest body, {
     required String scope,
     required String name,
@@ -1351,7 +1298,7 @@ abstract interface class PrittInterface {
   ///   - [UnauthorizedError] on status code 401
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<YankPackageByVersionRequest>
-      yankPackageByNameWithScopeAndVersion(
+  yankPackageByNameWithScopeAndVersion(
     YankPackageByVersionResponse body, {
     required String scope,
     required String name,
@@ -1506,6 +1453,7 @@ abstract interface class PrittInterface {
 
   /// GET /api/archive/adapter/{name}
   ///
-  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName(
-      {required String name});
+  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName({
+    required String name,
+  });
 }

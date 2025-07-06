@@ -22,9 +22,11 @@ class ServerCommand extends PrittCommand {
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
-      logger.severe(userCredentials == null
-          ? 'You are not logged in to Pritt'
-          : 'Your login session has expired');
+      logger.severe(
+        userCredentials == null
+            ? 'You are not logged in to Pritt'
+            : 'Your login session has expired',
+      );
       logger.stderr('To log in, run: ${styleBold.wrap('pritt login')}');
       exit(1);
     }

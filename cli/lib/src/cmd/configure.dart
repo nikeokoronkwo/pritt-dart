@@ -18,11 +18,13 @@ class ConfigureCommand extends PrittCommand {
       "Configures your project to be able to use its own package manager for installing packages from Pritt";
 
   ConfigureCommand() {
-    argParser.addOption('config',
-        abbr: 'c',
-        help:
-            'The Pritt Configuration file for this project. Defaults to the "pritt.yaml" file in the current directory',
-        defaultsTo: "pritt.yaml");
+    argParser.addOption(
+      'config',
+      abbr: 'c',
+      help:
+          'The Pritt Configuration file for this project. Defaults to the "pritt.yaml" file in the current directory',
+      defaultsTo: "pritt.yaml",
+    );
   }
 
   @override
@@ -32,9 +34,11 @@ class ConfigureCommand extends PrittCommand {
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
-      logger.warn(userCredentials == null
-          ? 'You are not logged in to Pritt'
-          : 'Your login session has expired');
+      logger.warn(
+        userCredentials == null
+            ? 'You are not logged in to Pritt'
+            : 'Your login session has expired',
+      );
       logger.warn('To log in, run: ${styleBold.wrap('pritt login')}');
     }
 
@@ -42,16 +46,21 @@ class ConfigureCommand extends PrittCommand {
         ? null
         : PrittClient(
             url: userCredentials.uri.toString(),
-            accessToken: userCredentials.accessToken);
+            accessToken: userCredentials.accessToken,
+          );
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getProject(p.current,
-        config: argResults?['config'], client: prittClient);
+    var project = await getProject(
+      p.current,
+      config: argResults?['config'],
+      client: prittClient,
+    );
     if (project.handlers.isEmpty) {
       logger.warn('Could not find a suitable handler for the given project.');
       logger.verbose(
-          'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
+        'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)',
+      );
       exit(1);
     } else {
       logger.info('Found: ${project.handlers.join(', ')}!');
@@ -67,6 +76,7 @@ class ConfigureCommand extends PrittCommand {
 
     logger.fine('All Done!');
     logger.fine(
-        'You can now use basic commands for installing and uninstalling packages');
+      'You can now use basic commands for installing and uninstalling packages',
+    );
   }
 }

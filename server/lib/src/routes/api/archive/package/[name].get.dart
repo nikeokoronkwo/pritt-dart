@@ -14,9 +14,9 @@ final handler = defineRequestHandler((event) async {
   if (user == null) {
     setResponseCode(event, 401);
     return common.UnauthorizedError(
-            error: 'Unauthorized',
-            description: 'You are not authorized to view or use this endpoint')
-        .toJson();
+      error: 'Unauthorized',
+      description: 'You are not authorized to view or use this endpoint',
+    ).toJson();
   }
 
   // get tarball for package
@@ -35,7 +35,7 @@ final handler = defineRequestHandler((event) async {
     setResponseCode(event, 403);
     return {
       'error': 'Invalid Parameter',
-      'message': 'The version $version is invalid: $errorMsg'
+      'message': 'The version $version is invalid: $errorMsg',
     };
   }
 
@@ -48,9 +48,9 @@ final handler = defineRequestHandler((event) async {
     if (!package.isSuccess) {
       setResponseCode(event, 404);
       return common.NotFoundError(
-              error: 'Package not found',
-              message: 'The package $pkgName could not be found')
-          .toJson();
+        error: 'Package not found',
+        message: 'The package $pkgName could not be found',
+      ).toJson();
     }
 
     final archive = await crs.ofs.getPackage(package.body!.archive.path);

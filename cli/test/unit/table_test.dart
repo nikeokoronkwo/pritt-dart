@@ -35,8 +35,9 @@ void main() {
   group('Table Testing', () {
     for (final key in testData.keys) {
       test('Render Table Case: $key', () {
-        final actual =
-            Table(testData[key]!).write(indentation: Indentation.left).trim();
+        final actual = Table(
+          testData[key]!,
+        ).write(indentation: Indentation.left).trim();
         final expected = expectedOutputs[key]!.trim();
 
         expect(actual, equals(expected));

@@ -13,37 +13,37 @@ final dartHandler = Handler<PubspecConfig>(
   name: 'dart',
   language: 'dart',
   config: Loader('pubspec.yaml', load: (contents) => contents),
-  ignore: Loader('.pubignore',
-      load: (contents) => const LineSplitter()
-          .convert(contents)
-          .skipWhile((c) => c.trim().startsWith('#'))
-          .toList()
-        ..addAll(['.dart_tool', 'pubspec.lock'])),
+  ignore: Loader(
+    '.pubignore',
+    load: (contents) =>
+        const LineSplitter()
+            .convert(contents)
+            .skipWhile((c) => c.trim().startsWith('#'))
+            .toList()
+          ..addAll(['.dart_tool', 'pubspec.lock']),
+  ),
   usePMForHostedPkgs: true,
   packageManager: PackageManager(
-      name: 'pub',
-      args: ['dart', 'pub'],
-      onGet: () => ['dart', 'pub', 'get'],
-      onAdd: () {
-        return PackageCmdArgs(
-          args: ['dart', 'pub', 'add'],
-          resolveType: (name, type) => (
-            [
-              type == PackageType.dev ? 'dev:$name' : name,
-            ],
-            collate: false
-          ),
-          resolveVersion: (name, version) => '$name:^$version',
-          resolveUrl: (name, url) => (
-            [
-              name,
-              if (url != null) ...['--hosted-url', url]
-            ],
-            singleUse: true
-          ),
-        );
-      },
-      onRemove: (info) => ['dart', 'pub', 'remove']),
+    name: 'pub',
+    args: ['dart', 'pub'],
+    onGet: () => ['dart', 'pub', 'get'],
+    onAdd: () {
+      return PackageCmdArgs(
+        args: ['dart', 'pub', 'add'],
+        resolveType: (name, type) =>
+            ([type == PackageType.dev ? 'dev:$name' : name], collate: false),
+        resolveVersion: (name, version) => '$name:^$version',
+        resolveUrl: (name, url) => (
+          [
+            name,
+            if (url != null) ...['--hosted-url', url],
+          ],
+          singleUse: true,
+        ),
+      );
+    },
+    onRemove: (info) => ['dart', 'pub', 'remove'],
+  ),
   onGetConfig: (directory, controller) async {
     // read the configuration file
     final config = await controller.readConfigFile(directory);
@@ -59,9 +59,10 @@ final dartHandler = Handler<PubspecConfig>(
   },
   onGetWorkspace: (directory, controller) async {
     return Workspace(
-        config: await controller.getConfiguration(directory),
-        directory: directory,
-        name: directory);
+      config: await controller.getConfiguration(directory),
+      directory: directory,
+      name: directory,
+    );
   },
   onConfigure: (context, controller) async {
     final tokenUrls = const LineSplitter()
@@ -71,14 +72,17 @@ final dartHandler = Handler<PubspecConfig>(
 
     if (!tokenUrls.any((line) => line.contains(controller.instanceUri))) {
       // add token
-      await controller.run('dart', args: [
-        'pub',
-        'token',
-        'add',
-        controller.instanceUri,
-        '--env-var',
-        'PRITT_AUTH_TOKEN'
-      ]);
+      await controller.run(
+        'dart',
+        args: [
+          'pub',
+          'token',
+          'add',
+          controller.instanceUri,
+          '--env-var',
+          'PRITT_AUTH_TOKEN',
+        ],
+      );
     }
 
     return [];
@@ -86,22 +90,24 @@ final dartHandler = Handler<PubspecConfig>(
 );
 
 class PubspecConfig extends Config {
-  const PubspecConfig._(
-      {required super.name,
-      required super.version,
-      super.description,
-      required super.author,
-      super.private,
-      required this.rawConfig});
+  const PubspecConfig._({
+    required super.name,
+    required super.version,
+    super.description,
+    required super.author,
+    super.private,
+    required this.rawConfig,
+  });
 
   factory PubspecConfig.fromJson(Map<String, dynamic> json, Author author) {
     return PubspecConfig._(
-        name: json['name'] as String,
-        version: json['version'] as String,
-        description: json['description'] as String?,
-        author: author,
-        private: json['publish_to'] == 'none',
-        rawConfig: json);
+      name: json['name'] as String,
+      version: json['version'] as String,
+      description: json['description'] as String?,
+      author: author,
+      private: json['publish_to'] == 'none',
+      rawConfig: json,
+    );
   }
 
   @override

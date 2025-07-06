@@ -21,17 +21,19 @@ final handler = defineRequestHandler((event) async {
     //     : (await checkAuthorization(authHeader) != null);
 
     return GetUserResponse(
-            name: user.name,
-            email: user.email,
-            created_at: user.createdAt.toIso8601String(),
-            updated_at: user.updatedAt.toIso8601String(),
-            packages: await packages
-                .map((pkg) => PackageMap(
-                      name: pkg.name,
-                      type: UserPackageRelationship.author,
-                    ))
-                .toList())
-        .toJson();
+      name: user.name,
+      email: user.email,
+      created_at: user.createdAt.toIso8601String(),
+      updated_at: user.updatedAt.toIso8601String(),
+      packages: await packages
+          .map(
+            (pkg) => PackageMap(
+              name: pkg.name,
+              type: UserPackageRelationship.author,
+            ),
+          )
+          .toList(),
+    ).toJson();
   } on CRSException catch (e) {
     switch (e.type) {
       case CRSExceptionType.USER_NOT_FOUND:

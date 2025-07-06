@@ -8,7 +8,7 @@ executables:
   pritt:
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.8.0
 
 # Add regular dependencies here.
 dependencies:

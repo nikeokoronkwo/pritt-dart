@@ -7,18 +7,18 @@ part of 'resolve.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$AdapterResolveObjectToJson(
-        AdapterResolveObject instance) =>
-    <String, dynamic>{
-      'path': instance.path,
-      'pathSegments': instance.pathSegments,
-      'url': instance.url,
-      'method': _$RequestMethodEnumMap[instance.method]!,
-      'accept': instance.accept,
-      'maxAge': instance.maxAge,
-      'query': instance.query,
-      'meta': instance.meta,
-      'userAgent': instance.userAgent.toJson(),
-    };
+  AdapterResolveObject instance,
+) => <String, dynamic>{
+  'path': instance.path,
+  'pathSegments': instance.pathSegments,
+  'url': instance.url,
+  'method': _$RequestMethodEnumMap[instance.method]!,
+  'accept': instance.accept,
+  'maxAge': instance.maxAge,
+  'query': instance.query,
+  'meta': instance.meta,
+  'userAgent': instance.userAgent.toJson(),
+};
 
 const _$RequestMethodEnumMap = {
   RequestMethod.GET: 'GET',

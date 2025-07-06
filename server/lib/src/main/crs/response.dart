@@ -10,18 +10,12 @@ sealed class CRSResponse<T> {
   /// with a body and a status code
   /// [body] is the body of the response
   /// [statusCode] is the status code of the response
-  factory CRSResponse.success({
-    required T body,
-    required int statusCode,
-  }) =>
+  factory CRSResponse.success({required T body, required int statusCode}) =>
       CRSSuccessResponse(body: body, statusCode: statusCode);
 
   /// A factory constructor for creating an error response
   /// with an error message and a status code
-  factory CRSResponse.error({
-    required String error,
-    required int statusCode,
-  }) =>
+  factory CRSResponse.error({required String error, required int statusCode}) =>
       CRSErrorResponse(error: error, statusCode: statusCode, body: null as T?);
 
   /// A factory constructor for creating an error response
@@ -30,8 +24,7 @@ sealed class CRSResponse<T> {
     required String error,
     required int statusCode,
     required T body,
-  }) =>
-      CRSErrorResponse(error: error, statusCode: statusCode, body: body);
+  }) => CRSErrorResponse(error: error, statusCode: statusCode, body: body);
 }
 
 class CRSSuccessResponse<T> extends CRSResponse<T> {
@@ -40,11 +33,9 @@ class CRSSuccessResponse<T> extends CRSResponse<T> {
   @override
   T get body => _body;
 
-  const CRSSuccessResponse({
-    required T body,
-    required int statusCode,
-  })  : _body = body,
-        super._(body);
+  const CRSSuccessResponse({required T body, required int statusCode})
+    : _body = body,
+      super._(body);
 }
 
 class CRSErrorResponse<T> extends CRSResponse<T> {
@@ -59,6 +50,6 @@ class CRSErrorResponse<T> extends CRSResponse<T> {
     required this.error,
     this.statusCode,
     required T? body,
-  })  : _body = body,
-        super._(body);
+  }) : _body = body,
+       super._(body);
 }

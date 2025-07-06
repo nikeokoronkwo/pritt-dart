@@ -39,13 +39,20 @@ void main() {
   group('Progress Bar Tests', () {
     progressBarTests.forEach((testObj, expected) {
       test(
-          'Progress bar for ${testObj.current}/${testObj.total} with width ${testObj.width}',
-          () {
-        final result = generateProgressBar(testObj.current, testObj.total,
-            width: testObj.width);
-        expect(result, equals(expected),
-            reason: "Expected: $expected, but got: $result");
-      });
+        'Progress bar for ${testObj.current}/${testObj.total} with width ${testObj.width}',
+        () {
+          final result = generateProgressBar(
+            testObj.current,
+            testObj.total,
+            width: testObj.width,
+          );
+          expect(
+            result,
+            equals(expected),
+            reason: "Expected: $expected, but got: $result",
+          );
+        },
+      );
     });
   });
 }

@@ -8,12 +8,13 @@ class IgnoreMatcher {
   final LineSplitter _lineSplitter = LineSplitter();
 
   IgnoreMatcher([List<String>? lines])
-      : patterns = lines
-                ?.map((l) => l.trim())
-                .where((l) => l.isNotEmpty && !l.startsWith('#'))
-                .map((l) => IgnorePattern.from(l))
-                .toList() ??
-            <IgnorePattern>[];
+    : patterns =
+          lines
+              ?.map((l) => l.trim())
+              .where((l) => l.isNotEmpty && !l.startsWith('#'))
+              .map((l) => IgnorePattern.from(l))
+              .toList() ??
+          <IgnorePattern>[];
 
   void add(String line) {
     if (line.isNotEmpty && !line.startsWith('#')) {
@@ -22,10 +23,12 @@ class IgnoreMatcher {
   }
 
   void addLines(Iterable<String> lines) {
-    patterns.addAll(lines
-        .map((l) => l.trim())
-        .where((l) => l.isNotEmpty && !l.startsWith('#'))
-        .map((l) => IgnorePattern.from(l)));
+    patterns.addAll(
+      lines
+          .map((l) => l.trim())
+          .where((l) => l.isNotEmpty && !l.startsWith('#'))
+          .map((l) => IgnorePattern.from(l)),
+    );
   }
 
   void addContent(String contents) {
@@ -52,9 +55,11 @@ class IgnorePattern {
   final bool isNegation;
 
   IgnorePattern.from(String pattern)
-      : isNegation = pattern.startsWith('!'),
-        glob = Glob(pattern.startsWith('!') ? pattern.substring(1) : pattern,
-            recursive: true);
+    : isNegation = pattern.startsWith('!'),
+      glob = Glob(
+        pattern.startsWith('!') ? pattern.substring(1) : pattern,
+        recursive: true,
+      );
 
   bool matches(String path) {
     // Normalize for matching: use forward slashes
@@ -81,6 +86,6 @@ String? getVCSIgnoreFile(VCS vcs) {
     VCS.git => '.gitignore',
     VCS.mercurial => '.hgignore',
     VCS.fossil => '.fossil-settings/ignore-glob',
-    _ => null
+    _ => null,
   };
 }

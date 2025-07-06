@@ -14,7 +14,8 @@ AdapterResolveObject getAdapterResolveObject(Request request) {
 
 UserAgent getUserAgentFromHeader(Map<String, String> header) {
   return UserAgent.fromRaw(
-      header.map((k, v) => MapEntry(k.toLowerCase(), v))['user-agent'] ?? '');
+    header.map((k, v) => MapEntry(k.toLowerCase(), v))['user-agent'] ?? '',
+  );
 }
 
 RequestMethod getMethodFromString(String method) {
@@ -24,6 +25,6 @@ RequestMethod getMethodFromString(String method) {
     'post' => RequestMethod.DELETE,
     'put' => RequestMethod.PUT,
     'delete' => RequestMethod.DELETE,
-    _ => throw Exception('Unsupported Request Method $method')
+    _ => throw Exception('Unsupported Request Method $method'),
   };
 }

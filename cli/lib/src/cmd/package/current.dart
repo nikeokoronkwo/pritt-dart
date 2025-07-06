@@ -20,10 +20,12 @@ class PackageCurrentCommand extends PrittCommand {
   String description = "Get information about the current package if on pritt";
 
   PackageCurrentCommand() {
-    argParser.addOption('json',
-        help:
-            'Write as a JSON output to a file. Pass "stdout" to print the JSON to stdout',
-        valueHelp: 'file');
+    argParser.addOption(
+      'json',
+      help:
+          'Write as a JSON output to a file. Pass "stdout" to print the JSON to stdout',
+      valueHelp: 'file',
+    );
   }
 
   @override
@@ -33,9 +35,11 @@ class PackageCurrentCommand extends PrittCommand {
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
-      logger.warn(userCredentials == null
-          ? 'You are not logged in to Pritt'
-          : 'Your login session has expired');
+      logger.warn(
+        userCredentials == null
+            ? 'You are not logged in to Pritt'
+            : 'Your login session has expired',
+      );
       logger.warn('To log in, run: ${styleBold.wrap('pritt login')}');
     }
 
@@ -43,16 +47,21 @@ class PackageCurrentCommand extends PrittCommand {
         ? null
         : PrittClient(
             url: userCredentials.uri.toString(),
-            accessToken: userCredentials.accessToken);
+            accessToken: userCredentials.accessToken,
+          );
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getProject(p.current,
-        config: argResults?['config'], client: prittClient);
+    var project = await getProject(
+      p.current,
+      config: argResults?['config'],
+      client: prittClient,
+    );
     if (project.handlers.isEmpty) {
       logger.warn('Could not find a suitable handler for the given project.');
       logger.verbose(
-          'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
+        'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)',
+      );
       exit(1);
     } else {
       logger.info('Found: ${project.handlers.join(', ')}!');
@@ -67,11 +76,12 @@ class PackageCurrentCommand extends PrittCommand {
         'name': config.name,
         'language': project.primaryHandler.language,
         if (config.packageManager?.name case final pm?) 'package manager': pm,
-        if (project.vcs != VCS.other) 'vcs': project.vcs.name
+        if (project.vcs != VCS.other) 'vcs': project.vcs.name,
       };
 
-      await File(argResults?['json'] ?? 'results.json')
-          .writeAsString(jsonEncode(projectJson));
+      await File(
+        argResults?['json'] ?? 'results.json',
+      ).writeAsString(jsonEncode(projectJson));
     } else {
       logger.info('Info for project at ${project.directory}');
       // table output

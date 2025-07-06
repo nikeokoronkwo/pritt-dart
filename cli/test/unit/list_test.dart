@@ -15,7 +15,8 @@ void main() {
       client = MockPrittClient();
 
       when(client.getPackages()).thenReturn(
-          GetPackagesResponse(packages: createMockPackages(scoped: true)));
+        GetPackagesResponse(packages: createMockPackages(scoped: true)),
+      );
     });
 
     test('List Packages Usage', () async {

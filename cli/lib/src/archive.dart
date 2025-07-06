@@ -9,8 +9,9 @@ Future<void> safeExtractTarGz({
   int maxTotalSizeBytes = 100 * 1024 * 1024, // 100MB
 }) async {
   final compressedBytes = await tarGzFile.readAsBytes();
-  final archive =
-      TarDecoder().decodeBytes(GZipDecoder().decodeBytes(compressedBytes));
+  final archive = TarDecoder().decodeBytes(
+    GZipDecoder().decodeBytes(compressedBytes),
+  );
 
   int totalSize = 0;
 
@@ -35,9 +36,8 @@ Future<void> safeExtractTarGz({
 
 String sanitizeFilename(String targetDir, String filePath) {
   final fullPath = File(
-          '$targetDir/${p.relative(filePath, from: filePath.split('/').first)}')
-      .absolute
-      .path;
+    '$targetDir/${p.relative(filePath, from: filePath.split('/').first)}',
+  ).absolute.path;
   final safeRoot = Directory(targetDir).absolute.path;
 
   if (!fullPath.startsWith(safeRoot)) {

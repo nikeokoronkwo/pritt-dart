@@ -55,7 +55,7 @@ enum CRSExceptionType {
   SCOPE_NOT_FOUND,
 
   /// Critical error in the system
-  CRITICAL_ERROR
+  CRITICAL_ERROR,
 }
 
 class UnauthorizedException implements Exception {

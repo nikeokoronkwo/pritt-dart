@@ -27,58 +27,93 @@ class CoreRegistryServiceController implements CRSController {
 
   @override
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
-          String packageName, String version,
-          {String? language, Map<String, dynamic>? env}) =>
-      delegate.getArchiveWithVersion(packageName, version,
-          language: this.language, env: env);
+    String packageName,
+    String version, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) => delegate.getArchiveWithVersion(
+    packageName,
+    version,
+    language: this.language,
+    env: env,
+  );
 
   @override
-  Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
-          {String? language, Map<String, dynamic>? env}) =>
+  Future<CRSResponse<PackageVersions>> getLatestPackage(
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) =>
       delegate.getLatestPackage(packageName, language: this.language, env: env);
 
   @override
-  Future<CRSResponse<Package>> getPackageDetails(String packageName,
-          {String? language, Map<String, dynamic>? env}) =>
-      delegate.getPackageDetails(packageName,
-          language: this.language, env: env);
+  Future<CRSResponse<Package>> getPackageDetails(
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) => delegate.getPackageDetails(
+    packageName,
+    language: this.language,
+    env: env,
+  );
 
   @override
   Future<CRSResponse<PackageVersions>> getPackageWithVersion(
-          String packageName, String version,
-          {String? language, Map<String, dynamic>? env}) =>
-      delegate.getPackageWithVersion(packageName, version,
-          language: this.language, env: env);
+    String packageName,
+    String version, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) => delegate.getPackageWithVersion(
+    packageName,
+    version,
+    language: this.language,
+    env: env,
+  );
 
   @override
   Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
-          String packageName,
-          {String? language,
-          Map<String, dynamic>? env}) =>
-      delegate.getPackages(packageName, language: this.language, env: env);
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) => delegate.getPackages(packageName, language: this.language, env: env);
 
   @override
-  CRSResponse<Stream<PackageVersions>> getPackagesStream(String packageName,
-          {String? language, Map<String, dynamic>? env}) =>
-      delegate.getPackagesStream(packageName,
-          language: this.language, env: env);
+  CRSResponse<Stream<PackageVersions>> getPackagesStream(
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) => delegate.getPackagesStream(
+    packageName,
+    language: this.language,
+    env: env,
+  );
 
   @override
   PrittStorageInterface get ofs => delegate.ofs;
 
   @override
   Future<CRSResponse<Map<User, Iterable<Privileges>>>> getPackageContributors(
-          String packageName,
-          {String? language,
-          Map<String, dynamic>? env}) =>
-      delegate.getPackageContributors(packageName,
-          language: this.language, env: env);
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) => delegate.getPackageContributors(
+    packageName,
+    language: this.language,
+    env: env,
+  );
 
   @override
-  FutureOr setFileServer(String packageName,
-          {String? version, String? language, bool cache = false}) =>
-      delegate.setFileServer(packageName,
-          version: version, language: this.language, cache: cache);
+  FutureOr setFileServer(
+    String packageName, {
+    String? version,
+    String? language,
+    bool cache = false,
+  }) => delegate.setFileServer(
+    packageName,
+    version: version,
+    language: this.language,
+    cache: cache,
+  );
 }
 
 /// The core registry service
@@ -103,16 +138,20 @@ class CoreRegistryService implements CRSController {
   }
 
   /// Creates a new instance of the core registry service
-  static Future<CoreRegistryService> connect(
-      {PrittDatabase? db, PrittStorage? storage}) async {
+  static Future<CoreRegistryService> connect({
+    PrittDatabase? db,
+    PrittStorage? storage,
+  }) async {
     db ??= await PrittDatabase.connect(
-        host: Platform.environment['DATABASE_HOST']!,
-        port: int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
-        database: Platform.environment['DATABASE_NAME']!,
-        username: Platform.environment['DATABASE_USERNAME']!,
-        password: Platform.environment['DATABASE_PASSWORD'] ??
-            String.fromEnvironment('DATABASE_PASSWORD'),
-        devMode: Platform.environment['DATABASE_HOST'] == 'localhost');
+      host: Platform.environment['DATABASE_HOST']!,
+      port: int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
+      database: Platform.environment['DATABASE_NAME']!,
+      username: Platform.environment['DATABASE_USERNAME']!,
+      password:
+          Platform.environment['DATABASE_PASSWORD'] ??
+          String.fromEnvironment('DATABASE_PASSWORD'),
+      devMode: Platform.environment['DATABASE_HOST'] == 'localhost',
+    );
 
     storage ??= await PrittStorage.connect(Platform.environment['S3_URL']!);
 
@@ -125,22 +164,23 @@ class CoreRegistryService implements CRSController {
 
   @override
   Future<CRSResponse<CRSArchive>> getArchiveWithVersion(
-      String packageName, String version,
-      {String? language, Map<String, dynamic>? env}) async {
+    String packageName,
+    String version, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       print('${scope == null ? name : '$scope/$name'}/$version.tar.gz');
       final file = await ofs.getPackage(
-          '${scope == null ? name : '$scope/$name'}/$version.tar.gz');
+        '${scope == null ? name : '$scope/$name'}/$version.tar.gz',
+      );
       final archive = CRSArchive(
         '$packageName.tar.gz',
         'application/gzip',
         Stream.fromIterable([file.data]),
       );
-      return CRSResponse.success(
-        body: archive,
-        statusCode: 200,
-      );
+      return CRSResponse.success(body: archive, statusCode: 200);
     } on CRSException catch (e) {
       switch (e.type) {
         case CRSExceptionType.OBJECT_NOT_FOUND:
@@ -158,8 +198,11 @@ class CoreRegistryService implements CRSController {
   }
 
   @override
-  Future<CRSResponse<PackageVersions>> getLatestPackage(String packageName,
-      {String? language, Map<String, dynamic>? env}) async {
+  Future<CRSResponse<PackageVersions>> getLatestPackage(
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       final package = await db.getPackage(name, scope: scope);
@@ -175,12 +218,11 @@ class CoreRegistryService implements CRSController {
 
       // TODO: Implement [db.getPackageWithVersion] method
       final latestPackage = await db.getPackageWithVersion(
-          packageName, Version.parse(latestVersion));
-
-      return CRSResponse.success(
-        body: latestPackage,
-        statusCode: 200,
+        packageName,
+        Version.parse(latestVersion),
       );
+
+      return CRSResponse.success(body: latestPackage, statusCode: 200);
     } on CRSException catch (e) {
       switch (e.type) {
         case CRSExceptionType.PACKAGE_NOT_FOUND:
@@ -202,16 +244,16 @@ class CoreRegistryService implements CRSController {
       }
     } catch (e) {
       // Handle any other exceptions that may occur
-      return CRSResponse.error(
-        error: e.toString(),
-        statusCode: 500,
-      );
+      return CRSResponse.error(error: e.toString(), statusCode: 500);
     }
   }
 
   @override
-  Future<CRSResponse<Package>> getPackageDetails(String packageName,
-      {String? language, Map<String, dynamic>? env}) async {
+  Future<CRSResponse<Package>> getPackageDetails(
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       final package = await db.getPackage(name, scope: scope);
@@ -224,10 +266,7 @@ class CoreRegistryService implements CRSController {
         );
       }
 
-      return CRSResponse.success(
-        body: package,
-        statusCode: 200,
-      );
+      return CRSResponse.success(body: package, statusCode: 200);
     } on CRSException catch (e) {
       switch (e.type) {
         case CRSExceptionType.PACKAGE_NOT_FOUND:
@@ -243,21 +282,24 @@ class CoreRegistryService implements CRSController {
       }
     } catch (e) {
       // Handle any other exceptions that may occur
-      return CRSResponse.error(
-        error: e.toString(),
-        statusCode: 500,
-      );
+      return CRSResponse.error(error: e.toString(), statusCode: 500);
     }
   }
 
   @override
   Future<CRSResponse<PackageVersions>> getPackageWithVersion(
-      String packageName, String version,
-      {String? language, Map<String, dynamic>? env}) async {
+    String packageName,
+    String version, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final pkg = await db.getPackageWithVersion(name, Version.parse(version),
-          scope: scope);
+      final pkg = await db.getPackageWithVersion(
+        name,
+        Version.parse(version),
+        scope: scope,
+      );
 
       if (language != null && pkg.package.language != language) {
         return CRSResponse.error(
@@ -267,10 +309,7 @@ class CoreRegistryService implements CRSController {
         );
       }
 
-      return CRSResponse.success(
-        body: pkg,
-        statusCode: 200,
-      );
+      return CRSResponse.success(body: pkg, statusCode: 200);
     } on CRSException catch (e) {
       switch (e.type) {
         case CRSExceptionType.VERSION_NOT_FOUND:
@@ -286,18 +325,16 @@ class CoreRegistryService implements CRSController {
       }
     } catch (e) {
       // Handle any other exceptions that may occur
-      return CRSResponse.error(
-        error: e.toString(),
-        statusCode: 500,
-      );
+      return CRSResponse.error(error: e.toString(), statusCode: 500);
     }
   }
 
   @override
   Future<CRSResponse<Map<Version, PackageVersions>>> getPackages(
-      String packageName,
-      {String? language,
-      Map<String, dynamic>? env}) async {
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       final packages = await db.getAllVersionsOfPackage(name, scope: scope);
@@ -312,10 +349,9 @@ class CoreRegistryService implements CRSController {
       }
 
       return CRSResponse.success(
-        body: packages
-            .toList()
-            .asMap()
-            .map((k, v) => MapEntry(Version.parse(v.version), v)),
+        body: packages.toList().asMap().map(
+          (k, v) => MapEntry(Version.parse(v.version), v),
+        ),
         statusCode: 200,
       );
     } on CRSException catch (e) {
@@ -325,27 +361,25 @@ class CoreRegistryService implements CRSController {
       );
     } catch (e) {
       // Handle any other exceptions that may occur
-      return CRSResponse.error(
-        error: e.toString(),
-        statusCode: 500,
-      );
+      return CRSResponse.error(error: e.toString(), statusCode: 500);
     }
   }
 
   @override
-  CRSResponse<Stream<PackageVersions>> getPackagesStream(String packageName,
-      {String? language, Map<String, dynamic>? env}) {
+  CRSResponse<Stream<PackageVersions>> getPackagesStream(
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
       final packages = db.getAllVersionsOfPackage(name, scope: scope);
 
-      var pkgStream = Stream.fromFuture(packages)
-          .asyncExpand((e) => Stream.fromIterable(e));
+      var pkgStream = Stream.fromFuture(
+        packages,
+      ).asyncExpand((e) => Stream.fromIterable(e));
 
-      return CRSResponse.success(
-        body: pkgStream,
-        statusCode: 200,
-      );
+      return CRSResponse.success(body: pkgStream, statusCode: 200);
     } on CRSException catch (e) {
       return CRSResponse.error(
         error: 'An unknown error occurred: ${e.message}',
@@ -353,27 +387,24 @@ class CoreRegistryService implements CRSController {
       );
     } catch (e) {
       // Handle any other exceptions that may occur
-      return CRSResponse.error(
-        error: e.toString(),
-        statusCode: 500,
-      );
+      return CRSResponse.error(error: e.toString(), statusCode: 500);
     }
   }
 
   @override
   Future<CRSResponse<Map<User, Iterable<Privileges>>>> getPackageContributors(
-      String packageName,
-      {String? language,
-      Map<String, dynamic>? env}) async {
+    String packageName, {
+    String? language,
+    Map<String, dynamic>? env,
+  }) async {
     try {
       final (name, scope: scope) = parsePackageName(packageName);
-      final contributors =
-          await db.getContributorsForPackage(name, scope: scope);
-
-      return CRSResponse.success(
-        body: contributors,
-        statusCode: 200,
+      final contributors = await db.getContributorsForPackage(
+        name,
+        scope: scope,
       );
+
+      return CRSResponse.success(body: contributors, statusCode: 200);
     } on CRSException catch (e) {
       return CRSResponse.error(
         error: 'An unknown error occurred: ${e.message}',
@@ -381,16 +412,17 @@ class CoreRegistryService implements CRSController {
       );
     } catch (e) {
       // Handle any other exceptions that may occur
-      return CRSResponse.error(
-        error: e.toString(),
-        statusCode: 500,
-      );
+      return CRSResponse.error(error: e.toString(), statusCode: 500);
     }
   }
 
   @override
-  FutureOr setFileServer(String packageName,
-      {String? version, String? language, bool cache = false}) {
+  FutureOr setFileServer(
+    String packageName, {
+    String? version,
+    String? language,
+    bool cache = false,
+  }) {
     // TODO: implement setFileServer
     throw UnimplementedError();
   }

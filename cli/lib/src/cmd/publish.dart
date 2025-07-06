@@ -32,29 +32,39 @@ class PublishCommand extends PrittCommand {
 
   PublishCommand() {
     argParser
-      ..addOption('config',
-          abbr: 'c',
-          help:
-              'The Pritt Configuration File (defaults to pritt.yaml file if exists)')
-      ..addOption('url',
-          abbr: 'u',
-          help:
-              "The URL of the pritt server. Defaults to the main pritt instance (you can also just pass 'main' to indicate the main server).\n"
-              "By default, if this is not a local instance of pritt, or 'main', an 'api' prefix will be placed in front of this URL\nif not specified already, and omitted for the Client URL.\n"
-              "To prevent this default behaviour, you can specify the client URL using the '--client-url' option.",
-          valueHelp: 'url')
-      ..addOption('client-url',
-          valueHelp: 'url',
-          help:
-              "The URL of the pritt client. Defaults to the main pritt instance (you can also just pass 'main' to indicate the main server).\nUse this only when you need to specify a separate URL for the client, like when using on a local instance.",
-          aliases: ['client'])
-      ..addOption('project-config',
-          help:
-              'The Project Configuration file to use (defaults to handler inference)')
-      ..addOption('language',
-          abbr: 'l',
-          help:
-              'If project contains multiple languages, this specifies the primary language to publish/select handlers for.');
+      ..addOption(
+        'config',
+        abbr: 'c',
+        help:
+            'The Pritt Configuration File (defaults to pritt.yaml file if exists)',
+      )
+      ..addOption(
+        'url',
+        abbr: 'u',
+        help:
+            "The URL of the pritt server. Defaults to the main pritt instance (you can also just pass 'main' to indicate the main server).\n"
+            "By default, if this is not a local instance of pritt, or 'main', an 'api' prefix will be placed in front of this URL\nif not specified already, and omitted for the Client URL.\n"
+            "To prevent this default behaviour, you can specify the client URL using the '--client-url' option.",
+        valueHelp: 'url',
+      )
+      ..addOption(
+        'client-url',
+        valueHelp: 'url',
+        help:
+            "The URL of the pritt client. Defaults to the main pritt instance (you can also just pass 'main' to indicate the main server).\nUse this only when you need to specify a separate URL for the client, like when using on a local instance.",
+        aliases: ['client'],
+      )
+      ..addOption(
+        'project-config',
+        help:
+            'The Project Configuration file to use (defaults to handler inference)',
+      )
+      ..addOption(
+        'language',
+        abbr: 'l',
+        help:
+            'If project contains multiple languages, this specifies the primary language to publish/select handlers for.',
+      );
   }
 
   // TODO(nikeokoronkwo): Key Signing Pipeline from User, https://github.com/nikeokoronkwo/pritt-dart/issues/58
@@ -102,31 +112,38 @@ class PublishCommand extends PrittCommand {
 
     // set up new client client
     client = PrittClient(
-        url: userCredentials.uri.toString(),
-        accessToken: userCredentials.accessToken);
+      url: userCredentials.uri.toString(),
+      accessToken: userCredentials.accessToken,
+    );
 
     // 0. PROJECT SETUP
     logger.info('Going through project...');
-    var project = await getProject(p.current,
-        config: argResults?['config'], client: client);
+    var project = await getProject(
+      p.current,
+      config: argResults?['config'],
+      client: client,
+    );
 
     // check for a handler to use
     if (project.handlers.isEmpty) {
       logger.severe('Could not find a suitable handler for the given project.');
       logger.stderr(
-          'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)');
+        'Try installing a handler for the project type from the marketplace, or filing an issue to add support/fix this (if you think it is a bug)',
+      );
       exit(1);
     } else {
       // get an active handler
       if (argResults?.wasParsed('language') ?? false) {
         // check for handler for language
         try {
-          final langHandler = project.handlers
-              .firstWhere((l) => l.language == argResults!['language']);
+          final langHandler = project.handlers.firstWhere(
+            (l) => l.language == argResults!['language'],
+          );
           project.primaryHandler = langHandler;
         } on StateError catch (e) {
           logger.severe(
-              'Could not find any adapters matching the given language ${argResults!['language']}');
+            'Could not find any adapters matching the given language ${argResults!['language']}',
+          );
           logger.verbose(e.message);
           exit(1);
         }
@@ -136,12 +153,14 @@ class PublishCommand extends PrittCommand {
           project.primaryHandler = project.handlers.single;
         } on StateError catch (e) {
           logger.severe(
-              'Found more than one handler matching the given project.');
+            'Found more than one handler matching the given project.',
+          );
           for (var h in project.handlers) {
             logger.stderr('\t- ${h.language}');
           }
           logger.stderr(
-              'You will need to pick one by rerunning this with the "--language" flag');
+            'You will need to pick one by rerunning this with the "--language" flag',
+          );
           logger.verbose(e.message);
           throw UsageException('', usage);
         }
@@ -177,10 +196,14 @@ class PublishCommand extends PrittCommand {
       await (scope == null
           ? client.getPackageByNameWithVersion(name: name, version: version)
           : client.getPackageByNameWithScopeAndVersion(
-              scope: scope, name: name, version: version));
+              scope: scope,
+              name: name,
+              version: version,
+            ));
 
       logger.stderr(
-          'Error: The package ${config.name} with version $version already exists.');
+        'Error: The package ${config.name} with version $version already exists.',
+      );
       exit(1);
     } catch (e) {
       // continue
@@ -219,8 +242,11 @@ class PublishCommand extends PrittCommand {
 
         final pubInitResponse = await (scope == null
             ? client.publishPackage(pkgRequest, name: name)
-            : client.publishPackageWithScope(pkgRequest,
-                scope: scope, name: name));
+            : client.publishPackageWithScope(
+                pkgRequest,
+                scope: scope,
+                name: name,
+              ));
 
         uploadUrl = pubInitResponse.url;
         pubId = pubInitResponse.queue.id;
@@ -237,10 +263,17 @@ class PublishCommand extends PrittCommand {
         );
 
         final pubInitResponse = await (scope == null
-            ? client.publishPackageVersion(pkgRequest,
-                name: name, version: version)
-            : client.publishPackageWithScopeAndVersion(pkgRequest,
-                scope: scope, name: name, version: version));
+            ? client.publishPackageVersion(
+                pkgRequest,
+                name: name,
+                version: version,
+              )
+            : client.publishPackageWithScopeAndVersion(
+                pkgRequest,
+                scope: scope,
+                name: name,
+                version: version,
+              ));
 
         uploadUrl = pubInitResponse.url;
         pubId = pubInitResponse.queue.id;
@@ -249,44 +282,57 @@ class PublishCommand extends PrittCommand {
       logger.describe(e);
       exit(1);
     } catch (e, _) {
-      logger
-          .stdout('An unknown error occured while initiating publishing task');
+      logger.stdout(
+        'An unknown error occured while initiating publishing task',
+      );
       logger.verbose(e);
       exit(2);
     }
 
     // given url and stuff, lets zip up and upload
     logger.info('Zipping Up Package...');
-    final archive = await createArchiveFromFiles(project.files(),
-        rootDir: project.directory, includeDirName: false);
+    final archive = await createArchiveFromFiles(
+      project.files(),
+      rootDir: project.directory,
+      includeDirName: false,
+    );
     final tarball = GZipEncoder().encode(TarEncoder().encode(archive))!;
     logger.fine('Completed Zipping Package!');
 
-    final ProgressBar progressBar =
-        ProgressBar('Uploading Package', completeMessage: 'Package Uploaded');
+    final ProgressBar progressBar = ProgressBar(
+      'Uploading Package',
+      completeMessage: 'Package Uploaded',
+    );
 
     int contentLength = tarball.length;
     int bytesUploaded = 0;
 
     final uploadCompleter = Completer<void>();
 
-    final Stream<Uint8List> tarballStream = asChunkedStream(
-            16, Stream.fromIterable(tarball))
-        .asBroadcastStream()
-        .transform(StreamTransformer.fromHandlers(handleData: (chunk, sink) {
-          sink.add(Uint8List.fromList(chunk));
-          bytesUploaded += chunk.length;
-          progressBar.tick(bytesUploaded, contentLength);
-          sleep(Duration(milliseconds: 10));
-        }, handleDone: (sink) async {
-          sink.close();
-          sleep(Duration(milliseconds: 100));
-          progressBar.end();
-          uploadCompleter.complete();
-        }, handleError: (e, st, sink) {
-          sink.close();
-          uploadCompleter.completeError(e, st);
-        }));
+    final Stream<Uint8List> tarballStream =
+        asChunkedStream(
+          16,
+          Stream.fromIterable(tarball),
+        ).asBroadcastStream().transform(
+          StreamTransformer.fromHandlers(
+            handleData: (chunk, sink) {
+              sink.add(Uint8List.fromList(chunk));
+              bytesUploaded += chunk.length;
+              progressBar.tick(bytesUploaded, contentLength);
+              sleep(Duration(milliseconds: 10));
+            },
+            handleDone: (sink) async {
+              sink.close();
+              sleep(Duration(milliseconds: 100));
+              progressBar.end();
+              uploadCompleter.complete();
+            },
+            handleError: (e, st, sink) {
+              sink.close();
+              uploadCompleter.completeError(e, st);
+            },
+          ),
+        );
 
     // receive and write endpoint pub request
     // upload
@@ -310,11 +356,13 @@ class PublishCommand extends PrittCommand {
     } else {
       try {
         final _ = await client.uploadPackageWithToken(
-            common.StreamedContent(
-                archivePath(name, version: version, scope: scope),
-                tarballStream,
-                contentLength),
-            id: pubId);
+          common.StreamedContent(
+            archivePath(name, version: version, scope: scope),
+            tarballStream,
+            contentLength,
+          ),
+          id: pubId,
+        );
       } on ApiException catch (e) {
         logger.describe(e);
         exit(1);
@@ -327,12 +375,16 @@ class PublishCommand extends PrittCommand {
 
     // complete pub
     logger.fine(
-        'Completed publishing package: ${scopedName(name, scope)}@$version');
+      'Completed publishing package: ${scopedName(name, scope)}@$version',
+    );
     return;
   }
 
-  Future waitForPublishingQueueToComplete(PrittClient client, String pubID,
-      {Duration? pollInterval}) async {
+  Future waitForPublishingQueueToComplete(
+    PrittClient client,
+    String pubID, {
+    Duration? pollInterval,
+  }) async {
     common.PublishPackageStatusResponse response;
     try {
       response = await client.getPackagePubStatus(id: pubID);
@@ -343,11 +395,13 @@ class PublishCommand extends PrittCommand {
     }
     while (response.status != common.PublishingStatus.success &&
         response.status != common.PublishingStatus.error) {
-      await Future.delayed(pollInterval ?? Duration(milliseconds: 600),
-          () async {
-        response = await client.getPackagePubStatus(id: pubID);
-        _clearAndWrite('Publishing Status: ${response.status.value}');
-      });
+      await Future.delayed(
+        pollInterval ?? Duration(milliseconds: 600),
+        () async {
+          response = await client.getPackagePubStatus(id: pubID);
+          _clearAndWrite('Publishing Status: ${response.status.value}');
+        },
+      );
     }
 
     switch (response.status) {
@@ -383,18 +437,21 @@ common.PublishPackageRequest assemblePubRequest({
   String? readmeFormat,
 }) {
   assert(
-      vcsUrl == null || vcs != null, "If VCS Url is set, then VCS must be set");
+    vcsUrl == null || vcs != null,
+    "If VCS Url is set, then VCS must be set",
+  );
   return common.PublishPackageRequest(
-      name: name,
-      scope: scope,
-      version: config.version,
-      language: language,
-      config: common.Configuration(path: configFile, config: config.rawConfig),
-      env: env,
-      info: config.configMetadata,
-      vcs: vcs != null
-          ? common.VersionControlSystem(name: vcs, url: vcsUrl)
-          : null);
+    name: name,
+    scope: scope,
+    version: config.version,
+    language: language,
+    config: common.Configuration(path: configFile, config: config.rawConfig),
+    env: env,
+    info: config.configMetadata,
+    vcs: vcs != null
+        ? common.VersionControlSystem(name: vcs, url: vcsUrl)
+        : null,
+  );
 }
 
 common.PublishPackageByVersionRequest assemblePubVerRequest({
@@ -409,17 +466,21 @@ common.PublishPackageByVersionRequest assemblePubVerRequest({
   String? readmeFormat,
 }) {
   return common.PublishPackageByVersionRequest(
-      name: name,
-      scope: scope,
-      version: config.version,
-      language: language,
-      config: common.Configuration(path: configFile, config: config.rawConfig),
-      env: env,
-      info: config.configMetadata);
+    name: name,
+    scope: scope,
+    version: config.version,
+    language: language,
+    config: common.Configuration(path: configFile, config: config.rawConfig),
+    env: env,
+    info: config.configMetadata,
+  );
 }
 
-Future<Archive> createArchiveFromFiles(Stream<File> files,
-    {bool includeDirName = true, required String rootDir}) async {
+Future<Archive> createArchiveFromFiles(
+  Stream<File> files, {
+  bool includeDirName = true,
+  required String rootDir,
+}) async {
   final archive = Archive();
 
   final dirName = p.basename(rootDir);

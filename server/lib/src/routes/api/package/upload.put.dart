@@ -18,8 +18,8 @@ final handler = defineRequestHandler((event) async {
   if (user == null) {
     setResponseCode(event, 401);
     return common.UnauthorizedError(
-            error: 'You are not authorized to view or use this endpoint')
-        .toJson();
+      error: 'You are not authorized to view or use this endpoint',
+    ).toJson();
   }
 
   // get the tarball from the body
@@ -31,33 +31,34 @@ final handler = defineRequestHandler((event) async {
   try {
     // read the tarball
     final archive = TarDecoder().decodeBytes(
-        await ByteStream(bodyStream.cast<List<int>>().transform(gzip.decoder))
-            .toBytes());
+      await ByteStream(
+        bodyStream.cast<List<int>>().transform(gzip.decoder),
+      ).toBytes(),
+    );
 
     print('=' * 100);
-    print('Archive: ${archive.length} : ${archive.map((f) => (
-          f.name,
-          f.content.runtimeType
-        ))} --> $archive');
+    print(
+      'Archive: ${archive.length} : ${archive.map((f) => (f.name, f.content.runtimeType))} --> $archive',
+    );
 
     // check if empty
     if (archive.isEmpty) {
       setResponseCode(event, 403);
       return common.InvalidTarballError(
-              error: 'InvalidTarballError',
-              description: 'The tarball is empty',
-              sanction: false)
-          .toJson();
+        error: 'InvalidTarballError',
+        description: 'The tarball is empty',
+        sanction: false,
+      ).toJson();
     }
 
     if (archive.any((f) => f.isSymbolicLink && f.name.startsWith('..'))) {
       setResponseCode(event, 403);
       return common.InvalidTarballError(
-              description:
-                  'The tarball contains recursive, external paths. This was not made using the Pritt CLI',
-              sanction: true,
-              error: 'InvalidTarballError')
-          .toJson();
+        description:
+            'The tarball contains recursive, external paths. This was not made using the Pritt CLI',
+        sanction: true,
+        error: 'InvalidTarballError',
+      ).toJson();
     }
 
     // TODO: allow restrictions for people to have more than max
@@ -65,17 +66,20 @@ final handler = defineRequestHandler((event) async {
     if (totalSize > maxTarballSize) {
       setResponseCode(event, 403);
       return common.InvalidTarballError(
-              description: 'Tarball too large',
-              sanction: false,
-              error: 'InvalidTarballError')
-          .toJson();
+        description: 'Tarball too large',
+        sanction: false,
+        error: 'InvalidTarballError',
+      ).toJson();
     }
 
     // get the pub task associated with this
     final taskInfo = await crs.db.getPublishingTaskById(pubID);
 
-    final tarballName = archivePath(taskInfo.name,
-        version: taskInfo.version, scope: taskInfo.scope);
+    final tarballName = archivePath(
+      taskInfo.name,
+      version: taskInfo.version,
+      scope: taskInfo.scope,
+    );
 
     print(tarballName);
 

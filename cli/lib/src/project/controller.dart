@@ -23,13 +23,17 @@ class PrittControllerManager {
 
   PrittConfigUnawareController makeConfigUnawareController(Handler handler) {
     return PrittConfigUnawareController(
-        configLoader: handler.config, client: apiClient);
+      configLoader: handler.config,
+      client: apiClient,
+    );
   }
 
   PrittController<T> makeController<T extends Config>(Handler<T> handler) {
     // create first
     final configUnawareCtrl = PrittConfigUnawareController(
-        configLoader: handler.config, client: apiClient);
+      configLoader: handler.config,
+      client: apiClient,
+    );
 
     Future<T> converter(String contents) async {
       return await handler.onGetConfig(dir ?? p.current, configUnawareCtrl);
@@ -45,18 +49,21 @@ class PrittConfigUnawareController
   PrittClient? client;
   String? token;
 
-  PrittConfigUnawareController(
-      {required this.configLoader, this.client, String? token})
-      : token =
-            token ?? (client?.authentication as HttpBearerAuth?)?.accessToken;
+  PrittConfigUnawareController({
+    required this.configLoader,
+    this.client,
+    String? token,
+  }) : token =
+           token ?? (client?.authentication as HttpBearerAuth?)?.accessToken;
 
   PrittController<T> _upgrade<T extends Config>({
     required FutureOr<T> Function(String) convertConfig,
   }) {
     return PrittController(
-        convertConfig: convertConfig,
-        configLoader: configLoader,
-        client: client);
+      convertConfig: convertConfig,
+      configLoader: configLoader,
+      client: client,
+    );
   }
 
   @override
@@ -76,7 +83,8 @@ class PrittConfigUnawareController
   FutureOr<User> getCurrentUser() async {
     if (client == null) {
       throw AuthorizationException(
-          'The current adapter needs user credentials, but user not logged in');
+        'The current adapter needs user credentials, but user not logged in',
+      );
     }
 
     return await client!.getCurrentUser();
@@ -98,16 +106,18 @@ class PrittConfigUnawareController
   @override
   FutureOr<String> readConfigFile(String directory) async {
     final configName = configLoader.name;
-    final configContents =
-        await File(p.join(directory, configName)).readAsString();
+    final configContents = await File(
+      p.join(directory, configName),
+    ).readAsString();
     return configLoader.load(configContents);
   }
 
   @override
   String readConfigFileSync(String directory) {
     final configName = configLoader.name;
-    final configContents =
-        File(p.join(directory, configName)).readAsStringSync();
+    final configContents = File(
+      p.join(directory, configName),
+    ).readAsStringSync();
     return configLoader.load(configContents);
   }
 
@@ -125,16 +135,20 @@ class PrittConfigUnawareController
   String configFileName() => configLoader.name;
 
   @override
-  Future<String> run(String command,
-      {List<String> args = const [],
-      String? directory,
-      Map<String, String>? environment}) async {
-    return (await Process.run(command, args,
-            workingDirectory: directory,
-            environment: (environment ?? {})
-              ..addAll(Platform.environment)
-              ..addAll({if (token != null) 'PRITT_AUTH_TOKEN': token!})))
-        .stdout;
+  Future<String> run(
+    String command, {
+    List<String> args = const [],
+    String? directory,
+    Map<String, String>? environment,
+  }) async {
+    return (await Process.run(
+      command,
+      args,
+      workingDirectory: directory,
+      environment: (environment ?? {})
+        ..addAll(Platform.environment)
+        ..addAll({if (token != null) 'PRITT_AUTH_TOKEN': token!}),
+    )).stdout;
   }
 }
 
@@ -149,9 +163,9 @@ class PrittController<T extends Config> extends PrittConfigUnawareController
     required FutureOr<T> Function(String) convertConfig,
     required super.configLoader,
     required PrittClient? client,
-  })  : apiClient = client,
-        builtConfigLoader = configLoader.stack(convertConfig),
-        convertConfigLoader = Loader(configLoader.name, load: convertConfig);
+  }) : apiClient = client,
+       builtConfigLoader = configLoader.stack(convertConfig),
+       convertConfigLoader = Loader(configLoader.name, load: convertConfig);
 
   @override
   FutureOr<T> getConfiguration(String directory) async {

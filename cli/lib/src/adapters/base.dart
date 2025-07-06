@@ -48,8 +48,10 @@ class Handler<T extends Config> {
   ///
   /// Other data can be added, but is not required
   final FutureOr<T> Function(
-          String directory, PrittLocalConfigUnawareController controller)
-      onGetConfig;
+    String directory,
+    PrittLocalConfigUnawareController controller,
+  )
+  onGetConfig;
 
   /// A function to run to get workspace data about the package
   ///
@@ -58,25 +60,36 @@ class Handler<T extends Config> {
   /// - The configuration file for the workspace
   /// - The directory of the workspace
   final FutureOr<Workspace<T>> Function(
-      String directory, PrittLocalController controller) onGetWorkspace;
+    String directory,
+    PrittLocalController controller,
+  )
+  onGetWorkspace;
 
   /// A function run to check whether a given workspace is for a given handler
   ///
   /// Defaults to `return await controller.fileExists(this.configFile);`
   final FutureOr<bool> Function(
-          String workspace, PrittLocalConfigUnawareController controller)?
-      onCheckWorkspace;
+    String workspace,
+    PrittLocalConfigUnawareController controller,
+  )?
+  onCheckWorkspace;
 
   /// A function run to configure a given workspace
   ///
   /// This is run to set up a workspace when installing a given package
   final FutureOr<List<Asset>?> Function(
-      PrittContext context, PrittLocalController controller) onConfigure;
+    PrittContext context,
+    PrittLocalController controller,
+  )
+  onConfigure;
 
   /// Whether
 
   final FutureOr<Map<String, dynamic>> Function(
-      PrittContext context, PrittLocalController controller)? getEnv;
+    PrittContext context,
+    PrittLocalController controller,
+  )?
+  getEnv;
 
   /// An enum to represent who should publish a package
   /// Given that the publisher is [PublishManager.pm], then publish commands must be passed to the [packageManager] in order to perform such publishing
@@ -84,50 +97,48 @@ class Handler<T extends Config> {
 
   final bool usePMForHostedPkgs;
 
-  Handler(
-      {required this.id,
-      required this.name,
-      required this.language,
-      required this.config,
-      this.ignore,
-      this.packageManager,
-      required this.onGetConfig,
-      required this.onGetWorkspace,
-      this.onCheckWorkspace,
-      required this.onConfigure,
-      this.getEnv,
-      this.publisher = PublishManager.pritt,
-      this.usePMForHostedPkgs = false})
-      : assert(
-            publisher == PublishManager.pritt ||
-                packageManager?.onPublish != null,
-            "For the publisher to be the language's package manager, publishing instructions should be passed");
+  Handler({
+    required this.id,
+    required this.name,
+    required this.language,
+    required this.config,
+    this.ignore,
+    this.packageManager,
+    required this.onGetConfig,
+    required this.onGetWorkspace,
+    this.onCheckWorkspace,
+    required this.onConfigure,
+    this.getEnv,
+    this.publisher = PublishManager.pritt,
+    this.usePMForHostedPkgs = false,
+  }) : assert(
+         publisher == PublishManager.pritt || packageManager?.onPublish != null,
+         "For the publisher to be the language's package manager, publishing instructions should be passed",
+       );
 
   @override
   String toString() => '$language Handler';
 }
 
-enum PublishManager {
-  pritt,
-  pm;
-}
+enum PublishManager { pritt, pm }
 
 class MultiPackageManagerHandler<T extends Config> extends Handler<T> {
   Map<String, PackageManager> packageManagers;
 
-  MultiPackageManagerHandler(
-      {required super.id,
-      required super.name,
-      required super.language,
-      required super.config,
-      super.ignore,
-      required super.onGetConfig,
-      required super.onGetWorkspace,
-      super.onCheckWorkspace,
-      required super.onConfigure,
-      super.publisher,
-      super.getEnv,
-      this.packageManagers = const {}});
+  MultiPackageManagerHandler({
+    required super.id,
+    required super.name,
+    required super.language,
+    required super.config,
+    super.ignore,
+    required super.onGetConfig,
+    required super.onGetWorkspace,
+    super.onCheckWorkspace,
+    required super.onConfigure,
+    super.publisher,
+    super.getEnv,
+    this.packageManagers = const {},
+  });
 
   @override
   PackageManager? get packageManager =>

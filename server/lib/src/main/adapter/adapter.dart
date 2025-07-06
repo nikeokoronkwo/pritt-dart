@@ -10,11 +10,14 @@ import 'adapter_registry.dart';
 
 typedef AdapterResolveFn = AdapterResolveType Function(AdapterResolveObject);
 
-typedef AdapterRequestFn = FutureOr<AdapterResult> Function(
-    AdapterRequestObject, CRSDBController);
+typedef AdapterRequestFn =
+    FutureOr<AdapterResult> Function(AdapterRequestObject, CRSDBController);
 
-typedef AdapterRetrieveFn = FutureOr<AdapterResult> Function(
-    AdapterRequestObject, CRSArchiveController);
+typedef AdapterRetrieveFn =
+    FutureOr<AdapterResult> Function(
+      AdapterRequestObject,
+      CRSArchiveController,
+    );
 
 /// An adapter implementation
 ///
@@ -51,8 +54,8 @@ class Adapter implements AdapterInterface {
     required this.resolve,
     required AdapterRequestFn request,
     required AdapterRetrieveFn retrieve,
-  })  : metaRequest = request,
-        archiveRequest = retrieve;
+  }) : metaRequest = request,
+       archiveRequest = retrieve;
 
   @override
   Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {

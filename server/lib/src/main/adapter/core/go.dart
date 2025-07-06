@@ -11,224 +11,279 @@ import '../adapter/resolve.dart';
 import '../adapter/result.dart';
 
 final goAdapter = Adapter(
-    id: 'go',
-    language: 'go',
-    resolve: (resolve) {
-      if (resolve.userAgent.toString().startsWith('Go-http-client')) {
-        if (resolve.query['go-get'] == '1') {
-          // initial retrieve
-          resolve.addMeta('stage', '1');
+  id: 'go',
+  language: 'go',
+  resolve: (resolve) {
+    if (resolve.userAgent.toString().startsWith('Go-http-client')) {
+      if (resolve.query['go-get'] == '1') {
+        // initial retrieve
+        resolve.addMeta('stage', '1');
+        return AdapterResolveType.meta;
+        // TODO: Get actual URL routing for Go adapter
+      } else {
+        if (resolve.pathSegments.last == 'list') {
+          resolve.addMeta('stage', '2');
           return AdapterResolveType.meta;
-          // TODO: Get actual URL routing for Go adapter
-        } else {
-          if (resolve.pathSegments.last == 'list') {
-            resolve.addMeta('stage', '2');
-            return AdapterResolveType.meta;
-          }
-          if (resolve.pathSegments.last.endsWith('.zip')) {
-            return AdapterResolveType.archive;
-          } else if (resolve.pathSegments.last.endsWith('.info') ||
-              resolve.pathSegments.last.endsWith('.mod')) {
-            resolve.addMeta('stage', '2');
-            return AdapterResolveType.meta;
-          }
+        }
+        if (resolve.pathSegments.last.endsWith('.zip')) {
+          return AdapterResolveType.archive;
+        } else if (resolve.pathSegments.last.endsWith('.info') ||
+            resolve.pathSegments.last.endsWith('.mod')) {
+          resolve.addMeta('stage', '2');
+          return AdapterResolveType.meta;
         }
       }
-      return AdapterResolveType.none;
-    },
-    request: (req, crs) async {
-      // multiple variants
-      if (req.env['stage'] == '1') {
-        final url = Uri.parse(req.resolveObject.url)
-            .replace(path: req.resolveObject.path);
-        // stage 1 -- simple html
-        final htmlDoc = Document()
-          ..append(Element.tag('html')
-            ..append(Element.tag('head')
-              ..append(Element.tag('meta')
-                ..attributes.addAll({
-                  'name': 'go-import',
-                  'content':
-                      '${url.host}/${url.path} mod ${url.replace(path: '').toString()}'
-                }))
-              ..append(Element.tag('meta'))));
+    }
+    return AdapterResolveType.none;
+  },
+  request: (req, crs) async {
+    // multiple variants
+    if (req.env['stage'] == '1') {
+      final url = Uri.parse(
+        req.resolveObject.url,
+      ).replace(path: req.resolveObject.path);
+      // stage 1 -- simple html
+      final htmlDoc = Document()
+        ..append(
+          Element.tag('html')..append(
+            Element.tag('head')
+              ..append(
+                Element.tag('meta')
+                  ..attributes.addAll({
+                    'name': 'go-import',
+                    'content':
+                        '${url.host}/${url.path} mod ${url.replace(path: '').toString()}',
+                  }),
+              )
+              ..append(Element.tag('meta')),
+          ),
+        );
 
-        // send down html
-        return AdapterMetaResult(htmlDoc.outerHtml,
-            responseType: ResponseType.html);
-      } else if (req.env['stage'] == '2') {
-        // get the path segments
-        final segments = req.resolveObject.pathSegments;
+      // send down html
+      return AdapterMetaResult(
+        htmlDoc.outerHtml,
+        responseType: ResponseType.html,
+      );
+    } else if (req.env['stage'] == '2') {
+      // get the path segments
+      final segments = req.resolveObject.pathSegments;
 
-        // match the path segments
-        if (segments.contains('@latest')) {
-          final [base, ...parts] =
-              segments.sublist(0, segments.indexOf('@latest'));
-          final (name, scope) = switch (parts) {
-            [String name] => (name, null),
-            [String scope, String name] => (name, scope),
-            _ => (parts.last, parts.first == parts.last ? null : parts.first)
-          };
-
-          // get latest version
-          final latestPkgResponse =
-              await crs.getLatestPackage(scopedName(name, scope));
-          if (!latestPkgResponse.isSuccess)
-            return AdapterErrorResult('bad request: no package',
-                statusCode: 404, responseType: ResponseType.plainText);
-
-          final latestPkg = latestPkgResponse.body!;
-
-          var metaResult = {
-            'Version': 'v${latestPkg.version}',
-            'Time': latestPkg.created.toIso8601String(),
-          };
-          return AdapterMetaResult(metaResult, responseType: ResponseType.json);
-        }
-
-        final positionOfAtV = segments.indexOf('@v');
-        if (segments.sublist(0, positionOfAtV).length == 1) {
-          // get all versions
-          // for now we do not support this
-          // TODO: throw
-          return AdapterErrorResult('bad request: unsupported',
-              statusCode: 404, responseType: ResponseType.plainText);
-        }
-        final [base, ...parts] = segments.sublist(0, positionOfAtV);
-        final requestRequirements = segments.sublist(positionOfAtV + 1).first;
-
-        // get name
+      // match the path segments
+      if (segments.contains('@latest')) {
+        final [base, ...parts] = segments.sublist(
+          0,
+          segments.indexOf('@latest'),
+        );
         final (name, scope) = switch (parts) {
           [String name] => (name, null),
           [String scope, String name] => (name, scope),
-          _ => (parts.last, parts.first == parts.last ? null : parts.first)
+          _ => (parts.last, parts.first == parts.last ? null : parts.first),
         };
 
-        // now match requirements
-        if (requestRequirements == 'list') {
-          // list versions
-          final pkgVersResult =
-              crs.getPackagesStream(scopedName(name, scope), env: {
-            'module_name': [base, ...parts].join('/')
-          });
-          if (!pkgVersResult.isSuccess) {
-            return AdapterErrorResult(
-                'bad request: ${(pkgVersResult as CRSErrorResponse).error}',
-                statusCode: 404,
-                responseType: ResponseType.plainText);
-          }
-
-          final versions = pkgVersResult.body!.map((p) => 'v${p.version}');
-
-          return AdapterMetaResult(await versions.join('\n'),
-              responseType: ResponseType.plainText);
-        } else if ([
-          requestRequirements.replaceFirst(
-              p.extension(requestRequirements), ''),
-          p.extension(requestRequirements).substring(1)
-        ]
-            case [String version, String type]
-            when Version.tryParse(
-                    version.startsWith('v') ? version.substring(1) : version) !=
-                null) {
-          version = version.startsWith('v') ? version.substring(1) : version;
-          final pkgVerResult =
-              await crs.getPackageWithVersion(scopedName(name, scope), version);
-          if (!pkgVerResult.isSuccess) {
-            return AdapterErrorResult(
-                'bad request: ${(pkgVerResult as CRSErrorResponse).error}',
-                statusCode: 404,
-                responseType: ResponseType.plainText);
-          }
-
-          switch (type) {
-            case 'info':
-              // get name and pub
-              final pkgVerResult = await crs.getPackageWithVersion(
-                  scopedName(name, scope), version);
-              if (!pkgVerResult.isSuccess) {}
-              var metaResult = {
-                'Version': 'v$version',
-                'Time': pkgVerResult.body!.created.toIso8601String(),
-              };
-              return AdapterMetaResult(metaResult,
-                  responseType: ResponseType.json);
-            case 'mod':
-              return AdapterMetaResult(pkgVerResult.body!.config,
-                  responseType: ResponseType.plainText);
-            default:
-              return AdapterErrorResult(
-                  'bad request: unexpected extension "$type"',
-                  statusCode: 404,
-                  responseType: ResponseType.plainText);
-          }
-        } else {
+        // get latest version
+        final latestPkgResponse = await crs.getLatestPackage(
+          scopedName(name, scope),
+        );
+        if (!latestPkgResponse.isSuccess)
           return AdapterErrorResult(
-              'not found: $requestRequirements is a known non-module',
-              responseType: ResponseType.plainText);
-        }
+            'bad request: no package',
+            statusCode: 404,
+            responseType: ResponseType.plainText,
+          );
+
+        final latestPkg = latestPkgResponse.body!;
+
+        var metaResult = {
+          'Version': 'v${latestPkg.version}',
+          'Time': latestPkg.created.toIso8601String(),
+        };
+        return AdapterMetaResult(metaResult, responseType: ResponseType.json);
       }
-      return AdapterErrorResult('bad request',
-          statusCode: 404, responseType: ResponseType.plainText);
-    },
-    retrieve: (req, crs) async {
-      final segments = req.resolveObject.pathSegments;
+
       final positionOfAtV = segments.indexOf('@v');
-
-      assert(positionOfAtV != -1);
-
+      if (segments.sublist(0, positionOfAtV).length == 1) {
+        // get all versions
+        // for now we do not support this
+        // TODO: throw
+        return AdapterErrorResult(
+          'bad request: unsupported',
+          statusCode: 404,
+          responseType: ResponseType.plainText,
+        );
+      }
       final [base, ...parts] = segments.sublist(0, positionOfAtV);
       final requestRequirements = segments.sublist(positionOfAtV + 1).first;
-
-      assert(requestRequirements.toLowerCase().endsWith('.zip'),
-          "Route meant for archive, should be <version>.zip");
 
       // get name
       final (name, scope) = switch (parts) {
         [String name] => (name, null),
         [String scope, String name] => (name, scope),
-        _ => (parts.last, parts.first == parts.last ? null : parts.first)
+        _ => (parts.last, parts.first == parts.last ? null : parts.first),
       };
 
-      var version = requestRequirements.replaceFirst(
-          p.extension(requestRequirements), '');
-      version = version.startsWith('v') ? version.substring(1) : version;
-
-      var moduleName = [base, ...parts].join('/');
-      final archiveResult = await crs.getArchiveWithVersion(
-          scopedName(name, scope), version,
-          env: {'module_name': moduleName});
-
-      if (!archiveResult.isSuccess) {
-        return AdapterErrorResult(
-            'bad request: could not find archive for $moduleName',
+      // now match requirements
+      if (requestRequirements == 'list') {
+        // list versions
+        final pkgVersResult = crs.getPackagesStream(
+          scopedName(name, scope),
+          env: {
+            'module_name': [base, ...parts].join('/'),
+          },
+        );
+        if (!pkgVersResult.isSuccess) {
+          return AdapterErrorResult(
+            'bad request: ${(pkgVersResult as CRSErrorResponse).error}',
             statusCode: 404,
-            responseType: ResponseType.plainText);
+            responseType: ResponseType.plainText,
+          );
+        }
+
+        final versions = pkgVersResult.body!.map((p) => 'v${p.version}');
+
+        return AdapterMetaResult(
+          await versions.join('\n'),
+          responseType: ResponseType.plainText,
+        );
+      } else if ([
+            requestRequirements.replaceFirst(
+              p.extension(requestRequirements),
+              '',
+            ),
+            p.extension(requestRequirements).substring(1),
+          ]
+          case [String version, String type]
+          when Version.tryParse(
+                version.startsWith('v') ? version.substring(1) : version,
+              ) !=
+              null) {
+        version = version.startsWith('v') ? version.substring(1) : version;
+        final pkgVerResult = await crs.getPackageWithVersion(
+          scopedName(name, scope),
+          version,
+        );
+        if (!pkgVerResult.isSuccess) {
+          return AdapterErrorResult(
+            'bad request: ${(pkgVerResult as CRSErrorResponse).error}',
+            statusCode: 404,
+            responseType: ResponseType.plainText,
+          );
+        }
+
+        switch (type) {
+          case 'info':
+            // get name and pub
+            final pkgVerResult = await crs.getPackageWithVersion(
+              scopedName(name, scope),
+              version,
+            );
+            if (!pkgVerResult.isSuccess) {}
+            var metaResult = {
+              'Version': 'v$version',
+              'Time': pkgVerResult.body!.created.toIso8601String(),
+            };
+            return AdapterMetaResult(
+              metaResult,
+              responseType: ResponseType.json,
+            );
+          case 'mod':
+            return AdapterMetaResult(
+              pkgVerResult.body!.config,
+              responseType: ResponseType.plainText,
+            );
+          default:
+            return AdapterErrorResult(
+              'bad request: unexpected extension "$type"',
+              statusCode: 404,
+              responseType: ResponseType.plainText,
+            );
+        }
+      } else {
+        return AdapterErrorResult(
+          'not found: $requestRequirements is a known non-module',
+          responseType: ResponseType.plainText,
+        );
       }
-      final archive = TarDecoder().decodeBytes(GZipDecoder()
-          .decodeBytes(await ByteStream(archiveResult.body!.data).toBytes()));
+    }
+    return AdapterErrorResult(
+      'bad request',
+      statusCode: 404,
+      responseType: ResponseType.plainText,
+    );
+  },
+  retrieve: (req, crs) async {
+    final segments = req.resolveObject.pathSegments;
+    final positionOfAtV = segments.indexOf('@v');
 
-      print(archive.length);
-      print(archive.map((a) => a.name));
+    assert(positionOfAtV != -1);
 
-      final Archive outArchive = Archive();
+    final [base, ...parts] = segments.sublist(0, positionOfAtV);
+    final requestRequirements = segments.sublist(positionOfAtV + 1).first;
 
-      for (final archiveFile in archive) {
-        outArchive.addFile(ArchiveFile(
-            [
-              base,
-              if (scope case final s?) s,
-              '$name@v$version',
-              // name,
-              archiveFile.name
-            ].join('/'),
-            archiveFile.size,
-            archiveFile.content,
-            archiveFile.compressionType));
-      }
+    assert(
+      requestRequirements.toLowerCase().endsWith('.zip'),
+      "Route meant for archive, should be <version>.zip",
+    );
 
-      final zipArchive = ZipEncoder().encode(outArchive);
-      return AdapterArchiveResult(
-          ByteStream.fromBytes(zipArchive ?? []), '$moduleName@$version',
-          contentType: 'application/zip');
-    });
+    // get name
+    final (name, scope) = switch (parts) {
+      [String name] => (name, null),
+      [String scope, String name] => (name, scope),
+      _ => (parts.last, parts.first == parts.last ? null : parts.first),
+    };
+
+    var version = requestRequirements.replaceFirst(
+      p.extension(requestRequirements),
+      '',
+    );
+    version = version.startsWith('v') ? version.substring(1) : version;
+
+    var moduleName = [base, ...parts].join('/');
+    final archiveResult = await crs.getArchiveWithVersion(
+      scopedName(name, scope),
+      version,
+      env: {'module_name': moduleName},
+    );
+
+    if (!archiveResult.isSuccess) {
+      return AdapterErrorResult(
+        'bad request: could not find archive for $moduleName',
+        statusCode: 404,
+        responseType: ResponseType.plainText,
+      );
+    }
+    final archive = TarDecoder().decodeBytes(
+      GZipDecoder().decodeBytes(
+        await ByteStream(archiveResult.body!.data).toBytes(),
+      ),
+    );
+
+    print(archive.length);
+    print(archive.map((a) => a.name));
+
+    final Archive outArchive = Archive();
+
+    for (final archiveFile in archive) {
+      outArchive.addFile(
+        ArchiveFile(
+          [
+            base,
+            if (scope case final s?) s,
+            '$name@v$version',
+            // name,
+            archiveFile.name,
+          ].join('/'),
+          archiveFile.size,
+          archiveFile.content,
+          archiveFile.compressionType,
+        ),
+      );
+    }
+
+    final zipArchive = ZipEncoder().encode(outArchive);
+    return AdapterArchiveResult(
+      ByteStream.fromBytes(zipArchive ?? []),
+      '$moduleName@$version',
+      contentType: 'application/zip',
+    );
+  },
+);

@@ -3,9 +3,12 @@ import 'package:xml/xml.dart';
 String mapToXml(Map<String, dynamic> data, {String rootElement = 'root'}) {
   final builder = XmlBuilder();
   builder.processing('xml', 'version="1.0" encoding="UTF-8"');
-  builder.element(rootElement, nest: () {
-    _buildXml(builder, data);
-  });
+  builder.element(
+    rootElement,
+    nest: () {
+      _buildXml(builder, data);
+    },
+  );
   return builder.buildDocument().toXmlString(pretty: true);
 }
 

@@ -11,7 +11,7 @@ const mockNames = [
   'cloud',
   'wizard',
   'snake',
-  'package'
+  'package',
 ];
 
 const mockScopedNames = [
@@ -28,7 +28,7 @@ const mockScopedNames = [
   ('cli', scope: 'rocket'),
   ('node', scope: 'rocket'),
   ('dart', scope: 'rocket'),
-  ('haskell', scope: 'rocket')
+  ('haskell', scope: 'rocket'),
 ];
 
 const mockAuthors = [

@@ -42,11 +42,16 @@ class AdapterErrorResult<T> extends AdapterResult {
 
   AdapterErrorResult(this.error, {this.statusCode = 500, super.responseType});
 
-  static AdapterErrorResult map(Map<String, dynamic> json,
-      {int statusCode = 500, ResponseType? responseType}) {
-    return AdapterErrorJsonResult(MapConvertible(json),
-        statusCode: statusCode,
-        responseType: responseType ?? ResponseType.json);
+  static AdapterErrorResult map(
+    Map<String, dynamic> json, {
+    int statusCode = 500,
+    ResponseType? responseType,
+  }) {
+    return AdapterErrorJsonResult(
+      MapConvertible(json),
+      statusCode: statusCode,
+      responseType: responseType ?? ResponseType.json,
+    );
   }
 }
 
@@ -64,8 +69,11 @@ class AdapterMetaResult<T> extends AdapterResult {
 class AdapterMetaJsonResult<T extends JsonConvertible>
     extends AdapterMetaResult<T> {
   String contentType;
-  AdapterMetaJsonResult(super.body,
-      {super.responseType, this.contentType = 'application/json'});
+  AdapterMetaJsonResult(
+    super.body, {
+    super.responseType,
+    this.contentType = 'application/json',
+  });
 }
 
 class AdapterArchiveResult extends AdapterResult {
@@ -74,7 +82,7 @@ class AdapterArchiveResult extends AdapterResult {
   final String contentType;
 
   AdapterArchiveResult(this.archive, this.name, {String? contentType})
-      : contentType =
-            contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
-        super(responseType: ResponseType.archive);
+    : contentType =
+          contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
+      super(responseType: ResponseType.archive);
 }

@@ -21,10 +21,12 @@ class AddCommand extends PrittCommand {
 
   AddCommand() {
     argParser
-      ..addFlag('configure',
-          negatable: true,
-          help: 'Whether to configure the project before running this command',
-          defaultsTo: true)
+      ..addFlag(
+        'configure',
+        negatable: true,
+        help: 'Whether to configure the project before running this command',
+        defaultsTo: true,
+      )
       ..addFlag('dev', abbr: 'D', negatable: false, help: 'Add dev dependency');
   }
 
@@ -45,9 +47,11 @@ class AddCommand extends PrittCommand {
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
-      logger.warn(userCredentials == null
-          ? 'You are not logged in to Pritt'
-          : 'Your login session has expired');
+      logger.warn(
+        userCredentials == null
+            ? 'You are not logged in to Pritt'
+            : 'Your login session has expired',
+      );
       logger.warn('To log in, run: ${styleBold.wrap('pritt login')}');
     }
 
@@ -55,9 +59,11 @@ class AddCommand extends PrittCommand {
         ? null
         : PrittClient(
             url: userCredentials.uri.toString(),
-            accessToken: userCredentials.accessToken);
+            accessToken: userCredentials.accessToken,
+          );
 
     logger.stderr(
-        'This command is under maintenance at this point. Please file a bug with us');
+      'This command is under maintenance at this point. Please file a bug with us',
+    );
   }
 }

@@ -17,14 +17,20 @@ class Workspace<T extends Config> {
 }
 
 class PackageWorkspace extends Workspace {
-  PackageWorkspace(
-      {required super.config, required super.directory, required super.name});
+  PackageWorkspace({
+    required super.config,
+    required super.directory,
+    required super.name,
+  });
 }
 
 /// NOTE: This is a stub for a future feature, not used at the moment
 class MonorepoWorkspace extends Workspace {
-  MonorepoWorkspace(
-      {required super.config, required super.directory, required super.name});
+  MonorepoWorkspace({
+    required super.config,
+    required super.directory,
+    required super.name,
+  });
 }
 
 // TODO(nikeokoronkwo): Add better support for adding, removing packages, https://github.com/nikeokoronkwo/pritt-dart/issues/53
@@ -39,14 +45,14 @@ class PackageManager {
   List<String> Function(String name)? onPublish;
   List<String> Function() onGet;
 
-  PackageManager(
-      {required this.name,
-      List<String>? args,
-      required this.onAdd,
-      required this.onRemove,
-      this.onPublish,
-      required this.onGet})
-      : args = args ?? [name];
+  PackageManager({
+    required this.name,
+    List<String>? args,
+    required this.onAdd,
+    required this.onRemove,
+    this.onPublish,
+    required this.onGet,
+  }) : args = args ?? [name];
 }
 
 /// Process:
@@ -57,14 +63,14 @@ class PackageCmdArgs {
 
   /// used to resolve args when given a package name and type
   final (List<String>, {bool? collate}) Function(String name, PackageType type)
-      resolveType;
+  resolveType;
 
   /// used to resolve args when given a package name and version
   final String Function(String name, String? version) resolveVersion;
 
   /// used to resolve args when given a package name and url
   final (List<String>, {bool singleUse}) Function(String name, String? url)?
-      resolveUrl;
+  resolveUrl;
 
   PackageCmdArgs({
     required this.args,

@@ -15,14 +15,16 @@ import 'interfaces.dart';
 
 final publishingTaskRunner =
     TaskRunner<PubTaskItem, Archive, void, Map<String, dynamic>>(
-        debug: true,
-        retryInterval: Duration(milliseconds: 800),
-        onRetrieve: getTarballForTask,
-        workAction: processTarball,
-        onCheck: checkTarballStatus,
-        context: {
-      'createPackageVersionFromPublishingTask': (String id,
-              {VersionType? versionType,
+      debug: true,
+      retryInterval: Duration(milliseconds: 800),
+      onRetrieve: getTarballForTask,
+      workAction: processTarball,
+      onCheck: checkTarballStatus,
+      context: {
+        'createPackageVersionFromPublishingTask':
+            (
+              String id, {
+              VersionType? versionType,
               String? readme,
               String? description,
               required String rawConfig,
@@ -32,8 +34,9 @@ final publishingTaskRunner =
               List<Signature> signatures = const [],
               required String integrity,
               PublishingTask? task,
-              List<String> contributorIds = const []}) =>
-          crs.db.createPackageVersionFromPublishingTask(id,
+              List<String> contributorIds = const [],
+            }) => crs.db.createPackageVersionFromPublishingTask(
+              id,
               versionType: versionType,
               readme: readme,
               description: description,
@@ -44,9 +47,12 @@ final publishingTaskRunner =
               signatures: signatures,
               integrity: integrity,
               task: task,
-              contributorIds: contributorIds),
-      'createPackageFromPublishingTask': (String id,
-              {String? description,
+              contributorIds: contributorIds,
+            ),
+        'createPackageFromPublishingTask':
+            (
+              String id, {
+              String? description,
               String? license,
               VersionType? versionType,
               String? readme,
@@ -57,8 +63,9 @@ final publishingTaskRunner =
               List<Signature> signatures = const [],
               required String integrity,
               PublishingTask? task,
-              List<String> contributorIds = const []}) =>
-          crs.db.createPackageFromPublishingTask(id,
+              List<String> contributorIds = const [],
+            }) => crs.db.createPackageFromPublishingTask(
+              id,
               versionType: versionType,
               readme: readme,
               description: description,
@@ -70,12 +77,15 @@ final publishingTaskRunner =
               signatures: signatures,
               integrity: integrity,
               task: task,
-              contributorIds: contributorIds)
-    });
+              contributorIds: contributorIds,
+            ),
+      },
+    );
 
 /// Processes the tarball
 FutureOr<void> processTarball(
-    WorkerItem<PubTaskItem, Archive, Map<String, dynamic>> item) async {
+  WorkerItem<PubTaskItem, Archive, Map<String, dynamic>> item,
+) async {
   // TODO(nikeokoronkwo): Temporary fix for isolate discovery of variables
   //  in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
   //  which would require a reworking of the worker's serialization
@@ -93,8 +103,11 @@ FutureOr<void> processTarball(
   }
 
   ArchiveFile? readme;
-  ArchiveFile configFile = archive.firstWhere((f) =>
-      f.isFile && p.basename(f.name.toLowerCase()) == configName.toLowerCase());
+  ArchiveFile configFile = archive.firstWhere(
+    (f) =>
+        f.isFile &&
+        p.basename(f.name.toLowerCase()) == configName.toLowerCase(),
+  );
   // TODO(nikeokoronkwo): Incorporate files and file checks: changelog (changelog map), license, pritt config (contributors)
   // ArchiveFile? changelog, license, prittConfig;
 
@@ -138,7 +151,7 @@ FutureOr<void> processTarball(
   var archiveParts = [
     if (taskInfo.scope != null) '@${taskInfo.scope}',
     taskInfo.name,
-    taskInfo.version
+    taskInfo.version,
   ];
 
   final tarballPath = '${archiveParts.join('/')}.tar.gz';
@@ -183,15 +196,18 @@ FutureOr<void> processTarball(
   // prepare for upload
 
   // add to storage
-  await crs.ofs.createPackage(
-      tarballPath, Uint8List.fromList(tarballData), tarballHash,
-      contentType: 'application/gzip',
-      metadata: {
-        'integrity': tarballIntegrity,
-      }).then((_) async {
-    // remove pub tarball afterwards
-    await crs.ofs.removePubArchive('${archiveParts.join('-')}.tar.gz');
-  });
+  await crs.ofs
+      .createPackage(
+        tarballPath,
+        Uint8List.fromList(tarballData),
+        tarballHash,
+        contentType: 'application/gzip',
+        metadata: {'integrity': tarballIntegrity},
+      )
+      .then((_) async {
+        // remove pub tarball afterwards
+        await crs.ofs.removePubArchive('${archiveParts.join('-')}.tar.gz');
+      });
 }
 
 // TODO(nikeokoronkwo): The call to `getPublishingTaskById` is marked with `@Cacheable`
@@ -209,8 +225,9 @@ FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
         final bytes = response.bodyBytes;
 
         // Save to disk or memory cache
-        final archive =
-            TarDecoder().decodeBytes(GZipDecoder().decodeBytes(bytes));
+        final archive = TarDecoder().decodeBytes(
+          GZipDecoder().decodeBytes(bytes),
+        );
 
         return archive;
       } else {
@@ -224,17 +241,19 @@ FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
     var archiveNameParts = [
       if (taskInfo.scope != null) '@${taskInfo.scope}',
       taskInfo.name,
-      taskInfo.version
+      taskInfo.version,
     ];
 
     print('${archiveNameParts.join('-')}.tar.gz');
 
     try {
-      final output =
-          await crs.ofs.getPubArchive('${archiveNameParts.join('-')}.tar.gz');
+      final output = await crs.ofs.getPubArchive(
+        '${archiveNameParts.join('-')}.tar.gz',
+      );
 
-      final archive =
-          TarDecoder().decodeBytes(GZipDecoder().decodeBytes(output.data));
+      final archive = TarDecoder().decodeBytes(
+        GZipDecoder().decodeBytes(output.data),
+      );
 
       return archive;
     } catch (e, stackTrace) {
@@ -259,11 +278,12 @@ FutureOr<bool> checkTarballStatus(PubTaskItem item) async {
     var archiveNameParts = [
       if (taskInfo.scope != null) '@${taskInfo.scope}',
       taskInfo.name,
-      taskInfo.version
+      taskInfo.version,
     ];
 
     print('${archiveNameParts.join('-')}.tar.gz');
-    return await crs.ofs
-        .pubArchiveExists('${archiveNameParts.join('-')}.tar.gz');
+    return await crs.ofs.pubArchiveExists(
+      '${archiveNameParts.join('-')}.tar.gz',
+    );
   }
 }

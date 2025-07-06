@@ -51,10 +51,11 @@ class AdapterRegistry {
   /// If "local" is passed, then the registry uses local memory to handle the registry (this can be used for testing or dev work)
   ///
   /// This function must be called before any other function on this, else an error will be thrown to connect the database first.
-  static Future<AdapterRegistry> connect(
-      {Object? db,
-      PrittStorageInterface? storage,
-      required Uri runnerUri}) async {
+  static Future<AdapterRegistry> connect({
+    Object? db,
+    PrittStorageInterface? storage,
+    required Uri runnerUri,
+  }) async {
     if (service != null) {
       return AdapterRegistry._();
     }
@@ -63,7 +64,8 @@ class AdapterRegistry {
 
     if (db is! PrittAdapterWithBlobDatabaseInterface && storage != null) {
       throw Exception(
-          "If db cannot contain storage (i.e db is not PrittAdapterWithBlobDatabaseInterface), storage must not be null");
+        "If db cannot contain storage (i.e db is not PrittAdapterWithBlobDatabaseInterface), storage must not be null",
+      );
     }
 
     // check type
@@ -89,7 +91,8 @@ class AdapterRegistry {
       databaseInterface = await CASLocalDatabase.connect(url: db.toString());
     } else {
       throw AssertionError(
-          'Unsupported type: db must be String, Uri or an implementation of PrittAdapterDatabaseInterface');
+        'Unsupported type: db must be String, Uri or an implementation of PrittAdapterDatabaseInterface',
+      );
     }
 
     // before starting...
@@ -103,10 +106,12 @@ class AdapterRegistry {
         pluginMap[plugin.id] = await db.getPluginCode(plugin.id);
       } else {
         // open tarball
-        final tarballOfPluginResult =
-            await storage!.getPackage(plugin.archive.toFilePath());
-        final tarballOfPlugin = TarDecoder()
-            .decodeBytes(GZipDecoder().decodeBytes(tarballOfPluginResult.data));
+        final tarballOfPluginResult = await storage!.getPackage(
+          plugin.archive.toFilePath(),
+        );
+        final tarballOfPlugin = TarDecoder().decodeBytes(
+          GZipDecoder().decodeBytes(tarballOfPluginResult.data),
+        );
 
         // get the files
         final files = <String, String>{};
@@ -117,12 +122,12 @@ class AdapterRegistry {
           //  plugin_adapter_meta_req.[min].js, plugin_adapter_archive_req.[min].js,
           //  plugin_handler_on.[min].js
           PluginArchiveType.multi => [
-              'plugin_meta.js',
-              'plugin_adapter_on.js',
-              'plugin_adapter_meta_req.js',
-              'plugin_adapter_archive_req.js',
-              'plugin_handler_on.js'
-            ],
+            'plugin_meta.js',
+            'plugin_adapter_on.js',
+            'plugin_adapter_meta_req.js',
+            'plugin_adapter_archive_req.js',
+            'plugin_handler_on.js',
+          ],
           // single file => plugin.[min].js
           PluginArchiveType.single => ['plugin.js'],
         };
@@ -140,8 +145,9 @@ class AdapterRegistry {
         for (final tarballFile in tarballOfPlugin) {
           if (tarballFile.isFile) {
             if (approvedNames.contains(tarballFile.name)) {
-              files[p.basenameWithoutExtension(tarballFile.name)] =
-                  utf8.decode(tarballFile.content as List<int>);
+              files[p.basenameWithoutExtension(tarballFile.name)] = utf8.decode(
+                tarballFile.content as List<int>,
+              );
             }
           }
 
@@ -153,8 +159,11 @@ class AdapterRegistry {
     }
 
     // load
-    service = await CustomAdapterService.connect(runnerUri,
-        plugins: plugins, pluginCodeMap: pluginMap);
+    service = await CustomAdapterService.connect(
+      runnerUri,
+      plugins: plugins,
+      pluginCodeMap: pluginMap,
+    );
 
     return AdapterRegistry._();
   }
@@ -163,8 +172,9 @@ class AdapterRegistry {
 
   /// Find an adapter given a request
   Future<({AdapterInterface adapter, AdapterResolveType resolve})> find(
-      AdapterResolveObject obj,
-      {bool checkedCore = false}) async {
+    AdapterResolveObject obj, {
+    bool checkedCore = false,
+  }) async {
     if (!checkedCore) {
       await for (final adapter in adapters) {
         final adapterResolve = adapter.resolve(obj);
@@ -186,7 +196,8 @@ class AdapterRegistry {
 
   /// Find an adapter given a request from the core adapters
   ({Adapter adapter, AdapterResolveType resolve})? findInCore(
-      AdapterResolveObject obj) {
+    AdapterResolveObject obj,
+  ) {
     for (final adapter in _coreAdapters) {
       final adapterResolve = adapter.resolve(obj);
       if (adapterResolve.isResolved) {

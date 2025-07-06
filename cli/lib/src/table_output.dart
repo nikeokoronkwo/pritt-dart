@@ -45,7 +45,7 @@ String listPackageInfo(List<Package> pkgs) {
           '${package.author.name} <${package.author.email}>',
       },
       package.version,
-      package.language ?? 'unknown'
+      package.language ?? 'unknown',
     ];
   }).toList();
 
@@ -56,11 +56,7 @@ String listAdapterInfo(List<Plugin> plugins) {
   final headers = ['Name', 'Version', 'Language'];
 
   final pkgList = plugins.map((plugin) {
-    return [
-      plugin.name,
-      plugin.version,
-      plugin.language ?? 'unknown',
-    ];
+    return [plugin.name, plugin.version, plugin.language ?? 'unknown'];
   }).toList();
 
   return Table(pkgList, header: headers).write();
@@ -76,7 +72,7 @@ Future<String> listProjectInfo(Project project) async {
     [
       'Language',
       project.primaryHandler.language,
-      'Deduced from handler #${project.primaryHandler.id}'
+      'Deduced from handler #${project.primaryHandler.id}',
     ],
     [
       'Package Manager',
@@ -84,7 +80,7 @@ Future<String> listProjectInfo(Project project) async {
       if (config.packageManager?.name == null)
         'No package manager associated with #${project.primaryHandler.id}'
       else
-        ''
+        '',
     ],
     ['VCS', project.vcs.name, ''],
   ];
