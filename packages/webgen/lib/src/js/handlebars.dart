@@ -6,12 +6,16 @@ import 'dart:js_interop';
 import 'js.dart';
 
 @JS('compile')
-external HandlebarsTemplateDelegate<T> compile<T extends JSObject>(JSAny input,
-    [CompileOptions options]);
+external HandlebarsTemplateDelegate<T> compile<T extends JSObject>(
+  JSAny input, [
+  CompileOptions options,
+]);
 
 @JS('compile')
-external HandlebarsTemplateDelegate compileString(String input,
-    [CompileOptions options]);
+external HandlebarsTemplateDelegate compileString(
+  String input, [
+  CompileOptions options,
+]);
 
 typedef HandlebarsTemplateDelegate<T extends JSObject> = TemplateDelegate<T>;
 
@@ -30,10 +34,12 @@ extension type CompileOptions._(JSObject _) implements JSObject {
 
 extension type TemplateDelegate<T extends JSObject>._(JSFunction _)
     implements JSFunction {
-  String call(T context, [RuntimeOptions? options]) => (options == null
-          ? callAsFunction(this, context)
-          : callAsFunction(this, context, options))
-      .dartify() as String;
+  String call(T context, [RuntimeOptions? options]) =>
+      (options == null
+                  ? callAsFunction(this, context)
+                  : callAsFunction(this, context, options))
+              .dartify()
+          as String;
 }
 
 extension type RuntimeOptions._(JSObject _) implements JSObject {

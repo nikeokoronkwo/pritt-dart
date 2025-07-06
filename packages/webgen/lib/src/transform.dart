@@ -21,23 +21,29 @@ class TransformationResult {
 
 /// Transforms the templates in the input directory using the provided
 /// configuration and writes the output to the specified output directory.
-Future<TransformationResult> transformTemplates(String inputDir,
-    String templateDir, String outputDir, WebGenTemplateConfig config) async {
+Future<TransformationResult> transformTemplates(
+  String inputDir,
+  String templateDir,
+  String outputDir,
+  WebGenTemplateConfig config,
+) async {
   // start with generating files
   final templateOptions = TemplateOptions(
+    name: config.name,
+    time: TimeOptions.fromDateTime(DateTime.now()),
+    auth: AuthOptions(
       name: config.name,
-      time: TimeOptions.fromDateTime(DateTime.now()),
-      auth: AuthOptions(
-          name: config.name,
-          title: config.meta?.title ?? config.name,
-          magicLink: config.auth.magicLink,
-          passkey: config.auth.passkey,
-          oauth: OAuthOptions(
-            google: config.auth.google,
-            github: config.auth.github,
-          ),
-          admin: true,
-          orgs: true));
+      title: config.meta?.title ?? config.name,
+      magicLink: config.auth.magicLink,
+      passkey: config.auth.passkey,
+      oauth: OAuthOptions(
+        google: config.auth.google,
+        github: config.auth.github,
+      ),
+      admin: true,
+      orgs: true,
+    ),
+  );
 
   // generate auth and db glue code
   await generateAuthAndDb(templateOptions, outputDir);
@@ -52,18 +58,20 @@ Future<TransformationResult> transformTemplates(String inputDir,
 
   // generate layouts
   final files = (await readdir(
-              templateDir,
-              FSReadDirOptions(
-                  encoding: 'utf8', recursive: true, withFileTypes: true))
-          .toDart)
-      .toDart;
+    templateDir,
+    FSReadDirOptions(encoding: 'utf8', recursive: true, withFileTypes: true),
+  ).toDart).toDart;
   for (final file in files.where((f) => f.isFile())) {
     final destPath = path.join(
-        outputDir,
-        path.relative(templateDir, file.parentPath),
-        file.name.replaceAll('.hbs', ''));
+      outputDir,
+      path.relative(templateDir, file.parentPath),
+      file.name.replaceAll('.hbs', ''),
+    );
     final actualPath = path.join(
-        templateDir, path.relative(templateDir, file.parentPath), file.name);
+      templateDir,
+      path.relative(templateDir, file.parentPath),
+      file.name,
+    );
 
     final actualContents = await File(actualPath).readAsString();
     final destContents = compileString(actualContents)(templateOptions);
@@ -78,14 +86,18 @@ Future<TransformationResult> transformTemplates(String inputDir,
 }
 
 Future<void> generateAssets(
-    WebGenTemplateConfig wgtConfig, String outputDir) async {
+  WebGenTemplateConfig wgtConfig,
+  String outputDir,
+) async {
   // 1. generate the two svgs
 
   // start with dir
   final assetsDir = 'assets/svg';
 
-  await mkdir(path.join(outputDir, assetsDir), FSMkdirOptions(recursive: true))
-      .toDart;
+  await mkdir(
+    path.join(outputDir, assetsDir),
+    FSMkdirOptions(recursive: true),
+  ).toDart;
 
   // get colours
   final accentColour = wgtConfig.style.colours.accent.defaultColour;
@@ -95,11 +107,13 @@ Future<void> generateAssets(
   final primarySvg = _svgGen(primaryColour);
 
   await writeFileAsString(
-          path.join(outputDir, assetsDir, 'bg-accent.svg'), accentSvg)
-      .toDart;
+    path.join(outputDir, assetsDir, 'bg-accent.svg'),
+    accentSvg,
+  ).toDart;
   await writeFileAsString(
-          path.join(outputDir, assetsDir, 'bg-primary.svg'), primarySvg)
-      .toDart;
+    path.join(outputDir, assetsDir, 'bg-primary.svg'),
+    primarySvg,
+  ).toDart;
 }
 
 String _svgGen(String colour) {
@@ -115,23 +129,29 @@ String _svgGen(String colour) {
 }
 
 /// Generates Tailwind CSS Code
-Future<void> generateTailwindCss(TemplateOptions templateOptions,
-    String outputDir, WebGenTemplateConfig config) async {
+Future<void> generateTailwindCss(
+  TemplateOptions templateOptions,
+  String outputDir,
+  WebGenTemplateConfig config,
+) async {
   print("LOG: Generating Tailwind CSS File");
   // generate CSS code
   final cssCode = generateTailwindMainCssFile(config.style);
   final cssFileOutput = './assets/css/main.css';
 
-  await mkdir(path.dirname(path.join(outputDir, cssFileOutput)),
-          FSMkdirOptions(recursive: true))
-      .toDart;
+  await mkdir(
+    path.dirname(path.join(outputDir, cssFileOutput)),
+    FSMkdirOptions(recursive: true),
+  ).toDart;
 
   await writeFileAsString(path.join(outputDir, cssFileOutput), cssCode).toDart;
 }
 
 /// Generates the Auth Code and Glue DB Code (patches due to imcompetencies)
 Future<void> generateAuthAndDb(
-    TemplateOptions templateOptions, String outputDir) async {
+  TemplateOptions templateOptions,
+  String outputDir,
+) async {
   // generate config
   final configurationCode = generateAuthConfig(templateOptions.auth).toDart;
 
@@ -140,36 +160,43 @@ Future<void> generateAuthAndDb(
   for (final codeMap in configurationCode) {
     final outPath = path.join(outputDir, codeMap.filename);
     // if (codeMap.name == 'auth') authOutPath = outPath;
-    (await File(outPath).create(recursive: true))
-        .writeAsStringSync(codeMap.code);
+    (await File(
+      outPath,
+    ).create(recursive: true)).writeAsStringSync(codeMap.code);
   }
 
   // run generate migrations
-  final _ = await Future.sync(() => childProcess.execSync(
+  final _ = await Future.sync(
+    () => childProcess.execSync(
       'pnpx @better-auth/cli generate --config ./server/utils/auth.ts --output ./server/db/schema/auth.ts --y',
-      ExecOptions(cwd: outputDir)));
+      ExecOptions(cwd: outputDir),
+    ),
+  );
 
   // run migrate migrations
   // read schema file
   final schemaFile = "./server/db/schema.ts";
 
-  String schemaFileContents =
-      await File(path.join(outputDir, schemaFile)).readAsString();
+  String schemaFileContents = await File(
+    path.join(outputDir, schemaFile),
+  ).readAsString();
 
   final lines = const LineSplitter().convert(schemaFileContents);
   lines.insert(0, "import * as auth from './schema/auth'");
   final spreadIndex = lines.indexWhere((i) => i.trim().startsWith('...'));
   lines.insert(spreadIndex, '...auth,');
 
-  await writeFileAsString(path.join(outputDir, schemaFile), lines.join('\n'))
-      .toDart;
+  await writeFileAsString(
+    path.join(outputDir, schemaFile),
+    lines.join('\n'),
+  ).toDart;
 
   // update the auth code
   // manual patch
   // TODO(nikeokoronkwo): File bug and get this fixed
-  String authDrizzleCode =
-      await File(path.join(outputDir, './server/db/schema/auth.ts'))
-          .readAsString();
+  String authDrizzleCode = await File(
+    path.join(outputDir, './server/db/schema/auth.ts'),
+  ).readAsString();
   authDrizzleCode = authDrizzleCode
       .replaceFirst('.default(member)', r".default('member')")
       .replaceFirst('.default(pending)', r".default('pending')")
@@ -179,11 +206,14 @@ Future<void> generateAuthAndDb(
   authDrizzleCode = adcLines.join('\n');
 
   await writeFileAsString(
-          path.join(outputDir, './server/db/schema/auth.ts'), authDrizzleCode)
-      .toDart;
+    path.join(outputDir, './server/db/schema/auth.ts'),
+    authDrizzleCode,
+  ).toDart;
 
   // generate drizzle migrations
   // ignore: non_constant_identifier_names
-  final __ = await Future.sync(() =>
-      childProcess.execSync('pnpm db:generate', ExecOptions(cwd: outputDir)));
+  final __ = await Future.sync(
+    () =>
+        childProcess.execSync('pnpm db:generate', ExecOptions(cwd: outputDir)),
+  );
 }

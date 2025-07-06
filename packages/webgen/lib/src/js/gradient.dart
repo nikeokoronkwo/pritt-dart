@@ -9,6 +9,7 @@ external JSRecord<JSNumber, JSString> _generateTailwindColorScale(String scale);
 WGTColourSpectrum generateTailwindColorScale(String scale) {
   final record = _generateTailwindColorScale(scale);
   return Map.fromIterables(
-      keysFromRecord(record).toDart.map((v) => v.toDartInt),
-      valuesFromRecord(record).toDart.map((v) => v.toDart));
+    keysFromRecord(record).toDart.map((v) => v.toDartInt),
+    valuesFromRecord(record).toDart.map((v) => v.toDart),
+  );
 }

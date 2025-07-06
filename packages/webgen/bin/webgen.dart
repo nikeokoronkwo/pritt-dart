@@ -13,29 +13,43 @@ import 'package:pritt_webgen/src/transform.dart';
 import 'package:yaml/yaml.dart';
 
 final argParser = ArgParser()
-  ..addOption('input',
-      abbr: 'i', help: 'The path to the input web dir', defaultsTo: 'web')
-  ..addOption('output',
-      abbr: 'o',
-      help: 'The output dir to produce the web code',
-      defaultsTo: 'web-ref')
-  ..addOption('template',
-      abbr: 't',
-      help: 'The template directory (i.e the dir where the template is)',
-      defaultsTo: 'web/template')
-  ..addOption('config',
-      abbr: 'c',
-      help: 'The configuration file to read the template config',
-      defaultsTo: 'template.yaml')
+  ..addOption(
+    'input',
+    abbr: 'i',
+    help: 'The path to the input web dir',
+    defaultsTo: 'web',
+  )
+  ..addOption(
+    'output',
+    abbr: 'o',
+    help: 'The output dir to produce the web code',
+    defaultsTo: 'web-ref',
+  )
+  ..addOption(
+    'template',
+    abbr: 't',
+    help: 'The template directory (i.e the dir where the template is)',
+    defaultsTo: 'web/template',
+  )
+  ..addOption(
+    'config',
+    abbr: 'c',
+    help: 'The configuration file to read the template config',
+    defaultsTo: 'template.yaml',
+  )
   ..addFlag('help', abbr: 'h', negatable: false, help: 'Show help information')
-  ..addFlag('watch',
-      abbr: 'w',
-      negatable: false,
-      help: 'Watch the input directory for changes')
-  ..addOption('js-file',
-      abbr: 'j',
-      help: 'The JS File containing utilities used',
-      defaultsTo: './index.js');
+  ..addFlag(
+    'watch',
+    abbr: 'w',
+    negatable: false,
+    help: 'Watch the input directory for changes',
+  )
+  ..addOption(
+    'js-file',
+    abbr: 'j',
+    help: 'The JS File containing utilities used',
+    defaultsTo: './index.js',
+  );
 
 // TODO(nikeokoronkwo): Wrap in try-catch to handle errors gracefully
 void main(List<String> args) async {
@@ -59,28 +73,36 @@ void main(List<String> args) async {
   outDir.createSync();
 
   print('LOG: Updating Drizzle Schema...');
-  execSync('pnpm db:pull',
-      ChildProcessExecOptions(encoding: 'utf-8', cwd: dir.path));
+  execSync(
+    'pnpm db:pull',
+    ChildProcessExecOptions(encoding: 'utf-8', cwd: dir.path),
+  );
 
   print('LOG: Copying Files...');
   // copy over files
   final files = (await readdir(
-              dir.path,
-              FSReadDirOptions(
-                  encoding: 'utf8', recursive: true, withFileTypes: true))
-          .toDart)
-      .toDart;
+    dir.path,
+    FSReadDirOptions(encoding: 'utf8', recursive: true, withFileTypes: true),
+  ).toDart).toDart;
   for (final file in files) {
     final srcPath = path.join(
-        dir.path, path.relative(dir.path, file.parentPath), file.name);
+      dir.path,
+      path.relative(dir.path, file.parentPath),
+      file.name,
+    );
     final destPath = path.join(
-        outDir.path, path.relative(dir.path, file.parentPath), file.name);
+      outDir.path,
+      path.relative(dir.path, file.parentPath),
+      file.name,
+    );
 
     if (!path.dirname(srcPath).split(path.sep).contains('node_modules')) {
       if (file.isFile()) {
         try {
-          await mkdir(path.dirname(destPath), FSMkdirOptions(recursive: true))
-              .toDart;
+          await mkdir(
+            path.dirname(destPath),
+            FSMkdirOptions(recursive: true),
+          ).toDart;
         } catch (e) {
           // ignore
         }
@@ -91,14 +113,18 @@ void main(List<String> args) async {
 
   // run install
   print('LOG: Installing Dependencies...');
-  execSync('pnpm i --ignore-workspace',
-      ChildProcessExecOptions(cwd: outDir.path, encoding: 'utf-8'));
+  execSync(
+    'pnpm i --ignore-workspace',
+    ChildProcessExecOptions(cwd: outDir.path, encoding: 'utf-8'),
+  );
 
   print('LOG: Reading Configuration...');
   // get configuration
-  final configFile = File(argResults['config'] == 'template.yaml'
-      ? path.join(dir.path, 'template.yaml')
-      : argResults['config']);
+  final configFile = File(
+    argResults['config'] == 'template.yaml'
+        ? path.join(dir.path, 'template.yaml')
+        : argResults['config'],
+  );
 
   if (!configFile.existsSync()) {
     print('Configuration file not found: ${configFile.path}');
@@ -107,7 +133,8 @@ void main(List<String> args) async {
 
   final configContent = await configFile.readAsString();
   final config = WebGenTemplateConfig.fromJson(
-      jsonDecode(jsonEncode(loadYaml(configContent))));
+    jsonDecode(jsonEncode(loadYaml(configContent))),
+  );
 
   // perform transformation
   // final templateFiles = (await readdir(
@@ -116,8 +143,12 @@ void main(List<String> args) async {
   //                 encoding: 'utf8', recursive: true, withFileTypes: true))
   //         .toDart)
   //     .toDart;
-  final result =
-      await transformTemplates(dir.path, templateDir.path, outDir.path, config);
+  final result = await transformTemplates(
+    dir.path,
+    templateDir.path,
+    outDir.path,
+    config,
+  );
 
   // if template dir is in new dir, remove
   if (isSubDir(dir.path, templateDir.path)) {
@@ -145,7 +176,7 @@ void main(List<String> args) async {
         if (filePath.contains('node_modules') ||
             filePath.contains('.nuxt') ||
             filePath.contains('.data') ||
-            filePath.contains('package.json.') /* notice the second dot */) {
+            filePath.contains('package.json.') /* notice the second dot */ ) {
           continue;
         }
 
@@ -153,24 +184,31 @@ void main(List<String> args) async {
         final isTemplate = path.dirname(filePath).startsWith('template');
         if (isTemplate) {
           destPath = path.join(
-              outDir.path, filePath.split(path.sep).skip(1).join(path.sep));
+            outDir.path,
+            filePath.split(path.sep).skip(1).join(path.sep),
+          );
         } else {
           destPath = path.join(outDir.path, filePath);
         }
 
-        await mkdir(path.dirname(destPath), FSMkdirOptions(recursive: true))
-            .toDart;
+        await mkdir(
+          path.dirname(destPath),
+          FSMkdirOptions(recursive: true),
+        ).toDart;
 
         if (modification) {
           // normal mod
           if (isTemplate && path.extname(filePath) == '.hbs') {
-            final fileContents =
-                await File(path.join(dir.path, filePath)).readAsString();
-            final destContents =
-                handlebars.compileString(fileContents)(result.options);
+            final fileContents = await File(
+              path.join(dir.path, filePath),
+            ).readAsString();
+            final destContents = handlebars.compileString(fileContents)(
+              result.options,
+            );
             await writeFileAsString(
-                    destPath.replaceAll('.hbs', ''), destContents)
-                .toDart;
+              destPath.replaceAll('.hbs', ''),
+              destContents,
+            ).toDart;
           } else {
             await copyFile(path.join(dir.path, filePath), destPath).toDart;
           }
@@ -181,10 +219,11 @@ void main(List<String> args) async {
             await copyFile(path.join(dir.path, filePath), destPath).toDart;
           } else {
             // deletion
-            await File(path.extname(filePath) == '.hbs'
-                    ? destPath.replaceAll('.hbs', '')
-                    : destPath)
-                .delete();
+            await File(
+              path.extname(filePath) == '.hbs'
+                  ? destPath.replaceAll('.hbs', '')
+                  : destPath,
+            ).delete();
           }
         }
       }
@@ -192,7 +231,8 @@ void main(List<String> args) async {
   }
   print('ALL DONE!');
   print(
-      'NOTE: Migrations have not been applied yet. You can apply migrations by running `pnpm db:migrate` in the directory');
+    'NOTE: Migrations have not been applied yet. You can apply migrations by running `pnpm db:migrate` in the directory',
+  );
 }
 
 bool isSubDir(String parent, String child) {

@@ -2,17 +2,18 @@ import 'dart:js_interop';
 
 // Options
 extension type AuthOptions._(JSObject _) implements JSObject {
-  external AuthOptions(
-      {String name,
-      String title,
-      bool magicLink,
-      bool passkey,
-      OAuthOptions oauth,
-      bool admin,
-      bool orgs,
-      bool sso,
-      bool oidc,
-      bool twoFactorAuth});
+  external AuthOptions({
+    String name,
+    String title,
+    bool magicLink,
+    bool passkey,
+    OAuthOptions oauth,
+    bool admin,
+    bool orgs,
+    bool sso,
+    bool oidc,
+    bool twoFactorAuth,
+  });
   external String get name;
   external String get title;
   external bool get magicLink;
@@ -26,8 +27,11 @@ extension type AuthOptions._(JSObject _) implements JSObject {
 }
 
 extension type OAuthOptions._(JSObject _) implements JSObject {
-  external OAuthOptions(
-      {bool github, bool google, JSArray<GenericOAuthOptions>? generic});
+  external OAuthOptions({
+    bool github,
+    bool google,
+    JSArray<GenericOAuthOptions>? generic,
+  });
   external bool get github;
   external bool get google;
   external JSArray<GenericOAuthOptions>? get generic;
