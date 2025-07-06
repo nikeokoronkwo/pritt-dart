@@ -6,7 +6,12 @@ import 'package:shelf/shelf_io.dart' as io;
 
 void main(List<String> args) async {
   // PRE SETUP
-  await startPrittServices();
+  var enableCustomAdapters =
+      int.tryParse(
+        Platform.environment['PRITT_IGNORE_CUSTOM_ADAPTERS'] ?? '0',
+      ) !=
+      1;
+  await startPrittServices(customAdapters: enableCustomAdapters);
 
   // SERVER SETUP
   var app = createRouter();
