@@ -32,7 +32,7 @@ void main() {
   });
 
   test('Basic', () async {
-    final output = await runWithOutput(() {
+    final _ = await runWithOutput(() {
       return runner.run([]);
     });
   }, skip: 'Unimplemented');
