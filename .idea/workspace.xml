@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" beforeDir="false" afterPath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +92,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Shell Script.PKL Testing.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/comment-tracking",
     "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",

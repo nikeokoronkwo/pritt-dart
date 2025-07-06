@@ -35,24 +35,30 @@ sealed class CRSResponse<T> {
 }
 
 class CRSSuccessResponse<T> extends CRSResponse<T> {
+  final T _body;
+
   @override
-  final T body;
+  T get body => _body;
 
   const CRSSuccessResponse({
-    required this.body,
+    required T body,
     required int statusCode,
-  }) : super._(body);
+  })  : _body = body,
+        super._(body);
 }
 
 class CRSErrorResponse<T> extends CRSResponse<T> {
   final String error;
   final int? statusCode;
+  final T? _body;
+
   @override
-  final T? body;
+  T? get body => _body;
 
   const CRSErrorResponse({
     required this.error,
     this.statusCode,
-    required this.body,
-  }) : super._(body);
+    required T? body,
+  })  : _body = body,
+        super._(body);
 }

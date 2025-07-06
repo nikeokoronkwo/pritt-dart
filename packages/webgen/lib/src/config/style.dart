@@ -44,9 +44,9 @@ extension WGTCS on WGTColourSpectrum {
   static WGTColourSpectrum fromJson(dynamic json) {
     if (json is String) {
       return generateTailwindColorScale(json);
-    } else if (json is Map<int, String>)
+    } else if (json is Map<int, String>) {
       return json;
-    else if (json is Map<dynamic, String>) {
+    } else if (json is Map<dynamic, String>) {
       return json.map((k, v) {
         if (k is int) {
           return MapEntry(k, v);
@@ -59,8 +59,9 @@ extension WGTCS on WGTColourSpectrum {
 
         return MapEntry(1000 * 100 + k.hashCode, v);
       });
-    } else
+    } else {
       throw Exception();
+    }
   }
 
   String get defaultColour => this[-1] ?? values.toList()[length ~/ 2];

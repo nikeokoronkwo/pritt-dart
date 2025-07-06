@@ -22,7 +22,6 @@ void main() {
     setUp(() {
       mockDBController = MockCRSDBController();
       mockArchiveController = MockCRSArchiveController();
-
     });
 
     // TODO(nikeokoronkwo): More Tests, https://github.com/nikeokoronkwo/pritt-dart/pull/51

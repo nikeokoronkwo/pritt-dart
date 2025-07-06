@@ -62,16 +62,17 @@ Iterable<Method> generateMethods(
             'string') {
           type = 'string';
         } else if (param.schema.getProperty('type'.toJS).dartify() as String ==
-            'number')
+            'number') {
           type = 'number';
-        else if (param.schema.getProperty('type'.toJS).dartify() as String ==
-            'boolean')
+        } else if (param.schema.getProperty('type'.toJS).dartify() as String ==
+            'boolean') {
           type = 'boolean';
-        else if (param.schema.getProperty('type'.toJS).dartify() as String ==
-            'integer')
+        } else if (param.schema.getProperty('type'.toJS).dartify() as String ==
+            'integer') {
           type = 'integer';
-        else
+        } else {
           type = 'dynamic';
+        }
 
         return Parameter((p) => p
           ..name = param.name

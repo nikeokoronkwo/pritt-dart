@@ -37,7 +37,8 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
                 .call([refer('data').property('codeUnits')]).code)))
           ..fields.add(Field((f) => f
             ..name = 'data'
-            ..type = refer('String')))
+            ..type = refer('String')
+            ..modifier = FieldModifier.final$))
         // override
         ),
 
@@ -63,13 +64,16 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
       ..fields.addAll([
         Field((f) => f
           ..name = 'data'
-          ..type = refer('Uint8List', 'dart:typed_data')),
+          ..type = refer('Uint8List', 'dart:typed_data')
+          ..modifier = FieldModifier.final$),
         Field((f) => f
           ..name = 'name'
-          ..type = refer('String')),
+          ..type = refer('String')
+          ..modifier = FieldModifier.final$),
         Field((f) => f
           ..name = 'contentType'
-          ..type = refer('String')),
+          ..type = refer('String')
+          ..modifier = FieldModifier.final$),
       ])),
 
     // json content
@@ -86,7 +90,8 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
         ]).code)))
       ..fields.add(Field((f) => f
         ..name = 'data'
-        ..type = refer('Map<String, dynamic>')))),
+        ..type = refer('Map<String, dynamic>')
+        ..modifier = FieldModifier.final$))),
 
     // streamed content
     Class((c) => c
@@ -111,20 +116,23 @@ Iterable<Class> generateBaseClasses(JSRecord<JSString, Schema> schemas,
           ..defaultTo = literalString('application/octet-stream').code))
         ..initializers.add(literal(refer('super')).call([literal([])]).code)))
       ..fields.addAll([
-        // TODO: Make all fields final
         Field((f) => f
           ..name = 'data'
-          ..type = refer('Stream<List<int>>')),
+          ..type = refer('Stream<List<int>>')
+          ..modifier = FieldModifier.final$),
         Field((f) => f
           ..annotations.add(refer('override'))
           ..name = 'length'
-          ..type = refer('int')),
+          ..type = refer('int')
+          ..modifier = FieldModifier.final$),
         Field((f) => f
           ..name = 'name'
-          ..type = refer('String')),
+          ..type = refer('String')
+          ..modifier = FieldModifier.final$),
         Field((f) => f
           ..name = 'contentType'
-          ..type = refer('String')),
+          ..type = refer('String')
+          ..modifier = FieldModifier.final$),
       ])
       ..methods.addAll([
         Method((m) => m

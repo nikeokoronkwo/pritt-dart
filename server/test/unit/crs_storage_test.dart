@@ -25,17 +25,32 @@ void main() {
       storage = MockPrittStorage();
       storageFS = MemoryFileSystem.test();
 
-      when(storage.publishingBucket).thenReturn(Bucket(creationDate: DateTime.now(), name: 'pritt-publishing-buckets'));
-      when(storage.adapterBucket).thenReturn(Bucket(creationDate: DateTime.now(), name: 'pritt-publishing-buckets'));
-      when(storage.publishingBucket).thenReturn(Bucket(creationDate: DateTime.now(), name: 'pritt-publishing-buckets'));
+      when(storage.publishingBucket).thenReturn(Bucket(
+          creationDate: DateTime.now(), name: 'pritt-publishing-buckets'));
+      when(storage.adapterBucket).thenReturn(Bucket(
+          creationDate: DateTime.now(), name: 'pritt-publishing-buckets'));
+      when(storage.publishingBucket).thenReturn(Bucket(
+          creationDate: DateTime.now(), name: 'pritt-publishing-buckets'));
 
-      when(storage.createPackage('pritt', any, any)).thenAnswer((_) async => true);
-      when(storage.getPackage('pritt')).thenAnswer((_) async => CRSFileOutputStream(path: 'pritt', data: Uint8List.fromList([]), metadata: {}, size: 0, hash: ''));
+      when(storage.createPackage('pritt', any, any))
+          .thenAnswer((_) async => true);
+      when(storage.getPackage('pritt')).thenAnswer((_) async =>
+          CRSFileOutputStream(
+              path: 'pritt',
+              data: Uint8List.fromList([]),
+              metadata: {},
+              size: 0,
+              hash: ''));
       when(storage.getPackage(any)).thenAnswer((invocation) async {
-        final file = storageFS.file(p.setExtension(invocation.positionalArguments.first, '.tar.gz'));
-        return CRSFileOutputStream(path: file.path, data: await file.readAsBytes(), metadata: {}, size: await file.length(), hash: '');
+        final file = storageFS.file(
+            p.setExtension(invocation.positionalArguments.first, '.tar.gz'));
+        return CRSFileOutputStream(
+            path: file.path,
+            data: await file.readAsBytes(),
+            metadata: {},
+            size: await file.length(),
+            hash: '');
       });
-
     });
 
     tearDownAll(() {});

@@ -21,7 +21,7 @@ class Content {
 class TextContent extends Content {
   TextContent(this.data) : super(data.codeUnits);
 
-  String data;
+  final String data;
 }
 
 class BinaryContent extends Content {
@@ -31,17 +31,17 @@ class BinaryContent extends Content {
     this.contentType = 'application/octet-stream',
   }) : super(data);
 
-  _i1.Uint8List data;
+  final _i1.Uint8List data;
 
-  String name;
+  final String name;
 
-  String contentType;
+  final String contentType;
 }
 
 class JSONContent extends Content {
   JSONContent(this.data) : super(_i2.jsonEncode(data).codeUnits);
 
-  Map<String, dynamic> data;
+  final Map<String, dynamic> data;
 }
 
 class StreamedContent extends Content {
@@ -52,14 +52,14 @@ class StreamedContent extends Content {
     this.contentType = 'application/octet-stream',
   }) : super([]);
 
-  Stream<List<int>> data;
+  final Stream<List<int>> data;
 
   @override
-  int length;
+  final int length;
 
-  String name;
+  final String name;
 
-  String contentType;
+  final String contentType;
 
   @override
   List<int> get raw => throw Exception(

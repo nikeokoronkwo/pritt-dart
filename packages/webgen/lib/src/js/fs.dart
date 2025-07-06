@@ -56,7 +56,6 @@ JSPromise writeFileAsString(String output, String code) =>
 external JSAsyncIterator<FSWatchEvent> watch(String dir,
     [FSWatchOptions? options]);
 
-/// TODO: .signal
 extension type FSWatchOptions._(JSObject _) implements JSObject {
   external FSWatchOptions({bool persistent, bool recursive, String encoding});
   external bool get persistent;

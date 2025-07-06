@@ -37,7 +37,7 @@ final argParser = ArgParser()
       help: 'The JS File containing utilities used',
       defaultsTo: './index.js');
 
-// TODO: Wrap in try-catch to handle errors gracefully
+// TODO(nikeokoronkwo): Wrap in try-catch to handle errors gracefully
 void main(List<String> args) async {
   final argResults = argParser.parse(args);
   if (argResults.wasParsed('help')) print(argParser.usage);

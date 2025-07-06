@@ -36,7 +36,7 @@ Future<TransformationResult> transformTemplates(String inputDir,
             google: config.auth.google,
             github: config.auth.github,
           ),
-          admin: true, // TODO: Optional?
+          admin: true,
           orgs: true));
 
   // generate auth and db glue code
@@ -150,7 +150,6 @@ Future<void> generateAuthAndDb(
       ExecOptions(cwd: outputDir)));
 
   // run migrate migrations
-  // TODO:
   // read schema file
   final schemaFile = "./server/db/schema.ts";
 
@@ -167,7 +166,7 @@ Future<void> generateAuthAndDb(
 
   // update the auth code
   // manual patch
-  // TODO: File bug and get this fixed
+  // TODO(nikeokoronkwo): File bug and get this fixed
   String authDrizzleCode =
       await File(path.join(outputDir, './server/db/schema/auth.ts'))
           .readAsString();
