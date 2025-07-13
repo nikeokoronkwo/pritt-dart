@@ -14,7 +14,7 @@ final handler = defineRequestHandler((event) async {
   final isAll = getQueryParams(event)['all'];
 
   // check authorization
-  var authHeader = getHeader(event, 'Authorization');
+  final authHeader = getHeader(event, 'Authorization');
   final isAuthorized = authHeader == null
       ? false
       : (await checkAuthorization(authHeader) != null);
@@ -34,7 +34,7 @@ final handler = defineRequestHandler((event) async {
     // get contributors
     final contributors = await crs.db.getContributorsForPackage(pkgName);
 
-    var author = common.Author(
+    final author = common.Author(
       name: pkg.author.name,
       email: pkg.author.email,
       avatar: pkg.author.avatarUrl,

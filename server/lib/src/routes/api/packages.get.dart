@@ -2,7 +2,7 @@ import 'package:pritt_common/interface.dart' as common;
 import '../../../pritt_server.dart';
 import '../../utils/request_handler.dart';
 
-final pkgCap = 100;
+const pkgCap = 100;
 
 final handler = defineRequestHandler((event) async {
   /// get params

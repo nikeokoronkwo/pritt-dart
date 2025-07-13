@@ -149,7 +149,7 @@ class CoreRegistryService implements CRSController {
       username: Platform.environment['DATABASE_USERNAME']!,
       password:
           Platform.environment['DATABASE_PASSWORD'] ??
-          String.fromEnvironment('DATABASE_PASSWORD'),
+          const String.fromEnvironment('DATABASE_PASSWORD'),
       devMode: Platform.environment['DATABASE_HOST'] == 'localhost',
     );
 
@@ -375,7 +375,7 @@ class CoreRegistryService implements CRSController {
       final (name, scope: scope) = parsePackageName(packageName);
       final packages = db.getAllVersionsOfPackage(name, scope: scope);
 
-      var pkgStream = Stream.fromFuture(
+      final pkgStream = Stream.fromFuture(
         packages,
       ).asyncExpand((e) => Stream.fromIterable(e));
 

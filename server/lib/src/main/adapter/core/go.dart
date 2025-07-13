@@ -94,7 +94,7 @@ final goAdapter = Adapter(
 
         final latestPkg = latestPkgResponse.body!;
 
-        var metaResult = {
+        final metaResult = {
           'Version': 'v${latestPkg.version}',
           'Time': latestPkg.created.toIso8601String(),
         };
@@ -155,7 +155,7 @@ final goAdapter = Adapter(
             ),
             p.extension(requestRequirements).substring(1),
           ]
-          case [String version, String type]
+          case [String version, final String type]
           when Version.tryParse(
                 version.startsWith('v') ? version.substring(1) : version,
               ) !=
@@ -181,7 +181,7 @@ final goAdapter = Adapter(
               version,
             );
             if (!pkgVerResult.isSuccess) {}
-            var metaResult = {
+            final metaResult = {
               'Version': 'v$version',
               'Time': pkgVerResult.body!.created.toIso8601String(),
             };
@@ -241,7 +241,7 @@ final goAdapter = Adapter(
     );
     version = version.startsWith('v') ? version.substring(1) : version;
 
-    var moduleName = [base, ...parts].join('/');
+    final moduleName = [base, ...parts].join('/');
     final archiveResult = await crs.getArchiveWithVersion(
       scopedName(name, scope),
       version,

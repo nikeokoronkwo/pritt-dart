@@ -39,9 +39,9 @@ Future<void> startPrittServices({
         (dbUri?.userInfo.split(':').first ??
         Platform.environment['DATABASE_USERNAME'])!,
     password:
-        (dbUri?.userInfo.split(':').last ??
+        dbUri?.userInfo.split(':').last ??
         Platform.environment['DATABASE_PASSWORD'] ??
-        String.fromEnvironment('DATABASE_PASSWORD')),
+        const String.fromEnvironment('DATABASE_PASSWORD'),
     devMode:
         (dbUri?.host ?? Platform.environment['DATABASE_HOST']) == 'localhost',
   );

@@ -17,7 +17,7 @@ void main() {
     late MockCRSDBController mockDBController;
     // ignore: unused_local_variable
     late MockCRSArchiveController mockArchiveController;
-    MockJsonConvertible mockMetaResult = MockJsonConvertible();
+    final MockJsonConvertible mockMetaResult = MockJsonConvertible();
 
     setUp(() {
       mockDBController = MockCRSDBController();
@@ -35,7 +35,7 @@ void main() {
           return CoreAdapterMetaResult(mockMetaResult);
         },
         retrieve: (requestObject, controller) async {
-          return CoreAdapterArchiveResult(Stream.empty(), 'test.tar.gz');
+          return CoreAdapterArchiveResult(const Stream.empty(), 'test.tar.gz');
         },
       );
 

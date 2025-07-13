@@ -5,14 +5,12 @@ import 'dart:io';
 import 'package:chunked_stream/chunked_stream.dart';
 import 'package:http/http.dart';
 import 'package:json_rpc_2/json_rpc_2.dart' as rpc;
-import 'package:pritt_common/functions.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../adapter/adapter/exception.dart';
 import '../adapter/adapter/interface.dart';
 import '../adapter/adapter/request_options.dart';
 import '../adapter/adapter/resolve.dart';
-import '../adapter/adapter/result.dart';
 import '../adapter/adapter_registry.dart';
 import '../base/db/schema.dart';
 import '../crs/interfaces.dart';
@@ -314,7 +312,7 @@ class CustomAdapter implements AdapterInterface {
           );
           final archiveResponse = CustomAdapterArchiveResult.fromJson(response);
           archiveResponse.archive ??= await readByteStream(
-            _cachedArchives[archiveResponse.archiveTarget] ?? Stream.empty(),
+            _cachedArchives[archiveResponse.archiveTarget] ?? const Stream.empty(),
           );
           return archiveResponse;
         default:

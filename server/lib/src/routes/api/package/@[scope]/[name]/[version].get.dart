@@ -13,7 +13,7 @@ final handler = defineRequestHandler((event) async {
   final pkgVer = Version.parse(getParams(event, 'version') as String);
 
   // check authorization
-  var authHeader = getHeader(event, 'Authorization');
+  final authHeader = getHeader(event, 'Authorization');
   final isAuthorized = authHeader == null
       ? false
       : (await checkAuthorization(authHeader) != null);
@@ -26,7 +26,7 @@ final handler = defineRequestHandler((event) async {
       scope: pkgScope,
     );
 
-    var author = common.Author(
+    final author = common.Author(
       name: pkg.package.author.name,
       email: pkg.package.author.email,
     );
@@ -59,9 +59,9 @@ final handler = defineRequestHandler((event) async {
       config: pkg.config == null
           ? null
           : common.ConfigFile(name: pkg.configName!, data: pkg.config!),
-      deprecated: (isAuthorized) ? pkg.isDeprecated : null,
-      yanked: (isAuthorized) ? pkg.isYanked : null,
-      deprecationMessage: (isAuthorized) ? pkg.deprecationMessage : null,
+      deprecated: isAuthorized ? pkg.isDeprecated : null,
+      yanked: isAuthorized ? pkg.isYanked : null,
+      deprecationMessage: isAuthorized ? pkg.deprecationMessage : null,
       hash: isAuthorized ? pkg.hash : null,
       integrity: isAuthorized ? pkg.integrity : null,
       contributors: contributors.entries.map((e) {

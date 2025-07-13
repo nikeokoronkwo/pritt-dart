@@ -64,7 +64,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
       endpointUrl: url,
     );
 
-    final r = RetryOptions(maxAttempts: 8);
+    const r = RetryOptions(maxAttempts: 8);
 
     // let's perform a health check
     // prefer to do one request rather than three HEAD requests
@@ -110,10 +110,10 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     s3region ??= Platform.environment['S3_REGION'] ?? 'us-east-1';
     s3secretKey ??=
         Platform.environment['S3_SECRET_KEY'] ??
-        String.fromEnvironment('S3_SECRET_KEY');
+        const String.fromEnvironment('S3_SECRET_KEY');
     s3accessKey ??=
         Platform.environment['S3_ACCESS_KEY'] ??
-        String.fromEnvironment('S3_ACCESS_KEY');
+        const String.fromEnvironment('S3_ACCESS_KEY');
 
     final signer = Signer(
       region: s3region,
@@ -144,7 +144,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         signer: signer,
       );
     } else {
-      var s3Buckets = (await s3!.listBuckets()).buckets ?? [];
+      final s3Buckets = (await s3!.listBuckets()).buckets ?? [];
       final s3PkgBucket = s3Buckets.firstWhere(
         (b) => b.name == 'pritt-packages',
       );
@@ -228,7 +228,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         prefix: path,
       );
 
-      var file = list.contents?.firstWhere((e) => e.key == path);
+      final file = list.contents?.firstWhere((e) => e.key == path);
       return file == null
           ? null
           : CRSFile(

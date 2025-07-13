@@ -10,8 +10,6 @@ import 'src/main/adapter/adapter/interface.dart';
 import 'src/main/adapter/adapter/request_options.dart';
 import 'src/main/adapter/adapter/resolve.dart';
 import 'src/main/adapter/adapter/result.dart';
-import 'src/main/adapter/adapter/adapter_base_result.dart';
-import 'src/main/cas/result.dart';
 import 'src/main/crs/crs.dart';
 import 'src/utils/resolve.dart';
 import 'src/utils/xml.dart';
@@ -60,9 +58,9 @@ Handler adapterHandler(CoreRegistryService crs) {
               ResponseType.json => jsonEncode(e.toJson()),
               ResponseType.xml => mapToXml(e.toJson()),
               _ => switch (e) {
-                String s => s,
-                Map<String, dynamic> map => jsonEncode(map),
-                List<Map<String, dynamic>> map => jsonEncode(map),
+                final String s => s,
+                final Map<String, dynamic> map => jsonEncode(map),
+                final List<Map<String, dynamic>> map => jsonEncode(map),
                 _ => result.error.toString(),
               },
             },

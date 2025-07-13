@@ -5,7 +5,6 @@ import 'dart:async';
 import '../../crs/interfaces.dart';
 import 'adapter_base_result.dart';
 import 'request_options.dart';
-import 'result.dart';
 
 /// A base interface shared between adapters
 abstract interface class AdapterInterface {

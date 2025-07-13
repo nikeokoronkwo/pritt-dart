@@ -18,8 +18,8 @@ final handler = defineRequestHandler((event) async {
 
   try {
     // check if user is authenticated
-    var authHeader = getHeader(event, 'Authorization');
-    var user = authHeader == null ? null : await checkAuthorization(authHeader);
+    final authHeader = getHeader(event, 'Authorization');
+    final user = authHeader == null ? null : await checkAuthorization(authHeader);
 
     if (user == null) {
       setResponseCode(event, 401);
@@ -32,7 +32,7 @@ final handler = defineRequestHandler((event) async {
     if (pkg.author.id != user.id) {
       // check if user is contrib to the package
       final contributors = await crs.db.getContributorsForPackage(pkgName);
-      if (!(contributors.keys.any((k) => k.id == user.id))) {
+      if (!contributors.keys.any((k) => k.id == user.id)) {
         // unauthorized
         setResponseCode(event, 401);
         return common.UnauthorizedError(

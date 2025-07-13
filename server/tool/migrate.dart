@@ -43,11 +43,11 @@ void main(List<String> args) async {
           (dbUri?.userInfo.split(':').first ??
           Platform.environment['DATABASE_USERNAME'])!,
       password:
-          (dbUri?.userInfo.split(':').last ??
+          dbUri?.userInfo.split(':').last ??
           Platform.environment['DATABASE_PASSWORD'] ??
-          String.fromEnvironment('DATABASE_PASSWORD')),
+          const String.fromEnvironment('DATABASE_PASSWORD'),
     ),
-    settings: ConnectionSettings(sslMode: SslMode.disable),
+    settings: const ConnectionSettings(sslMode: SslMode.disable),
   );
 
   // set up migrations table

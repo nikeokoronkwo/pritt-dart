@@ -13,7 +13,7 @@ import '../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   // check authorization
   final authToken = getHeader(event, 'Authorization');
-  var user = authToken == null ? null : await checkAuthorization(authToken);
+  final user = authToken == null ? null : await checkAuthorization(authToken);
 
   if (user == null) {
     setResponseCode(event, 401);
@@ -62,7 +62,7 @@ final handler = defineRequestHandler((event) async {
     }
 
     // TODO: allow restrictions for people to have more than max
-    int totalSize = archive.files.fold(0, (sum, f) => sum + f.size);
+    final int totalSize = archive.files.fold(0, (sum, f) => sum + f.size);
     if (totalSize > maxTarballSize) {
       setResponseCode(event, 403);
       return common.InvalidTarballError(

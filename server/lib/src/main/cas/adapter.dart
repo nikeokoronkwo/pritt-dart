@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import '../adapter/adapter/adapter_base_result.dart';
 import '../adapter/adapter/result.dart';
-import '../adapter/adapter/adapter_base_result.dart';
 import '../utils/mixins.dart';
 
 part 'adapter.g.dart';

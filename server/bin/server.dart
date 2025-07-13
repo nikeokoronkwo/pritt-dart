@@ -6,7 +6,7 @@ import 'package:shelf/shelf_io.dart' as io;
 
 void main(List<String> args) async {
   // PRE SETUP
-  var enableCustomAdapters =
+  final enableCustomAdapters =
       int.tryParse(
         Platform.environment['PRITT_IGNORE_CUSTOM_ADAPTERS'] ?? '0',
       ) !=
@@ -14,13 +14,13 @@ void main(List<String> args) async {
   await startPrittServices(customAdapters: enableCustomAdapters);
 
   // SERVER SETUP
-  var app = createRouter();
+  final app = createRouter();
 
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 
   // Configure a pipeline that logs requests.
-  final handler = Pipeline().addMiddleware(logRequests()).addHandler(app);
+  final handler = const Pipeline().addMiddleware(logRequests()).addHandler(app);
 
   // For running in containers, we respect the PORT environment variable.
   final port = int.parse(Platform.environment['PORT'] ?? '8080');
