@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../adapter/adapter/adapter_base_result.dart';
 import '../adapter/adapter/result.dart';
+import '../adapter/adapter/adapter_base_result.dart';
 import '../utils/mixins.dart';
 
 part 'adapter.g.dart';
@@ -21,7 +23,7 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
 
   CustomAdapterResult({required this.resultType});
 
-  AdapterResult toAdapterResult();
+  CoreAdapterResult toAdapterResult();
 
   factory CustomAdapterResult.fromJson(Map<String, dynamic> json) {
     return switch (CustomAdapterResultType.fromString(json['result_type'])) {
@@ -36,7 +38,7 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
 
 // TODO(nikeokoronkwo): Implement, https://github.com/nikeokoronkwo/pritt-dart/issues/62
 class CustomAdapterMetaResult extends CustomAdapterResult
-    implements AdapterMetaResult {
+    implements CoreAdapterMetaResult {
   CustomAdapterMetaResult({required super.resultType});
 
   @override
@@ -46,7 +48,7 @@ class CustomAdapterMetaResult extends CustomAdapterResult
   JsonConvertible get body => throw UnimplementedError();
 
   @override
-  AdapterResult toAdapterResult() {
+  CoreAdapterResult toAdapterResult() {
     throw UnimplementedError();
   }
 
@@ -58,7 +60,7 @@ class CustomAdapterMetaResult extends CustomAdapterResult
 
 // TODO(nikeokoronkwo): Implement, https://github.com/nikeokoronkwo/pritt-dart/issues/62
 class CustomAdapterArchiveResult extends CustomAdapterResult
-    implements AdapterMetaResult {
+    implements CoreAdapterMetaResult {
   CustomAdapterArchiveResult({required super.resultType});
 
   @override
@@ -68,7 +70,7 @@ class CustomAdapterArchiveResult extends CustomAdapterResult
   JsonConvertible get body => throw UnimplementedError();
 
   @override
-  AdapterResult toAdapterResult() {
+  CoreAdapterResult toAdapterResult() {
     throw UnimplementedError();
   }
 

@@ -11,10 +11,10 @@ import 'adapter_registry.dart';
 typedef AdapterResolveFn = AdapterResolveType Function(AdapterResolveObject);
 
 typedef AdapterRequestFn =
-    FutureOr<AdapterResult> Function(AdapterRequestObject, CRSDBController);
+    FutureOr<CoreAdapterResult> Function(AdapterRequestObject, CRSDBController);
 
 typedef AdapterRetrieveFn =
-    FutureOr<AdapterResult> Function(
+    FutureOr<CoreAdapterResult> Function(
       AdapterRequestObject,
       CRSArchiveController,
     );
@@ -42,7 +42,7 @@ class Adapter implements AdapterInterface {
   /// The function called when a request is delegated to the given adapter.
   ///
   /// The function makes use of a [CRSController] to make requests to the Common Core Registry Service
-  /// and returns a [AdapterResult] object.
+  /// and returns a [CoreAdapterResult] object.
   final AdapterRequestFn metaRequest;
 
   /// Similar to [Adapter.metaRequest], but used for archive requests
@@ -58,7 +58,10 @@ class Adapter implements AdapterInterface {
        archiveRequest = retrieve;
 
   @override
-  Future<AdapterResult> run(CRSController crs, AdapterOptions options) async {
+  Future<CoreAdapterResult> run(
+    CRSController crs,
+    AdapterOptions options,
+  ) async {
     // run the adapter
     switch (options.resolveType) {
       case AdapterResolveType.meta:

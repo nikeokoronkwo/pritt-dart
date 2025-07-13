@@ -1,0 +1,172 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'messages.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+GetLatestPackageRequest _$GetLatestPackageRequestFromJson(Map json) =>
+    GetLatestPackageRequest(
+      name: json['name'] as String,
+      options: json['options'] == null
+          ? null
+          : PackageOptions.fromJson(
+              Map<String, dynamic>.from(json['options'] as Map),
+            ),
+    );
+
+Map<String, dynamic> _$GetLatestPackageRequestToJson(
+  GetLatestPackageRequest instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'options': instance.options?.toJson(),
+};
+
+Map<String, dynamic> _$GetLatestPackageResponseToJson(
+  GetLatestPackageResponse instance,
+) => <String, dynamic>{'package': instance.package.toJson()};
+
+GetPackageWithVersionRequest _$GetPackageWithVersionRequestFromJson(Map json) =>
+    GetPackageWithVersionRequest(
+      name: json['name'] as String,
+      version: json['version'] as String,
+      options: json['options'] == null
+          ? null
+          : PackageOptions.fromJson(
+              Map<String, dynamic>.from(json['options'] as Map),
+            ),
+    );
+
+Map<String, dynamic> _$GetPackageWithVersionRequestToJson(
+  GetPackageWithVersionRequest instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'version': instance.version,
+  'options': instance.options?.toJson(),
+};
+
+Map<String, dynamic> _$GetPackageWithVersionResponseToJson(
+  GetPackageWithVersionResponse instance,
+) => <String, dynamic>{'package': instance.package.toJson()};
+
+GetPackagesRequest _$GetPackagesRequestFromJson(Map json) => GetPackagesRequest(
+  name: json['name'] as String,
+  options: json['options'] == null
+      ? null
+      : PackageOptions.fromJson(
+          Map<String, dynamic>.from(json['options'] as Map),
+        ),
+);
+
+Map<String, dynamic> _$GetPackagesRequestToJson(GetPackagesRequest instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'options': instance.options?.toJson(),
+    };
+
+Map<String, dynamic> _$GetPackagesResponseToJson(
+  GetPackagesResponse instance,
+) => <String, dynamic>{
+  'package_versions': instance.packageVersions.map(
+    (k, e) => MapEntry(k, e.toJson()),
+  ),
+};
+
+GetPackageDetailsRequest _$GetPackageDetailsRequestFromJson(Map json) =>
+    GetPackageDetailsRequest(
+      name: json['name'] as String,
+      options: json['options'] == null
+          ? null
+          : PackageOptions.fromJson(
+              Map<String, dynamic>.from(json['options'] as Map),
+            ),
+    );
+
+Map<String, dynamic> _$GetPackageDetailsRequestToJson(
+  GetPackageDetailsRequest instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'options': instance.options?.toJson(),
+};
+
+Map<String, dynamic> _$GetPackageDetailsResponseToJson(
+  GetPackageDetailsResponse instance,
+) => <String, dynamic>{'package': instance.package.toJson()};
+
+GetPackageContributorsRequest _$GetPackageContributorsRequestFromJson(
+  Map json,
+) => GetPackageContributorsRequest(
+  name: json['name'] as String,
+  options: json['options'] == null
+      ? null
+      : PackageOptions.fromJson(
+          Map<String, dynamic>.from(json['options'] as Map),
+        ),
+);
+
+Map<String, dynamic> _$GetPackageContributorsRequestToJson(
+  GetPackageContributorsRequest instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'options': instance.options?.toJson(),
+};
+
+Map<String, dynamic> _$GetPackageContributorsResponseToJson(
+  GetPackageContributorsResponse instance,
+) => <String, dynamic>{
+  'contributors': instance.contributors.map((e) => e.toJson()).toList(),
+};
+
+GetArchiveWithVersionRequest _$GetArchiveWithVersionRequestFromJson(Map json) =>
+    GetArchiveWithVersionRequest(
+      name: json['name'] as String,
+      version: json['version'] as String,
+      language: json['language'] as String?,
+    );
+
+Map<String, dynamic> _$GetArchiveWithVersionRequestToJson(
+  GetArchiveWithVersionRequest instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'version': instance.version,
+  'language': instance.language,
+};
+
+Map<String, dynamic> _$GetArchiveWithVersionResponseToJson(
+  GetArchiveWithVersionResponse instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'contentType': instance.contentType,
+  'data': instance.data,
+};
+
+Map<String, dynamic> _$GetRawArchiveWithVersionResponseToJson(
+  GetRawArchiveWithVersionResponse instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'contentType': instance.contentType,
+  'data': instance.data,
+};
+
+PackageOptions _$PackageOptionsFromJson(Map json) => PackageOptions(
+  language: json['language'] as String?,
+  env: (json['env'] as Map?)?.map((k, e) => MapEntry(k as String, e)),
+);
+
+Map<String, dynamic> _$PackageOptionsToJson(PackageOptions instance) =>
+    <String, dynamic>{'language': instance.language, 'env': instance.env};
+
+Map<String, dynamic> _$UserEntryToJson(UserEntry instance) => <String, dynamic>{
+  'user': const UserJsonConverter().toJson(instance.user),
+  'privileges': instance.privileges
+      .map((e) => _$PrivilegesEnumMap[e]!)
+      .toList(),
+};
+
+const _$PrivilegesEnumMap = {
+  Privileges.read: 'read',
+  Privileges.write: 'write',
+  Privileges.publish: 'publish',
+  Privileges.ultimate: 'ultimate',
+};

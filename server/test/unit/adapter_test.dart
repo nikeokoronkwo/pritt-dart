@@ -32,10 +32,10 @@ void main() {
         id: 'test-adapter',
         resolve: (resolveObject) => AdapterResolveType.meta,
         request: (requestObject, controller) async {
-          return AdapterMetaResult(mockMetaResult);
+          return CoreAdapterMetaResult(mockMetaResult);
         },
         retrieve: (requestObject, controller) async {
-          return AdapterArchiveResult(Stream.empty(), 'test.tar.gz');
+          return CoreAdapterArchiveResult(Stream.empty(), 'test.tar.gz');
         },
       );
 
@@ -65,9 +65,9 @@ void main() {
           mockDBController,
         );
 
-        assert(result is AdapterMetaResult, "adapter should be meta");
+        assert(result is CoreAdapterMetaResult, "adapter should be meta");
         expect(
-          (result as AdapterMetaResult).body.toJson(),
+          (result as CoreAdapterMetaResult).body.toJson(),
           equals({'name': 1, 'age': 2}),
         );
       });
