@@ -77,23 +77,27 @@ class GoModConfig extends Config {
     final String name;
 
     switch (moduleParts.skip(1)) {
-      case [String moduleScope, String moduleName, String moduleVersion]
+      case [
+            final String moduleScope,
+            final String moduleName,
+            final String moduleVersion,
+          ]
           when moduleVersion.startsWith('v') &&
               Version.tryParse(moduleVersion.substring(1)) != null:
         name = '@$moduleScope/$moduleName';
         version = moduleVersion;
         break;
-      case [String moduleName, String moduleVersion]
+      case [final String moduleName, final String moduleVersion]
           when moduleVersion.startsWith('v') &&
               Version.tryParse(moduleVersion.substring(1)) != null:
         name = moduleName;
         version = moduleVersion;
         break;
-      case [String moduleScope, String moduleName]:
+      case [final String moduleScope, final String moduleName]:
         name = '@$moduleScope/$moduleName';
         version = '1.0.0';
         break;
-      case [String moduleName]:
+      case [final String moduleName]:
         name = moduleName;
         version = '1.0.0';
         break;

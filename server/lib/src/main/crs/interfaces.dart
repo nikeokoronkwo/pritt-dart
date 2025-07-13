@@ -17,7 +17,10 @@ class CRSArchive {
   final Stream<List<int>> data;
 
   const CRSArchive(this.name, this.contentType, this.data);
-  CRSArchive.empty() : name = '', contentType = null, data = const Stream.empty();
+  CRSArchive.empty()
+    : name = '',
+      contentType = null,
+      data = const Stream.empty();
 }
 
 /// an interface for the core registry system, used by adapters to make requests to retrieve common data

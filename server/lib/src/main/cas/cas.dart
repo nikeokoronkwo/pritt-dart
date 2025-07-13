@@ -312,7 +312,8 @@ class CustomAdapter implements AdapterInterface {
           );
           final archiveResponse = CustomAdapterArchiveResult.fromJson(response);
           archiveResponse.archive ??= await readByteStream(
-            _cachedArchives[archiveResponse.archiveTarget] ?? const Stream.empty(),
+            _cachedArchives[archiveResponse.archiveTarget] ??
+                const Stream.empty(),
           );
           return archiveResponse;
         default:

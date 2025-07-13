@@ -31,7 +31,7 @@ class PackageCurrentCommand extends PrittCommand {
   @override
   FutureOr? run() async {
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
@@ -43,7 +43,7 @@ class PackageCurrentCommand extends PrittCommand {
       logger.warn('To log in, run: ${styleBold.wrap('pritt login')}');
     }
 
-    var prittClient = (userCredentials == null || userCredentials.isExpired)
+    final prittClient = (userCredentials == null || userCredentials.isExpired)
         ? null
         : PrittClient(
             url: userCredentials.uri.toString(),
@@ -52,7 +52,7 @@ class PackageCurrentCommand extends PrittCommand {
 
     // get project
     logger.stdout('Getting Adapter for Project...');
-    var project = await getProject(
+    final project = await getProject(
       p.current,
       config: argResults?['config'],
       client: prittClient,

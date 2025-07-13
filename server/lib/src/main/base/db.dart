@@ -68,7 +68,10 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
           ),
         ],
         settings: devMode
-            ? const PoolSettings(maxConnectionCount: 20, sslMode: SslMode.disable)
+            ? const PoolSettings(
+                maxConnectionCount: 20,
+                sslMode: SslMode.disable,
+              )
             : PoolSettings(
                 maxConnectionCount: 20,
                 sslMode: Platform.environment.containsKey('DATABASE_SSL')

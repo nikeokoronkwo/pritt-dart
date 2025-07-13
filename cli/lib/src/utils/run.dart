@@ -9,7 +9,7 @@ class Runner {
     bool forwardIO = true,
     String? dir,
   }) async {
-    var spawn = await (forwardIO
+    final spawn = await (forwardIO
         ? manager.spawn(
             executable,
             args,

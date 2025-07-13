@@ -53,7 +53,7 @@ Future<UserCredentials> loginUser(
     authPollResponse = authStatus.response ?? {};
 
     // sleep for a while
-    sleep(Duration(milliseconds: 1500));
+    sleep(const Duration(milliseconds: 1500));
   }
 
   // check the status
@@ -100,9 +100,9 @@ Future<UserCredentials> loginUser(
 String _getTime(DateTime time, {bool verbose = true}) {
   if (verbose) return time.toIso8601String();
 
-  int hour = time.hour;
-  int mins = time.minute;
-  String suffix = time.hour >= 12 ? 'pm' : 'am';
+  final int hour = time.hour;
+  final int mins = time.minute;
+  final String suffix = time.hour >= 12 ? 'pm' : 'am';
 
   return '${hour > 12 ? hour - 12 : hour}:${mins.toString().padLeft(2, '0')} $suffix';
 }

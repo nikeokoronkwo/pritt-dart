@@ -63,7 +63,7 @@ Future<String?> getVcsRemoteUrl(VCS vcs, {String? directory}) async {
 }
 
 Future<List<String>> getIgnoredVCSFiles(VCS vcs, {String? directory}) async {
-  final splitter = const LineSplitter();
+  const splitter = LineSplitter();
   switch (vcs) {
     case VCS.git:
       return splitter.convert(
