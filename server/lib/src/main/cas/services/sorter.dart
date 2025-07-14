@@ -7,13 +7,13 @@ part 'sorter.g.dart';
 class SorterResponse {
   @JsonKey(name: 'result')
   final AdapterResolveType type;
-  final String? adapterId;
+  final String adapterId;
   final bool success;
   final String workerId;
 
   const SorterResponse({
     required this.type,
-    this.adapterId,
+    required this.adapterId,
     required this.success,
     required this.workerId,
   });

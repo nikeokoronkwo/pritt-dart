@@ -128,7 +128,7 @@ class CustomAdapterService {
     await wsConn.ready;
 
     // return WS
-    return (adapter: CustomAdapter._(wsConn), type: body.type);
+    return (adapter: CustomAdapter._(wsConn, body.adapterId), type: body.type);
   }
 }
 
@@ -140,11 +140,12 @@ class CustomAdapter implements AdapterInterface {
   final Map<String, Stream<List<int>>> _cachedArchives = {};
   WebSocketChannel channel;
   CRSController? crs;
+  final String id;
 
   late Completer completer;
   late final rpc.Peer _peer;
 
-  CustomAdapter._(this.channel) {
+  CustomAdapter._(this.channel, this.id) {
     _peer = rpc.Peer(channel.cast<String>());
 
     // register methods on peer
@@ -300,16 +301,16 @@ class CustomAdapter implements AdapterInterface {
     try {
       switch (options.resolveType) {
         case AdapterResolveType.meta:
-          final response = await _peer.sendRequest(
-            'metaRequest',
-            options.toRequestObject().toJson(),
-          );
+          final response = await _peer.sendRequest('metaRequest', {
+            'id': id,
+            ...options.toRequestObject().toJson(),
+          });
           return CustomAdapterMetaResult.fromJson(response);
         case AdapterResolveType.archive:
-          final response = await _peer.sendRequest(
-            'metaRetrieve',
-            options.toRequestObject().toJson(),
-          );
+          final response = await _peer.sendRequest('archiveRequest', {
+            'id': id,
+            ...options.toRequestObject().toJson(),
+          });
           final archiveResponse = CustomAdapterArchiveResult.fromJson(response);
           archiveResponse.archive ??= await readByteStream(
             _cachedArchives[archiveResponse.archiveTarget] ??
