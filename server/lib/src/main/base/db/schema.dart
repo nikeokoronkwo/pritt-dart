@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:pritt_common/version.dart';
 
 import 'annotations/schema.dart';
+import 'schema_json.dart';
 
 part 'schema.g.dart';
 
@@ -18,6 +19,7 @@ enum Privileges {
   }
 }
 
+@JsonEnum()
 enum VCS {
   git,
   svn,
@@ -34,6 +36,7 @@ enum VCS {
 }
 
 /// A package, as represented in the pritt database
+@JsonSerializable(createFactory: false)
 class Package {
   /// The id of the package
   @primary
@@ -48,11 +51,13 @@ class Package {
 
   /// The latest version of the given package
   /// updated with every publish to the database
+  @JsonKey(name: 'latest_version')
   String version;
 
   /// The person who published the given package
   ///
   /// This is a foreign reference to a user
+  @UserJsonConverter()
   User author;
 
   /// The programming language
@@ -101,9 +106,12 @@ class Package {
     this.scope,
     this.vcsUrl,
   }) : updated = updated ?? created;
+
+  Map<String, dynamic> toJson() => _$PackageToJson(this);
 }
 
 /// Maps packages to their versions, and info about those versions
+@JsonSerializable(createFactory: false)
 class PackageVersions {
   @primary
   @ForeignKey(Package, property: 'name')
@@ -142,6 +150,7 @@ class PackageVersions {
   /// The archive path of the given package.
   ///
   /// This archive is usually for the Object File System and so is relative to that
+  @JsonKey(name: 'archive_path')
   Uri archive;
 
   /// The archive SHA256 hash data
@@ -184,6 +193,8 @@ class PackageVersions {
          config == null || configName != null,
          "If config is set, then configName must be set as well",
        );
+
+  Map<String, dynamic> toJson() => _$PackageVersionsToJson(this);
 }
 
 /// Join table for contributors for a package

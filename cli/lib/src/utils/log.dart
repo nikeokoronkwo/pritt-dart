@@ -6,11 +6,10 @@ import 'package:logging/logging.dart' as l;
 const l.Level VERBOSE = l.Level('VERBOSE', 100);
 
 class Logger {
+  Logger();
   factory Logger.verbose() = VerboseLogger;
 
   final _messageDuration = const Duration(milliseconds: 100);
-
-  Logger();
 
   void stderr(Object msg) {
     io.stderr.writeln(msg);

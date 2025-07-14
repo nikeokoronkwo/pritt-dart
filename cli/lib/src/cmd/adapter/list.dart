@@ -38,7 +38,7 @@ class AdapterListCommand extends PrittCommand {
   void run() async {
     try {
       // check if user is logged in
-      var userCredentials = await UserCredentials.fetch();
+      final userCredentials = await UserCredentials.fetch();
 
       if (userCredentials == null || userCredentials.isExpired) {
         // else log user in
@@ -52,13 +52,13 @@ class AdapterListCommand extends PrittCommand {
       }
 
       // set up pritt client
-      var client = PrittClient(
+      final client = PrittClient(
         url: userCredentials.uri.toString(),
         accessToken: userCredentials.accessToken,
       );
 
       // get packages
-      var pkgs = await client.getAdapters();
+      final pkgs = await client.getAdapters();
 
       if (pkgs.adapters == null || (pkgs.adapters ?? []).isEmpty) {
         logger.stdout('There are no adapters');
@@ -69,7 +69,7 @@ class AdapterListCommand extends PrittCommand {
       }
 
       // get output format
-      var format = argResults != null
+      final format = argResults != null
           ? getFormatFromResults(argResults!)
           : OutputFormat.text;
 

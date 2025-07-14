@@ -17,7 +17,7 @@ class InfoCommand extends PrittCommand {
   @override
   void run() async {
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
@@ -67,7 +67,7 @@ String transformKey(String key) {
     '_',
     onMatch: (_) => ' ',
     onNonMatch: (v) {
-      var out = v.split('');
+      final out = v.split('');
       out[0] = out[0].toUpperCase();
       return out.join();
     },

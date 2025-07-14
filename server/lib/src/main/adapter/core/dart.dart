@@ -8,6 +8,7 @@ import '../../base/db/schema.dart';
 import '../../crs/response.dart';
 import '../../utils/mixins.dart';
 import '../adapter.dart';
+import '../adapter/adapter_base_result.dart';
 import '../adapter/resolve.dart';
 import '../adapter/result.dart';
 import 'dart/pubspec.dart';
@@ -43,7 +44,7 @@ final dartAdapter = Adapter(
     final packageDetails = await crs.getPackageDetails(packageName);
 
     if (!packageDetails.isSuccess) {
-      return AdapterErrorResult(
+      return CoreAdapterErrorResult(
         DartErrorResult(
           code: 'NoSuchKey',
           message: 'The specified key does not exist.',
@@ -65,7 +66,7 @@ final dartAdapter = Adapter(
         .firstWhere((entry) => entry.key.toString() == latestVersion)
         .value;
 
-    return AdapterMetaJsonResult(
+    return CoreAdapterMetaJsonResult(
       contentType: 'application/vnd.pub.v2+json',
       DartMetaResult(
         name: packageName,
@@ -112,7 +113,7 @@ final dartAdapter = Adapter(
     final archive = await crs.getArchiveWithVersion(packageName, version);
 
     if (!archive.isSuccess) {
-      return AdapterErrorResult(
+      return CoreAdapterErrorResult(
         DartErrorResult(
           code: 'NoSuchKey',
           message: 'The specified key does not exist.',
@@ -123,7 +124,7 @@ final dartAdapter = Adapter(
     }
 
     // stream the archive
-    return AdapterArchiveResult(
+    return CoreAdapterArchiveResult(
       archive.body!.data,
       archive.body!.name,
       contentType: archive.body!.contentType ?? 'application/gzip',

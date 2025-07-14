@@ -44,7 +44,7 @@ class AdapterUnpackCommand extends PrittCommand {
     final name = argResults!.rest.first;
 
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
@@ -76,7 +76,7 @@ class AdapterUnpackCommand extends PrittCommand {
       completeMessage: 'Adapter Downloaded',
     );
 
-    final outName = (argResults?['output'] ?? name);
+    final outName = argResults?['output'] ?? name;
     final directory = Directory(outName);
 
     if (await directory.exists() && !argResults?['force']) {

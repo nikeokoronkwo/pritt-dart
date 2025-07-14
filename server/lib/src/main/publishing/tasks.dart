@@ -16,7 +16,7 @@ import 'interfaces.dart';
 final publishingTaskRunner =
     TaskRunner<PubTaskItem, Archive, void, Map<String, dynamic>>(
       debug: true,
-      retryInterval: Duration(milliseconds: 800),
+      retryInterval: const Duration(milliseconds: 800),
       onRetrieve: getTarballForTask,
       workAction: processTarball,
       onCheck: checkTarballStatus,
@@ -146,9 +146,9 @@ FutureOr<void> processTarball(
 
   // zip up tarball
   // tarballData should not be null, else worker will fail before now
-  var tarballData = GZipEncoder().encode(TarEncoder().encode(archive))!;
+  final tarballData = GZipEncoder().encode(TarEncoder().encode(archive))!;
 
-  var archiveParts = [
+  final archiveParts = [
     if (taskInfo.scope != null) '@${taskInfo.scope}',
     taskInfo.name,
     taskInfo.version,
@@ -238,7 +238,7 @@ FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
     }
   } else {
     // use info to check storage S3
-    var archiveNameParts = [
+    final archiveNameParts = [
       if (taskInfo.scope != null) '@${taskInfo.scope}',
       taskInfo.name,
       taskInfo.version,
@@ -275,7 +275,7 @@ FutureOr<bool> checkTarballStatus(PubTaskItem item) async {
     return response.statusCode == 200;
   } else {
     // use info to check storage S3
-    var archiveNameParts = [
+    final archiveNameParts = [
       if (taskInfo.scope != null) '@${taskInfo.scope}',
       taskInfo.name,
       taskInfo.version,

@@ -21,24 +21,32 @@ class PackageInfoTest {
 }
 
 final packageInfoTests = <PackageInfoTest, Map<String, dynamic>>{
-  PackageInfoTest('foo', 'foo'): {
+  const PackageInfoTest('foo', 'foo'): {
     'name': 'foo',
     'scope': null,
     'version': null,
   },
-  PackageInfoTest('foo@1.2.3', 'foo', version: '1.2.3'): {
+  const PackageInfoTest('foo@1.2.3', 'foo', version: '1.2.3'): {
     'name': 'foo',
     'scope': null,
     'version': '1.2.3',
   },
-  PackageInfoTest('@scope/foo', 'foo', scope: 'scope'): {
+  const PackageInfoTest('@scope/foo', 'foo', scope: 'scope'): {
     'name': 'foo',
     'scope': 'scope',
     'version': null,
   },
-  PackageInfoTest('@scope/foo@2.0.0', 'foo', scope: 'scope', version: '2.0.0'):
-      {'name': 'foo', 'scope': 'scope', 'version': '2.0.0'},
-  PackageInfoTest(
+  const PackageInfoTest(
+    '@scope/foo@2.0.0',
+    'foo',
+    scope: 'scope',
+    version: '2.0.0',
+  ): {
+    'name': 'foo',
+    'scope': 'scope',
+    'version': '2.0.0',
+  },
+  const PackageInfoTest(
     '@scope/foo@2.0.0@beta',
     'foo',
     scope: 'scope',
@@ -49,22 +57,22 @@ final packageInfoTests = <PackageInfoTest, Map<String, dynamic>>{
     'version': '2.0.0@beta',
   },
   // More cases
-  PackageInfoTest('bar@latest', 'bar', version: 'latest'): {
+  const PackageInfoTest('bar@latest', 'bar', version: 'latest'): {
     'name': 'bar',
     'scope': null,
     'version': 'latest',
   },
-  PackageInfoTest('@org/bar', 'bar', scope: 'org'): {
+  const PackageInfoTest('@org/bar', 'bar', scope: 'org'): {
     'name': 'bar',
     'scope': 'org',
     'version': null,
   },
-  PackageInfoTest('@org/bar@dev', 'bar', scope: 'org', version: 'dev'): {
+  const PackageInfoTest('@org/bar@dev', 'bar', scope: 'org', version: 'dev'): {
     'name': 'bar',
     'scope': 'org',
     'version': 'dev',
   },
-  PackageInfoTest('baz@', 'baz', version: ''): {
+  const PackageInfoTest('baz@', 'baz', version: ''): {
     'name': 'baz',
     'scope': null,
     'version': '',

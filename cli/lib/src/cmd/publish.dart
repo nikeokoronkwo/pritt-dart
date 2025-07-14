@@ -118,7 +118,7 @@ class PublishCommand extends PrittCommand {
 
     // 0. PROJECT SETUP
     logger.info('Going through project...');
-    var project = await getProject(
+    final project = await getProject(
       p.current,
       config: argResults?['config'],
       client: client,
@@ -304,7 +304,7 @@ class PublishCommand extends PrittCommand {
       completeMessage: 'Package Uploaded',
     );
 
-    int contentLength = tarball.length;
+    final int contentLength = tarball.length;
     int bytesUploaded = 0;
 
     final uploadCompleter = Completer<void>();
@@ -319,11 +319,11 @@ class PublishCommand extends PrittCommand {
               sink.add(Uint8List.fromList(chunk));
               bytesUploaded += chunk.length;
               progressBar.tick(bytesUploaded, contentLength);
-              sleep(Duration(milliseconds: 10));
+              sleep(const Duration(milliseconds: 10));
             },
             handleDone: (sink) async {
               sink.close();
-              sleep(Duration(milliseconds: 100));
+              sleep(const Duration(milliseconds: 100));
               progressBar.end();
               uploadCompleter.complete();
             },
@@ -396,7 +396,7 @@ class PublishCommand extends PrittCommand {
     while (response.status != common.PublishingStatus.success &&
         response.status != common.PublishingStatus.error) {
       await Future.delayed(
-        pollInterval ?? Duration(milliseconds: 600),
+        pollInterval ?? const Duration(milliseconds: 600),
         () async {
           response = await client.getPackagePubStatus(id: pubID);
           _clearAndWrite('Publishing Status: ${response.status.value}');
@@ -486,7 +486,7 @@ Future<Archive> createArchiveFromFiles(
   final dirName = p.basename(rootDir);
   await for (var file in files) {
     var filename = p.relative(file.path, from: rootDir);
-    filename = includeDirName ? ('$dirName/$filename') : filename;
+    filename = includeDirName ? '$dirName/$filename' : filename;
 
     final fileStream = InputFileStream(file.path);
     final af = ArchiveFile.stream(filename, file.lengthSync(), fileStream);

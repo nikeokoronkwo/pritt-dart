@@ -8,7 +8,7 @@ part of 'sorter.dart';
 
 SorterResponse _$SorterResponseFromJson(Map json) => SorterResponse(
   type: $enumDecode(_$AdapterResolveTypeEnumMap, json['result']),
-  adapterId: json['adapterId'] as String?,
+  adapterId: json['adapterId'] as String,
   success: json['success'] as bool,
   workerId: json['workerId'] as String,
 );

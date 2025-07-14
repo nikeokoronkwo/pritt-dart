@@ -13,7 +13,7 @@ import 'constants.dart';
 import 'utils/log.dart';
 
 class PrittClient extends ApiClient implements PrittInterface {
-  final retryClient = RetryOptions(maxAttempts: 3);
+  final retryClient = const RetryOptions(maxAttempts: 3);
   Map<String, String> get _prittHeaders => {
     HttpHeaders.userAgentHeader: 'pritt cli',
   };
@@ -38,7 +38,7 @@ class PrittClient extends ApiClient implements PrittInterface {
           {},
           null,
           null,
-        ).timeout(Duration(seconds: 2));
+        ).timeout(const Duration(seconds: 2));
       }, retryIf: (e) => e is SocketException || e is TimeoutException);
       return true;
     } catch (_) {
@@ -771,9 +771,9 @@ extension HandleApiException on Logger {
       verbose('Message: ${exception.body.toJson()}');
     } catch (_) {
       verbose(switch (exception.body) {
-        String s => 'Message: $s',
-        Error err => 'Message: ${err.toJson()}',
-        Object o => 'Unknown Message: $o',
+        final String s => 'Message: $s',
+        final Error err => 'Message: ${err.toJson()}',
+        final Object o => 'Unknown Message: $o',
         null => 'No Message',
       });
     }

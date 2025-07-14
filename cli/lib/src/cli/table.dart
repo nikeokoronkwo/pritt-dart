@@ -23,7 +23,7 @@ class Table {
     String ifEmpty = '_',
     Indentation indentation = Indentation.center,
   }) {
-    StringBuffer sink = StringBuffer();
+    final StringBuffer sink = StringBuffer();
 
     final allLines = _header != null ? [...array, _header] : array;
 

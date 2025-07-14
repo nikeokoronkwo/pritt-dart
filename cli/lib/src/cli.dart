@@ -12,7 +12,7 @@ import 'cmd/yank.dart';
 
 /// Run the command-line interface
 Future run(List<String> args) async {
-  var runner =
+  final runner =
       PrittCommandRunner(
           'pritt',
           "A tool for making development easier across projects",

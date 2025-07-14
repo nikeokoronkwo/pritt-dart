@@ -29,11 +29,12 @@ sealed class CRSResponse<T> {
 
 class CRSSuccessResponse<T> extends CRSResponse<T> {
   final T _body;
+  final int statusCode;
 
   @override
   T get body => _body;
 
-  const CRSSuccessResponse({required T body, required int statusCode})
+  const CRSSuccessResponse({required T body, this.statusCode = 200})
     : _body = body,
       super._(body);
 }

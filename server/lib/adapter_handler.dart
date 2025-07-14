@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import 'pritt_server.dart';
+import 'src/main/adapter/adapter/adapter_base_result.dart';
 import 'src/main/adapter/adapter/exception.dart';
 import 'src/main/adapter/adapter/interface.dart';
 import 'src/main/adapter/adapter/request_options.dart';
@@ -31,7 +32,7 @@ Handler adapterHandler(CoreRegistryService crs) {
       final adapter = adapterSearchResult.adapter;
 
       // once we get an adapter, we can then begin the adapter life cycle
-      final AdapterResult result;
+      final AdapterBaseResult result;
       try {
         result = await adapter.run(
           adapter.language == null ? crs : crs.controller(adapter.language!),
@@ -40,59 +41,62 @@ Handler adapterHandler(CoreRegistryService crs) {
             resolveType: adapterSearchResult.resolve,
           ),
         );
-      } catch (e, stackTrace) {
-        print('$e -- $stackTrace');
+      } catch (_) {
         rethrow;
       }
 
-      print(
-        result is AdapterMetaJsonResult ? jsonEncode(result.body.toJson()) : '',
-      );
-      print(result);
-
       // return response based on the result
       return switch (result) {
-        AdapterErrorResult() => Response(
-          result.statusCode,
-          body: switch (result.responseType) {
-            ResponseType.json => jsonEncode(result.error.toJson()),
-            ResponseType.xml => mapToXml(result.error.toJson()),
-            _ => switch (result.error) {
-              String s => s,
-              Map<String, dynamic> map => jsonEncode(map),
-              List<Map<String, dynamic>> map => jsonEncode(map),
-              _ => result.error.toString(),
+        AdapterErrorResult(
+          statusCode: final code,
+          responseType: final responseType,
+          error: final e,
+        ) =>
+          Response(
+            code,
+            body: switch (responseType) {
+              ResponseType.json => jsonEncode(e.toJson()),
+              ResponseType.xml => mapToXml(e.toJson()),
+              _ => switch (e) {
+                final String s => s,
+                final Map<String, dynamic> map => jsonEncode(map),
+                final List<Map<String, dynamic>> map => jsonEncode(map),
+                _ => result.error.toString(),
+              },
             },
-          },
-          headers: {
-            HttpHeaders.contentTypeHeader: result.responseType.mimeType,
-          },
+            headers: {HttpHeaders.contentTypeHeader: responseType.mimeType},
+          ),
+        CoreAdapterMetaJsonResult() => Response.ok(
+          jsonEncode(result.body.toJson()),
+          headers: {HttpHeaders.contentTypeHeader: result.contentType},
         ),
-        AdapterMetaResult() => Response.ok(
-          switch (result) {
-            AdapterMetaJsonResult() => jsonEncode(result.body.toJson()),
-            _ => switch (result.responseType) {
-              ResponseType.json => jsonEncode(result.body),
-              ResponseType.xml => mapToXml(result.body.toJson()),
-              _ => result.body.toString(),
+        AdapterMetaResult(responseType: final responseType, body: final body) =>
+          Response.ok(
+            switch (responseType) {
+              ResponseType.json => jsonEncode(body),
+              ResponseType.xml => mapToXml(body.toJson()),
+              _ => body.toString(),
             },
-          },
-          headers: {
-            HttpHeaders.contentTypeHeader: result is AdapterMetaJsonResult
-                ? result.contentType
-                : switch (result.body) {
-                    Map<String, dynamic>() ||
-                    List<Map<String, dynamic>>() => 'application/json',
-                    _ => result.responseType.contentType,
-                  },
-          },
-        ),
+            headers: {
+              HttpHeaders.contentTypeHeader: switch (body) {
+                Map<String, dynamic>() ||
+                List<Map<String, dynamic>>() => 'application/json',
+                _ => responseType.contentType,
+              },
+            },
+          ),
         AdapterArchiveResult() => Response.ok(
           result.archive,
           headers: {
             HttpHeaders.contentTypeHeader: result.contentType,
             HttpHeaders.contentDisposition:
                 'attachment; filename=${result.name}',
+          },
+        ),
+        AdapterBaseResult() => Response.ok(
+          null,
+          headers: {
+            HttpHeaders.contentTypeHeader: result.responseType.contentType,
           },
         ),
       };
