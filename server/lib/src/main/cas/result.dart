@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../adapter/adapter/adapter_base_result.dart';
-import 'converters.dart';
+import 'types/converters.dart';
 
 part 'result.g.dart';
 

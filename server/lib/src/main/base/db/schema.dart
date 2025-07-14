@@ -51,6 +51,7 @@ class Package {
 
   /// The latest version of the given package
   /// updated with every publish to the database
+  @JsonKey(name: 'latest_version')
   String version;
 
   /// The person who published the given package
@@ -149,6 +150,7 @@ class PackageVersions {
   /// The archive path of the given package.
   ///
   /// This archive is usually for the Object File System and so is relative to that
+  @JsonKey(name: 'archive_path')
   Uri archive;
 
   /// The archive SHA256 hash data

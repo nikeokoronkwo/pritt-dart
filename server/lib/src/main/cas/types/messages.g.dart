@@ -25,7 +25,9 @@ Map<String, dynamic> _$GetLatestPackageRequestToJson(
 
 Map<String, dynamic> _$GetLatestPackageResponseToJson(
   GetLatestPackageResponse instance,
-) => <String, dynamic>{'package': instance.package.toJson()};
+) => <String, dynamic>{
+  'package': const PackageVersionsConverter().toJson(instance.package),
+};
 
 GetPackageWithVersionRequest _$GetPackageWithVersionRequestFromJson(Map json) =>
     GetPackageWithVersionRequest(
@@ -48,7 +50,9 @@ Map<String, dynamic> _$GetPackageWithVersionRequestToJson(
 
 Map<String, dynamic> _$GetPackageWithVersionResponseToJson(
   GetPackageWithVersionResponse instance,
-) => <String, dynamic>{'package': instance.package.toJson()};
+) => <String, dynamic>{
+  'package': const PackageVersionsConverter().toJson(instance.package),
+};
 
 GetPackagesRequest _$GetPackagesRequestFromJson(Map json) => GetPackagesRequest(
   name: json['name'] as String,
@@ -68,8 +72,8 @@ Map<String, dynamic> _$GetPackagesRequestToJson(GetPackagesRequest instance) =>
 Map<String, dynamic> _$GetPackagesResponseToJson(
   GetPackagesResponse instance,
 ) => <String, dynamic>{
-  'package_versions': instance.packageVersions.map(
-    (k, e) => MapEntry(k, e.toJson()),
+  'package_versions': const PackageVersionsMapConverter().toJson(
+    instance.packageVersions,
   ),
 };
 

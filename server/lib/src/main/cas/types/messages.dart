@@ -6,6 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../base/db/schema.dart';
 import '../../base/db/schema_json.dart';
 import '../../crs/interfaces.dart';
+import 'converters.dart';
 
 part 'messages.g.dart';
 
@@ -25,6 +26,7 @@ class GetLatestPackageRequest {
 
 @JsonSerializable(createFactory: false)
 class GetLatestPackageResponse {
+  @PackageVersionsConverter()
   final PackageVersions package;
 
   GetLatestPackageResponse({required this.package});
@@ -54,6 +56,7 @@ class GetPackageWithVersionRequest {
 
 @JsonSerializable(createFactory: false)
 class GetPackageWithVersionResponse {
+  @PackageVersionsConverter()
   final PackageVersions package;
 
   GetPackageWithVersionResponse({required this.package});
@@ -78,6 +81,7 @@ class GetPackagesRequest {
 @JsonSerializable(createFactory: false)
 class GetPackagesResponse {
   @JsonKey(name: 'package_versions')
+  @PackageVersionsMapConverter()
   final Map<String, PackageVersions> packageVersions;
 
   GetPackagesResponse({required this.packageVersions});
