@@ -29,9 +29,13 @@ final handler = defineRequestHandler((event) async {
       scope: pkgScope,
     );
 
+    final org = pkg.scope != null
+        ? await crs.db.getOrganizationByName(pkg.scope!)
+        : null;
+
     // if the package is not public and the user is not authorized, return 404
     // or if the user is not the author and not a contributor
-    if (!(pkg.public ?? true) &&
+    if (!((pkg.public ?? true) && (org?.public ?? true)) &&
         (pkg.author != user || !isAuthorized) &&
         !contributors.keys.contains(user)) {
       // check org membership

@@ -1,5 +1,6 @@
 import 'package:pritt_common/interface.dart' as common;
 import '../../../pritt_server.dart';
+import '../../server_utils/access.dart';
 import '../../server_utils/authorization.dart';
 import '../../utils/extensions.dart';
 import '../../utils/request_handler.dart';
@@ -21,31 +22,11 @@ final handler = defineRequestHandler((event) async {
 
     final approvedPkgs =
         pkgs
-                .asyncMap((pkg) async {
-                  final author = pkg.author;
-                  if (pkg.public ?? true) return pkg;
-
-                  if (pkg.scope case final scope?) {
-                    final org = await crs.db.getOrganizationByName(scope);
-                    if (org.public) return pkg;
-
-                    if (user == null) return null; // not logged in, skip
-
-                    final orgMembers = crs.db.getMembersForOrganizationStream(
-                      scope,
-                    );
-                    if (await orgMembers.contains(user)) return pkg;
-
-                    // if the user is not a member of the organization, skip
-                    return null;
-                  }
-
-                  if (user == null)
-                    return null; // not logged in, skip
-                  else
-                    return author == user ? pkg : null; // not the author, skip
-                })
-                .nonNull();
+        .asyncMap((pkg) async {
+          final author = pkg.author;
+          return await userIsAuthorizedToPackage(pkg, user, author: author) ? pkg : null;
+        })
+        .nonNull();
 
     // while the stream loads..
 
@@ -89,27 +70,7 @@ final handler = defineRequestHandler((event) async {
     final approvedPkgs =
         (await pkgs.map((pkg) async {
               final author = pkg.author;
-              if (pkg.public ?? true) return pkg;
-
-              if (pkg.scope case final scope?) {
-                final org = await crs.db.getOrganizationByName(scope);
-                if (org.public) return pkg;
-
-                if (user == null) return null; // not logged in, skip
-
-                final orgMembers = crs.db.getMembersForOrganizationStream(
-                  scope,
-                );
-                if (await orgMembers.contains(user)) return pkg;
-
-                // if the user is not a member of the organization, skip
-                return null;
-              }
-
-              if (user == null)
-                return null; // not logged in, skip
-              else
-                return author == user ? pkg : null; // not the author, skip
+              return await userIsAuthorizedToPackage(pkg, user, author: author) ? pkg : null; // not the author, skip
             }).wait).nonNulls;
 
     final resp = common.GetPackagesResponse(

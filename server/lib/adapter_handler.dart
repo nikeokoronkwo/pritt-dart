@@ -16,8 +16,6 @@ import 'src/utils/xml.dart';
 Handler adapterHandler(CoreRegistryService crs) {
   return (Request req) async {
     try {
-      print(req.headers);
-      print(req.headersAll);
       final adapterResolve = getAdapterResolveObject(req);
 
       // check through the core adapters first
@@ -34,7 +32,7 @@ Handler adapterHandler(CoreRegistryService crs) {
       final AdapterResult result;
       try {
         result = await adapter.run(
-          adapter.language == null ? crs : crs.controller(adapter.language!),
+          adapter.language == null ? crs : await crs.controller(adapter.language!, adapterResolve.authToken),
           AdapterOptions(
             resolveObject: adapterResolve,
             resolveType: adapterSearchResult.resolve,

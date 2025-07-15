@@ -110,4 +110,6 @@ abstract interface class CRSDBController {
   });
 }
 
-abstract class CRSController implements CRSDBController, CRSArchiveController {}
+abstract class CRSController implements CRSDBController, CRSArchiveController {
+  bool get isAuthenticated;
+}

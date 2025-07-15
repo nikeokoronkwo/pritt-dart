@@ -1210,9 +1210,53 @@ RETURNING *''',
   Stream<PackageVersions> getAllVersionsOfPackageStream(
     String name, {
     String? scope,
-  }) {
-    // TODO: implement getAllVersionsOfPackageStream
-    throw UnimplementedError();
+  }) async* {
+    if (_statements['getAllVersionsOfPackage'] == null) {
+      _statements['getAllVersionsOfPackage'] = await _pool.prepare(
+        Sql.named('''
+SELECT version, version_type, created_at, info, env, metadata, archive, hash, signatures, integrity, readme, config, config_name,
+       deprecated, deprecated_message, yanked
+FROM package_versions
+WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
+'''),
+      );
+    }
+
+    final result = _statements['getAllVersionsOfPackage']!.run({
+      'name': name,
+      'scope': scope,
+    });
+
+    final pkg = await getPackage(name);
+
+    yield* Stream.fromFuture(result).asyncExpand((res) {
+      return Stream.fromIterable(res).map((row) {
+        final columnMap = row.toColumnMap();
+        return PackageVersions(
+          package: pkg,
+          version: columnMap['version'] as String,
+          versionType: VersionType.fromString(
+            (columnMap['version_type'] as UndecodedBytes).asString,
+          ),
+          created: columnMap['created_at'] as DateTime,
+          info: columnMap['info'] as Map<String, dynamic>,
+          env: columnMap['env'] as Map<String, dynamic>,
+          metadata: columnMap['metadata'] as Map<String, dynamic>,
+          archive: Uri.file(columnMap['archive'] as String),
+          hash: columnMap['hash'] as String,
+          signatures: (columnMap['signatures'] as List<dynamic>)
+              .map((e) => Signature.fromJson(e))
+              .toList(),
+          integrity: columnMap['integrity'] as String,
+          readme: columnMap['readme'] as String?,
+          config: columnMap['config'] as String?,
+          configName: columnMap['config_name'] as String?,
+          isDeprecated: columnMap['deprecated'] as bool,
+          isYanked: columnMap['yanked'] as bool,
+          deprecationMessage: columnMap['deprecated_message'] as String?,
+        );
+      });
+    });
   }
 
   @override

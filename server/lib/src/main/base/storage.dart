@@ -197,6 +197,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     String sha, {
     String? contentType,
     Map<String, String>? metadata,
+    bool private = false,
   }) async {
     // Create the object in the bucket
     try {
@@ -206,6 +207,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         body: data,
         contentType: contentType,
         metadata: {'sha256': sha}..addAll(metadata ?? {}),
+        acl: private ? ObjectCannedACL.private : null
       );
 
       return true;

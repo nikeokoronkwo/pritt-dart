@@ -1,25 +1,53 @@
 import '../../pritt_server.dart';
+import '../main/base/db.dart';
 import '../main/base/db/schema.dart';
+import '../main/crs/crs.dart';
 
 Future<bool> userIsAuthorizedToPackage(
   Package pkg,
   User? user, {
-    bool isRoot = false,
+    User? author,
+    PrittDatabase? db
+}) async {
+  db ??= crs.db;
+  author ??= pkg.author;
+  // check if package is public
+  if (pkg.scoped) {
+    if (pkg.public ?? true) return true;
+
+    // if user is not provided, return false
+    if (user == null) return false;
+
+    if (author == user) return true;
+
+    final contribs = await db.getContributorsForPackage(
+      pkg.name,
+    );
+
+    if (contribs.keys.contains(user)) return true;
+  } else {
+    final org = pkg.scope != null
+      ? await db.getOrganizationByName(pkg.scope!)
+      : null;
+
+    if ((pkg.public ?? true) && (org?.public ?? true)) return true;
+
+    // if user is not provided, return false
+    if (user == null) return false;
+    
+    if (author == user) return true;
+
+    final members = db.getMembersForOrganizationStream(pkg.scope!);
+
+    if (pkg.public ?? true && await members.contains(user)) return true;
+
+    final contribs = await db.getContributorsForPackage(
+      pkg.name,
+      scope: pkg.scope,
+    );
+
+    if (contribs.keys.contains(user)) return true;
   }
-) async{
-  if (isRoot) return true;
 
-  if (pkg.public ?? true) return true;
-
-  if (user == null) return false;
-
-  if (pkg.author.id == user.id) return true;
-
-  // check if user is a contributor to the package
-  final contributors = await crs.db.getContributorsForPackage(pkg.name, scope: pkg.scope);
-  return contributors.entries.any(
-    (entry) =>
-      entry.key.id == user.id &&
-      entry.value.any((p) => p == Privileges.write || p == Privileges.publish),
-  );
+  return false;
 }

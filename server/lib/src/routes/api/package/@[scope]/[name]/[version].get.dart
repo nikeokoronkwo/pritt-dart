@@ -31,7 +31,11 @@ final handler = defineRequestHandler((event) async {
       scope: pkgScope,
     );
 
-    if (!(pkg.package.public ?? true) &&
+    final org = pkg.package.scope != null
+        ? await crs.db.getOrganizationByName(pkg.package.scope!)
+        : null;
+
+    if (!((pkg.package.public ?? true) && (org?.public ?? true)) &&
         (pkg.package.author != user || !isAuthorized) &&
         !contributors.keys.contains(user)) {
       // check org membership

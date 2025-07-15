@@ -24,6 +24,7 @@ abstract interface class PrittStorageInterface<T> {
     String sha, {
     String? contentType,
     Map<String, String>? metadata,
+    bool private = false,
   });
 
   /// Remove a package file located at [path] from the CRS OFS
