@@ -6,6 +6,7 @@ import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
+import 'package:pritt_common/config.dart' as common;
 import 'package:pritt_common/version.dart';
 
 import '../../../pritt_server.dart';
@@ -110,6 +111,8 @@ FutureOr<void> processTarball(
   );
   // TODO(nikeokoronkwo): Incorporate files and file checks: changelog (changelog map), license, pritt config (contributors)
   // ArchiveFile? changelog, license, prittConfig;
+  ArchiveFile? prittConfigFile;
+  ArchiveFile? authorsFile;
 
   for (final file in archive) {
     if (!file.isFile) break;
@@ -125,8 +128,12 @@ FutureOr<void> processTarball(
       case 'license':
         // license = file;
         break;
+      case 'authors':
+        authorsFile = file;
+        break;
+      // TODO(nikeokoronkwo): What if the pritt config file is named differently?
       case 'pritt':
-        // prittConfig = file;
+        prittConfigFile = file;
         break;
       default:
         if (p.basenameWithoutExtension(fileName.toLowerCase()) == configName) {
@@ -142,7 +149,55 @@ FutureOr<void> processTarball(
 
   // process license
 
-  // read pritt config (future)
+  // read pritt config
+  final prittConfig = prittConfigFile != null
+      ? common.PrittConfig.fromJson(
+          jsonDecode(utf8.decode(prittConfigFile.content as Uint8List)),
+        )
+      : null;
+  // read authors file
+  final authors = authorsFile != null
+      ? const LineSplitter()
+            .convert(utf8.decode(authorsFile.content as Uint8List))
+            .where((line) => line.isNotEmpty && !line.trim().startsWith('#'))
+      : null;
+
+  // =============== CONTRIBUTOR PROCESSING ===============
+  // contributors are either in the pritt config or in the AUTHORS file
+  final contributors = [
+    if (prittConfig?.contributors case final contribs?) ...contribs,
+    if (authors != null) ...authors.map((author) => common.User.parse(author)),
+  ];
+
+  final contributorsAsUsers = <User>[];
+  List<User>? usersTests;
+  if (!contributors.every((contrib) => contrib.email != null)) {
+    usersTests = (await crs.db.getUsers()).toList();
+  }
+
+  for (final contributor in contributors) {
+    if (usersTests case final userList?) {
+      if (userList.where(
+            (u) =>
+                u.name == contributor.name &&
+                (u.email == contributor.email || contributor.email == null),
+          )
+          case [final User existingUser?]) {
+        contributorsAsUsers.add(existingUser);
+      }
+    } else {
+      try {
+        final existingUser = await crs.db.getUserByEmail(contributor.email!);
+        contributorsAsUsers.add(existingUser);
+      } catch (e) {
+        // skip if user not found
+      }
+    }
+  }
+
+  // =============== END OF CONTRIBUTOR PROCESSING ===============
+
+  final private = prittConfig?.private ?? false;
 
   // zip up tarball
   // tarballData should not be null, else worker will fail before now
@@ -178,6 +233,8 @@ FutureOr<void> processTarball(
       archive: Uri.file(tarballPath, windows: false),
       hash: tarballHash,
       integrity: tarballIntegrity,
+      contributorIds: contributorsAsUsers.map((c) => c.id).toList(),
+      private: private,
     );
   } else {
     // create new package version
@@ -190,10 +247,12 @@ FutureOr<void> processTarball(
       archive: Uri.file(tarballPath, windows: false),
       hash: tarballHash,
       integrity: tarballIntegrity,
+      contributorIds: contributorsAsUsers.map((c) => c.id).toList(),
     );
   }
 
   // prepare for upload
+  // TODO: URL signing for upload and URL generation
 
   // add to storage
   await crs.ofs

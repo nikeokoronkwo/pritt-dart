@@ -55,6 +55,7 @@ CREATE TABLE organizations (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT UNIQUE NOT NULL,
     description TEXT,
+    public BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -97,9 +98,11 @@ CREATE TABLE packages (
     vcs_url TEXT,
     archive TEXT NOT NULL,
     license TEXT,
+    public BOOLEAN,
     UNIQUE (name, scope),
     CONSTRAINT valid_name CHECK (name ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
     CONSTRAINT valid_scope CHECK (scope ~ '^[a-zA-Z0-9][a-zA-Z0-9_.-]*$'),
+    CONSTRAINT scoped_or_valid_public CHECK (scope IS NOT NULL OR public IS NOT NULL),
     FOREIGN KEY (author_id) REFERENCES users (id),
     FOREIGN KEY (scope) REFERENCES organizations (name)
 );
@@ -114,7 +117,22 @@ CREATE TABLE package_contributors (
     FOREIGN KEY (contributor_id) REFERENCES users (id)
 );
 
+CREATE TRIGGER update_package_contributors_updated_at
+AFTER INSERT OR UPDATE ON package_contributors
+FOR EACH ROW
+EXECUTE FUNCTION update_package_updated_at();
 
+CREATE OR REPLACE FUNCTION update_package_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE packages
+    SET updated_at = now()
+    WHERE id = NEW.package_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- TODO: Should we consider private package versions?
 CREATE TABLE package_versions (
     package_id TEXT NOT NULL,
     version TEXT NOT NULL,

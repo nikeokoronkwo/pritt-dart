@@ -1,5 +1,7 @@
 import 'package:pritt_common/interface.dart' as common;
 import '../../../pritt_server.dart';
+import '../../main/base/db/schema.dart';
+import '../../server_utils/authorization.dart';
 import '../../utils/request_handler.dart';
 
 final pkgCap = 100;
@@ -7,6 +9,8 @@ final pkgCap = 100;
 final handler = defineRequestHandler((event) async {
   /// get params
   final queryParams = getQueryParams(event);
+  final authToken = getHeader(event, 'Authorization');
+  var user = authToken != null ? await checkAuthorization(authToken) : null;
 
   // Get the estimate
   final pkgCount = await crs.db.getPackagesCountEstimate();
@@ -14,6 +18,27 @@ final handler = defineRequestHandler((event) async {
   if (pkgCount >= pkgCap) {
     // get the packages as a stream
     final pkgs = crs.db.getPackagesStream();
+
+    final approvedPkgs = pkgs.asyncMap((pkg) async {
+      final author = pkg.author;
+      if (pkg.public ?? true) return pkg;
+      
+      if (pkg.scope case final scope?) {
+        final org = await crs.db.getOrganizationByName(scope);
+        if (org.public) return pkg;
+
+        if (user == null) return null; // not logged in, skip
+
+        final orgMembers = crs.db.getMembersForOrganizationStream(scope);
+        if (await orgMembers.contains(user)) return pkg;
+
+        // if the user is not a member of the organization, skip
+        return null;
+      }
+
+      if (user == null) return null; // not logged in, skip
+      else return author == user ? pkg : null; // not the author, skip
+    }).where((pkg) => pkg != null) as Stream<Package>;
 
     // while the stream loads..
 
@@ -25,7 +50,8 @@ final handler = defineRequestHandler((event) async {
     }
 
     final resp = common.GetPackagesResponse(
-      packages: (await pkgs.skip(index * 100).take(pkgCap).toList())
+      packages: (await approvedPkgs
+      .skip(index * 100).take(pkgCap).toList())
           // TODO: More Package features:
           // - keywords, - license
           .map(
@@ -54,8 +80,29 @@ final handler = defineRequestHandler((event) async {
     // get the packages as a list
     final pkgs = await crs.db.getPackages();
 
+    final approvedPkgs = (await pkgs.map((pkg) async {
+      final author = pkg.author;
+      if (pkg.public ?? true) return pkg;
+      
+      if (pkg.scope case final scope?) {
+        final org = await crs.db.getOrganizationByName(scope);
+        if (org.public) return pkg;
+
+        if (user == null) return null; // not logged in, skip
+
+        final orgMembers = crs.db.getMembersForOrganizationStream(scope);
+        if (await orgMembers.contains(user)) return pkg;
+
+        // if the user is not a member of the organization, skip
+        return null;
+      }
+
+      if (user == null) return null; // not logged in, skip
+      else return author == user ? pkg : null; // not the author, skip
+    }).wait).where((pkg) => pkg != null) as Iterable<Package>;
+
     final resp = common.GetPackagesResponse(
-      packages: pkgs.map((pkg) {
+      packages: approvedPkgs.map((pkg) {
         return common.Package(
           name: pkg.name,
           description: pkg.description,

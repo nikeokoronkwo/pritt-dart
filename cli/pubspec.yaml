@@ -10,7 +10,7 @@ executables:
 environment:
   sdk: ^3.8.0
 
-# Add regular dependencies here.
+
 dependencies:
   archive: ^3.6.1
   args: ^2.5.0

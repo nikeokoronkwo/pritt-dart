@@ -60,6 +60,7 @@ abstract interface class PrittDatabaseInterface
     String? license,
     required Uri archive,
     Iterable<User>? contributors,
+    bool private = false,
   });
 
   /// adds a new version of a package to the database
@@ -177,6 +178,9 @@ abstract interface class PrittDatabaseInterface
   /// Get packages for a specific user via [Stream]
   Stream<Package> getPackagesForUserStream(String id);
 
+  /// Changes the scope (publicity) of a package
+  Future<Package> changePackagePublicity(String name, {String? scope});
+
   /// Get contributors for a specific package
   FutureOr<Map<User, Iterable<Privileges>>> getContributorsForPackage(
     String name, {
@@ -251,6 +255,7 @@ abstract interface class PrittDatabaseInterface
     required String name,
     String? description,
     required User owner,
+    bool private = false,
   });
 
   /// Update an organization
@@ -366,6 +371,7 @@ abstract interface class PrittDatabaseInterface
     required String integrity,
     PublishingTask? task,
     List<String> contributorIds = const [],
+    bool private = false,
   });
 
   /// Elevates a publishing task to a new version of a package
@@ -381,5 +387,6 @@ abstract interface class PrittDatabaseInterface
     required String integrity,
     PublishingTask? task,
     List<String> contributorIds = const [],
+    bool private = false,
   });
 }

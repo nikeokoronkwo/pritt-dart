@@ -774,6 +774,7 @@ FROM plugins p
     required String name,
     String? description,
     required User owner,
+    bool private = false,
   }) {
     // TODO: implement createOrganization
     throw UnimplementedError();
@@ -782,21 +783,94 @@ FROM plugins p
   @override
   FutureOr<Map<User, Iterable<Privileges>>> getMembersForOrganization(
     String name,
-  ) {
-    // TODO: implement getMembersForOrganization
-    throw UnimplementedError();
+  ) async {
+    final result = await _pool.execute(Sql.named('''
+SELECT u.id, u.name, u.email, u.avatar_url, u.created_at, u.updated_at,
+       o.name as organization_name, o.description as organization_description, o.public as organization_public,
+       om.privileges as privileges
+FROM organization_members om
+LEFT JOIN users u ON om.user_id = u.id
+LEFT JOIN organizations o ON om.organization_id = o.id
+WHERE o.name = @name
+'''), parameters: {
+  'name': name,
+});
+
+    return result.asMap().map((k, row) {
+      final columnMap = row.toColumnMap();
+      return MapEntry(
+        User(
+          id: columnMap['id'] as String,
+          name: columnMap['name'] as String,
+          email: columnMap['email'] as String,
+          avatarUrl: columnMap['avatar_url'] as String?,
+          createdAt: columnMap['created_at'] as DateTime,
+          updatedAt: columnMap['updated_at'] as DateTime,
+        ),
+        (columnMap['privileges'] as Iterable<UndecodedBytes>).map(
+          (p) => Privileges.fromString(p.asString),
+        ),
+      );
+    });
   }
 
   @override
-  Stream<User> getMembersForOrganizationStream(String name) {
-    // TODO: implement getMembersForOrganizationStream
-    throw UnimplementedError();
+  Stream<User> getMembersForOrganizationStream(String name) async* {
+    final result = _pool.execute(Sql.named('''
+SELECT u.id, u.name, u.email, u.avatar_url, u.created_at, u.updated_at,
+       o.name as organization_name, o.description as organization_description, o.public as organization_public,
+       om.privileges as privileges
+FROM organization_members om
+LEFT JOIN users u ON om.user_id = u.id
+LEFT JOIN organizations o ON om.organization_id = o.id
+WHERE o.name = @name
+'''), parameters: {
+  'name': name,
+});
+
+    yield* Stream.fromFuture(result).asyncExpand(
+      (e) => Stream.fromIterable(
+        e.map((row) {
+          final columnMap = row.toColumnMap();
+          return User(
+            id: columnMap['id'] as String,
+            name: columnMap['name'] as String,
+            email: columnMap['email'] as String,
+            avatarUrl: columnMap['avatar_url'] as String?,
+            createdAt: columnMap['created_at'] as DateTime,
+            updatedAt: columnMap['updated_at'] as DateTime,
+          );
+        }),
+      ),
+    );
   }
 
   @override
-  FutureOr<Scope> getOrganizationByName(String name) {
-    // TODO: implement getOrganizationByName
-    throw UnimplementedError();
+  FutureOr<Scope> getOrganizationByName(String name) async {
+    final result = await _pool.execute(Sql.named('''
+SELECT id, name, description, created_at, updated_at, public
+FROM organizations
+WHERE name = @name
+'''), parameters: {
+  'name': name,
+});
+
+    if (result.isEmpty) {
+      throw CRSException(
+        CRSExceptionType.SCOPE_NOT_FOUND,
+        'Could not find organization with name $name',
+      );
+    }
+
+    final columnMap = result.first.toColumnMap();
+    return Scope(
+      id: columnMap['id'] as String,
+      name: columnMap['name'] as String,
+      description: columnMap['description'] as String?,
+      createdAt: columnMap['created_at'] as DateTime,
+      updatedAt: columnMap['updated_at'] as DateTime,
+      public: columnMap['public'] as bool,
+    );
   }
 
   @override
@@ -877,13 +951,14 @@ FROM plugins p
     String? license,
     required Uri archive,
     Iterable<User>? contributors,
+    bool private = false,
   }) async {
     final id = Slugid.nice().toString();
     try {
       final result = await _pool.execute(
         r'''
-INSERT INTO packages (id, name, scope, version, description, author_id, language, vcs, vcs_url, archive, license)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+INSERT INTO packages (id, name, scope, version, description, author_id, language, vcs, vcs_url, archive, license, public)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 RETURNING *''',
         parameters: [
           id,
@@ -897,6 +972,7 @@ RETURNING *''',
           vcsUrl,
           archive.toFilePath(windows: false),
           license,
+          !private,
         ],
       );
 
@@ -1606,6 +1682,7 @@ RETURNING *
     required String integrity,
     PublishingTask? task,
     List<String> contributorIds = const [],
+    bool private = false,
   }) async {
     // get publishing task from db
     task ??= await getPublishingTaskById(id);
@@ -1622,6 +1699,7 @@ RETURNING *
         language: task.language,
         vcs: task.vcs,
         archive: archive,
+        private: private,
       ),
     ).then((pkg) async {
       final pkgVer = await addNewVersionOfPackageGivenPkg(
@@ -1658,6 +1736,7 @@ RETURNING *
     required String integrity,
     PublishingTask? task,
     List<String> contributorIds = const [],
+    bool private = false,
   }) async {
     task ??= await getPublishingTaskById(id);
 
@@ -1790,6 +1869,12 @@ RETURNING *
       updatedAt: columnMap['updated_at'] as DateTime,
       expiresAt: columnMap['expires_at'] as DateTime,
     );
+  }
+
+  @override
+  Future<Package> changePackagePublicity(String name, {String? scope}) {
+    // TODO: implement changePackagePublicity
+    throw UnimplementedError();
   }
 }
 
