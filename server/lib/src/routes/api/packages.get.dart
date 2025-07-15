@@ -1,7 +1,7 @@
 import 'package:pritt_common/interface.dart' as common;
 import '../../../pritt_server.dart';
-import '../../main/base/db/schema.dart';
 import '../../server_utils/authorization.dart';
+import '../../utils/extensions.dart';
 import '../../utils/request_handler.dart';
 
 final pkgCap = 100;
@@ -45,8 +45,7 @@ final handler = defineRequestHandler((event) async {
                   else
                     return author == user ? pkg : null; // not the author, skip
                 })
-                .where((pkg) => pkg != null)
-            as Stream<Package>;
+                .nonNull();
 
     // while the stream loads..
 
@@ -111,8 +110,7 @@ final handler = defineRequestHandler((event) async {
                 return null; // not logged in, skip
               else
                 return author == user ? pkg : null; // not the author, skip
-            }).wait).where((pkg) => pkg != null)
-            as Iterable<Package>;
+            }).wait).nonNulls;
 
     final resp = common.GetPackagesResponse(
       packages: approvedPkgs.map((pkg) {
