@@ -19,26 +19,34 @@ final handler = defineRequestHandler((event) async {
     // get the packages as a stream
     final pkgs = crs.db.getPackagesStream();
 
-    final approvedPkgs = pkgs.asyncMap((pkg) async {
-      final author = pkg.author;
-      if (pkg.public ?? true) return pkg;
-      
-      if (pkg.scope case final scope?) {
-        final org = await crs.db.getOrganizationByName(scope);
-        if (org.public) return pkg;
+    final approvedPkgs =
+        pkgs
+                .asyncMap((pkg) async {
+                  final author = pkg.author;
+                  if (pkg.public ?? true) return pkg;
 
-        if (user == null) return null; // not logged in, skip
+                  if (pkg.scope case final scope?) {
+                    final org = await crs.db.getOrganizationByName(scope);
+                    if (org.public) return pkg;
 
-        final orgMembers = crs.db.getMembersForOrganizationStream(scope);
-        if (await orgMembers.contains(user)) return pkg;
+                    if (user == null) return null; // not logged in, skip
 
-        // if the user is not a member of the organization, skip
-        return null;
-      }
+                    final orgMembers = crs.db.getMembersForOrganizationStream(
+                      scope,
+                    );
+                    if (await orgMembers.contains(user)) return pkg;
 
-      if (user == null) return null; // not logged in, skip
-      else return author == user ? pkg : null; // not the author, skip
-    }).where((pkg) => pkg != null) as Stream<Package>;
+                    // if the user is not a member of the organization, skip
+                    return null;
+                  }
+
+                  if (user == null)
+                    return null; // not logged in, skip
+                  else
+                    return author == user ? pkg : null; // not the author, skip
+                })
+                .where((pkg) => pkg != null)
+            as Stream<Package>;
 
     // while the stream loads..
 
@@ -50,8 +58,7 @@ final handler = defineRequestHandler((event) async {
     }
 
     final resp = common.GetPackagesResponse(
-      packages: (await approvedPkgs
-      .skip(index * 100).take(pkgCap).toList())
+      packages: (await approvedPkgs.skip(index * 100).take(pkgCap).toList())
           // TODO: More Package features:
           // - keywords, - license
           .map(
@@ -80,26 +87,32 @@ final handler = defineRequestHandler((event) async {
     // get the packages as a list
     final pkgs = await crs.db.getPackages();
 
-    final approvedPkgs = (await pkgs.map((pkg) async {
-      final author = pkg.author;
-      if (pkg.public ?? true) return pkg;
-      
-      if (pkg.scope case final scope?) {
-        final org = await crs.db.getOrganizationByName(scope);
-        if (org.public) return pkg;
+    final approvedPkgs =
+        (await pkgs.map((pkg) async {
+              final author = pkg.author;
+              if (pkg.public ?? true) return pkg;
 
-        if (user == null) return null; // not logged in, skip
+              if (pkg.scope case final scope?) {
+                final org = await crs.db.getOrganizationByName(scope);
+                if (org.public) return pkg;
 
-        final orgMembers = crs.db.getMembersForOrganizationStream(scope);
-        if (await orgMembers.contains(user)) return pkg;
+                if (user == null) return null; // not logged in, skip
 
-        // if the user is not a member of the organization, skip
-        return null;
-      }
+                final orgMembers = crs.db.getMembersForOrganizationStream(
+                  scope,
+                );
+                if (await orgMembers.contains(user)) return pkg;
 
-      if (user == null) return null; // not logged in, skip
-      else return author == user ? pkg : null; // not the author, skip
-    }).wait).where((pkg) => pkg != null) as Iterable<Package>;
+                // if the user is not a member of the organization, skip
+                return null;
+              }
+
+              if (user == null)
+                return null; // not logged in, skip
+              else
+                return author == user ? pkg : null; // not the author, skip
+            }).wait).where((pkg) => pkg != null)
+            as Iterable<Package>;
 
     final resp = common.GetPackagesResponse(
       packages: approvedPkgs.map((pkg) {

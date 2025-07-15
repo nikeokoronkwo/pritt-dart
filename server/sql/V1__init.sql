@@ -156,6 +156,22 @@ CREATE TABLE package_versions (
     FOREIGN KEY (package_id) REFERENCES packages (id)
 );
 
+CREATE TRIGGER update_package_versions_updated_at
+AFTER INSERT OR UPDATE ON package_versions
+FOR EACH ROW
+EXECUTE FUNCTION update_package_updated_at();
+
+-- Trigger function to update package's updated_at field
+CREATE OR REPLACE FUNCTION update_package_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE packages
+    SET updated_at = now()
+    WHERE id = NEW.package_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- package_versions trigger upon update of signatures
 CREATE TRIGGER validate_signatures_trigger
 AFTER INSERT OR UPDATE OF signatures

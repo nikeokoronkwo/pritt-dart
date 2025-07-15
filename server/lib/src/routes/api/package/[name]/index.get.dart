@@ -15,13 +15,21 @@ final handler = defineRequestHandler((event) async {
 
   // check authorization
   var authHeader = getHeader(event, 'Authorization');
-  final isAuthorized = authHeader == null
-      ? false
-      : (await checkAuthorization(authHeader) != null);
+  var user = authHeader != null ? await checkAuthorization(authHeader) : null;
+  final isAuthorized = user != null;
 
   try {
     // get the package
     final pkg = await crs.db.getPackage(pkgName);
+
+    // get contributors
+    final contributors = await crs.db.getContributorsForPackage(pkgName);
+
+    if (!(pkg.public ?? true) &&
+        (pkg.author != user || !isAuthorized) &&
+        !contributors.keys.contains(user)) {
+      throw CRSException(CRSExceptionType.UNAUTHORIZED, 'Package not found');
+    }
 
     // get the package versions
     final pkgVersions = (await crs.db.getAllVersionsOfPackage(pkgName)).toList()
@@ -30,9 +38,6 @@ final handler = defineRequestHandler((event) async {
         final verB = Version.parse(b.version);
         return verA.compareTo(verB);
       });
-
-    // get contributors
-    final contributors = await crs.db.getContributorsForPackage(pkgName);
 
     var author = common.Author(
       name: pkg.author.name,
@@ -137,6 +142,14 @@ final handler = defineRequestHandler((event) async {
     // if package not found, return 404
   } on CRSException catch (e, stack) {
     switch (e.type) {
+      case CRSExceptionType.UNAUTHORIZED:
+        // TODO: 401 or 404?
+        setResponseCode(event, 401);
+        return common.UnauthorizedError(
+          error: 'Unauthorized',
+          reason: common.UnauthorizedReason.protected,
+          description: 'You are not authorized to access this package',
+        ).toJson();
       case CRSExceptionType.PACKAGE_NOT_FOUND:
         print('${e.message} -- ${e.cause} : ${e.stackTrace} : \n$stack');
         setResponseCode(event, 404);

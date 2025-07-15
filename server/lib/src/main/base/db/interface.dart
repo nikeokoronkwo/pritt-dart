@@ -175,8 +175,18 @@ abstract interface class PrittDatabaseInterface
   /// Get packages for a specific user
   FutureOr<Iterable<Package>> getPackagesForUser(String id);
 
+  /// Get packages contributed to by a specific user
+  FutureOr<Map<Package, Iterable<Privileges>>> getPackagesContributedToByUser(
+    String id,
+  );
+
   /// Get packages for a specific user via [Stream]
   Stream<Package> getPackagesForUserStream(String id);
+
+  /// Get packages contributed to by a specific user via [Stream]
+  Stream<(Package, Iterable<Privileges>)> getPackagesContributedToByUserStream(
+    String id,
+  );
 
   /// Changes the scope (publicity) of a package
   Future<Package> changePackagePublicity(String name, {String? scope});

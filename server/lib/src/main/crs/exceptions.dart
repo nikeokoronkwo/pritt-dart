@@ -21,6 +21,9 @@ class CRSException implements Exception {
 }
 
 enum CRSExceptionType {
+  /// The request is not authorized
+  UNAUTHORIZED,
+
   /// The package is not found
   PACKAGE_NOT_FOUND,
 
