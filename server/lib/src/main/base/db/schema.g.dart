@@ -21,6 +21,7 @@ Map<String, dynamic> _$PackageToJson(Package instance) => <String, dynamic>{
   'license': instance.license,
   'scoped': instance.scoped,
   'scope': instance.scope,
+  'public': instance.public,
 };
 
 const _$VCSEnumMap = {

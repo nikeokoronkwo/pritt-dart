@@ -207,16 +207,3 @@ class AdapterRegistry {
     return null;
   }
 }
-
-/// An object instance which abstracts access to the external adapter
-class CustomAdapterDB {
-  /// get an adapter by its id
-  Future<Adapter> getAdapterById(String id) async {
-    throw UnimplementedError("TODO: Implement getAdapterById");
-  }
-
-  /// get a list of adapters that satisfy a given language
-  Future<Iterable<Adapter>> getAdaptersByLanguage(String language) async {
-    throw UnimplementedError("TODO: Implement getAdaptersByLanguage");
-  }
-}

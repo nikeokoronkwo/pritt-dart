@@ -18,8 +18,8 @@ import 'storage/interface.dart';
 ///
 /// During live production deployments (usually not on prem), we make use of &lt;insert cloud provider S3 compatible OFS here&gt;
 ///
-/// TODO: In the future, we should make our own `PrittBucket` type that can wrap different buckets.
-/// That way it is easier to use various other types of buckets if needed
+// TODO: In the future, we should make our own `PrittBucket` type that can wrap different buckets.
+//  That way it is easier to use various other types of buckets if needed
 class PrittStorage implements PrittStorageInterface<Bucket> {
   PrittStorage._({
     required this.pkgBucket,
@@ -197,6 +197,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
     String sha, {
     String? contentType,
     Map<String, String>? metadata,
+    bool private = false,
   }) async {
     // Create the object in the bucket
     try {
@@ -206,6 +207,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         body: data,
         contentType: contentType,
         metadata: {'sha256': sha}..addAll(metadata ?? {}),
+        acl: private ? ObjectCannedACL.private : null,
       );
 
       return true;

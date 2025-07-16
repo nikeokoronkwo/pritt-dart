@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
 
+import '../../server_utils/access.dart';
 import '../base/db.dart';
 import '../base/db/interface.dart';
 import '../base/db/schema.dart';
@@ -19,8 +20,20 @@ class CoreRegistryServiceController implements CRSController {
   CoreRegistryService delegate;
   String language;
 
+  /// The auth token for the controller, used for authentication purposes
+  String? authToken;
+  User? user;
+
+  @override
+  bool get isAuthenticated => authToken != null && user != null;
+
   /// Creates a new instance of the core registry service controller
-  CoreRegistryServiceController(this.delegate, this.language);
+  CoreRegistryServiceController._(
+    this.delegate,
+    this.language,
+    this.authToken,
+    this.user,
+  );
 
   @override
   PrittDatabaseInterface get db => delegate.db;
@@ -126,6 +139,9 @@ class CoreRegistryServiceController implements CRSController {
 /// It directly inherits from the [CRSDBController] and [CRSArchiveController] interfaces
 class CoreRegistryService implements CRSController {
   @override
+  bool get isAuthenticated => true;
+
+  @override
   PrittDatabase db;
 
   @override
@@ -133,8 +149,12 @@ class CoreRegistryService implements CRSController {
 
   CoreRegistryService._(this.db, this.ofs);
 
-  CoreRegistryServiceController controller(String language) {
-    return CoreRegistryServiceController(this, language);
+  Future<CoreRegistryServiceController> controller(
+    String language, [
+    String? auth,
+  ]) async {
+    final user = auth != null ? await db.getUserByAccessToken(auth) : null;
+    return CoreRegistryServiceController._(this, language, auth, user);
   }
 
   /// Creates a new instance of the core registry service
@@ -170,7 +190,7 @@ class CoreRegistryService implements CRSController {
     Map<String, dynamic>? env,
   }) async {
     try {
-      final (name, scope: scope) = parsePackageName(packageName);
+      final (name, :scope) = parsePackageName(packageName);
       print('${scope == null ? name : '$scope/$name'}/$version.tar.gz');
       final file = await ofs.getPackage(
         '${scope == null ? name : '$scope/$name'}/$version.tar.gz',
@@ -202,10 +222,18 @@ class CoreRegistryService implements CRSController {
     String packageName, {
     String? language,
     Map<String, dynamic>? env,
+    User? user,
   }) async {
     try {
-      final (name, scope: scope) = parsePackageName(packageName);
+      final (name, :scope) = parsePackageName(packageName);
       final package = await db.getPackage(name, scope: scope);
+      if (!(await userIsAuthorizedToPackage(package, user))) {
+        return CRSResponse.error(
+          error: 'Unauthorized to access package: $packageName',
+          statusCode: 401,
+        );
+      }
+
       final latestVersion = package.version;
 
       if (language != null && package.language != language) {
@@ -253,10 +281,17 @@ class CoreRegistryService implements CRSController {
     String packageName, {
     String? language,
     Map<String, dynamic>? env,
+    User? user,
   }) async {
     try {
-      final (name, scope: scope) = parsePackageName(packageName);
+      final (name, :scope) = parsePackageName(packageName);
       final package = await db.getPackage(name, scope: scope);
+      if (!(await userIsAuthorizedToPackage(package, user))) {
+        return CRSResponse.error(
+          error: 'Unauthorized to access package: $packageName',
+          statusCode: 401,
+        );
+      }
 
       if (language != null && package.language != language) {
         return CRSResponse.error(
@@ -292,14 +327,21 @@ class CoreRegistryService implements CRSController {
     String version, {
     String? language,
     Map<String, dynamic>? env,
+    User? user,
   }) async {
     try {
-      final (name, scope: scope) = parsePackageName(packageName);
+      final (name, :scope) = parsePackageName(packageName);
       final pkg = await db.getPackageWithVersion(
         name,
         Version.parse(version),
         scope: scope,
       );
+      if (!(await userIsAuthorizedToPackage(pkg.package, user))) {
+        return CRSResponse.error(
+          error: 'Unauthorized to access package: $packageName',
+          statusCode: 401,
+        );
+      }
 
       if (language != null && pkg.package.language != language) {
         return CRSResponse.error(
@@ -334,9 +376,10 @@ class CoreRegistryService implements CRSController {
     String packageName, {
     String? language,
     Map<String, dynamic>? env,
+    User? user,
   }) async {
     try {
-      final (name, scope: scope) = parsePackageName(packageName);
+      final (name, :scope) = parsePackageName(packageName);
       final packages = await db.getAllVersionsOfPackage(name, scope: scope);
 
       if (language != null &&
@@ -345,6 +388,14 @@ class CoreRegistryService implements CRSController {
           error:
               'Package not found for the specified languag: $packageName is associated with ${packages.first.package.language}',
           statusCode: 404,
+        );
+      }
+
+      final pkg = packages.firstOrNull?.package;
+      if (pkg != null && !(await userIsAuthorizedToPackage(pkg, user))) {
+        return CRSResponse.error(
+          error: 'Unauthorized to access package: $packageName',
+          statusCode: 401,
         );
       }
 
@@ -372,14 +423,13 @@ class CoreRegistryService implements CRSController {
     Map<String, dynamic>? env,
   }) {
     try {
-      final (name, scope: scope) = parsePackageName(packageName);
-      final packages = db.getAllVersionsOfPackage(name, scope: scope);
+      final (name, :scope) = parsePackageName(packageName);
+      final packagesStream = db.getAllVersionsOfPackageStream(
+        name,
+        scope: scope,
+      );
 
-      final pkgStream = Stream.fromFuture(
-        packages,
-      ).asyncExpand((e) => Stream.fromIterable(e));
-
-      return CRSResponse.success(body: pkgStream, statusCode: 200);
+      return CRSResponse.success(body: packagesStream, statusCode: 200);
     } on CRSException catch (e) {
       return CRSResponse.error(
         error: 'An unknown error occurred: ${e.message}',
@@ -427,7 +477,3 @@ class CoreRegistryService implements CRSController {
     throw UnimplementedError();
   }
 }
-
-class CRSDBOptions {}
-
-class CRSOFSOptions {}

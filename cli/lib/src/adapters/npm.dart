@@ -63,24 +63,40 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
   onConfigure: (context, controller) async {
     final pm = context.workspace.packageManager;
 
-    Map<String, String> npmRc = {};
+    (Map<String, String>, List<String>) npmRc = ({}, []);
 
     // create .npmrc if not exists
     if (await controller.fileExists('.npmrc')) {
-      npmRc = const LineSplitter()
+      final lines = const LineSplitter()
           .convert(await controller.readFileAt('.npmrc'))
-          .asMap()
-          .map((_, v) {
-            final [key, value] = v.split('=');
-            return MapEntry(key, value);
-          });
+          .where((line) => line.isNotEmpty);
+      final List<String> ignoreLines = [];
+      final Map<String, String> actualRC = {};
+      for (final line in lines) {
+        if (line.startsWith('#') || line.startsWith('//')) {
+          ignoreLines.add(line);
+        } else {
+          final parts = line.split('=');
+          if (parts.length == 2) {
+            actualRC[parts[0].trim()] = parts[1].trim();
+          }
+        }
+      }
+
+      npmRc = (actualRC, ignoreLines);
     }
 
-    npmRc['@pritt:registry'] = controller.instanceUri;
+    npmRc.$1['@pritt:registry'] = controller.instanceUri;
+    npmRc.$2.add(
+      '//${Uri.parse(controller.instanceUri).host}/:_authToken=PRITT_AUTH_TOKEN',
+    );
 
     await controller.writeFileAt(
       '.npmrc',
-      npmRc.entries.map((e) => '${e.key}=${e.value}').join('\n'),
+      [
+        ...npmRc.$1.entries.map((e) => '${e.key}=${e.value}'),
+        ...npmRc.$2,
+      ].join('\n'),
     );
 
     controller.log(

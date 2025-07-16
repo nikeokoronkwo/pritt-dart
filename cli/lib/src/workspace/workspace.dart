@@ -161,11 +161,6 @@ Future<Project> getProject(
   final PrittConfig? prittConfig = await readPrittConfig(directory, config);
 
   // check for a .prittignore
-  // final List<String> ignoreFiles = const LineSplitter().convert(
-  //     (await File(p.join(directory, '.prittignore')).exists())
-  //         ? await File(p.join(directory, '.prittignore')).readAsString()
-  //         : '')
-  //   ..addAll(commonlyIgnoredFiles);
   final String prittIgnore =
       (await File(p.join(directory, '.prittignore')).exists())
       ? await File(p.join(directory, '.prittignore')).readAsString()

@@ -91,6 +91,9 @@ class Package {
   /// The scope of the package, if it is scoped
   String? scope;
 
+  /// Whether this package is public or not
+  bool? public;
+
   Package({
     required this.id,
     required this.name,
@@ -105,7 +108,12 @@ class Package {
     this.license,
     this.scope,
     this.vcsUrl,
-  }) : updated = updated ?? created;
+    this.public,
+  }) : updated = updated ?? created,
+       assert(
+         scope != null || public != null,
+         "A package is either scoped (publicity inferred) or explicitly public/private",
+       );
 
   Map<String, dynamic> toJson() => _$PackageToJson(this);
 }
@@ -228,7 +236,6 @@ class PackageContributors {
 
 /// User information
 ///
-/// TODO: Auth?
 class User {
   /// The id of the user
   @primary
@@ -286,12 +293,16 @@ class Scope {
   /// The time the scope was last updated
   DateTime updatedAt;
 
+  /// Whether this organization is public or not
+  bool public;
+
   Scope({
     required this.id,
     required this.name,
     this.description,
     required this.createdAt,
     required this.updatedAt,
+    this.public = true,
   });
 }
 

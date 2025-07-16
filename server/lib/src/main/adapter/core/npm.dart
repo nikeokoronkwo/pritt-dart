@@ -48,41 +48,53 @@ final npmAdapter = Adapter(
 
     // check if the package info is successful
     // if not, return an error
-    if (!packageInfo.isSuccess) {
-      final errorResponse = packageInfo as CRSErrorResponse;
+    if (packageInfo case CRSErrorResponse(
+      error: final err,
+      statusCode: final statusCode,
+    )) {
       return CoreAdapterErrorResult<NpmError>(
-        NpmError(error: errorResponse.error),
-        statusCode: errorResponse.statusCode ?? 500,
+        NpmError(error: err),
+        statusCode: statusCode ?? 500,
       );
     }
 
     // get package contributors
-    final contributors = await crs.getPackageContributors(packageName);
+    final contributorsResponse = await crs.getPackageContributors(packageName);
 
     // get the latest package
-    final latestPackage = await crs.getLatestPackage(packageName);
+    final latestPackageResponse = await crs.getLatestPackage(packageName);
 
-    if (!latestPackage.isSuccess || !contributors.isSuccess) {
-      final errorResponse = latestPackage as CRSErrorResponse;
+    if (!latestPackageResponse.isSuccess || !contributorsResponse.isSuccess) {
+      final errorResponse = latestPackageResponse is CRSErrorResponse
+          ? latestPackageResponse as CRSErrorResponse
+          : contributorsResponse as CRSErrorResponse;
       return CoreAdapterErrorResult<NpmError>(
         NpmError(error: errorResponse.error),
         statusCode: errorResponse.statusCode ?? 500,
       );
     }
 
+    final CRSSuccessResponse(body: contributors) =
+        contributorsResponse
+            as CRSSuccessResponse<Map<User, Iterable<Privileges>>>;
+    final CRSSuccessResponse(body: latestPackage) =
+        latestPackageResponse as CRSSuccessResponse<PackageVersions>;
+
     // add author to contributors
-    final contrib = contributors.body!
+    final contrib = contributors
       ..addAll({
         packageInfo.body!.author: [Privileges.ultimate],
       });
 
-    final package = latestPackage.body!;
+    final package = latestPackage;
 
     // get all packages
-    final allPackages = await crs.getPackages(packageName);
+    final CRSSuccessResponse(body: allPackages) =
+        await crs.getPackages(packageName)
+            as CRSSuccessResponse<Map<Version, PackageVersions>>;
 
     // get package versions
-    final packageVersions = allPackages.body!.keys;
+    final packageVersions = allPackages.keys;
 
     final versionGroups = <VersionType, Version?>{
       for (var type in VersionType.values) type: null,
@@ -107,7 +119,7 @@ final npmAdapter = Adapter(
           beta: versionGroups[VersionType.beta].toString(),
           canary: versionGroups[VersionType.canary].toString(),
           // this one is iterating because npm's definition of a "next" version is not completely related to its prerelease info
-          next: allPackages.body!.entries
+          next: allPackages.entries
               .firstWhere(
                 (e) =>
                     e.value.versionType == VersionType.next &&
@@ -118,7 +130,7 @@ final npmAdapter = Adapter(
           experimental: versionGroups[VersionType.experimental].toString(),
           rc: versionGroups[VersionType.rc].toString(),
         ),
-        versions: allPackages.body!.map((k, v) {
+        versions: allPackages.map((k, v) {
           return MapEntry(
             k.toString(),
             NpmPackage.fromPackageJson(
@@ -141,7 +153,7 @@ final npmAdapter = Adapter(
         maintainers: contrib.keys.map(
           (c) => {'name': c.name, 'email': c.email},
         ),
-        time: allPackages.body!.map(
+        time: allPackages.map(
           (k, v) => MapEntry(k.toString(), v.created.toIso8601String()),
         ),
       ),

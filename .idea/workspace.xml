@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="minor changes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,11 +86,14 @@
     "Docker.Compose (services only).executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Shell Script.PKL Testing.executor": "Run",
+    "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feature/comment-tracking",
+    "git-widget-placeholder": "#76 on nikeokoronkwo/issue25",
     "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -415,7 +416,23 @@
       <option name="project" value="LOCAL" />
       <updated>1750978199143</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033">
+      <option name="closed" value="true" />
+      <created>1752638133440</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1752638133440</updated>
+    </task>
+    <task id="LOCAL-00034" summary="minor changes">
+      <option name="closed" value="true" />
+      <created>1752638263703</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1752638263703</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -430,7 +447,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLI: Implement `info`" />
     <MESSAGE value="CLI: Migrated Command Implementations" />
     <MESSAGE value="WIP: [cli] Implementing `unpack` command" />
     <MESSAGE value="[cli] Implemented `unpack` and `adapter unpack` command at unpack.dart&#10;&#10;Looking towards how I can redirect `package unpack` to `unpack`" />
@@ -455,6 +471,7 @@
     <MESSAGE value="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)" />
     <MESSAGE value="[infra] Formatting" />
     <MESSAGE value="[idea] workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="[idea] workspace.xml" />
+    <MESSAGE value="minor changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
   </component>
 </project>

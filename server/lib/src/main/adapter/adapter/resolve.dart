@@ -34,6 +34,14 @@ class AdapterResolveObject {
   /// The query parameters
   Map<String, String> query;
 
+  String? _authToken;
+  String? get authToken => _authToken;
+  set authToken(String? token) {
+    if (token != null) {
+      _authToken = token;
+    }
+  }
+
   final Map<String, dynamic> _meta = {};
   Map<String, dynamic> get meta => _meta;
 
@@ -49,9 +57,11 @@ class AdapterResolveObject {
     this.accept = 'application/json',
     this.query = const {},
     required this.userAgent,
+    String? authorization,
   }) : path = uri.path,
        pathSegments = uri.pathSegments,
-       url = uri.replace(path: '').toString();
+       url = uri.replace(path: '').toString(),
+       _authToken = authorization;
 
   Map<String, dynamic> toJson() => _$AdapterResolveObjectToJson(this);
 }

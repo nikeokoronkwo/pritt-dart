@@ -225,12 +225,17 @@ class MockPrittStorage extends _i1.Mock implements _i9.PrittStorage {
     String? sha, {
     String? contentType,
     Map<String, String>? metadata,
+    bool? private = false,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
               #createPackage,
               [path, data, sha],
-              {#contentType: contentType, #metadata: metadata},
+              {
+                #contentType: contentType,
+                #metadata: metadata,
+                #private: private,
+              },
             ),
             returnValue: _i6.Future<bool>.value(false),
           )

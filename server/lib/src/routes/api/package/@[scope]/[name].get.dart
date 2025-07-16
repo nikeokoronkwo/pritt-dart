@@ -15,13 +15,38 @@ final handler = defineRequestHandler((event) async {
   final isAll = getQueryParams(event)['all'];
 
   // check authorization
-  final authHeader = getHeader(event, 'Authorization');
-  final isAuthorized =
-      authHeader != null && (await checkAuthorization(authHeader) != null);
+  final authToken = getHeader(event, 'Authorization');
+  final user = authToken != null ? await checkAuthorization(authToken) : null;
+  final isAuthorized = user != null;
 
   try {
     // get the package
     final pkg = await crs.db.getPackage(pkgName, scope: pkgScope);
+
+    // get contributors
+    final contributors = await crs.db.getContributorsForPackage(
+      pkgName,
+      scope: pkgScope,
+    );
+
+    final org = pkg.scope != null
+        ? await crs.db.getOrganizationByName(pkg.scope!)
+        : null;
+
+    // if the package is not public and the user is not authorized, return 404
+    // or if the user is not the author and not a contributor
+    if (!((pkg.public ?? true) && (org?.public ?? true)) &&
+        (pkg.author != user || !isAuthorized) &&
+        !contributors.keys.contains(user)) {
+      // check org membership
+      final members = crs.db.getMembersForOrganizationStream(pkgScope);
+      if (pkg.scope != null && !(await members.contains(user))) {
+        throw const CRSException(
+          CRSExceptionType.UNAUTHORIZED,
+          'Package not found',
+        );
+      }
+    }
 
     // get the package versions
     final pkgVersions =
@@ -33,12 +58,6 @@ final handler = defineRequestHandler((event) async {
           final verB = Version.parse(b.version);
           return verA.compareTo(verB);
         });
-
-    // get contributors
-    final contributors = await crs.db.getContributorsForPackage(
-      pkgName,
-      scope: pkgScope,
-    );
 
     final author = common.Author(
       name: pkg.author.name,
@@ -142,6 +161,14 @@ final handler = defineRequestHandler((event) async {
     // if package not found, return 404
   } on CRSException catch (e) {
     switch (e.type) {
+      case CRSExceptionType.UNAUTHORIZED:
+        // TODO: 401 or 404?
+        setResponseCode(event, 401);
+        return common.UnauthorizedError(
+          error: 'Unauthorized',
+          reason: common.UnauthorizedReason.protected,
+          description: 'You are not authorized to access this package',
+        ).toJson();
       case CRSExceptionType.PACKAGE_NOT_FOUND:
         setResponseCode(event, 404);
         return common.NotFoundError(

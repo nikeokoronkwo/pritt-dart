@@ -110,7 +110,6 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   }) async {
     final id = Slugid.nice();
 
-    // TODO: Access Token Generation
     try {
       final result = await _pool.execute(
         r'''
@@ -198,7 +197,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT 
     if (_statements['getPackage'] == null) {
       _statements['getPackage'] = await _pool.prepare(
         Sql.named('''
-SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
+SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license, p.public,
        u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
@@ -244,6 +243,7 @@ WHERE p.name = @name AND p.scope IS NOT DISTINCT FROM @scope
       archive: Uri.directory(columnMap['archive'] as String),
       description: columnMap['description'] as String?,
       license: columnMap['license'] as String?,
+      public: columnMap['public'] as bool?,
     );
   }
 
@@ -270,7 +270,7 @@ SELECT reltuples::bigint AS estimate FROM pg_class where relname = 'packages';
     // less cacheable
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
-SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
+SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license, p.public,
        u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
@@ -304,6 +304,7 @@ LEFT JOIN users u ON p.author_id = u.id
         archive: Uri.directory(columnMap['archive'] as String),
         description: columnMap['description'] as String?,
         license: columnMap['license'] as String?,
+        public: columnMap['public'] as bool?,
       );
     });
   }
@@ -313,7 +314,7 @@ LEFT JOIN users u ON p.author_id = u.id
     // cacheable
     if (_statements['getPackagesForUser'] == null) {
       _statements['getPackagesForUser'] = await _pool.prepare('''
-SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license,
+SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.vcs_url, p.archive, p.description, p.license, p.public,
        u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
@@ -348,6 +349,7 @@ WHERE u.id = @userId
         archive: Uri.directory(columnMap['archive'] as String),
         description: columnMap['description'] as String?,
         license: columnMap['license'] as String?,
+        public: columnMap['public'] as bool?,
       );
     });
   }
@@ -439,7 +441,7 @@ SELECT pv.version, pv.version_type, pv.created_at, pv.info, pv.env, pv.metadata,
        pv.deprecated, pv.deprecated_message, pv.yanked, 
        p.id as package_id, p.name as package_name, p.scope as package_scope, p.language as package_language, p.created_at as package_created_at, 
        p.updated_at as package_updated_at, p.version as package_latest_version, p.vcs as package_vcs, p.vcs_url as package_vcs_url, 
-       p.archive as package_archive, p.description as package_description, p.license as package_license,
+       p.archive as package_archive, p.description as package_description, p.license as package_license, p.public as package_public,
        u.id as author_id, u.name as author_name, u.email as author_email, u.avatar_url as author_avatar_url,
        u.created_at as author_created_at, 
        u.updated_at as author_updated_at
@@ -492,6 +494,7 @@ LIMIT 1
         archive: Uri.directory(columnMap['package_archive'] as String),
         description: columnMap['package_description'] as String?,
         license: columnMap['package_license'] as String?,
+        public: columnMap['package_public'] as bool?,
       ),
       version: version.toString(),
       versionType: VersionType.fromString(
@@ -582,7 +585,7 @@ WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope IS N
     if (_statements['getPackagesForUser'] == null) {
       _statements['getPackagesForUser'] = await _pool.prepare(
         Sql.named('''
-SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description,
+SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description, p.public,
        u.id as author_id, u.name as author_name, u.avatar_url as author_avatar_url, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
@@ -615,6 +618,7 @@ WHERE u.id = @userId
             archive: Uri.directory(columnMap['archive'] as String),
             description: columnMap['description'] as String?,
             license: columnMap['license'] as String?,
+            public: columnMap['public'] as bool?,
           );
         }),
       ),
@@ -626,7 +630,7 @@ WHERE u.id = @userId
     // less cacheable
     if (_statements['getPackages'] == null) {
       _statements['getPackages'] = await _pool.prepare('''
-SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description,
+SELECT p.id, p.name, p.scope, p.version, p.language, p.created_at, p.updated_at, p.vcs, p.archive, p.license, p.description, p.public,
        u.id as author_id, u.name as author_name, u.avatar_url as author_avatar_url, u.email as author_email, u.created_at as author_created_at, u.updated_at as author_updated_at
 FROM packages p
 LEFT JOIN users u ON p.author_id = u.id
@@ -657,6 +661,7 @@ LEFT JOIN users u ON p.author_id = u.id
             archive: Uri.directory(columnMap['archive'] as String),
             description: columnMap['description'] as String?,
             license: columnMap['license'] as String?,
+            public: columnMap['public'] as bool?,
           );
         }),
       ),
@@ -777,6 +782,7 @@ FROM plugins p
     required String name,
     String? description,
     required User owner,
+    bool private = false,
   }) {
     // TODO: implement createOrganization
     throw UnimplementedError();
@@ -785,21 +791,97 @@ FROM plugins p
   @override
   FutureOr<Map<User, Iterable<Privileges>>> getMembersForOrganization(
     String name,
-  ) {
-    // TODO: implement getMembersForOrganization
-    throw UnimplementedError();
+  ) async {
+    final result = await _pool.execute(
+      Sql.named('''
+SELECT u.id, u.name, u.email, u.avatar_url, u.created_at, u.updated_at,
+       o.name as organization_name, o.description as organization_description, o.public as organization_public,
+       om.privileges as privileges
+FROM organization_members om
+LEFT JOIN users u ON om.user_id = u.id
+LEFT JOIN organizations o ON om.organization_id = o.id
+WHERE o.name = @name
+'''),
+      parameters: {'name': name},
+    );
+
+    return result.asMap().map((k, row) {
+      final columnMap = row.toColumnMap();
+      return MapEntry(
+        User(
+          id: columnMap['id'] as String,
+          name: columnMap['name'] as String,
+          email: columnMap['email'] as String,
+          avatarUrl: columnMap['avatar_url'] as String?,
+          createdAt: columnMap['created_at'] as DateTime,
+          updatedAt: columnMap['updated_at'] as DateTime,
+        ),
+        (columnMap['privileges'] as Iterable<UndecodedBytes>).map(
+          (p) => Privileges.fromString(p.asString),
+        ),
+      );
+    });
   }
 
   @override
-  Stream<User> getMembersForOrganizationStream(String name) {
-    // TODO: implement getMembersForOrganizationStream
-    throw UnimplementedError();
+  Stream<User> getMembersForOrganizationStream(String name) async* {
+    final result = _pool.execute(
+      Sql.named('''
+SELECT u.id, u.name, u.email, u.avatar_url, u.created_at, u.updated_at,
+       o.name as organization_name, o.description as organization_description, o.public as organization_public,
+       om.privileges as privileges
+FROM organization_members om
+LEFT JOIN users u ON om.user_id = u.id
+LEFT JOIN organizations o ON om.organization_id = o.id
+WHERE o.name = @name
+'''),
+      parameters: {'name': name},
+    );
+
+    yield* Stream.fromFuture(result).asyncExpand(
+      (e) => Stream.fromIterable(
+        e.map((row) {
+          final columnMap = row.toColumnMap();
+          return User(
+            id: columnMap['id'] as String,
+            name: columnMap['name'] as String,
+            email: columnMap['email'] as String,
+            avatarUrl: columnMap['avatar_url'] as String?,
+            createdAt: columnMap['created_at'] as DateTime,
+            updatedAt: columnMap['updated_at'] as DateTime,
+          );
+        }),
+      ),
+    );
   }
 
   @override
-  FutureOr<Scope> getOrganizationByName(String name) {
-    // TODO: implement getOrganizationByName
-    throw UnimplementedError();
+  FutureOr<Scope> getOrganizationByName(String name) async {
+    final result = await _pool.execute(
+      Sql.named('''
+SELECT id, name, description, created_at, updated_at, public
+FROM organizations
+WHERE name = @name
+'''),
+      parameters: {'name': name},
+    );
+
+    if (result.isEmpty) {
+      throw CRSException(
+        CRSExceptionType.SCOPE_NOT_FOUND,
+        'Could not find organization with name $name',
+      );
+    }
+
+    final columnMap = result.first.toColumnMap();
+    return Scope(
+      id: columnMap['id'] as String,
+      name: columnMap['name'] as String,
+      description: columnMap['description'] as String?,
+      createdAt: columnMap['created_at'] as DateTime,
+      updatedAt: columnMap['updated_at'] as DateTime,
+      public: columnMap['public'] as bool,
+    );
   }
 
   @override
@@ -880,13 +962,14 @@ FROM plugins p
     String? license,
     required Uri archive,
     Iterable<User>? contributors,
+    bool private = false,
   }) async {
     final id = Slugid.nice().toString();
     try {
       final result = await _pool.execute(
         r'''
-INSERT INTO packages (id, name, scope, version, description, author_id, language, vcs, vcs_url, archive, license)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+INSERT INTO packages (id, name, scope, version, description, author_id, language, vcs, vcs_url, archive, license, public)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 RETURNING *''',
         parameters: [
           id,
@@ -900,6 +983,7 @@ RETURNING *''',
           vcsUrl,
           archive.toFilePath(windows: false),
           license,
+          !private,
         ],
       );
 
@@ -964,7 +1048,6 @@ RETURNING *''',
       created: DateTime.now(),
     );
     final result = await _pool.runTx((session) async {
-      // TODO: Get version type
       final v = Version.parse(version);
       final oldV = Version.parse(pkg.version);
       final versionType = v.versionType;
@@ -1055,7 +1138,6 @@ RETURNING *''',
     );
     final p = await getPackage(name, language: language, scope: scope);
     final result = await _pool.runTx((session) async {
-      // TODO: Get version type
       final v = Version.parse(version);
       final oldV = Version.parse(p.version);
       final versionType = v.versionType;
@@ -1128,9 +1210,53 @@ RETURNING *''',
   Stream<PackageVersions> getAllVersionsOfPackageStream(
     String name, {
     String? scope,
-  }) {
-    // TODO: implement getAllVersionsOfPackageStream
-    throw UnimplementedError();
+  }) async* {
+    if (_statements['getAllVersionsOfPackage'] == null) {
+      _statements['getAllVersionsOfPackage'] = await _pool.prepare(
+        Sql.named('''
+SELECT version, version_type, created_at, info, env, metadata, archive, hash, signatures, integrity, readme, config, config_name,
+       deprecated, deprecated_message, yanked
+FROM package_versions
+WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
+'''),
+      );
+    }
+
+    final result = _statements['getAllVersionsOfPackage']!.run({
+      'name': name,
+      'scope': scope,
+    });
+
+    final pkg = await getPackage(name);
+
+    yield* Stream.fromFuture(result).asyncExpand((res) {
+      return Stream.fromIterable(res).map((row) {
+        final columnMap = row.toColumnMap();
+        return PackageVersions(
+          package: pkg,
+          version: columnMap['version'] as String,
+          versionType: VersionType.fromString(
+            (columnMap['version_type'] as UndecodedBytes).asString,
+          ),
+          created: columnMap['created_at'] as DateTime,
+          info: columnMap['info'] as Map<String, dynamic>,
+          env: columnMap['env'] as Map<String, dynamic>,
+          metadata: columnMap['metadata'] as Map<String, dynamic>,
+          archive: Uri.file(columnMap['archive'] as String),
+          hash: columnMap['hash'] as String,
+          signatures: (columnMap['signatures'] as List<dynamic>)
+              .map((e) => Signature.fromJson(e))
+              .toList(),
+          integrity: columnMap['integrity'] as String,
+          readme: columnMap['readme'] as String?,
+          config: columnMap['config'] as String?,
+          configName: columnMap['config_name'] as String?,
+          isDeprecated: columnMap['deprecated'] as bool,
+          isYanked: columnMap['yanked'] as bool,
+          deprecationMessage: columnMap['deprecated_message'] as String?,
+        );
+      });
+    });
   }
 
   @override
@@ -1609,6 +1735,7 @@ RETURNING *
     required String integrity,
     PublishingTask? task,
     List<String> contributorIds = const [],
+    bool private = false,
   }) async {
     // get publishing task from db
     task ??= await getPublishingTaskById(id);
@@ -1625,6 +1752,7 @@ RETURNING *
         language: task.language,
         vcs: task.vcs,
         archive: archive,
+        private: private,
       ),
     ).then((pkg) async {
       final pkgVer = await addNewVersionOfPackageGivenPkg(
@@ -1661,6 +1789,7 @@ RETURNING *
     required String integrity,
     PublishingTask? task,
     List<String> contributorIds = const [],
+    bool private = false,
   }) async {
     task ??= await getPublishingTaskById(id);
 
@@ -1793,6 +1922,135 @@ RETURNING *
       updatedAt: columnMap['updated_at'] as DateTime,
       expiresAt: columnMap['expires_at'] as DateTime,
     );
+  }
+
+  @override
+  Future<Package> changePackagePublicity(String name, {String? scope}) {
+    // TODO: implement changePackagePublicity
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<Map<Package, Iterable<Privileges>>> getPackagesContributedToByUser(
+    String id,
+  ) async {
+    if (_statements['getPackagesContributedToByUser'] == null) {
+      _statements['getPackagesContributedToByUser'] = await _pool.prepare(
+        Sql.named('''
+SELECT p.id, p.name, p.scope, p.version, p.description, p.author_id, p.language, p.vcs, p.vcs_url, p.archive, p.license, p.public, p.created_at, p.updated_at,
+       u.name AS author_name, u.email AS author_email, u.avatar_url AS author_avatar_url, u.created_at AS author_created_at, u.updated_at AS author_updated_at
+       pc.privileges AS contributor_privileges
+FROM package_contributors pc
+INNER JOIN packages p ON pc.package_id = p.id
+INNER JOIN users u ON p.author_id = u.id
+WHERE pc.user_id = @userId
+'''),
+      );
+    }
+
+    final result = await _statements['getPackagesContributedToByUser']!.run({
+      'userId': id,
+    });
+
+    return result.asMap().map((k, row) {
+      final columnMap = row.toColumnMap();
+
+      return MapEntry(
+        Package(
+          id: columnMap['id'] as String,
+          name: columnMap['name'] as String,
+          scope: columnMap['scope'] as String?,
+          version: columnMap['version'] as String,
+          description: columnMap['description'] as String?,
+          author: User(
+            id: id,
+            name: columnMap['author_name'] as String,
+            email: columnMap['author_email'] as String,
+            createdAt: columnMap['author_created_at'] as DateTime,
+            updatedAt: columnMap['author_updated_at'] as DateTime,
+            avatarUrl: columnMap['author_avatar_url'] as String?,
+          ),
+          language: columnMap['language'] as String,
+          vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+          vcsUrl: columnMap['vcs_url'] == null
+              ? null
+              : Uri.parse(columnMap['vcs_url'] as String),
+          archive: Uri.parse(columnMap['archive'] as String),
+          license: columnMap['license'] as String?,
+          created: columnMap['created_at'] as DateTime,
+          updated: columnMap['updated_at'] as DateTime,
+          public: columnMap['public'] as bool?,
+        ),
+        (columnMap['contributor_privileges'] as Iterable<UndecodedBytes>).map(
+          (privilege) => Privileges.fromString(privilege.asString),
+        ),
+      );
+    });
+  }
+
+  @override
+  Stream<(Package, Iterable<Privileges>)> getPackagesContributedToByUserStream(
+    String id,
+  ) async* {
+    if (_statements['getPackagesContributedToByUser'] == null) {
+      _statements['getPackagesContributedToByUser'] = await _pool.prepare(
+        Sql.named('''
+SELECT p.id, p.name, p.scope, p.version, p.description, p.author_id, p.language, p.vcs, p.vcs_url, p.archive, p.license, p.public, p.created_at, p.updated_at,
+       u.name AS author_name, u.email AS author_email, u.avatar_url AS author_avatar_url, u.created_at AS author_created_at, u.updated_at AS author_updated_at
+       pc.privileges AS contributor_privileges
+FROM package_contributors pc
+INNER JOIN packages p ON pc.package_id = p.id
+INNER JOIN users u ON p.author_id = u.id
+WHERE pc.user_id = @userId
+'''),
+      );
+    }
+
+    final result = _statements['getPackagesContributedToByUser']!.run({
+      'userId': id,
+    });
+
+    // TODO: Stream.fromFuture or Stream.fromIterable?
+    // Using Stream.fromFuture to ensure the result is awaited before streaming
+    // and asyncExpand to handle the row mapping asynchronously.
+    // This allows for better performance and avoids blocking the event loop.
+    // If the result is large, consider using Stream.fromIterable directly.
+    yield* Stream.fromFuture(result).asyncExpand((row) {
+      return Stream.fromIterable(row).map((row) {
+        final columnMap = row.toColumnMap();
+
+        return (
+          Package(
+            id: columnMap['id'] as String,
+            name: columnMap['name'] as String,
+            scope: columnMap['scope'] as String?,
+            version: columnMap['version'] as String,
+            description: columnMap['description'] as String?,
+            author: User(
+              id: id,
+              name: columnMap['author_name'] as String,
+              email: columnMap['author_email'] as String,
+              createdAt: columnMap['author_created_at'] as DateTime,
+              updatedAt: columnMap['author_updated_at'] as DateTime,
+              avatarUrl: columnMap['author_avatar_url'] as String?,
+            ),
+            language: columnMap['language'] as String,
+            vcs: VCS.fromString((columnMap['vcs'] as UndecodedBytes).asString),
+            vcsUrl: columnMap['vcs_url'] == null
+                ? null
+                : Uri.parse(columnMap['vcs_url'] as String),
+            archive: Uri.parse(columnMap['archive'] as String),
+            license: columnMap['license'] as String?,
+            created: columnMap['created_at'] as DateTime,
+            updated: columnMap['updated_at'] as DateTime,
+            public: columnMap['public'] as bool?,
+          ),
+          (columnMap['contributor_privileges'] as Iterable<UndecodedBytes>).map(
+            (privilege) => Privileges.fromString(privilege.asString),
+          ),
+        );
+      });
+    });
   }
 }
 
