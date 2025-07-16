@@ -1,6 +1,0 @@
-- [ ] Add private package support
-- [ ] Implement authentication and authorization
-- [ ] Do not show private packages in search results unless via authenticated user
-- [ ] Do not show organizations in search results unless via authenticated user
-- [ ] Add tests for private package functionality
-- [ ] Add tests for authentication and authorization
