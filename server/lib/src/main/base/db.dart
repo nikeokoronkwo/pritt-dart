@@ -110,7 +110,6 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
   }) async {
     final id = Slugid.nice();
 
-    // TODO: Access Token Generation
     try {
       final result = await _pool.execute(
         r'''
@@ -1049,7 +1048,6 @@ RETURNING *''',
       created: DateTime.now(),
     );
     final result = await _pool.runTx((session) async {
-      // TODO: Get version type
       final v = Version.parse(version);
       final oldV = Version.parse(pkg.version);
       final versionType = v.versionType;
@@ -1140,7 +1138,6 @@ RETURNING *''',
     );
     final p = await getPackage(name, language: language, scope: scope);
     final result = await _pool.runTx((session) async {
-      // TODO: Get version type
       final v = Version.parse(version);
       final oldV = Version.parse(p.version);
       final versionType = v.versionType;
