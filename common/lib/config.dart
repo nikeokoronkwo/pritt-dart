@@ -11,7 +11,6 @@ class PrittConfig {
   /// Contributors to the given package
   ///
   /// Either specify this, or have an [AUTHORS]() file at the root of the project
-  // TODO: Support the AUTHORS file
   List<User>? contributors;
 
   /// Whether the given package is private or not
@@ -21,7 +20,7 @@ class PrittConfig {
 
   factory PrittConfig.fromJson(Map<String, dynamic> json) =>
       _$PrittConfigFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$PrittConfigToJson(this);
 }
 
@@ -47,11 +46,8 @@ class User {
   factory User.fromJson(dynamic json) {
     if (json is String) {
       return User.parse(json);
-    } 
-    return User(
-      name: json['name'] as String,
-      email: json['email'] as String?,
-    );
+    }
+    return User(name: json['name'] as String, email: json['email'] as String?);
   }
 
   Map<String, dynamic> toJson() => {
