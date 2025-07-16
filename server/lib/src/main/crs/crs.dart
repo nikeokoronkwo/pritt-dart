@@ -466,7 +466,3 @@ class CoreRegistryService implements CRSController {
     throw UnimplementedError();
   }
 }
-
-class CRSDBOptions {}
-
-class CRSOFSOptions {}

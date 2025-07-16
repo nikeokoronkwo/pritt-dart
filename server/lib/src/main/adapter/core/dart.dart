@@ -42,26 +42,28 @@ final dartAdapter = Adapter(
     // retrieve the package details
     final packageDetails = await crs.getPackageDetails(packageName);
 
-    if (!packageDetails.isSuccess) {
+    if (packageDetails case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
       return AdapterErrorResult(
-        DartErrorResult(
+        statusCode == 401 ? DartErrorResult(code: 'Unauthorized', message: err) : DartErrorResult(
           code: 'NoSuchKey',
           message: 'The specified key does not exist.',
         ),
-        statusCode: 404,
+        statusCode: statusCode ?? 404,
         responseType: ResponseType.xml,
       );
     }
 
+    final CRSSuccessResponse(body: body) = packageDetails as CRSSuccessResponse<Package>;
+
     // get the latest version
-    final latestVersion = packageDetails.body!.version;
+    final latestVersion = body.version;
 
     // get all packages
-    final packages =
+    final CRSSuccessResponse(body: packages) =
         await crs.getPackages(packageName)
             as CRSSuccessResponse<Map<Version, PackageVersions>>;
 
-    final latestPackage = packages.body.entries
+    final latestPackage = packages.entries
         .firstWhere((entry) => entry.key.toString() == latestVersion)
         .value;
 
@@ -80,7 +82,7 @@ final dartAdapter = Adapter(
           archiveHash: latestPackage.hash,
           published: latestPackage.created,
         ),
-        versions: packages.body.values
+        versions: packages.values
             .map(
               (e) => DartPackage(
                 version: e.version,

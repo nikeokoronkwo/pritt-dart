@@ -84,10 +84,10 @@ final goAdapter = Adapter(
         final latestPkgResponse = await crs.getLatestPackage(
           scopedName(name, scope),
         );
-        if (!latestPkgResponse.isSuccess)
+        if (latestPkgResponse case CRSErrorResponse(error: final err, statusCode: final statusCode))
           return AdapterErrorResult(
             'bad request: no package',
-            statusCode: 404,
+            statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
           );
 
@@ -130,10 +130,11 @@ final goAdapter = Adapter(
             'module_name': [base, ...parts].join('/'),
           },
         );
-        if (!pkgVersResult.isSuccess) {
+
+        if (pkgVersResult case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
           return AdapterErrorResult(
-            'bad request: ${(pkgVersResult as CRSErrorResponse).error}',
-            statusCode: 404,
+            'bad request: $err',
+            statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
           );
         }
@@ -161,10 +162,10 @@ final goAdapter = Adapter(
           scopedName(name, scope),
           version,
         );
-        if (!pkgVerResult.isSuccess) {
+        if (pkgVerResult case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
           return AdapterErrorResult(
-            'bad request: ${(pkgVerResult as CRSErrorResponse).error}',
-            statusCode: 404,
+            'bad request: $err',
+            statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
           );
         }
