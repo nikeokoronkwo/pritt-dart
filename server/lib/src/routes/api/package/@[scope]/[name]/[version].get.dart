@@ -13,8 +13,8 @@ final handler = defineRequestHandler((event) async {
   final pkgVer = Version.parse(getParams(event, 'version') as String);
 
   // check authorization
-  var authToken = getHeader(event, 'Authorization');
-  var user = authToken != null ? await checkAuthorization(authToken) : null;
+  final authToken = getHeader(event, 'Authorization');
+  final user = authToken != null ? await checkAuthorization(authToken) : null;
   final isAuthorized = user != null;
 
   try {
@@ -41,11 +41,14 @@ final handler = defineRequestHandler((event) async {
       // check org membership
       final members = crs.db.getMembersForOrganizationStream(pkgScope);
       if (pkg.package.scoped && !(await members.contains(user))) {
-        throw CRSException(CRSExceptionType.UNAUTHORIZED, 'Package not found');
+        throw const CRSException(
+          CRSExceptionType.UNAUTHORIZED,
+          'Package not found',
+        );
       }
     }
 
-    var author = common.Author(
+    final author = common.Author(
       name: pkg.package.author.name,
       email: pkg.package.author.email,
     );

@@ -48,7 +48,10 @@ final npmAdapter = Adapter(
 
     // check if the package info is successful
     // if not, return an error
-    if (packageInfo case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
+    if (packageInfo case CRSErrorResponse(
+      error: final err,
+      statusCode: final statusCode,
+    )) {
       return CoreAdapterErrorResult<NpmError>(
         NpmError(error: err),
         statusCode: statusCode ?? 500,
@@ -71,8 +74,11 @@ final npmAdapter = Adapter(
       );
     }
 
-    final CRSSuccessResponse(body: contributors) = contributorsResponse as CRSSuccessResponse<Map<User, Iterable<Privileges>>>;
-    final CRSSuccessResponse(body: latestPackage) = latestPackageResponse as CRSSuccessResponse<PackageVersions>;
+    final CRSSuccessResponse(body: contributors) =
+        contributorsResponse
+            as CRSSuccessResponse<Map<User, Iterable<Privileges>>>;
+    final CRSSuccessResponse(body: latestPackage) =
+        latestPackageResponse as CRSSuccessResponse<PackageVersions>;
 
     // add author to contributors
     final contrib = contributors
@@ -83,7 +89,9 @@ final npmAdapter = Adapter(
     final package = latestPackage;
 
     // get all packages
-    final CRSSuccessResponse(body: allPackages) = await crs.getPackages(packageName) as CRSSuccessResponse<Map<Version, PackageVersions>>;
+    final CRSSuccessResponse(body: allPackages) =
+        await crs.getPackages(packageName)
+            as CRSSuccessResponse<Map<Version, PackageVersions>>;
 
     // get package versions
     final packageVersions = allPackages.keys;

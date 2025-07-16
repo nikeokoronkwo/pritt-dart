@@ -12,8 +12,8 @@ final handler = defineRequestHandler((event) async {
   final pkgVer = Version.parse(getParams(event, 'version') as String);
 
   // check authorization
-  var authHeader = getHeader(event, 'Authorization');
-  var user = authHeader != null ? await checkAuthorization(authHeader) : null;
+  final authHeader = getHeader(event, 'Authorization');
+  final user = authHeader != null ? await checkAuthorization(authHeader) : null;
   final isAuthorized = user != null;
 
   try {
@@ -25,10 +25,13 @@ final handler = defineRequestHandler((event) async {
     if (!(pkg.package.public ?? true) &&
         (pkg.package.author != user || !isAuthorized) &&
         !contributors.keys.contains(user)) {
-      throw CRSException(CRSExceptionType.UNAUTHORIZED, 'Package not found');
+      throw const CRSException(
+        CRSExceptionType.UNAUTHORIZED,
+        'Package not found',
+      );
     }
 
-    var author = common.Author(
+    final author = common.Author(
       name: pkg.package.author.name,
       email: pkg.package.author.email,
     );

@@ -28,7 +28,12 @@ class CoreRegistryServiceController implements CRSController {
   bool get isAuthenticated => authToken != null && user != null;
 
   /// Creates a new instance of the core registry service controller
-  CoreRegistryServiceController._(this.delegate, this.language, this.authToken, this.user);
+  CoreRegistryServiceController._(
+    this.delegate,
+    this.language,
+    this.authToken,
+    this.user,
+  );
 
   @override
   PrittDatabaseInterface get db => delegate.db;
@@ -144,7 +149,10 @@ class CoreRegistryService implements CRSController {
 
   CoreRegistryService._(this.db, this.ofs);
 
-  Future<CoreRegistryServiceController> controller(String language, [String? auth]) async {
+  Future<CoreRegistryServiceController> controller(
+    String language, [
+    String? auth,
+  ]) async {
     final user = auth != null ? await db.getUserByAccessToken(auth) : null;
     return CoreRegistryServiceController._(this, language, auth, user);
   }
@@ -214,7 +222,7 @@ class CoreRegistryService implements CRSController {
     String packageName, {
     String? language,
     Map<String, dynamic>? env,
-    User? user
+    User? user,
   }) async {
     try {
       final (name, :scope) = parsePackageName(packageName);
@@ -416,7 +424,10 @@ class CoreRegistryService implements CRSController {
   }) {
     try {
       final (name, :scope) = parsePackageName(packageName);
-      final packagesStream = db.getAllVersionsOfPackageStream(name, scope: scope);
+      final packagesStream = db.getAllVersionsOfPackageStream(
+        name,
+        scope: scope,
+      );
 
       return CRSResponse.success(body: packagesStream, statusCode: 200);
     } on CRSException catch (e) {

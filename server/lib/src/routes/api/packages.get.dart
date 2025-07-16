@@ -11,7 +11,7 @@ final handler = defineRequestHandler((event) async {
   /// get params
   final queryParams = getQueryParams(event);
   final authToken = getHeader(event, 'Authorization');
-  var user = authToken != null ? await checkAuthorization(authToken) : null;
+  final user = authToken != null ? await checkAuthorization(authToken) : null;
 
   // Get the estimate
   final pkgCount = await crs.db.getPackagesCountEstimate();
@@ -20,13 +20,12 @@ final handler = defineRequestHandler((event) async {
     // get the packages as a stream
     final pkgs = crs.db.getPackagesStream();
 
-    final approvedPkgs =
-        pkgs
-        .asyncMap((pkg) async {
-          final author = pkg.author;
-          return await userIsAuthorizedToPackage(pkg, user, author: author) ? pkg : null;
-        })
-        .nonNull();
+    final approvedPkgs = pkgs.asyncMap((pkg) async {
+      final author = pkg.author;
+      return await userIsAuthorizedToPackage(pkg, user, author: author)
+          ? pkg
+          : null;
+    }).nonNull();
 
     // while the stream loads..
 
@@ -67,11 +66,12 @@ final handler = defineRequestHandler((event) async {
     // get the packages as a list
     final pkgs = await crs.db.getPackages();
 
-    final approvedPkgs =
-        (await pkgs.map((pkg) async {
-              final author = pkg.author;
-              return await userIsAuthorizedToPackage(pkg, user, author: author) ? pkg : null; // not the author, skip
-            }).wait).nonNulls;
+    final approvedPkgs = (await pkgs.map((pkg) async {
+      final author = pkg.author;
+      return await userIsAuthorizedToPackage(pkg, user, author: author)
+          ? pkg
+          : null; // not the author, skip
+    }).wait).nonNulls;
 
     final resp = common.GetPackagesResponse(
       packages: approvedPkgs.map((pkg) {

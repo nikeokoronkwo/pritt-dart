@@ -11,7 +11,11 @@ AdapterResolveObject getAdapterResolveObject(Request request) {
     method: getMethodFromString(request.method),
     maxAge: int.tryParse(request.headers['max-age'] ?? ''),
     userAgent: getUserAgentFromHeader(request.headers),
-    authorization: request.headers[HttpHeaders.authorizationHeader]?.startsWith('Bearer ') ?? false
+    authorization:
+        request.headers[HttpHeaders.authorizationHeader]?.startsWith(
+              'Bearer ',
+            ) ??
+            false
         ? request.headers[HttpHeaders.authorizationHeader]!.substring(7)
         : null,
   );

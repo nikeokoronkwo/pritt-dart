@@ -33,7 +33,12 @@ Handler adapterHandler(CoreRegistryService crs) {
       final AdapterBaseResult result;
       try {
         result = await adapter.run(
-          adapter.language == null ? crs : await crs.controller(adapter.language!, adapterResolve.authToken),
+          adapter.language == null
+              ? crs
+              : await crs.controller(
+                  adapter.language!,
+                  adapterResolve.authToken,
+                ),
           AdapterOptions(
             resolveObject: adapterResolve,
             resolveType: adapterSearchResult.resolve,

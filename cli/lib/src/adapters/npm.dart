@@ -70,8 +70,8 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
       final lines = const LineSplitter()
           .convert(await controller.readFileAt('.npmrc'))
           .where((line) => line.isNotEmpty);
-      List<String> ignoreLines = [];
-      Map<String, String> actualRC = {};
+      final List<String> ignoreLines = [];
+      final Map<String, String> actualRC = {};
       for (final line in lines) {
         if (line.startsWith('#') || line.startsWith('//')) {
           ignoreLines.add(line);
@@ -87,7 +87,9 @@ final npmHandler = MultiPackageManagerHandler<PackageJsonConfig>(
     }
 
     npmRc.$1['@pritt:registry'] = controller.instanceUri;
-    npmRc.$2.add('//${Uri.parse(controller.instanceUri).host}/:_authToken=PRITT_AUTH_TOKEN');
+    npmRc.$2.add(
+      '//${Uri.parse(controller.instanceUri).host}/:_authToken=PRITT_AUTH_TOKEN',
+    );
 
     await controller.writeFileAt(
       '.npmrc',

@@ -207,7 +207,7 @@ class PrittStorage implements PrittStorageInterface<Bucket> {
         body: data,
         contentType: contentType,
         metadata: {'sha256': sha}..addAll(metadata ?? {}),
-        acl: private ? ObjectCannedACL.private : null
+        acl: private ? ObjectCannedACL.private : null,
       );
 
       return true;

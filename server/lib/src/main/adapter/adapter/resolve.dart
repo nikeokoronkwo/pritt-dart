@@ -47,8 +47,6 @@ class AdapterResolveObject {
 
   void addMeta(String key, String value) => _meta[key] = value;
 
-  
-
   /// User agent information
   UserAgent userAgent;
 
@@ -59,7 +57,7 @@ class AdapterResolveObject {
     this.accept = 'application/json',
     this.query = const {},
     required this.userAgent,
-    String? authorization
+    String? authorization,
   }) : path = uri.path,
        pathSegments = uri.pathSegments,
        url = uri.replace(path: '').toString(),

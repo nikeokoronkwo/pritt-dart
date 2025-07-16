@@ -5,8 +5,8 @@ import '../main/base/db/schema.dart';
 Future<bool> userIsAuthorizedToPackage(
   Package pkg,
   User? user, {
-    User? author,
-    PrittDatabase? db
+  User? author,
+  PrittDatabase? db,
 }) async {
   db ??= crs.db;
   author ??= pkg.author;
@@ -19,21 +19,19 @@ Future<bool> userIsAuthorizedToPackage(
 
     if (author == user) return true;
 
-    final contribs = await db.getContributorsForPackage(
-      pkg.name,
-    );
+    final contribs = await db.getContributorsForPackage(pkg.name);
 
     if (contribs.keys.contains(user)) return true;
   } else {
     final org = pkg.scope != null
-      ? await db.getOrganizationByName(pkg.scope!)
-      : null;
+        ? await db.getOrganizationByName(pkg.scope!)
+        : null;
 
     if ((pkg.public ?? true) && (org?.public ?? true)) return true;
 
     // if user is not provided, return false
     if (user == null) return false;
-    
+
     if (author == user) return true;
 
     final members = db.getMembersForOrganizationStream(pkg.scope!);

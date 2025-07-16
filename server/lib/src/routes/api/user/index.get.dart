@@ -23,11 +23,13 @@ final handler = defineRequestHandler((event) async {
     }
 
     final pkgs = crs.db.getPackagesForUserStream(user.id);
-    final contributedPackages = crs.db.getPackagesContributedToByUserStream(user.id);
+    final contributedPackages = crs.db.getPackagesContributedToByUserStream(
+      user.id,
+    );
 
     final approvedPkgsGroup = StreamGroup<(Package, Iterable<Privileges>)>()
-    ..add(pkgs.map((pkg) => (pkg, [Privileges.ultimate])))
-    ..add(contributedPackages);
+      ..add(pkgs.map((pkg) => (pkg, [Privileges.ultimate])))
+      ..add(contributedPackages);
 
     return common.GetUserResponse(
       name: user.name,
@@ -38,15 +40,21 @@ final handler = defineRequestHandler((event) async {
           .map(
             (pkgRecord) => common.PackageMap(
               name: pkgRecord.$1.name,
-              type: pkgRecord.$2.contains(Privileges.ultimate) ? common.UserPackageRelationship.author : common.UserPackageRelationship.contributor,
+              type: pkgRecord.$2.contains(Privileges.ultimate)
+                  ? common.UserPackageRelationship.author
+                  : common.UserPackageRelationship.contributor,
               privileges: pkgRecord.$2.contains(Privileges.ultimate)
                   ? null
-                  : pkgRecord.$2.map((p) => switch (p) {
-                    Privileges.read => common.Privilege.read,
-                    Privileges.write => common.Privilege.write,
-                    Privileges.publish => common.Privilege.publish,
-                    Privileges.ultimate => common.Privilege.ultimate,
-                  }).toList(),
+                  : pkgRecord.$2
+                        .map(
+                          (p) => switch (p) {
+                            Privileges.read => common.Privilege.read,
+                            Privileges.write => common.Privilege.write,
+                            Privileges.publish => common.Privilege.publish,
+                            Privileges.ultimate => common.Privilege.ultimate,
+                          },
+                        )
+                        .toList(),
             ),
           )
           .toList(),
@@ -55,7 +63,10 @@ final handler = defineRequestHandler((event) async {
     switch (e.type) {
       case CRSExceptionType.USER_NOT_FOUND:
         setResponseCode(event, 404);
-        return common.NotFoundError(error: 'NotFound', message: e.message).toJson();
+        return common.NotFoundError(
+          error: 'NotFound',
+          message: e.message,
+        ).toJson();
       default:
         setResponseCode(event, 500);
         return common.ServerError(error: e.message).toJson();

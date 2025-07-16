@@ -34,13 +34,13 @@ final handler = defineRequestHandler((event) async {
     if (pkg.author.id != user.id) {
       // check if user is contrib to the package
       final contributors = await crs.db.getContributorsForPackage(pkgName);
-      if (!(contributors.entries.any(
+      if (!contributors.entries.any(
         (entry) =>
             entry.key.id == user.id &&
             entry.value.any(
               (p) => p == Privileges.write || p == Privileges.publish,
             ),
-      ))) {
+      )) {
         // unauthorized
         setResponseCode(event, 401);
         return common.UnauthorizedError(

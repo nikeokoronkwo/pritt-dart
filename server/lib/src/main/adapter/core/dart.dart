@@ -43,18 +43,24 @@ final dartAdapter = Adapter(
     // retrieve the package details
     final packageDetails = await crs.getPackageDetails(packageName);
 
-    if (packageDetails case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
+    if (packageDetails case CRSErrorResponse(
+      error: final err,
+      statusCode: final statusCode,
+    )) {
       return CoreAdapterErrorResult(
-        statusCode == 401 ? DartErrorResult(code: 'Unauthorized', message: err) : DartErrorResult(
-          code: 'NoSuchKey',
-          message: 'The specified key does not exist.',
-        ),
+        statusCode == 401
+            ? DartErrorResult(code: 'Unauthorized', message: err)
+            : DartErrorResult(
+                code: 'NoSuchKey',
+                message: 'The specified key does not exist.',
+              ),
         statusCode: statusCode ?? 404,
         responseType: ResponseType.xml,
       );
     }
 
-    final CRSSuccessResponse(body: body) = packageDetails as CRSSuccessResponse<Package>;
+    final CRSSuccessResponse(body: body) =
+        packageDetails as CRSSuccessResponse<Package>;
 
     // get the latest version
     final latestVersion = body.version;
