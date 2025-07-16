@@ -39,6 +39,27 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION update_package_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE packages
+    SET updated_at = now()
+    WHERE id = NEW.package_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger function to update package's updated_at field
+CREATE OR REPLACE FUNCTION update_package_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE packages
+    SET updated_at = now()
+    WHERE id = NEW.package_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 
 -- The actual types
 
@@ -122,16 +143,6 @@ AFTER INSERT OR UPDATE ON package_contributors
 FOR EACH ROW
 EXECUTE FUNCTION update_package_updated_at();
 
-CREATE OR REPLACE FUNCTION update_package_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE packages
-    SET updated_at = now()
-    WHERE id = NEW.package_id;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 -- TODO: Should we consider private package versions?
 CREATE TABLE package_versions (
     package_id TEXT NOT NULL,
@@ -160,17 +171,6 @@ CREATE TRIGGER update_package_versions_updated_at
 AFTER INSERT OR UPDATE ON package_versions
 FOR EACH ROW
 EXECUTE FUNCTION update_package_updated_at();
-
--- Trigger function to update package's updated_at field
-CREATE OR REPLACE FUNCTION update_package_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE packages
-    SET updated_at = now()
-    WHERE id = NEW.package_id;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 -- package_versions trigger upon update of signatures
 CREATE TRIGGER validate_signatures_trigger

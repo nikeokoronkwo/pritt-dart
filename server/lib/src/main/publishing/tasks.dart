@@ -166,7 +166,7 @@ FutureOr<void> processTarball(
   // contributors are either in the pritt config or in the AUTHORS file
   final contributors = [
     if (prittConfig?.contributors case final contribs?) ...contribs,
-    if (authors != null) ...authors.map((author) => common.User.parse(author)),
+    if (authors != null) ...authors.map(common.User.parse),
   ];
 
   final contributorsAsUsers = <User>[];

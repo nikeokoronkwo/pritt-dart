@@ -18,9 +18,10 @@ linter:
     - slash_for_doc_comments
     - sort_pub_dependencies
     - sort_unnamed_constructors_first
+    - type_annotate_public_apis
+    - unnecessary_lambdas
     - unnecessary_parenthesis
     - unreachable_from_main
-    - type_annotate_public_apis
     - use_named_constants
     - use_string_buffers
 

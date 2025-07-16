@@ -165,7 +165,7 @@ final npmAdapter = Adapter(
     final packageFile = req.resolveObject.pathSegments.last;
     final [_, version] = packageFile
         .split('-')
-        .map((e) => basenameWithoutExtension(e))
+        .map(basenameWithoutExtension)
         .toList();
 
     final archive = await crs.getArchiveWithVersion(packageName, version);
