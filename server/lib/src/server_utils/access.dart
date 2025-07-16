@@ -1,7 +1,6 @@
 import '../../pritt_server.dart';
 import '../main/base/db.dart';
 import '../main/base/db/schema.dart';
-import '../main/crs/crs.dart';
 
 Future<bool> userIsAuthorizedToPackage(
   Package pkg,
