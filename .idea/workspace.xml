@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/adapter/adapter/request_options.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/adapter/adapter/resolve.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/adapter/core/dart/pubspec.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/adapter/core/dart/result.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/adapter/core/npm/package_json.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/adapter/core/npm/result.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/auth.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/base/db/schema.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/cas/adapter.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/cas/result.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/cas/services/sorter.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/lib/src/main/cas/types/messages.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/test/unit/adapter_test.mocks.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/test/unit/crs_storage_test.mocks.dart" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,31 +90,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Dart Command Line App.CLI.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Command Line App.Server.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Command Line App.house.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.CSV Encoding Testing in csv_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.Client Testing in list_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.Table Testing in table_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Dart Test.Tests in progress_bar_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Compose (services only).executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Shell Script.PKL Testing.executor&quot;: &quot;Run&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/comment-tracking&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Dart Command Line App.CLI.executor": "Run",
+    "Dart Command Line App.Server.executor": "Run",
+    "Dart Command Line App.house.dart.executor": "Run",
+    "Dart Test.CSV Encoding Testing in csv_test.dart.executor": "Run",
+    "Dart Test.Client Testing in list_test.dart.executor": "Run",
+    "Dart Test.Table Testing in table_test.dart.executor": "Run",
+    "Dart Test.Tests in progress_bar_test.dart.executor": "Run",
+    "Docker.Compose (services only).executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Shell Script.PKL Testing.executor": "Run",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "#76 on nikeokoronkwo/issue25",
+    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.editor",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/common/test" />
@@ -415,7 +432,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750978199143</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033">
+      <option name="closed" value="true" />
+      <created>1752638133440</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1752638133440</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

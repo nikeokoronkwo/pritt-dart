@@ -16,6 +16,7 @@ Map<String, dynamic> _$AdapterResolveObjectToJson(
   'accept': instance.accept,
   'maxAge': instance.maxAge,
   'query': instance.query,
+  'authToken': instance.authToken,
   'meta': instance.meta,
   'userAgent': instance.userAgent.toJson(),
 };
