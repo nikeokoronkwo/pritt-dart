@@ -51,7 +51,7 @@ class Worker<P, R> {
 
     // Spawn the isolate.
     try {
-      await Isolate.spawn(_startRemoteIsolate(work), (initPort.sendPort));
+      await Isolate.spawn(_startRemoteIsolate(work), initPort.sendPort);
     } on Object {
       initPort.close();
       rethrow;

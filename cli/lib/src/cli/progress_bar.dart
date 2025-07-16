@@ -14,10 +14,10 @@ String generateProgressBar(
   final progressValue = (progress * 100).toInt();
 
   width ??=
-      (stdout.terminalColumns -
+      stdout.terminalColumns -
       4 -
       widthPadding -
-      (progressValue != 0 ? ((log(progressValue) * log10e) + 1) : 1).toInt());
+      (progressValue != 0 ? ((log(progressValue) * log10e) + 1) : 1).toInt();
   final int completed = (progress * width).toInt();
 
   return "[${"█" * completed}${"-" * (width - completed)}] $progressValue%";
@@ -30,7 +30,7 @@ class ProgressBar {
   ProgressBar(this.message, {this.completeMessage});
 
   void tick(int current, int total) {
-    int messageLength = max(
+    final int messageLength = max(
       message.length,
       (completeMessage ?? message).length,
     );

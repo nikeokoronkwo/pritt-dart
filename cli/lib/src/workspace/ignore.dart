@@ -5,7 +5,7 @@ import 'package:pritt_common/interface.dart';
 
 class IgnoreMatcher {
   final List<IgnorePattern> patterns;
-  final LineSplitter _lineSplitter = LineSplitter();
+  final LineSplitter _lineSplitter = const LineSplitter();
 
   IgnoreMatcher([List<String>? lines])
     : patterns =

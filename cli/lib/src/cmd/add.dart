@@ -43,7 +43,7 @@ class AddCommand extends PrittCommand {
     logger.warn('For best results, use your language package manager if any');
 
     // basically run everything in configure if not already there
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in

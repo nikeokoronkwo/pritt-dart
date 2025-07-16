@@ -18,7 +18,7 @@ class ServerCommand extends PrittCommand {
   @override
   FutureOr? run() async {
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in

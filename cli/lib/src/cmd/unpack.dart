@@ -50,7 +50,7 @@ class UnpackCommand extends PrittCommand {
     );
 
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
@@ -88,8 +88,8 @@ class UnpackCommand extends PrittCommand {
     );
 
     final outName =
-        (argResults?['output'] ??
-        _suitableFileName(name: name, scope: scope, version: version));
+        argResults?['output'] ??
+        _suitableFileName(name: name, scope: scope, version: version);
     final directory = Directory(outName);
 
     if (await directory.exists() && !argResults?['force']) {
@@ -113,17 +113,17 @@ class UnpackCommand extends PrittCommand {
         controller.add(chunk);
         bytesReceived += chunk.length;
         progressBar.tick(bytesReceived, contentLength);
-        sleep(Duration(milliseconds: 10));
+        sleep(const Duration(milliseconds: 10));
       },
       onDone: () async {
         await controller.close();
-        sleep(Duration(milliseconds: 100));
+        sleep(const Duration(milliseconds: 100));
         progressBar.end();
         downloadCompleter.complete();
       },
       onError: (e, st) async {
         await controller.close();
-        sleep(Duration(milliseconds: 100));
+        sleep(const Duration(milliseconds: 100));
         downloadCompleter.completeError(e, st);
       },
       cancelOnError: true,

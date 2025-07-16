@@ -7,6 +7,7 @@ import 'package:pritt_common/version.dart';
 
 import '../../crs/response.dart';
 import '../adapter.dart';
+import '../adapter/adapter_base_result.dart';
 import '../adapter/resolve.dart';
 import '../adapter/result.dart';
 
@@ -60,7 +61,7 @@ final goAdapter = Adapter(
         );
 
       // send down html
-      return AdapterMetaResult(
+      return CoreAdapterMetaResult(
         htmlDoc.outerHtml,
         responseType: ResponseType.html,
       );
@@ -85,7 +86,7 @@ final goAdapter = Adapter(
           scopedName(name, scope),
         );
         if (latestPkgResponse case CRSErrorResponse(error: final err, statusCode: final statusCode))
-          return AdapterErrorResult(
+          return CoreAdapterErrorResult(
             'bad request: no package',
             statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
@@ -93,11 +94,14 @@ final goAdapter = Adapter(
 
         final latestPkg = latestPkgResponse.body!;
 
-        var metaResult = {
+        final metaResult = {
           'Version': 'v${latestPkg.version}',
           'Time': latestPkg.created.toIso8601String(),
         };
-        return AdapterMetaResult(metaResult, responseType: ResponseType.json);
+        return CoreAdapterMetaResult(
+          metaResult,
+          responseType: ResponseType.json,
+        );
       }
 
       final positionOfAtV = segments.indexOf('@v');
@@ -105,7 +109,7 @@ final goAdapter = Adapter(
         // get all versions
         // for now we do not support this
         // TODO: throw
-        return AdapterErrorResult(
+        return CoreAdapterErrorResult(
           'bad request: unsupported',
           statusCode: 404,
           responseType: ResponseType.plainText,
@@ -132,7 +136,7 @@ final goAdapter = Adapter(
         );
 
         if (pkgVersResult case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
-          return AdapterErrorResult(
+          return CoreAdapterErrorResult(
             'bad request: $err',
             statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
@@ -141,7 +145,7 @@ final goAdapter = Adapter(
 
         final versions = pkgVersResult.body!.map((p) => 'v${p.version}');
 
-        return AdapterMetaResult(
+        return CoreAdapterMetaResult(
           await versions.join('\n'),
           responseType: ResponseType.plainText,
         );
@@ -152,7 +156,7 @@ final goAdapter = Adapter(
             ),
             p.extension(requestRequirements).substring(1),
           ]
-          case [String version, String type]
+          case [String version, final String type]
           when Version.tryParse(
                 version.startsWith('v') ? version.substring(1) : version,
               ) !=
@@ -163,7 +167,7 @@ final goAdapter = Adapter(
           version,
         );
         if (pkgVerResult case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
-          return AdapterErrorResult(
+          return CoreAdapterErrorResult(
             'bad request: $err',
             statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
@@ -178,34 +182,34 @@ final goAdapter = Adapter(
               version,
             );
             if (!pkgVerResult.isSuccess) {}
-            var metaResult = {
+            final metaResult = {
               'Version': 'v$version',
               'Time': pkgVerResult.body!.created.toIso8601String(),
             };
-            return AdapterMetaResult(
+            return CoreAdapterMetaResult(
               metaResult,
               responseType: ResponseType.json,
             );
           case 'mod':
-            return AdapterMetaResult(
+            return CoreAdapterMetaResult(
               pkgVerResult.body!.config,
               responseType: ResponseType.plainText,
             );
           default:
-            return AdapterErrorResult(
+            return CoreAdapterErrorResult(
               'bad request: unexpected extension "$type"',
               statusCode: 404,
               responseType: ResponseType.plainText,
             );
         }
       } else {
-        return AdapterErrorResult(
+        return CoreAdapterErrorResult(
           'not found: $requestRequirements is a known non-module',
           responseType: ResponseType.plainText,
         );
       }
     }
-    return AdapterErrorResult(
+    return CoreAdapterErrorResult(
       'bad request',
       statusCode: 404,
       responseType: ResponseType.plainText,
@@ -238,7 +242,7 @@ final goAdapter = Adapter(
     );
     version = version.startsWith('v') ? version.substring(1) : version;
 
-    var moduleName = [base, ...parts].join('/');
+    final moduleName = [base, ...parts].join('/');
     final archiveResult = await crs.getArchiveWithVersion(
       scopedName(name, scope),
       version,
@@ -246,7 +250,7 @@ final goAdapter = Adapter(
     );
 
     if (!archiveResult.isSuccess) {
-      return AdapterErrorResult(
+      return CoreAdapterErrorResult(
         'bad request: could not find archive for $moduleName',
         statusCode: 404,
         responseType: ResponseType.plainText,
@@ -281,7 +285,7 @@ final goAdapter = Adapter(
     }
 
     final zipArchive = ZipEncoder().encode(outArchive);
-    return AdapterArchiveResult(
+    return CoreAdapterArchiveResult(
       ByteStream.fromBytes(zipArchive ?? []),
       '$moduleName@$version',
       contentType: 'application/zip',

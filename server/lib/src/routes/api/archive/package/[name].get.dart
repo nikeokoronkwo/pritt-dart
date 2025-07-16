@@ -9,7 +9,7 @@ import '../../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   // check authorization
   final authToken = getHeader(event, 'Authorization');
-  var user = authToken == null ? null : await checkAuthorization(authToken);
+  final user = authToken == null ? null : await checkAuthorization(authToken);
 
   if (user == null) {
     setResponseCode(event, 401);
@@ -28,7 +28,7 @@ final handler = defineRequestHandler((event) async {
 
   // check version is valid
   if (version != null && Version.tryParse(version) == null) {
-    String errorMsg = version.startsWith('v') || version.startsWith('@')
+    final String errorMsg = version.startsWith('v') || version.startsWith('@')
         ? 'Versions must start with their plain number, no "v<version>" or "@<version>"'
         : 'Versions must follow semver';
 

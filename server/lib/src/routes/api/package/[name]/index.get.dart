@@ -39,7 +39,7 @@ final handler = defineRequestHandler((event) async {
         return verA.compareTo(verB);
       });
 
-    var author = common.Author(
+    final author = common.Author(
       name: pkg.author.name,
       email: pkg.author.email,
       avatar: pkg.author.avatarUrl,

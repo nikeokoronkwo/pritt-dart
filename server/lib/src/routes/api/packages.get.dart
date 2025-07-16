@@ -5,7 +5,7 @@ import '../../server_utils/authorization.dart';
 import '../../utils/extensions.dart';
 import '../../utils/request_handler.dart';
 
-final pkgCap = 100;
+const pkgCap = 100;
 
 final handler = defineRequestHandler((event) async {
   /// get params

@@ -49,7 +49,7 @@ final npmAdapter = Adapter(
     // check if the package info is successful
     // if not, return an error
     if (packageInfo case CRSErrorResponse(error: final err, statusCode: final statusCode)) {
-      return AdapterErrorResult<NpmError>(
+      return CoreAdapterErrorResult<NpmError>(
         NpmError(error: err),
         statusCode: statusCode ?? 500,
       );
@@ -65,7 +65,7 @@ final npmAdapter = Adapter(
       final errorResponse = latestPackageResponse is CRSErrorResponse
           ? latestPackageResponse as CRSErrorResponse
           : contributorsResponse as CRSErrorResponse;
-      return AdapterErrorResult<NpmError>(
+      return CoreAdapterErrorResult<NpmError>(
         NpmError(error: errorResponse.error),
         statusCode: errorResponse.statusCode ?? 500,
       );
@@ -102,7 +102,7 @@ final npmAdapter = Adapter(
       }
     }
 
-    return AdapterMetaJsonResult(
+    return CoreAdapterMetaJsonResult(
       NpmMetaResult(
         id: packageName,
         name: packageName,
@@ -164,14 +164,14 @@ final npmAdapter = Adapter(
 
     if (!archive.isSuccess) {
       final errorResponse = archive as CRSErrorResponse;
-      return AdapterErrorResult<NpmError>(
+      return CoreAdapterErrorResult<NpmError>(
         NpmError(error: errorResponse.error),
         statusCode: errorResponse.statusCode ?? 500,
       );
     }
 
     // stream the archive
-    return AdapterArchiveResult(
+    return CoreAdapterArchiveResult(
       archive.body!.data,
       archive.body!.name,
       contentType: archive.body?.contentType ?? 'application/x-tar',

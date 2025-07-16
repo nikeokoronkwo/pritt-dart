@@ -161,7 +161,7 @@ class CoreRegistryService implements CRSController {
       username: Platform.environment['DATABASE_USERNAME']!,
       password:
           Platform.environment['DATABASE_PASSWORD'] ??
-          String.fromEnvironment('DATABASE_PASSWORD'),
+          const String.fromEnvironment('DATABASE_PASSWORD'),
       devMode: Platform.environment['DATABASE_HOST'] == 'localhost',
     );
 

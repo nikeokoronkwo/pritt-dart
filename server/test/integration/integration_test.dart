@@ -83,14 +83,14 @@ void main() {
               ], environment: env);
             else
               throw Exception(
-                'Migration did not succeed: ${(await serverProcess.stderr.transform(utf8.decoder).join('\n'))}',
+                'Migration did not succeed: ${await serverProcess.stderr.transform(utf8.decoder).join('\n')}',
               );
           });
 
-      await Future.delayed(Duration(seconds: 40)).then((_) {
+      await Future.delayed(const Duration(seconds: 40)).then((_) {
         serverProcess.stderr.listen((event) async {
           throw Exception(
-            'Server did not start successfully: ${(await serverProcess.stderr.transform(utf8.decoder).join('\n'))}',
+            'Server did not start successfully: ${await serverProcess.stderr.transform(utf8.decoder).join('\n')}',
           );
         });
       });
@@ -142,7 +142,7 @@ void main() {
             // add pritt
 
             // run
-            final packageName = 'pritt'; // adjust as needed for your test data
+            const packageName = 'pritt'; // adjust as needed for your test data
             final response = await http.get(
               Uri.parse('http://localhost:8080/api/package/$packageName'),
             );
@@ -170,7 +170,7 @@ void main() {
 
     test('POST /api/auth/status returns 404 with ID not found', () async {
       final Random random = Random();
-      StringBuffer s = StringBuffer('');
+      final StringBuffer s = StringBuffer('');
       for (int i = 0; i < 10; i += 2)
         s.write(String.fromCharCode(random.nextInt(26) + 65));
       final response = await http.post(
@@ -253,7 +253,7 @@ void main() {
     );
 
     test('POST /api/package/{name} returns 401 without auth', () async {
-      final packageName = 'pritt';
+      const packageName = 'pritt';
       final response = await http.post(
         Uri.parse('http://localhost:8080/api/package/$packageName'),
         headers: {'Content-Type': 'application/json'},

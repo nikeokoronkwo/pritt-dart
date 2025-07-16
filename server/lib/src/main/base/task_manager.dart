@@ -80,7 +80,7 @@ class TaskRunner<
   Ctx extends Object
 > {
   final Logger? _logger;
-  static final int _maximumWorkers = 2;
+  static const int _maximumWorkers = 2;
 
   /// The queue for worker/task items
   final Queue<Task> queue = Queue();
@@ -135,7 +135,7 @@ class TaskRunner<
     this.context,
     bool debug = false,
   }) : _logger = debug ? Logger('PRITT TASK RUNNER') : null,
-       retryInterval = retryInterval ?? Duration(milliseconds: 150) {
+       retryInterval = retryInterval ?? const Duration(milliseconds: 150) {
     if (!hierarchicalLoggingEnabled) hierarchicalLoggingEnabled = true;
     _logger?.level = Level.ALL;
 

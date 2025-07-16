@@ -68,7 +68,10 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
           ),
         ],
         settings: devMode
-            ? PoolSettings(maxConnectionCount: 20, sslMode: SslMode.disable)
+            ? const PoolSettings(
+                maxConnectionCount: 20,
+                sslMode: SslMode.disable,
+              )
             : PoolSettings(
                 maxConnectionCount: 20,
                 sslMode: Platform.environment.containsKey('DATABASE_SSL')
@@ -1352,7 +1355,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT 
   updateAuthSessionWithAccessToken({required String sessionId}) async {
     String? token;
     final updatedAt = DateTime.now();
-    final accessTokenExpiresAt = updatedAt.add(Duration(days: 10));
+    final accessTokenExpiresAt = updatedAt.add(const Duration(days: 10));
 
     try {
       final result = await _pool.runTx((session) async {
@@ -1443,12 +1446,12 @@ RETURNING *''',
   Future<AuthorizationSession> createNewAuthSession({
     required String deviceId,
   }) async {
-    var dateTime = DateTime.now();
+    final dateTime = DateTime.now();
     final enc = sha256
         .convert(utf8.encode(deviceId + dateTime.toIso8601String()))
         .toString();
 
-    final expiresAt = dateTime.add(Duration(hours: 1));
+    final expiresAt = dateTime.add(const Duration(hours: 1));
 
     final sessionId = enc.substring(0, 10);
 
@@ -1502,8 +1505,8 @@ RETURNING *''',
     Map<String, dynamic>? deviceInfo,
   }) async {
     late String token;
-    DateTime createdAt = DateTime.now();
-    DateTime expiresAt = createdAt.add(Duration(days: 10));
+    final DateTime createdAt = DateTime.now();
+    final DateTime expiresAt = createdAt.add(const Duration(days: 10));
 
     /// Create an access token
     final result = await _pool.runTx((session) async {
@@ -1669,7 +1672,7 @@ WHERE session_id = @sessionId
   }) async {
     // create an expires-at time
     final currentDate = DateTime.now();
-    final expiresAtDate = currentDate.add(Duration(days: 3));
+    final expiresAtDate = currentDate.add(const Duration(days: 3));
 
     final result = await _pool.execute(
       r'''
@@ -2141,17 +2144,17 @@ WHERE a.hash = @accessToken'''),
 String generateRandomCode({int length = 8, String? seed}) {
   final random = Random.secure();
 
-  final characters = 'ABCDEFGHJKLMNOPQRSTUVWXYZ234567890';
+  const characters = 'ABCDEFGHJKLMNOPQRSTUVWXYZ234567890';
 
   final String input;
   if (seed == null) {
     input = characters;
   } else {
-    var encodedSeed = base64Encode(utf8.encode(seed));
+    final encodedSeed = base64Encode(utf8.encode(seed));
     input = encodedSeed.split('').where((c) => characters.contains(c)).join('');
   }
 
-  StringBuffer output = StringBuffer();
+  final StringBuffer output = StringBuffer();
   for (int i = 0; i < length; ++i) {
     output.write(input[random.nextInt(characters.length - 1)]);
   }
