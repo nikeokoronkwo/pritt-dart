@@ -1032,6 +1032,100 @@ class PublishPackageStatusResponse {
 }
 
 @JsonSerializable(includeIfNull: false)
+class RemovePackageByVersionRequest {
+  RemovePackageByVersionRequest({this.reason, this.yank, this.alternative});
+
+  factory RemovePackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageByVersionRequestFromJson(json);
+
+  final String? reason;
+
+  final bool? yank;
+
+  final String? alternative;
+
+  Map<String, dynamic> toJson() => _$RemovePackageByVersionRequestToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum RequestType {
+  yank('yank'),
+  deprecate('deprecate');
+
+  const RequestType(this.value);
+
+  final String value;
+}
+
+@JsonSerializable(includeIfNull: false)
+class RemovePackageByVersionResponse {
+  RemovePackageByVersionResponse({
+    required this.success,
+    this.reason,
+    required this.package_name,
+    this.alternative,
+    required this.request_type,
+  });
+
+  factory RemovePackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageByVersionResponseFromJson(json);
+
+  final bool success;
+
+  final String? reason;
+
+  final String package_name;
+
+  final String? alternative;
+
+  final RequestType request_type;
+
+  Map<String, dynamic> toJson() => _$RemovePackageByVersionResponseToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class RemovePackageRequest {
+  RemovePackageRequest({this.reason, this.yank, this.alternative});
+
+  factory RemovePackageRequest.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageRequestFromJson(json);
+
+  final String? reason;
+
+  final bool? yank;
+
+  final String? alternative;
+
+  Map<String, dynamic> toJson() => _$RemovePackageRequestToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class RemovePackageResponse {
+  RemovePackageResponse({
+    required this.success,
+    this.reason,
+    required this.package_name,
+    this.alternative,
+    required this.request_type,
+  });
+
+  factory RemovePackageResponse.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageResponseFromJson(json);
+
+  final bool success;
+
+  final String? reason;
+
+  final String package_name;
+
+  final String? alternative;
+
+  final RequestType request_type;
+
+  Map<String, dynamic> toJson() => _$RemovePackageResponseToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
 class ServerError {
   ServerError({this.error});
 
@@ -1093,54 +1187,14 @@ class UploadPackageResponse {
 
 @JsonSerializable(includeIfNull: false)
 class YankAdapterResponse {
-  YankAdapterResponse();
+  YankAdapterResponse({this.reason});
 
   factory YankAdapterResponse.fromJson(Map<String, dynamic> json) =>
       _$YankAdapterResponseFromJson(json);
 
+  final String? reason;
+
   Map<String, dynamic> toJson() => _$YankAdapterResponseToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageByVersionRequest {
-  YankPackageByVersionRequest();
-
-  factory YankPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageByVersionRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$YankPackageByVersionRequestToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageByVersionResponse {
-  YankPackageByVersionResponse();
-
-  factory YankPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageByVersionResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$YankPackageByVersionResponseToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageRequest {
-  YankPackageRequest({required this.version});
-
-  factory YankPackageRequest.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageRequestFromJson(json);
-
-  final String version;
-
-  Map<String, dynamic> toJson() => _$YankPackageRequestToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageResponse {
-  YankPackageResponse();
-
-  factory YankPackageResponse.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$YankPackageResponseToJson(this);
 }
 
 /// The Pritt OpenAPI specification used for integrating Pritt with its internal tools (i.e generating schemas for endpoints on the Rust Server and Frontends (CLI and Web)),
@@ -1175,16 +1229,20 @@ abstract interface class PrittInterface {
     required String name,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (remove) a package**
   /// DELETE /api/package/{name}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  /// In order to yank a package, all its versions must be empty, otherwise it will return a 402 error.
+  /// In order to deprecate a package, its latest (stable) version must be deprecated, otherwise it will return a 402 error.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
-  ///   - [ExistsError] on status code 402
+  ///   - [InvalidError] on status code 402
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageResponse> yankPackageByName(
-    YankPackageRequest body, {
+  _i3.FutureOr<RemovePackageResponse> removePackageByName(
+    RemovePackageRequest body, {
     required String name,
   });
 
@@ -1212,15 +1270,20 @@ abstract interface class PrittInterface {
     required String name,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (Remove) a package**
   /// DELETE /api/package/@{scope}/{name}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  /// In order to yank a package, all its versions must be empty, otherwise it will return a 402 error.
+  /// In order to deprecate a package, its latest (stable) version must be deprecated, otherwise it will return a 402 error.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
+  ///   - [InvalidError] on status code 402
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageResponse> yankPackageByNameWithScope(
-    YankPackageRequest body, {
+  _i3.FutureOr<RemovePackageResponse> removePackageByNameWithScope(
+    RemovePackageRequest body, {
     required String scope,
     required String name,
   });
@@ -1249,15 +1312,17 @@ abstract interface class PrittInterface {
     required String version,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (remove) a package**
   /// DELETE /api/package/{name}/{version}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
-    YankPackageByVersionResponse body, {
+  _i3.FutureOr<RemovePackageByVersionResponse> removePackageVersionByName(
+    RemovePackageByVersionRequest body, {
     required String name,
     required String version,
   });
@@ -1290,16 +1355,18 @@ abstract interface class PrittInterface {
     required String version,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (Remove) a package**
   /// DELETE /api/package/@{scope}/{name}/{version}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageByVersionRequest>
-  yankPackageByNameWithScopeAndVersion(
-    YankPackageByVersionResponse body, {
+  _i3.FutureOr<RemovePackageByVersionResponse>
+  removePackageByNameWithScopeAndVersion(
+    RemovePackageByVersionRequest body, {
     required String scope,
     required String name,
     required String version,

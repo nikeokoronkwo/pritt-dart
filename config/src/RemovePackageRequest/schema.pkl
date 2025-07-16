@@ -1,0 +1,13 @@
+/// The schema of the request object for the add user endpoint `api/user/{id}`
+///
+/// The object gets important information such as necessary information for registering the user
+open module RemovePackageRequest
+
+/// The reason for yanking the package
+reason: String?
+
+/// Whether this is a yank or deprecation request
+yank: Boolean? = false
+
+/// The alternative package to use instead of the yanked package
+alternative: String?

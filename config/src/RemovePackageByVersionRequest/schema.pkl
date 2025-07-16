@@ -1,0 +1,3 @@
+module RemovePackageByVersionRequest
+
+extends "../RemovePackageRequest/schema.pkl"

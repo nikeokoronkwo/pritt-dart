@@ -1,5 +1,0 @@
-/// The schema of the request object for the add user endpoint ``
-///
-/// Returns the info about the yanked package
-module YankPackageResponse
-
