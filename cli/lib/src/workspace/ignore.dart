@@ -12,7 +12,7 @@ class IgnoreMatcher {
           lines
               ?.map((l) => l.trim())
               .where((l) => l.isNotEmpty && !l.startsWith('#'))
-              .map((l) => IgnorePattern.from(l))
+              .map(IgnorePattern.from)
               .toList() ??
           <IgnorePattern>[];
 
@@ -27,7 +27,7 @@ class IgnoreMatcher {
       lines
           .map((l) => l.trim())
           .where((l) => l.isNotEmpty && !l.startsWith('#'))
-          .map((l) => IgnorePattern.from(l)),
+          .map(IgnorePattern.from),
     );
   }
 
