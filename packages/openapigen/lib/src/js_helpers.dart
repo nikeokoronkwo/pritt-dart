@@ -9,10 +9,9 @@ extension type JSRecord<K extends JSAny, V extends JSAny>._(JSObject _)
 
 extension ToDartMap<K extends JSAny, V extends JSAny> on JSRecord<K, V> {
   Map<K, V> get toDart {
-    return entriesFromRecord(this)
-        .toDart
-        .asMap()
-        .map((k, v) => MapEntry(v.$0, v.$1));
+    return entriesFromRecord(
+      this,
+    ).toDart.asMap().map((k, v) => MapEntry(v.$0, v.$1));
   }
 }
 
@@ -34,12 +33,13 @@ extension JSArrayHelpers<T extends JSAny> on JSArray<T> {
 
 @JS('Object.entries')
 external JSArray<JSTuple2<K, V>>
-    entriesFromRecord<K extends JSAny, V extends JSAny>(JSRecord<K, V> record);
+entriesFromRecord<K extends JSAny, V extends JSAny>(JSRecord<K, V> record);
 
 @JS('Object.keys')
 external JSArray<K> keysFromRecord<K extends JSAny, V extends JSAny>(
-    JSRecord<K, V> record);
+  JSRecord<K, V> record,
+);
 
 @JS('Object.values')
 external JSArray<JSTuple2<K, V>>
-    valuesFromRecord<K extends JSAny, V extends JSAny>(JSRecord<K, V> record);
+valuesFromRecord<K extends JSAny, V extends JSAny>(JSRecord<K, V> record);

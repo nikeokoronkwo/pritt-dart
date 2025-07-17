@@ -4,8 +4,12 @@ import 'gen.dart';
 import 'js.dart';
 
 extension type TemplateOptions._(JSObject _) implements JSObject {
-  external TemplateOptions(
-      {AuthOptions auth, String name, TimeOptions time, StyleOptions style});
+  external TemplateOptions({
+    AuthOptions auth,
+    String name,
+    TimeOptions time,
+    StyleOptions style,
+  });
 
   /// auth options
   external AuthOptions get auth;

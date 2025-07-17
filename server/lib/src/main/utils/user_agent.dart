@@ -16,11 +16,8 @@ class UserAgent {
     return _raw ?? "$name $version";
   }
 
-  const UserAgent._({
-    required this.name,
-    required this.version,
-    String? raw,
-  }) : _raw = raw;
+  const UserAgent._({required this.name, required this.version, String? raw})
+    : _raw = raw;
 
   /// Create a user agent from parsing the raw string
   factory UserAgent.fromRaw(String raw) {

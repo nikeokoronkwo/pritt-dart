@@ -14,10 +14,14 @@ late final CoreRegistryService crs;
 
 late final AdapterRegistry registry;
 
-Future<void> startPrittServices(
-    {String? ofsUrl, String? dbUrl, bool customAdapters = true}) async {
+Future<void> startPrittServices({
+  String? ofsUrl,
+  String? dbUrl,
+  bool customAdapters = true,
+}) async {
   // Load environment variables for the S3 URL and database connection
-  ofsUrl ??= Platform.environment['S3_URL'] ??
+  ofsUrl ??=
+      Platform.environment['S3_URL'] ??
       'http://localhost:${Platform.environment['S3_LOCAL_PORT'] ?? '6007'}';
 
   final databaseUrl = dbUrl ?? Platform.environment['DATABASE_URL'];
@@ -25,26 +29,34 @@ Future<void> startPrittServices(
 
   // read keys for authentication
   final db = await PrittDatabase.connect(
-      host: (dbUri?.host ?? Platform.environment['DATABASE_HOST'])!,
-      port: dbUri?.port ??
-          int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
-      database:
-          (dbUri?.pathSegments.first ?? Platform.environment['DATABASE_NAME'])!,
-      username: (dbUri?.userInfo.split(':').first ??
-          Platform.environment['DATABASE_USERNAME'])!,
-      password: (dbUri?.userInfo.split(':').last ??
-          Platform.environment['DATABASE_PASSWORD'] ??
-          String.fromEnvironment('DATABASE_PASSWORD')),
-      devMode: (dbUri?.host ?? Platform.environment['DATABASE_HOST']) ==
-          'localhost');
+    host: (dbUri?.host ?? Platform.environment['DATABASE_HOST'])!,
+    port:
+        dbUri?.port ??
+        int.parse(Platform.environment['DATABASE_PORT'] ?? '5432'),
+    database:
+        (dbUri?.pathSegments.first ?? Platform.environment['DATABASE_NAME'])!,
+    username:
+        (dbUri?.userInfo.split(':').first ??
+        Platform.environment['DATABASE_USERNAME'])!,
+    password:
+        dbUri?.userInfo.split(':').last ??
+        Platform.environment['DATABASE_PASSWORD'] ??
+        const String.fromEnvironment('DATABASE_PASSWORD'),
+    devMode:
+        (dbUri?.host ?? Platform.environment['DATABASE_HOST']) == 'localhost',
+  );
 
   final PrittStorage storage;
   if (Platform.environment.containsKey('S3_CREDENTIALS_FILE')) {
-    final keys =
-        await loadSecretsFromFile(Platform.environment['S3_CREDENTIALS_FILE']!);
+    final keys = await loadSecretsFromFile(
+      Platform.environment['S3_CREDENTIALS_FILE']!,
+    );
     if (keys != null) {
-      storage = await PrittStorage.connect(ofsUrl,
-          s3secretKey: keys.secretKey, s3accessKey: keys.accessKey);
+      storage = await PrittStorage.connect(
+        ofsUrl,
+        s3secretKey: keys.secretKey,
+        s3accessKey: keys.accessKey,
+      );
     } else {
       storage = await PrittStorage.connect(ofsUrl);
     }
@@ -52,12 +64,18 @@ Future<void> startPrittServices(
     storage = await PrittStorage.connect(ofsUrl);
   }
 
-  crs = await CoreRegistryService.connect(db: db, storage: storage);
+  // TODO: Late Initialization Check
+  try {
+    final _ = crs;
+  } catch (e) {
+    crs = await CoreRegistryService.connect(db: db, storage: storage);
+  }
 
   if (customAdapters)
     registry = await AdapterRegistry.connect(
-        db: db,
-        runnerUri: Uri.parse(Platform.environment['PRITT_RUNNER_URL']!));
+      db: db,
+      runnerUri: Uri.parse(Platform.environment['PRITT_RUNNER_URL']!),
+    );
 
   publishingTaskRunner.start();
 }
@@ -71,7 +89,8 @@ Future<void> startPrittServices(
 ///
 /// This should not be done during production: credentials must be ready before server startup
 Future<({String accessKey, String secretKey})?> loadSecretsFromFile(
-    String path) async {
+  String path,
+) async {
   final file = File(path);
 
   if (!await file.exists()) {
@@ -96,7 +115,7 @@ Future<({String accessKey, String secretKey})?> loadSecretsFromFile(
           credentials.containsKey('SECRET_KEY')
       ? (
           accessKey: credentials['ACCESS_KEY']!,
-          secretKey: credentials['SECRET_KEY']!
+          secretKey: credentials['SECRET_KEY']!,
         )
       : null;
 }

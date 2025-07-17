@@ -31,24 +31,14 @@ import 'package:pritt_server/src/main/utils/mixins.dart' as _i10;
 
 class _FakePrittDatabaseInterface_0 extends _i1.SmartFake
     implements _i2.PrittDatabaseInterface {
-  _FakePrittDatabaseInterface_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePrittDatabaseInterface_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePrittStorageInterface_1<T> extends _i1.SmartFake
     implements _i3.PrittStorageInterface<T> {
-  _FakePrittStorageInterface_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePrittStorageInterface_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [CRSDBController].
@@ -60,13 +50,15 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
   }
 
   @override
-  _i2.PrittDatabaseInterface get db => (super.noSuchMethod(
-        Invocation.getter(#db),
-        returnValue: _FakePrittDatabaseInterface_0(
-          this,
-          Invocation.getter(#db),
-        ),
-      ) as _i2.PrittDatabaseInterface);
+  _i2.PrittDatabaseInterface get db =>
+      (super.noSuchMethod(
+            Invocation.getter(#db),
+            returnValue: _FakePrittDatabaseInterface_0(
+              this,
+              Invocation.getter(#db),
+            ),
+          )
+          as _i2.PrittDatabaseInterface);
 
   @override
   _i5.Future<_i6.CRSResponse<_i7.PackageVersions>> getLatestPackage(
@@ -75,27 +67,23 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getLatestPackage,
-          [packageName],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>.value(
-            _i8.dummyValue<_i6.CRSResponse<_i7.PackageVersions>>(
-          this,
-          Invocation.method(
-            #getLatestPackage,
-            [packageName],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>);
+            Invocation.method(
+              #getLatestPackage,
+              [packageName],
+              {#language: language, #env: env},
+            ),
+            returnValue: _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>.value(
+              _i8.dummyValue<_i6.CRSResponse<_i7.PackageVersions>>(
+                this,
+                Invocation.method(
+                  #getLatestPackage,
+                  [packageName],
+                  {#language: language, #env: env},
+                ),
+              ),
+            ),
+          )
+          as _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>);
 
   @override
   _i5.Future<_i6.CRSResponse<_i7.PackageVersions>> getPackageWithVersion(
@@ -105,65 +93,56 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackageWithVersion,
-          [
-            packageName,
-            version,
-          ],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>.value(
-            _i8.dummyValue<_i6.CRSResponse<_i7.PackageVersions>>(
-          this,
-          Invocation.method(
-            #getPackageWithVersion,
-            [
-              packageName,
-              version,
-            ],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>);
+            Invocation.method(
+              #getPackageWithVersion,
+              [packageName, version],
+              {#language: language, #env: env},
+            ),
+            returnValue: _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>.value(
+              _i8.dummyValue<_i6.CRSResponse<_i7.PackageVersions>>(
+                this,
+                Invocation.method(
+                  #getPackageWithVersion,
+                  [packageName, version],
+                  {#language: language, #env: env},
+                ),
+              ),
+            ),
+          )
+          as _i5.Future<_i6.CRSResponse<_i7.PackageVersions>>);
 
   @override
-  _i5.Future<
-      _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>> getPackages(
+  _i5.Future<_i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>
+  getPackages(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackages,
-          [packageName],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i5.Future<
-                _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>.value(
-            _i8.dummyValue<
-                _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>(
-          this,
-          Invocation.method(
-            #getPackages,
-            [packageName],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i5.Future<_i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>>);
+            Invocation.method(
+              #getPackages,
+              [packageName],
+              {#language: language, #env: env},
+            ),
+            returnValue:
+                _i5.Future<
+                  _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>
+                >.value(
+                  _i8.dummyValue<
+                    _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>
+                  >(
+                    this,
+                    Invocation.method(
+                      #getPackages,
+                      [packageName],
+                      {#language: language, #env: env},
+                    ),
+                  ),
+                ),
+          )
+          as _i5.Future<
+            _i6.CRSResponse<Map<_i9.Version, _i7.PackageVersions>>
+          >);
 
   @override
   _i6.CRSResponse<_i5.Stream<_i7.PackageVersions>> getPackagesStream(
@@ -172,27 +151,22 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackagesStream,
-          [packageName],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue:
-            _i8.dummyValue<_i6.CRSResponse<_i5.Stream<_i7.PackageVersions>>>(
-          this,
-          Invocation.method(
-            #getPackagesStream,
-            [packageName],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        ),
-      ) as _i6.CRSResponse<_i5.Stream<_i7.PackageVersions>>);
+            Invocation.method(
+              #getPackagesStream,
+              [packageName],
+              {#language: language, #env: env},
+            ),
+            returnValue: _i8
+                .dummyValue<_i6.CRSResponse<_i5.Stream<_i7.PackageVersions>>>(
+                  this,
+                  Invocation.method(
+                    #getPackagesStream,
+                    [packageName],
+                    {#language: language, #env: env},
+                  ),
+                ),
+          )
+          as _i6.CRSResponse<_i5.Stream<_i7.PackageVersions>>);
 
   @override
   _i5.Future<_i6.CRSResponse<_i7.Package>> getPackageDetails(
@@ -201,61 +175,56 @@ class MockCRSDBController extends _i1.Mock implements _i4.CRSDBController {
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackageDetails,
-          [packageName],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i5.Future<_i6.CRSResponse<_i7.Package>>.value(
-            _i8.dummyValue<_i6.CRSResponse<_i7.Package>>(
-          this,
-          Invocation.method(
-            #getPackageDetails,
-            [packageName],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i5.Future<_i6.CRSResponse<_i7.Package>>);
+            Invocation.method(
+              #getPackageDetails,
+              [packageName],
+              {#language: language, #env: env},
+            ),
+            returnValue: _i5.Future<_i6.CRSResponse<_i7.Package>>.value(
+              _i8.dummyValue<_i6.CRSResponse<_i7.Package>>(
+                this,
+                Invocation.method(
+                  #getPackageDetails,
+                  [packageName],
+                  {#language: language, #env: env},
+                ),
+              ),
+            ),
+          )
+          as _i5.Future<_i6.CRSResponse<_i7.Package>>);
 
   @override
   _i5.Future<_i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>>
-      getPackageContributors(
+  getPackageContributors(
     String? packageName, {
     String? language,
     Map<String, dynamic>? env,
   }) =>
-          (super.noSuchMethod(
+      (super.noSuchMethod(
             Invocation.method(
               #getPackageContributors,
               [packageName],
-              {
-                #language: language,
-                #env: env,
-              },
+              {#language: language, #env: env},
             ),
-            returnValue: _i5.Future<
-                    _i6.CRSResponse<
-                        Map<_i7.User, Iterable<_i7.Privileges>>>>.value(
-                _i8.dummyValue<
-                    _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>>(
-              this,
-              Invocation.method(
-                #getPackageContributors,
-                [packageName],
-                {
-                  #language: language,
-                  #env: env,
-                },
-              ),
-            )),
-          ) as _i5.Future<
-              _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>>);
+            returnValue:
+                _i5.Future<
+                  _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>
+                >.value(
+                  _i8.dummyValue<
+                    _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>
+                  >(
+                    this,
+                    Invocation.method(
+                      #getPackageContributors,
+                      [packageName],
+                      {#language: language, #env: env},
+                    ),
+                  ),
+                ),
+          )
+          as _i5.Future<
+            _i6.CRSResponse<Map<_i7.User, Iterable<_i7.Privileges>>>
+          >);
 }
 
 /// A class which mocks [CRSArchiveController].
@@ -268,13 +237,15 @@ class MockCRSArchiveController extends _i1.Mock
   }
 
   @override
-  _i3.PrittStorageInterface<dynamic> get ofs => (super.noSuchMethod(
-        Invocation.getter(#ofs),
-        returnValue: _FakePrittStorageInterface_1<dynamic>(
-          this,
-          Invocation.getter(#ofs),
-        ),
-      ) as _i3.PrittStorageInterface<dynamic>);
+  _i3.PrittStorageInterface<dynamic> get ofs =>
+      (super.noSuchMethod(
+            Invocation.getter(#ofs),
+            returnValue: _FakePrittStorageInterface_1<dynamic>(
+              this,
+              Invocation.getter(#ofs),
+            ),
+          )
+          as _i3.PrittStorageInterface<dynamic>);
 
   @override
   _i5.Future<_i6.CRSResponse<_i4.CRSArchive>> getArchiveWithVersion(
@@ -284,33 +255,23 @@ class MockCRSArchiveController extends _i1.Mock
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getArchiveWithVersion,
-          [
-            packageName,
-            version,
-          ],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>.value(
-            _i8.dummyValue<_i6.CRSResponse<_i4.CRSArchive>>(
-          this,
-          Invocation.method(
-            #getArchiveWithVersion,
-            [
-              packageName,
-              version,
-            ],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>);
+            Invocation.method(
+              #getArchiveWithVersion,
+              [packageName, version],
+              {#language: language, #env: env},
+            ),
+            returnValue: _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>.value(
+              _i8.dummyValue<_i6.CRSResponse<_i4.CRSArchive>>(
+                this,
+                Invocation.method(
+                  #getArchiveWithVersion,
+                  [packageName, version],
+                  {#language: language, #env: env},
+                ),
+              ),
+            ),
+          )
+          as _i5.Future<_i6.CRSResponse<_i4.CRSArchive>>);
 
   @override
   _i5.FutureOr<dynamic> setFileServer(
@@ -319,15 +280,14 @@ class MockCRSArchiveController extends _i1.Mock
     String? language,
     bool? cache = false,
   }) =>
-      (super.noSuchMethod(Invocation.method(
-        #setFileServer,
-        [packageName],
-        {
-          #version: version,
-          #language: language,
-          #cache: cache,
-        },
-      )) as _i5.FutureOr<dynamic>);
+      (super.noSuchMethod(
+            Invocation.method(
+              #setFileServer,
+              [packageName],
+              {#version: version, #language: language, #cache: cache},
+            ),
+          )
+          as _i5.FutureOr<dynamic>);
 }
 
 /// A class which mocks [JsonConvertible].
@@ -339,11 +299,10 @@ class MockJsonConvertible extends _i1.Mock implements _i10.JsonConvertible {
   }
 
   @override
-  Map<String, dynamic> toJson() => (super.noSuchMethod(
-        Invocation.method(
-          #toJson,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }

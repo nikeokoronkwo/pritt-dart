@@ -13,11 +13,13 @@ List<User> createMockUsers() {
         ? random.nextInt(100) + (now.year - 100) - 1
         : now.year;
     return User(
-        name: m.name,
-        email: m.email,
-        created_at:
-            DateTime.now().copyWith(month: month, year: year).toIso8601String(),
-        updated_at: DateTime.now().toIso8601String(),
-        packages: []);
+      name: m.name,
+      email: m.email,
+      created_at: DateTime.now()
+          .copyWith(month: month, year: year)
+          .toIso8601String(),
+      updated_at: DateTime.now().toIso8601String(),
+      packages: [],
+    );
   }).toList();
 }

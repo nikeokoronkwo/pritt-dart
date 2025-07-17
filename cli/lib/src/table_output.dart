@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:pritt_common/interface.dart';
 
 import 'cli/table.dart';
+import 'parse_name.dart';
+import 'workspace/workspace.dart';
 
 enum TerminalSize {
   small,
@@ -43,7 +45,7 @@ String listPackageInfo(List<Package> pkgs) {
           '${package.author.name} <${package.author.email}>',
       },
       package.version,
-      package.language ?? 'unknown'
+      package.language ?? 'unknown',
     ];
   }).toList();
 
@@ -54,18 +56,34 @@ String listAdapterInfo(List<Plugin> plugins) {
   final headers = ['Name', 'Version', 'Language'];
 
   final pkgList = plugins.map((plugin) {
-    return [
-      plugin.name,
-      plugin.version,
-      plugin.language ?? 'unknown',
-    ];
+    return [plugin.name, plugin.version, plugin.language ?? 'unknown'];
   }).toList();
 
   return Table(pkgList, header: headers).write();
 }
 
-(String, String?) parseName(String name) {
-  final [first, ...last] = name.split(' ');
-  if (last.isEmpty) return (first, null);
-  return (first, last.join(' '));
+Future<String> listProjectInfo(Project project) async {
+  final headers = ['Item', 'Info', 'Comment'];
+
+  final config = await project.getWorkspace();
+
+  final items = [
+    ['Name', config.name, ''],
+    [
+      'Language',
+      project.primaryHandler.language,
+      'Deduced from handler #${project.primaryHandler.id}',
+    ],
+    [
+      'Package Manager',
+      config.packageManager?.name ?? 'none',
+      if (config.packageManager?.name == null)
+        'No package manager associated with #${project.primaryHandler.id}'
+      else
+        '',
+    ],
+    ['VCS', project.vcs.name, ''],
+  ];
+
+  return Table(items, header: headers).write();
 }

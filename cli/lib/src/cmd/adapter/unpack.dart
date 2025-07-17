@@ -17,7 +17,6 @@ class AdapterUnpackCommand extends PrittCommand {
   String get description => "Downloads an adapter from Pritt to use in-place";
 
   @override
-  // TODO: implement invocation
   String get invocation => 'pritt adapter unpack <name> [flags]';
 
   AdapterUnpackCommand() {
@@ -27,8 +26,11 @@ class AdapterUnpackCommand extends PrittCommand {
         abbr: 'f',
         help: 'Overwrite the target directory if it already exists.',
       )
-      ..addOption('output',
-          abbr: 'o', help: 'The output directory to write this to');
+      ..addOption(
+        'output',
+        abbr: 'o',
+        help: 'The output directory to write this to',
+      );
   }
 
   @override
@@ -42,21 +44,24 @@ class AdapterUnpackCommand extends PrittCommand {
     final name = argResults!.rest.first;
 
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
-      logger.severe(userCredentials == null
-          ? 'You are not logged in to Pritt'
-          : 'Your login session has expired');
+      logger.severe(
+        userCredentials == null
+            ? 'You are not logged in to Pritt'
+            : 'Your login session has expired',
+      );
       logger.severe('To log in, run: ${styleBold.wrap('pritt login')}');
       exit(1);
     }
 
     // establish client
     final client = PrittClient(
-        url: userCredentials.uri.toString(),
-        accessToken: userCredentials.accessToken);
+      url: userCredentials.uri.toString(),
+      accessToken: userCredentials.accessToken,
+    );
 
     // get archive of package
     logger.info('Fetching Adapter $name');
@@ -66,10 +71,12 @@ class AdapterUnpackCommand extends PrittCommand {
     final contentLength = content.length;
 
     // download contents
-    final ProgressBar progressBar = ProgressBar('Downloading Adapter',
-        completeMessage: 'Adapter Downloaded');
+    final ProgressBar progressBar = ProgressBar(
+      'Downloading Adapter',
+      completeMessage: 'Adapter Downloaded',
+    );
 
-    final outName = (argResults?['output'] ?? name);
+    final outName = argResults?['output'] ?? name;
     final directory = Directory(outName);
 
     if (await directory.exists() && !argResults?['force']) {
@@ -108,7 +115,6 @@ class AdapterUnpackCommand extends PrittCommand {
     await downloadCompleter.future;
 
     // now deflate, and open
-    // TODO: Complete
 
     logger.info('Expanding Contents');
 

@@ -3,4 +3,4 @@ version: 0.1.0
 description: A package
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.8.0

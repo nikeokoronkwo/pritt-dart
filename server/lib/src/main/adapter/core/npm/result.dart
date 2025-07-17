@@ -87,11 +87,7 @@ class NpmAuthor {
   /// The url of the author
   final String? url;
 
-  const NpmAuthor({
-    required this.name,
-    this.email,
-    this.url,
-  });
+  const NpmAuthor({required this.name, this.email, this.url});
 
   factory NpmAuthor.fromJson(Map<String, dynamic> json) =>
       _$NpmAuthorFromJson(json);
@@ -267,12 +263,12 @@ class NpmPackage extends PackageJson {
     super.libc,
     super.readme,
     super.readmeFilename,
-  })  : assert(npmUser is NpmAuthor? ||
-            npmUser is String? ||
-            npmUser is Map<String, String>?),
-        super(
-          private: false,
-        );
+  }) : assert(
+         npmUser is NpmAuthor? ||
+             npmUser is String? ||
+             npmUser is Map<String, String>?,
+       ),
+       super(private: false);
 
   factory NpmPackage.fromPackageJson(
     PackageJson package, {
@@ -283,46 +279,45 @@ class NpmPackage extends PackageJson {
     String? npmVersion,
     dynamic npmUser,
     List<NpmAuthor>? maintainers,
-  }) =>
-      NpmPackage(
-        id: id,
-        rev: rev,
-        dist: dist,
-        from: from,
-        npmVersion: npmVersion,
-        npmUser: npmUser,
-        maintainers: maintainers,
-        name: package.name,
-        version: package.version,
-        description: package.description,
-        keywords: package.keywords,
-        homePage: package.homePage,
-        bugs: package.bugs,
-        license: package.license,
-        author: package.author,
-        funding: package.funding,
-        contributors: package.contributors,
-        repository: package.repository,
-        files: package.files,
-        exports: package.exports,
-        dependencies: package.dependencies,
-        main: package.main,
-        browser: package.browser,
-        bin: package.bin,
-        directories: package.directories,
-        scripts: package.scripts,
-        config: package.config,
-        devDependencies: package.devDependencies,
-        peerDependencies: package.peerDependencies,
-        optionalDependencies: package.optionalDependencies,
-        bundledDependencies: package.bundledDependencies,
-        engines: package.engines,
-        os: package.os,
-        cpu: package.cpu,
-        libc: package.libc,
-        readme: package.readme,
-        readmeFilename: package.readmeFilename,
-      );
+  }) => NpmPackage(
+    id: id,
+    rev: rev,
+    dist: dist,
+    from: from,
+    npmVersion: npmVersion,
+    npmUser: npmUser,
+    maintainers: maintainers,
+    name: package.name,
+    version: package.version,
+    description: package.description,
+    keywords: package.keywords,
+    homePage: package.homePage,
+    bugs: package.bugs,
+    license: package.license,
+    author: package.author,
+    funding: package.funding,
+    contributors: package.contributors,
+    repository: package.repository,
+    files: package.files,
+    exports: package.exports,
+    dependencies: package.dependencies,
+    main: package.main,
+    browser: package.browser,
+    bin: package.bin,
+    directories: package.directories,
+    scripts: package.scripts,
+    config: package.config,
+    devDependencies: package.devDependencies,
+    peerDependencies: package.peerDependencies,
+    optionalDependencies: package.optionalDependencies,
+    bundledDependencies: package.bundledDependencies,
+    engines: package.engines,
+    os: package.os,
+    cpu: package.cpu,
+    libc: package.libc,
+    readme: package.readme,
+    readmeFilename: package.readmeFilename,
+  );
 
   factory NpmPackage.fromJson(Map<String, dynamic> json) =>
       _$NpmPackageFromJson(json);

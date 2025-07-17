@@ -31,64 +31,34 @@ import 'package:pritt_server/src/main/crs/response.dart' as _i7;
 
 class _FakePrittStorageInterface_0<T> extends _i1.SmartFake
     implements _i2.PrittStorageInterface<T> {
-  _FakePrittStorageInterface_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePrittStorageInterface_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBucket_1 extends _i1.SmartFake implements _i3.Bucket {
-  _FakeBucket_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBucket_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSigner_2 extends _i1.SmartFake implements _i4.Signer {
-  _FakeSigner_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSigner_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeS3_3 extends _i1.SmartFake implements _i3.S3 {
-  _FakeS3_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeS3_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeCRSFileOutputStream_4 extends _i1.SmartFake
     implements _i2.CRSFileOutputStream {
-  _FakeCRSFileOutputStream_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeCRSFileOutputStream_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUri_5 extends _i1.SmartFake implements Uri {
-  _FakeUri_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUri_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [CRSArchiveController].
@@ -101,13 +71,15 @@ class MockCRSArchiveController extends _i1.Mock
   }
 
   @override
-  _i2.PrittStorageInterface<dynamic> get ofs => (super.noSuchMethod(
-        Invocation.getter(#ofs),
-        returnValue: _FakePrittStorageInterface_0<dynamic>(
-          this,
-          Invocation.getter(#ofs),
-        ),
-      ) as _i2.PrittStorageInterface<dynamic>);
+  _i2.PrittStorageInterface<dynamic> get ofs =>
+      (super.noSuchMethod(
+            Invocation.getter(#ofs),
+            returnValue: _FakePrittStorageInterface_0<dynamic>(
+              this,
+              Invocation.getter(#ofs),
+            ),
+          )
+          as _i2.PrittStorageInterface<dynamic>);
 
   @override
   _i6.Future<_i7.CRSResponse<_i5.CRSArchive>> getArchiveWithVersion(
@@ -117,33 +89,23 @@ class MockCRSArchiveController extends _i1.Mock
     Map<String, dynamic>? env,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getArchiveWithVersion,
-          [
-            packageName,
-            version,
-          ],
-          {
-            #language: language,
-            #env: env,
-          },
-        ),
-        returnValue: _i6.Future<_i7.CRSResponse<_i5.CRSArchive>>.value(
-            _i8.dummyValue<_i7.CRSResponse<_i5.CRSArchive>>(
-          this,
-          Invocation.method(
-            #getArchiveWithVersion,
-            [
-              packageName,
-              version,
-            ],
-            {
-              #language: language,
-              #env: env,
-            },
-          ),
-        )),
-      ) as _i6.Future<_i7.CRSResponse<_i5.CRSArchive>>);
+            Invocation.method(
+              #getArchiveWithVersion,
+              [packageName, version],
+              {#language: language, #env: env},
+            ),
+            returnValue: _i6.Future<_i7.CRSResponse<_i5.CRSArchive>>.value(
+              _i8.dummyValue<_i7.CRSResponse<_i5.CRSArchive>>(
+                this,
+                Invocation.method(
+                  #getArchiveWithVersion,
+                  [packageName, version],
+                  {#language: language, #env: env},
+                ),
+              ),
+            ),
+          )
+          as _i6.Future<_i7.CRSResponse<_i5.CRSArchive>>);
 
   @override
   _i6.FutureOr<dynamic> setFileServer(
@@ -152,15 +114,14 @@ class MockCRSArchiveController extends _i1.Mock
     String? language,
     bool? cache = false,
   }) =>
-      (super.noSuchMethod(Invocation.method(
-        #setFileServer,
-        [packageName],
-        {
-          #version: version,
-          #language: language,
-          #cache: cache,
-        },
-      )) as _i6.FutureOr<dynamic>);
+      (super.noSuchMethod(
+            Invocation.method(
+              #setFileServer,
+              [packageName],
+              {#version: version, #language: language, #cache: cache},
+            ),
+          )
+          as _i6.FutureOr<dynamic>);
 }
 
 /// A class which mocks [PrittStorage].
@@ -172,116 +133,90 @@ class MockPrittStorage extends _i1.Mock implements _i9.PrittStorage {
   }
 
   @override
-  _i3.Bucket get pkgBucket => (super.noSuchMethod(
-        Invocation.getter(#pkgBucket),
-        returnValue: _FakeBucket_1(
-          this,
-          Invocation.getter(#pkgBucket),
-        ),
-      ) as _i3.Bucket);
+  _i3.Bucket get pkgBucket =>
+      (super.noSuchMethod(
+            Invocation.getter(#pkgBucket),
+            returnValue: _FakeBucket_1(this, Invocation.getter(#pkgBucket)),
+          )
+          as _i3.Bucket);
 
   @override
-  _i3.Bucket get publishingBucket => (super.noSuchMethod(
-        Invocation.getter(#publishingBucket),
-        returnValue: _FakeBucket_1(
-          this,
-          Invocation.getter(#publishingBucket),
-        ),
-      ) as _i3.Bucket);
+  _i3.Bucket get publishingBucket =>
+      (super.noSuchMethod(
+            Invocation.getter(#publishingBucket),
+            returnValue: _FakeBucket_1(
+              this,
+              Invocation.getter(#publishingBucket),
+            ),
+          )
+          as _i3.Bucket);
 
   @override
-  _i3.Bucket get adapterBucket => (super.noSuchMethod(
-        Invocation.getter(#adapterBucket),
-        returnValue: _FakeBucket_1(
-          this,
-          Invocation.getter(#adapterBucket),
-        ),
-      ) as _i3.Bucket);
+  _i3.Bucket get adapterBucket =>
+      (super.noSuchMethod(
+            Invocation.getter(#adapterBucket),
+            returnValue: _FakeBucket_1(this, Invocation.getter(#adapterBucket)),
+          )
+          as _i3.Bucket);
 
   @override
-  String get url => (super.noSuchMethod(
-        Invocation.getter(#url),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.getter(#url),
-        ),
-      ) as String);
+  String get url =>
+      (super.noSuchMethod(
+            Invocation.getter(#url),
+            returnValue: _i8.dummyValue<String>(this, Invocation.getter(#url)),
+          )
+          as String);
 
   @override
-  _i4.Signer get signer => (super.noSuchMethod(
-        Invocation.getter(#signer),
-        returnValue: _FakeSigner_2(
-          this,
-          Invocation.getter(#signer),
-        ),
-      ) as _i4.Signer);
+  _i4.Signer get signer =>
+      (super.noSuchMethod(
+            Invocation.getter(#signer),
+            returnValue: _FakeSigner_2(this, Invocation.getter(#signer)),
+          )
+          as _i4.Signer);
 
   @override
-  _i3.S3 get s3Instance => (super.noSuchMethod(
-        Invocation.getter(#s3Instance),
-        returnValue: _FakeS3_3(
-          this,
-          Invocation.getter(#s3Instance),
-        ),
-      ) as _i3.S3);
+  _i3.S3 get s3Instance =>
+      (super.noSuchMethod(
+            Invocation.getter(#s3Instance),
+            returnValue: _FakeS3_3(this, Invocation.getter(#s3Instance)),
+          )
+          as _i3.S3);
 
   @override
   set pkgBucket(_i3.Bucket? _pkgBucket) => super.noSuchMethod(
-        Invocation.setter(
-          #pkgBucket,
-          _pkgBucket,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#pkgBucket, _pkgBucket),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set publishingBucket(_i3.Bucket? _publishingBucket) => super.noSuchMethod(
-        Invocation.setter(
-          #publishingBucket,
-          _publishingBucket,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#publishingBucket, _publishingBucket),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set adapterBucket(_i3.Bucket? _adapterBucket) => super.noSuchMethod(
-        Invocation.setter(
-          #adapterBucket,
-          _adapterBucket,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#adapterBucket, _adapterBucket),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set url(String? _url) => super.noSuchMethod(
-        Invocation.setter(
-          #url,
-          _url,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#url, _url),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set signer(_i4.Signer? _signer) => super.noSuchMethod(
-        Invocation.setter(
-          #signer,
-          _signer,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#signer, _signer),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i6.FutureOr<dynamic> copyPackage(
-    String? from,
-    String? to,
-  ) =>
-      (super.noSuchMethod(Invocation.method(
-        #copyPackage,
-        [
-          from,
-          to,
-        ],
-      )) as _i6.FutureOr<dynamic>);
+  _i6.FutureOr<dynamic> copyPackage(String? from, String? to) =>
+      (super.noSuchMethod(Invocation.method(#copyPackage, [from, to]))
+          as _i6.FutureOr<dynamic>);
 
   @override
   _i6.Future<bool> createPackage(
@@ -290,153 +225,120 @@ class MockPrittStorage extends _i1.Mock implements _i9.PrittStorage {
     String? sha, {
     String? contentType,
     Map<String, String>? metadata,
+    bool? private = false,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createPackage,
-          [
-            path,
-            data,
-            sha,
-          ],
-          {
-            #contentType: contentType,
-            #metadata: metadata,
-          },
-        ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+            Invocation.method(
+              #createPackage,
+              [path, data, sha],
+              {
+                #contentType: contentType,
+                #metadata: metadata,
+                #private: private,
+              },
+            ),
+            returnValue: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
 
   @override
-  _i6.Future<_i2.CRSFile?> findPackage(String? path) => (super.noSuchMethod(
-        Invocation.method(
-          #findPackage,
-          [path],
-        ),
-        returnValue: _i6.Future<_i2.CRSFile?>.value(),
-      ) as _i6.Future<_i2.CRSFile?>);
+  _i6.Future<_i2.CRSFile?> findPackage(String? path) =>
+      (super.noSuchMethod(
+            Invocation.method(#findPackage, [path]),
+            returnValue: _i6.Future<_i2.CRSFile?>.value(),
+          )
+          as _i6.Future<_i2.CRSFile?>);
 
   @override
-  _i6.Future<List<_i2.CRSFile>> listAllPackages() => (super.noSuchMethod(
-        Invocation.method(
-          #listAllPackages,
-          [],
-        ),
-        returnValue: _i6.Future<List<_i2.CRSFile>>.value(<_i2.CRSFile>[]),
-      ) as _i6.Future<List<_i2.CRSFile>>);
+  _i6.Future<List<_i2.CRSFile>> listAllPackages() =>
+      (super.noSuchMethod(
+            Invocation.method(#listAllPackages, []),
+            returnValue: _i6.Future<List<_i2.CRSFile>>.value(<_i2.CRSFile>[]),
+          )
+          as _i6.Future<List<_i2.CRSFile>>);
 
   @override
   _i6.Future<List<_i2.CRSFile>> listPackagesWhere(
-          bool Function(String)? where) =>
+    bool Function(String)? where,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #listPackagesWhere,
-          [where],
-        ),
-        returnValue: _i6.Future<List<_i2.CRSFile>>.value(<_i2.CRSFile>[]),
-      ) as _i6.Future<List<_i2.CRSFile>>);
+            Invocation.method(#listPackagesWhere, [where]),
+            returnValue: _i6.Future<List<_i2.CRSFile>>.value(<_i2.CRSFile>[]),
+          )
+          as _i6.Future<List<_i2.CRSFile>>);
 
   @override
   _i6.FutureOr<dynamic> removePackage(String? path) =>
-      (super.noSuchMethod(Invocation.method(
-        #removePackage,
-        [path],
-      )) as _i6.FutureOr<dynamic>);
+      (super.noSuchMethod(Invocation.method(#removePackage, [path]))
+          as _i6.FutureOr<dynamic>);
 
   @override
-  _i6.FutureOr<dynamic> updatePackage(
-    String? path,
-    _i10.Uint8List? data,
-  ) =>
-      (super.noSuchMethod(Invocation.method(
-        #updatePackage,
-        [
-          path,
-          data,
-        ],
-      )) as _i6.FutureOr<dynamic>);
+  _i6.FutureOr<dynamic> updatePackage(String? path, _i10.Uint8List? data) =>
+      (super.noSuchMethod(Invocation.method(#updatePackage, [path, data]))
+          as _i6.FutureOr<dynamic>);
 
   @override
   _i6.Future<_i2.CRSFileOutputStream> getPackage(String? path) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPackage,
-          [path],
-        ),
-        returnValue: _i6.Future<_i2.CRSFileOutputStream>.value(
-            _FakeCRSFileOutputStream_4(
-          this,
-          Invocation.method(
-            #getPackage,
-            [path],
-          ),
-        )),
-      ) as _i6.Future<_i2.CRSFileOutputStream>);
+            Invocation.method(#getPackage, [path]),
+            returnValue: _i6.Future<_i2.CRSFileOutputStream>.value(
+              _FakeCRSFileOutputStream_4(
+                this,
+                Invocation.method(#getPackage, [path]),
+              ),
+            ),
+          )
+          as _i6.Future<_i2.CRSFileOutputStream>);
 
   @override
-  _i6.FutureOr<dynamic> createPubArchive(
+  _i6.FutureOr<bool> createPubArchive(
     String? path,
     _i10.Uint8List? data, {
     String? contentType,
     Map<String, String>? metadata,
   }) =>
-      (super.noSuchMethod(Invocation.method(
-        #createPubArchive,
-        [
-          path,
-          data,
-        ],
-        {
-          #contentType: contentType,
-          #metadata: metadata,
-        },
-      )) as _i6.FutureOr<dynamic>);
+      (super.noSuchMethod(
+            Invocation.method(
+              #createPubArchive,
+              [path, data],
+              {#contentType: contentType, #metadata: metadata},
+            ),
+            returnValue: _i6.Future<bool>.value(false),
+          )
+          as _i6.FutureOr<bool>);
 
   @override
   _i6.FutureOr<_i2.CRSFileOutputStream> getPubArchive(String? path) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPubArchive,
-          [path],
-        ),
-        returnValue: _i6.Future<_i2.CRSFileOutputStream>.value(
-            _FakeCRSFileOutputStream_4(
-          this,
-          Invocation.method(
-            #getPubArchive,
-            [path],
-          ),
-        )),
-      ) as _i6.FutureOr<_i2.CRSFileOutputStream>);
+            Invocation.method(#getPubArchive, [path]),
+            returnValue: _i6.Future<_i2.CRSFileOutputStream>.value(
+              _FakeCRSFileOutputStream_4(
+                this,
+                Invocation.method(#getPubArchive, [path]),
+              ),
+            ),
+          )
+          as _i6.FutureOr<_i2.CRSFileOutputStream>);
 
   @override
-  _i6.FutureOr<dynamic> movePubArchiveToPackage(
-    String? from,
-    String? to,
-  ) =>
-      (super.noSuchMethod(Invocation.method(
-        #movePubArchiveToPackage,
-        [
-          from,
-          to,
-        ],
-      )) as _i6.FutureOr<dynamic>);
+  _i6.FutureOr<dynamic> movePubArchiveToPackage(String? from, String? to) =>
+      (super.noSuchMethod(
+            Invocation.method(#movePubArchiveToPackage, [from, to]),
+          )
+          as _i6.FutureOr<dynamic>);
 
   @override
-  _i6.FutureOr<bool> pubArchiveExists(String? path) => (super.noSuchMethod(
-        Invocation.method(
-          #pubArchiveExists,
-          [path],
-        ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.FutureOr<bool>);
+  _i6.FutureOr<bool> pubArchiveExists(String? path) =>
+      (super.noSuchMethod(
+            Invocation.method(#pubArchiveExists, [path]),
+            returnValue: _i6.Future<bool>.value(false),
+          )
+          as _i6.FutureOr<bool>);
 
   @override
   _i6.FutureOr<dynamic> removePubArchive(String? path) =>
-      (super.noSuchMethod(Invocation.method(
-        #removePubArchive,
-        [path],
-      )) as _i6.FutureOr<dynamic>);
+      (super.noSuchMethod(Invocation.method(#removePubArchive, [path]))
+          as _i6.FutureOr<dynamic>);
 
   @override
   _i6.FutureOr<Uri> createPubEndpointUrl(
@@ -444,18 +346,17 @@ class MockPrittStorage extends _i1.Mock implements _i9.PrittStorage {
     required String? pubId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createPubEndpointUrl,
-          [path],
-          {#pubId: pubId},
-        ),
-        returnValue: _i6.Future<Uri>.value(_FakeUri_5(
-          this,
-          Invocation.method(
-            #createPubEndpointUrl,
-            [path],
-            {#pubId: pubId},
-          ),
-        )),
-      ) as _i6.FutureOr<Uri>);
+            Invocation.method(#createPubEndpointUrl, [path], {#pubId: pubId}),
+            returnValue: _i6.Future<Uri>.value(
+              _FakeUri_5(
+                this,
+                Invocation.method(
+                  #createPubEndpointUrl,
+                  [path],
+                  {#pubId: pubId},
+                ),
+              ),
+            ),
+          )
+          as _i6.FutureOr<Uri>);
 }

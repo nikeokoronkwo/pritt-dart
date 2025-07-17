@@ -39,21 +39,25 @@ void main(List<String> args) async {
   final List<String> prevArgs = args.sublist(0, separatorIndex);
 
   final dotEnvFile = File(
-      prevArgs.where((arg) => arg.startsWith('.env')).isEmpty
-          ? '.env'
-          : prevArgs.where((arg) => arg.startsWith('.env')).first);
-  final String dotEnv =
-      await dotEnvFile.exists() ? await dotEnvFile.readAsString() : "";
+    prevArgs.where((arg) => arg.startsWith('.env')).isEmpty
+        ? '.env'
+        : prevArgs.where((arg) => arg.startsWith('.env')).first,
+  );
+  final String dotEnv = await dotEnvFile.exists()
+      ? await dotEnvFile.readAsString()
+      : "";
 
-  final contents = Map.fromEntries(LineSplitter().convert(dotEnv).map((line) {
-    final split = line.split("=");
-    return MapEntry(split[0], split[1]);
-  }));
+  final contents = Map.fromEntries(
+    LineSplitter().convert(dotEnv).map((line) {
+      final split = line.split("=");
+      return MapEntry(split[0], split[1]);
+    }),
+  );
 
   final defineArg = switch (actualArgs[0]) {
     "flutter" => "--dart-define",
     "dart" => "--define",
-    _ => throw Exception("denv only works for dart and flutter")
+    _ => throw Exception("denv only works for dart and flutter"),
   };
 
   var executable = actualArgs[0];
@@ -66,20 +70,21 @@ void main(List<String> args) async {
 
   print("$executable ${arguments.join(' ')}");
 
-  final process = await Process.start(executable, arguments,
-      runInShell: true, workingDirectory: directory.path, environment: environment);
+  final process = await Process.start(
+    executable,
+    arguments,
+    runInShell: true,
+    workingDirectory: directory.path,
+    environment: environment,
+  );
 
   bool exitBad = false;
   stdin.listen(process.stdin.add);
-  process.stdout.transform(utf8.decoder).listen(
-        print,
-        onDone: () => exit(exitBad ? 1 : 0),
-      );
-  process.stderr.transform(utf8.decoder).listen(
-    (event) {
-      exitBad = true;
-      stderr.write(event);
-    },
-    onDone: () => exit(exitBad ? 1 : 0),
-  );
+  process.stdout
+      .transform(utf8.decoder)
+      .listen(print, onDone: () => exit(exitBad ? 1 : 0));
+  process.stderr.transform(utf8.decoder).listen((event) {
+    exitBad = true;
+    stderr.write(event);
+  }, onDone: () => exit(exitBad ? 1 : 0));
 }

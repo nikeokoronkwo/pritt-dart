@@ -26,16 +26,24 @@ class PrittCommandRunner extends CommandRunner {
   /// Whether verbose or not
   bool verbose = false;
 
-  PrittCommandRunner(super.executableName, super.description,
-      {this.version = "0.1.0"})
-      : super() {
+  PrittCommandRunner(
+    super.executableName,
+    super.description, {
+    this.version = "0.1.0",
+  }) : super() {
     argParser
-      ..addFlag('version',
-          abbr: 'v',
-          negatable: false,
-          help: "Print out the current devenv version")
-      ..addFlag('verbose',
-          abbr: 'V', negatable: false, help: "Output Verbose Logging");
+      ..addFlag(
+        'version',
+        abbr: 'v',
+        negatable: false,
+        help: "Print out the current devenv version",
+      )
+      ..addFlag(
+        'verbose',
+        abbr: 'V',
+        negatable: false,
+        help: "Output Verbose Logging",
+      );
     // ..addFlag('define', abbr: 'D', help: 'Define overrides to given config options');
   }
 

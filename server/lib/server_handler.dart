@@ -15,10 +15,14 @@ import 'src/routes/api/auth/validate.post.dart' as authValidatePost;
 import 'src/routes/api/package/@[scope]/[name].get.dart' as packageScopeNameGet;
 import 'src/routes/api/package/@[scope]/[name].post.dart'
     as packageScopeNamePost;
+import 'src/routes/api/package/@[scope]/[name]/[version].delete.dart'
+    as packageScopeNameVersionDelete;
 import 'src/routes/api/package/@[scope]/[name]/[version].get.dart'
     as packageScopeNameVersionGet;
 import 'src/routes/api/package/@[scope]/[name]/[version].post.dart'
     as packageScopeNameVersionPost;
+import 'src/routes/api/package/[name]/[version].delete.dart'
+    as packageNameVersionDelete;
 import 'src/routes/api/package/[name]/[version].get.dart'
     as packageNameVersionGet;
 import 'src/routes/api/package/[name]/[version].post.dart'
@@ -42,12 +46,21 @@ Handler serverHandler() {
     ..post('/api/package/<name>', packageNamePost.handler)
     ..get('/api/package/<name>/<version>', packageNameVersionGet.handler)
     ..post('/api/package/<name>/<version>', packageNameVersionPost.handler)
+    ..delete('/api/package/<name>/<version>', packageNameVersionDelete.handler)
     ..get('/api/package/@<scope>/<name>', packageScopeNameGet.handler)
     ..post('/api/package/@<scope>/<name>', packageScopeNamePost.handler)
-    ..get('/api/package/@<scope>/<name>/<version>',
-        packageScopeNameVersionGet.handler)
-    ..post('/api/package/@<scope>/<name>/<version>',
-        packageScopeNameVersionPost.handler)
+    ..get(
+      '/api/package/@<scope>/<name>/<version>',
+      packageScopeNameVersionGet.handler,
+    )
+    ..post(
+      '/api/package/@<scope>/<name>/<version>',
+      packageScopeNameVersionPost.handler,
+    )
+    ..delete(
+      '/api/package/@<scope>/<name>/<version>',
+      packageScopeNameVersionDelete.handler,
+    )
     ..put('/api/package/upload', packageUploadPut.handler)
     ..post('/api/publish/status', publishStatusPost.handler)
     ..get('/api/auth/new', authNewGet.handler)
@@ -59,9 +72,7 @@ Handler serverHandler() {
 }
 
 // TODO: Work on OPTIONS until web requests work!
-Handler optionsWithCors({
-  required List<String> allowedMethods,
-}) {
+Handler optionsWithCors({required List<String> allowedMethods}) {
   return (Request request) async {
     final corsHeaders = {
       HttpHeaders.accessControlAllowMethodsHeader: allowedMethods.join(', '),
@@ -69,7 +80,7 @@ Handler optionsWithCors({
       HttpHeaders.accessControlAllowOriginHeader:
           request.headers['origin'] ?? '*',
       HttpHeaders.allowHeader: allowedMethods.join(', '),
-      HttpHeaders.dateHeader: DateTime.now().toIso8601String()
+      HttpHeaders.dateHeader: DateTime.now().toIso8601String(),
     };
 
     print(corsHeaders);
@@ -85,7 +96,9 @@ Handler preFlightHandler() {
   final router = Router()
     ..options('/', optionsWithCors(allowedMethods: ['GET']))
     ..options(
-        '/api/auth/details/<id>', optionsWithCors(allowedMethods: ['GET']))
+      '/api/auth/details/<id>',
+      optionsWithCors(allowedMethods: ['GET']),
+    )
     ..options('/api/auth/validate', optionsWithCors(allowedMethods: ['POST']));
   return router.call;
 }

@@ -2,79 +2,78 @@
 
 import 'dart:async';
 import 'package:mime/mime.dart';
+import '../../utils/map_convertible.dart';
 import '../../utils/mixins.dart';
+import 'adapter_base_result.dart';
 
-/// shared base result between [AdapterResult] used internally and [CustomAdapterResult]
-abstract class AdapterBaseResult {
-  const AdapterBaseResult();
-}
-
-sealed class AdapterResult extends AdapterBaseResult {
+sealed class CoreAdapterResult extends AdapterBaseResult {
+  @override
   final ResponseType responseType;
 
-  const AdapterResult({this.responseType = ResponseType.json}) : super();
+  const CoreAdapterResult({this.responseType = ResponseType.json}) : super();
 }
 
-// TODO: Custom conversion types for other formats (i.e custom adapter formats)
-enum ResponseType {
-  json(mimeType: 'application/json'),
-  archive(mimeType: 'application/octet-stream'),
-  xml(mimeType: 'application/xml'),
-  plainText(mimeType: 'text/plain'),
-  html(mimeType: 'text/html');
-
-  final String mimeType;
-  const ResponseType({required this.mimeType});
-  String get contentType => mimeType;
-}
-
-class MapConvertible with JsonConvertible {
-  final Map<String, dynamic> map;
-
-  MapConvertible(this.map);
+class CoreAdapterErrorResult<T> extends CoreAdapterResult
+    implements AdapterErrorResult<T> {
   @override
-  Map<String, dynamic> toJson() => map;
-}
-
-class AdapterErrorResult<T> extends AdapterResult {
   final T error;
+
+  @override
   final int statusCode;
 
-  AdapterErrorResult(this.error, {this.statusCode = 500, super.responseType});
+  CoreAdapterErrorResult(
+    this.error, {
+    this.statusCode = 500,
+    super.responseType,
+  });
 
-  static AdapterErrorResult map(Map<String, dynamic> json,
-      {int statusCode = 500, ResponseType? responseType}) {
-    return AdapterErrorJsonResult(MapConvertible(json),
-        statusCode: statusCode,
-        responseType: responseType ?? ResponseType.json);
+  static CoreAdapterErrorResult map(
+    Map<String, dynamic> json, {
+    int statusCode = 500,
+    ResponseType? responseType,
+  }) {
+    return CoreAdapterErrorJsonResult(
+      MapConvertible(json),
+      statusCode: statusCode,
+      responseType: responseType ?? ResponseType.json,
+    );
   }
 }
 
-class AdapterErrorJsonResult<T extends JsonConvertible>
-    extends AdapterErrorResult<T> {
-  AdapterErrorJsonResult(super.error, {super.statusCode, super.responseType});
+class CoreAdapterErrorJsonResult<T extends JsonConvertible>
+    extends CoreAdapterErrorResult<T> {
+  CoreAdapterErrorJsonResult(
+    super.error, {
+    super.statusCode,
+    super.responseType,
+  });
 }
 
-class AdapterMetaResult<T> extends AdapterResult {
+class CoreAdapterMetaResult<T> extends CoreAdapterResult
+    implements AdapterMetaResult<T> {
+  @override
   final T body;
 
-  AdapterMetaResult(this.body, {super.responseType});
+  CoreAdapterMetaResult(this.body, {super.responseType});
 }
 
-class AdapterMetaJsonResult<T extends JsonConvertible>
-    extends AdapterMetaResult<T> {
+class CoreAdapterMetaJsonResult<T extends JsonConvertible>
+    extends CoreAdapterMetaResult<T> {
   String contentType;
-  AdapterMetaJsonResult(super.body,
-      {super.responseType, this.contentType = 'application/json'});
+  CoreAdapterMetaJsonResult(
+    super.body, {
+    super.responseType,
+    this.contentType = 'application/json',
+  });
 }
 
-class AdapterArchiveResult extends AdapterResult {
+class CoreAdapterArchiveResult extends CoreAdapterResult {
   final Stream<List<int>> archive;
   final String name;
   final String contentType;
 
-  AdapterArchiveResult(this.archive, this.name, {String? contentType})
-      : contentType =
-            contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
-        super(responseType: ResponseType.archive);
+  CoreAdapterArchiveResult(this.archive, this.name, {String? contentType})
+    : contentType =
+          contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
+      super(responseType: ResponseType.archive);
 }

@@ -4,13 +4,22 @@ services:
   # web:
   #   build: web-ref
   #   ports:
-  #     - "3000:3000"
+  #     - '3000:3000'
   #   environment:
   #     NUXT_PUBLIC_API_URL: ${API_URL}
-  #     DATABASE_URL: ${DATABASE_URL}
+  #     DATABASE_NAME: ${DATABASE_NAME}
+  #     DATABASE_USERNAME: ${DATABASE_USERNAME}
+  #     DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+  #     DATABASE_PORT: ${DATABASE_PORT}
+  #     DATABASE_HOST: ${DATABASE_HOST}
   #   env_file:
   #     - .env
-    
+
+  runner:
+    image: pritt-runner:latest
+    expose:
+      - 8000
+
   server:
     build:
       secrets:
@@ -73,14 +82,13 @@ services:
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
-      # POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_PASSWORD_FILE: /run/secrets/db-password
     ports:
       - '${DATABASE_PORT}:5432'
     env_file:
       - .env
     # volumes:
-      # - db-data:/var/lib/postgresql/data
+    #   - db-data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -96,6 +104,24 @@ services:
       retries: 5
     secrets:
       - db-password
+
+  migrate:
+    image: flyway/flyway:latest
+    command: -url=jdbc:postgresql://host.docker.internal:${DATABASE_PORT}/${DATABASE_NAME} -user=${DATABASE_USERNAME} -password=${DATABASE_PASSWORD} -locations=filesystem:/flyway/sql migrate
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+    volumes:
+      - ./server/sql:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+    secrets:
+      - db-password
+    env_file:
+      - .env
 
 volumes:
   shared-secrets:

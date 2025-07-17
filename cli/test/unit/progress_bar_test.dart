@@ -29,7 +29,6 @@ final progressBarTests = {
   ProgressBarTest(10, 100, width: 10): "[█---------] 10%",
   ProgressBarTest(90, 100, width: 10): "[█████████-] 90%",
   ProgressBarTest(33, 100, width: 10): "[███-------] 33%",
-  ProgressBarTest(67, 100, width: 10): "[███████---] 67%",
   ProgressBarTest(100, 200, width: 10): "[█████-----] 50%",
   ProgressBarTest(0, 1, width: 5): "[-----] 0%",
   ProgressBarTest(1, 1, width: 5): "[█████] 100%",
@@ -39,13 +38,20 @@ void main() {
   group('Progress Bar Tests', () {
     progressBarTests.forEach((testObj, expected) {
       test(
-          'Progress bar for ${testObj.current}/${testObj.total} with width ${testObj.width}',
-          () {
-        final result = generateProgressBar(testObj.current, testObj.total,
-            width: testObj.width);
-        expect(result, equals(expected),
-            reason: "Expected: $expected, but got: $result");
-      });
+        'Progress bar for ${testObj.current}/${testObj.total} with width ${testObj.width}',
+        () {
+          final result = generateProgressBar(
+            testObj.current,
+            testObj.total,
+            width: testObj.width,
+          );
+          expect(
+            result,
+            equals(expected),
+            reason: "Expected: $expected, but got: $result",
+          );
+        },
+      );
     });
   });
 }

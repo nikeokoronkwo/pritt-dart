@@ -10,7 +10,6 @@ class UpdateCommand extends Command {
   String name = "update";
 
   @override
-  // TODO: find which installation of pritt this is
   String get description =>
       "Checks for any updates of pritt based on the installation of Pritt present";
 
@@ -18,7 +17,7 @@ class UpdateCommand extends Command {
 
   @override
   FutureOr? run() {
-    // TODO: implement run
+    // TODO(nikeokoronkwo): implement auto_update, https://github.com/nikeokoronkwo/pritt-dart/issues/60
     return super.run();
   }
 }

@@ -3,10 +3,12 @@ name: pritt_server
 resolution: workspace
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.8.0
 
 dependencies:
   archive: ^3.6.1
+  args: ^2.7.0
+  async: ^2.13.0
   aws_s3_api: ^2.0.0
   aws_signer_api: ^2.0.0
   chunked_stream: ^1.4.2
@@ -14,7 +16,9 @@ dependencies:
   file: ^7.0.1
   html: ^0.15.6
   http: ^1.4.0
+  http_multi_server: ^3.2.2
   json_annotation: ^4.9.0
+  json_rpc_2: ^4.0.0
   logging: ^1.3.0
   mime: ^2.0.0
   path: ^1.9.1

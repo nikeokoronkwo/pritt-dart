@@ -9,7 +9,7 @@ class DeprecateCommand extends PrittCommand {
 
   @override
   void run() {
-    // TODO: implement run
+    // TODO(nikeokoronkwo): implement deprecate command, https://github.com/nikeokoronkwo/pritt-dart/issues/59
     throw UnimplementedError();
   }
 }

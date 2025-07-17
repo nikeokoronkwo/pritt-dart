@@ -1,0 +1,59 @@
+name: Adapter Proposal
+description: Propose support for a new built in adapter. Make sure to check if a given adapter has already been proposed for before adding support.
+labels: ["adapter"]
+title: " [proposal] PA: "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome!
+        Thanks for taking the time to file this proposal out! We really appreciate contributions for new adapters and extending pritt with more!
+        Be sure to check our [contribution guidelines](CONTRIBUTING.md) and make sure that:
+        - The given adapter proposal has not been proposed before: To prevent duplicate proposals, make sure to check if this has already been proposed.
+  - type: input
+    id: name
+    attributes:
+      label: Name of the Adapter
+      description: The name of the adapter being proposed for.
+    validations:
+      required: true
+  - type: input
+    id: language
+    attributes:
+      label: Programming Language
+      description: What programming language is the given adapter for?
+    validations:
+      required: true
+  - type: input
+    id: package_manager
+    attributes:
+      label: Package Manager Associated With
+      description: If the given language has a package manager associated with it which will be used for installing packages from Pritt, please specify
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Adapter Requirements
+      description: Select all that apply
+      options:
+        - label: Supports Authentication
+        - label: Supports Publishing
+        - label: Supports Artifacts (specify artifacts in description below)
+        - label: Supports Scoping (if not by default, specify how scoping would work in description below)
+        - label: Supports Caching of Requests
+  - type: textarea
+    id: description
+    attributes:
+      label: Adapter Description
+      description: Describe your adapter proposal here. Try to talk about important things like how the package manager would work with Pritt, registry format, and other important things needed to consider for such adapter.
+    validations:
+      required: true
+  - type: textarea
+    id: spec
+    attributes:
+      label: Language Package Spec
+      description: Provide any links, references, schemas and others concerning the registry API spec for the package manager
+  
+
+
+    

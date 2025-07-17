@@ -12,18 +12,21 @@ import 'cmd/yank.dart';
 
 /// Run the command-line interface
 Future run(List<String> args) async {
-  var runner = PrittCommandRunner(
-      'pritt', "A tool for making development easier across projects")
-    ..addCommand(AddCommand())
-    ..addCommand(RemoveCommand())
-    ..addCommand(LoginCommand())
-    ..addCommand(InfoCommand())
-    ..addCommand(ConfigureCommand())
-    ..addCommand(UnpackCommand())
-    ..addCommand(PackageCommand())
-    ..addCommand(PublishCommand())
-    ..addCommand(YankCommand())
-    ..addCommand(AdapterCommand())
-    ..run(args);
+  final runner =
+      PrittCommandRunner(
+          'pritt',
+          "A tool for making development easier across projects",
+        )
+        ..addCommand(AddCommand())
+        ..addCommand(RemoveCommand())
+        ..addCommand(LoginCommand())
+        ..addCommand(InfoCommand())
+        ..addCommand(ConfigureCommand())
+        ..addCommand(UnpackCommand())
+        ..addCommand(PackageCommand())
+        ..addCommand(PublishCommand())
+        ..addCommand(YankCommand())
+        ..addCommand(AdapterCommand())
+        ..run(args);
   return runner;
 }

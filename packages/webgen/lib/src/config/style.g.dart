@@ -25,10 +25,10 @@ Map<String, dynamic> _$WGTStyleColoursToJson(WGTStyleColours instance) =>
     };
 
 WGTStyleFont _$WGTStyleFontFromJson(Map<String, dynamic> json) => WGTStyleFont(
-      family: json['family'] as String,
-      size: (json['size'] as num?)?.toInt(),
-      weight: (json['weight'] as num?)?.toInt(),
-    );
+  family: json['family'] as String,
+  size: (json['size'] as num?)?.toInt(),
+  weight: (json['weight'] as num?)?.toInt(),
+);
 
 Map<String, dynamic> _$WGTStyleFontToJson(WGTStyleFont instance) =>
     <String, dynamic>{

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:pritt_common/config.dart';
 import 'package:pritt_common/interface.dart';
 import 'package:yaml/yaml.dart';
 
@@ -9,7 +10,6 @@ import '../adapters/base.dart';
 import '../adapters/base/context.dart';
 import '../adapters/base/workspace.dart';
 import '../client.dart';
-import '../config/config.dart';
 import '../project/controller.dart';
 import '../project/handler_manager.dart';
 import 'ignore.dart';
@@ -17,7 +17,7 @@ import 'vcs.dart';
 
 /// A class used to define the basic details for a project, including its [Workspace]
 ///
-/// TODO: Monorepo support
+// TODO(nikeokoronkwo): Monorepo support, https://github.com/nikeokoronkwo/pritt-dart/issues/10
 class Project {
   /// Handlers for the current project
   final List<Handler> handlers;
@@ -39,11 +39,12 @@ class Project {
   (String?, {String? format}) get readme {
     try {
       final file = Directory(directory).listSync().whereType<File>().firstWhere(
-          (f) => p.basenameWithoutExtension(f.path).toLowerCase() == 'readme');
+        (f) => p.basenameWithoutExtension(f.path).toLowerCase() == 'readme',
+      );
 
       return (
         file.readAsStringSync(),
-        format: p.extension(file.path).replaceFirst('.', '')
+        format: p.extension(file.path).replaceFirst('.', ''),
       );
     } on StateError catch (_) {
       return (null, format: null);
@@ -65,20 +66,21 @@ class Project {
   /// The handler manager
   final PrittControllerManager _manager;
 
-  Project._(
-      {required this.handlers,
-      this.vcs = VCS.git,
-      required this.config,
-      required this.directory,
-      List<String> ignoreFiles = commonlyIgnoredFiles,
-      IgnoreMatcher? matcher,
-      required PrittControllerManager manager})
-      :
-        // TODO: Add support for multiple handlers
-        assert(handlers.length <= 1,
-            "Unsupported: Multiple handlers is not supported"),
-        _manager = manager,
-        _ignoreMatcher = matcher ?? IgnoreMatcher() {
+  Project._({
+    required this.handlers,
+    this.vcs = VCS.git,
+    required this.config,
+    required this.directory,
+    List<String> ignoreFiles = commonlyIgnoredFiles,
+    IgnoreMatcher? matcher,
+    required PrittControllerManager manager,
+  }) : // TODO(unknown): Add support for multiple handlers, https://github.com/nikeokoronkwo/pritt-dart/issues/56
+       assert(
+         handlers.length <= 1,
+         "Unsupported: Multiple handlers is not supported",
+       ),
+       _manager = manager,
+       _ignoreMatcher = matcher ?? IgnoreMatcher() {
     _ignoreMatcher.addLines(ignoreFiles);
   }
 
@@ -97,10 +99,14 @@ class Project {
   /// NOTE: Primary Handler must be set
   Future<Map<String, dynamic>> getEnv() async {
     final controller = _manager.makeController(primaryHandler);
-    final workspace =
-        await primaryHandler.onGetWorkspace(directory, controller);
-    return await primaryHandler.getEnv
-            ?.call(PrittContext(workspace: workspace), controller) ??
+    final workspace = await primaryHandler.onGetWorkspace(
+      directory,
+      controller,
+    );
+    return await primaryHandler.getEnv?.call(
+          PrittContext(workspace: workspace),
+          controller,
+        ) ??
         {};
   }
 
@@ -111,8 +117,8 @@ class Project {
 
   Future<String> getConfig() async {
     return primaryHandler.config.load(
-        await File(p.join(directory, primaryHandler.configFile))
-            .readAsString());
+      await File(p.join(directory, primaryHandler.configFile)).readAsString(),
+    );
   }
 
   Stream<File> files() {
@@ -132,12 +138,17 @@ class Project {
 }
 
 /// Get the current workspace information for the project being worked on
-Future<Project> getProject(String directory,
-    {String? config, PrittClient? client}) async {
+Future<Project> getProject(
+  String directory, {
+  String? config,
+  PrittClient? client,
+}) async {
   final dir = Directory(directory);
   // get basic workspace information
-  final HandlerManager manager =
-      HandlerManager(directory: directory, apiClient: client);
+  final HandlerManager manager = HandlerManager(
+    directory: directory,
+    apiClient: client,
+  );
   final handlers = manager.find(directory);
 
   // in the meantime...
@@ -150,15 +161,10 @@ Future<Project> getProject(String directory,
   final PrittConfig? prittConfig = await readPrittConfig(directory, config);
 
   // check for a .prittignore
-  // final List<String> ignoreFiles = const LineSplitter().convert(
-  //     (await File(p.join(directory, '.prittignore')).exists())
-  //         ? await File(p.join(directory, '.prittignore')).readAsString()
-  //         : '')
-  //   ..addAll(commonlyIgnoredFiles);
   final String prittIgnore =
       (await File(p.join(directory, '.prittignore')).exists())
-          ? await File(p.join(directory, '.prittignore')).readAsString()
-          : '';
+      ? await File(p.join(directory, '.prittignore')).readAsString()
+      : '';
   final String? vcsIgnoreFile = getVCSIgnoreFile(vcs);
 
   final IgnoreMatcher matcher = IgnoreMatcher()..addContent(prittIgnore);
@@ -168,7 +174,8 @@ Future<Project> getProject(String directory,
     matcher.addLines(await getIgnoredVCSFiles(vcs));
   } else {
     matcher.addContent(
-        await File(p.join(directory, vcsIgnoreFile)).readAsString());
+      await File(p.join(directory, vcsIgnoreFile)).readAsString(),
+    );
   }
 
   final resolvedHandlers = await handlers;
@@ -185,12 +192,13 @@ Future<Project> getProject(String directory,
 
   // assemble
   return Project._(
-      handlers: (await handlers).toList(),
-      config: prittConfig,
-      directory: directory,
-      vcs: vcs,
-      matcher: matcher,
-      manager: manager.controllerHandler);
+    handlers: (await handlers).toList(),
+    config: prittConfig,
+    directory: directory,
+    vcs: vcs,
+    matcher: matcher,
+    manager: manager.controllerHandler,
+  );
 }
 
 Future<PrittConfig?> readPrittConfig(String dir, String? config) async {

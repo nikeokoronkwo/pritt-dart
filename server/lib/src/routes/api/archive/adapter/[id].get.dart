@@ -11,8 +11,8 @@ final handler = defineRequestHandler((event) async {
   if (auth == null) {
     setResponseCode(event, 401);
     return common.UnauthorizedError(
-            error: 'Unauthorized',
-            description: 'You are not authorized to view or use this endpoint')
-        .toJson();
+      error: 'Unauthorized',
+      description: 'You are not authorized to view or use this endpoint',
+    ).toJson();
   }
 });

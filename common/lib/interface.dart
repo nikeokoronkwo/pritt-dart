@@ -21,7 +21,7 @@ class Content {
 class TextContent extends Content {
   TextContent(this.data) : super(data.codeUnits);
 
-  String data;
+  final String data;
 }
 
 class BinaryContent extends Content {
@@ -31,17 +31,17 @@ class BinaryContent extends Content {
     this.contentType = 'application/octet-stream',
   }) : super(data);
 
-  _i1.Uint8List data;
+  final _i1.Uint8List data;
 
-  String name;
+  final String name;
 
-  String contentType;
+  final String contentType;
 }
 
 class JSONContent extends Content {
   JSONContent(this.data) : super(_i2.jsonEncode(data).codeUnits);
 
-  Map<String, dynamic> data;
+  final Map<String, dynamic> data;
 }
 
 class StreamedContent extends Content {
@@ -52,18 +52,19 @@ class StreamedContent extends Content {
     this.contentType = 'application/octet-stream',
   }) : super([]);
 
-  Stream<List<int>> data;
+  final Stream<List<int>> data;
 
   @override
-  int length;
+  final int length;
 
-  String name;
+  final String name;
 
-  String contentType;
+  final String contentType;
 
   @override
   List<int> get raw => throw Exception(
-      'Do not call raw on streamed content: Use `data` instead');
+    'Do not call raw on streamed content: Use `data` instead',
+  );
 }
 
 @JsonSerializable(includeIfNull: false)
@@ -150,10 +151,7 @@ class AuthDetailsResponse {
 
 @JsonSerializable(includeIfNull: false)
 class AuthError {
-  AuthError({
-    this.error,
-    required this.status,
-  });
+  AuthError({this.error, required this.status});
 
   factory AuthError.fromJson(Map<String, dynamic> json) =>
       _$AuthErrorFromJson(json);
@@ -167,10 +165,7 @@ class AuthError {
 
 @JsonSerializable(includeIfNull: false)
 class AuthPollResponse {
-  AuthPollResponse({
-    required this.status,
-    this.response,
-  });
+  AuthPollResponse({required this.status, this.response});
 
   factory AuthPollResponse.fromJson(Map<String, dynamic> json) =>
       _$AuthPollResponseFromJson(json);
@@ -267,10 +262,7 @@ class Error {
 
 @JsonSerializable(includeIfNull: false)
 class ExistsError {
-  ExistsError({
-    this.error,
-    required this.name,
-  });
+  ExistsError({this.error, required this.name});
 
   factory ExistsError.fromJson(Map<String, dynamic> json) =>
       _$ExistsErrorFromJson(json);
@@ -284,10 +276,7 @@ class ExistsError {
 
 @JsonSerializable(includeIfNull: false)
 class ExpiredError {
-  ExpiredError({
-    this.error,
-    required this.expired_time,
-  });
+  ExpiredError({this.error, required this.expired_time});
 
   factory ExpiredError.fromJson(Map<String, dynamic> json) =>
       _$ExpiredErrorFromJson(json);
@@ -451,11 +440,7 @@ class GetCurrentUserResponse {
 
 @JsonSerializable(includeIfNull: false)
 class Author {
-  Author({
-    required this.name,
-    required this.email,
-    this.avatar,
-  });
+  Author({required this.name, required this.email, this.avatar});
 
   factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 
@@ -513,10 +498,7 @@ class Signature {
 
 @JsonSerializable(includeIfNull: false)
 class ConfigFile {
-  ConfigFile({
-    required this.name,
-    required this.data,
-  });
+  ConfigFile({required this.name, required this.data});
 
   factory ConfigFile.fromJson(Map<String, dynamic> json) =>
       _$ConfigFileFromJson(json);
@@ -752,10 +734,7 @@ class Package {
 
 @JsonSerializable(includeIfNull: false)
 class GetPackagesResponse {
-  GetPackagesResponse({
-    this.next_url,
-    required this.packages,
-  });
+  GetPackagesResponse({this.next_url, required this.packages});
 
   factory GetPackagesResponse.fromJson(Map<String, dynamic> json) =>
       _$GetPackagesResponseFromJson(json);
@@ -769,10 +748,7 @@ class GetPackagesResponse {
 
 @JsonSerializable(includeIfNull: false)
 class GetScopeResponse {
-  GetScopeResponse({
-    required this.name,
-    required this.is_member,
-  });
+  GetScopeResponse({required this.name, required this.is_member});
 
   factory GetScopeResponse.fromJson(Map<String, dynamic> json) =>
       _$GetScopeResponseFromJson(json);
@@ -822,11 +798,7 @@ class GetUsersResponse {
 
 @JsonSerializable(includeIfNull: false)
 class InvalidError {
-  InvalidError({
-    this.error,
-    this.description,
-    this.redirect,
-  });
+  InvalidError({this.error, this.description, this.redirect});
 
   factory InvalidError.fromJson(Map<String, dynamic> json) =>
       _$InvalidErrorFromJson(json);
@@ -865,10 +837,7 @@ class InvalidTarballError {
 
 @JsonSerializable(includeIfNull: false)
 class NotFoundError {
-  NotFoundError({
-    this.error,
-    this.message,
-  });
+  NotFoundError({this.error, this.message});
 
   factory NotFoundError.fromJson(Map<String, dynamic> json) =>
       _$NotFoundErrorFromJson(json);
@@ -882,10 +851,7 @@ class NotFoundError {
 
 @JsonSerializable(includeIfNull: false)
 class Configuration {
-  Configuration({
-    required this.path,
-    this.config,
-  });
+  Configuration({required this.path, this.config});
 
   factory Configuration.fromJson(Map<String, dynamic> json) =>
       _$ConfigurationFromJson(json);
@@ -899,10 +865,7 @@ class Configuration {
 
 @JsonSerializable(includeIfNull: false)
 class VersionControlSystem {
-  VersionControlSystem({
-    required this.name,
-    this.url,
-  });
+  VersionControlSystem({required this.name, this.url});
 
   factory VersionControlSystem.fromJson(Map<String, dynamic> json) =>
       _$VersionControlSystemFromJson(json);
@@ -964,10 +927,7 @@ enum PublishingStatus {
 
 @JsonSerializable(includeIfNull: false)
 class Queue {
-  Queue({
-    required this.id,
-    required this.status,
-  });
+  Queue({required this.id, required this.status});
 
   factory Queue.fromJson(Map<String, dynamic> json) => _$QueueFromJson(json);
 
@@ -980,10 +940,7 @@ class Queue {
 
 @JsonSerializable(includeIfNull: false)
 class PublishPackageByVersionResponse {
-  PublishPackageByVersionResponse({
-    this.url,
-    required this.queue,
-  });
+  PublishPackageByVersionResponse({this.url, required this.queue});
 
   factory PublishPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageByVersionResponseFromJson(json);
@@ -1033,10 +990,7 @@ class PublishPackageRequest {
 
 @JsonSerializable(includeIfNull: false)
 class PublishPackageResponse {
-  PublishPackageResponse({
-    this.url,
-    required this.queue,
-  });
+  PublishPackageResponse({this.url, required this.queue});
 
   factory PublishPackageResponse.fromJson(Map<String, dynamic> json) =>
       _$PublishPackageResponseFromJson(json);
@@ -1078,6 +1032,110 @@ class PublishPackageStatusResponse {
 }
 
 @JsonSerializable(includeIfNull: false)
+class RemovePackageByVersionRequest {
+  RemovePackageByVersionRequest({this.reason, this.yank, this.alternative});
+
+  factory RemovePackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageByVersionRequestFromJson(json);
+
+  final String? reason;
+
+  final bool? yank;
+
+  final String? alternative;
+
+  Map<String, dynamic> toJson() => _$RemovePackageByVersionRequestToJson(this);
+}
+
+@JsonEnum(valueField: 'value')
+enum RequestType {
+  yank('yank'),
+  deprecate('deprecate');
+
+  const RequestType(this.value);
+
+  final String value;
+}
+
+@JsonSerializable(includeIfNull: false)
+class RemovePackageByVersionResponse {
+  RemovePackageByVersionResponse({
+    required this.success,
+    this.reason,
+    required this.package_name,
+    this.alternative,
+    required this.request_type,
+  });
+
+  factory RemovePackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageByVersionResponseFromJson(json);
+
+  final bool success;
+
+  final String? reason;
+
+  final String package_name;
+
+  final String? alternative;
+
+  final RequestType request_type;
+
+  Map<String, dynamic> toJson() => _$RemovePackageByVersionResponseToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class RemovePackageRequest {
+  RemovePackageRequest({
+    this.reason,
+    this.yank,
+    this.alternative,
+    this.version,
+  });
+
+  factory RemovePackageRequest.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageRequestFromJson(json);
+
+  final String? reason;
+
+  final bool? yank;
+
+  final String? alternative;
+
+  final String? version;
+
+  Map<String, dynamic> toJson() => _$RemovePackageRequestToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
+class RemovePackageResponse {
+  RemovePackageResponse({
+    required this.success,
+    this.reason,
+    required this.package_name,
+    this.alternative,
+    required this.request_type,
+    required this.version,
+  });
+
+  factory RemovePackageResponse.fromJson(Map<String, dynamic> json) =>
+      _$RemovePackageResponseFromJson(json);
+
+  final bool success;
+
+  final String? reason;
+
+  final String package_name;
+
+  final String? alternative;
+
+  final RequestType request_type;
+
+  final String version;
+
+  Map<String, dynamic> toJson() => _$RemovePackageResponseToJson(this);
+}
+
+@JsonSerializable(includeIfNull: false)
 class ServerError {
   ServerError({this.error});
 
@@ -1103,11 +1161,7 @@ enum UnauthorizedReason {
 
 @JsonSerializable(includeIfNull: false)
 class UnauthorizedError {
-  UnauthorizedError({
-    this.error,
-    this.reason,
-    this.description,
-  });
+  UnauthorizedError({this.error, this.reason, this.description});
 
   factory UnauthorizedError.fromJson(Map<String, dynamic> json) =>
       _$UnauthorizedErrorFromJson(json);
@@ -1143,54 +1197,14 @@ class UploadPackageResponse {
 
 @JsonSerializable(includeIfNull: false)
 class YankAdapterResponse {
-  YankAdapterResponse();
+  YankAdapterResponse({this.reason});
 
   factory YankAdapterResponse.fromJson(Map<String, dynamic> json) =>
       _$YankAdapterResponseFromJson(json);
 
+  final String? reason;
+
   Map<String, dynamic> toJson() => _$YankAdapterResponseToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageByVersionRequest {
-  YankPackageByVersionRequest();
-
-  factory YankPackageByVersionRequest.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageByVersionRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$YankPackageByVersionRequestToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageByVersionResponse {
-  YankPackageByVersionResponse();
-
-  factory YankPackageByVersionResponse.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageByVersionResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$YankPackageByVersionResponseToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageRequest {
-  YankPackageRequest({required this.version});
-
-  factory YankPackageRequest.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageRequestFromJson(json);
-
-  final String version;
-
-  Map<String, dynamic> toJson() => _$YankPackageRequestToJson(this);
-}
-
-@JsonSerializable(includeIfNull: false)
-class YankPackageResponse {
-  YankPackageResponse();
-
-  factory YankPackageResponse.fromJson(Map<String, dynamic> json) =>
-      _$YankPackageResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$YankPackageResponseToJson(this);
 }
 
 /// The Pritt OpenAPI specification used for integrating Pritt with its internal tools (i.e generating schemas for endpoints on the Rust Server and Frontends (CLI and Web)),
@@ -1200,10 +1214,7 @@ abstract interface class PrittInterface {
   /// GET /api/packages
   ///
   /// This GET Request retrieves metadata about all the packages in the registry. To get more information on a specific package use /api/package/{name}
-  _i3.FutureOr<GetPackagesResponse> getPackages({
-    String index,
-    String user,
-  });
+  _i3.FutureOr<GetPackagesResponse> getPackages({String index, String user});
 
   /// **Get a package from the Pritt Server with the given name**
   /// GET /api/package/{name}
@@ -1228,16 +1239,20 @@ abstract interface class PrittInterface {
     required String name,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (remove) a package**
   /// DELETE /api/package/{name}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  /// In order to yank a package, all its versions must be empty, otherwise it will return a 402 error.
+  /// In order to deprecate a package, its latest (stable) version must be deprecated, otherwise it will return a 402 error.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
-  ///   - [ExistsError] on status code 402
+  ///   - [InvalidError] on status code 402
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageResponse> yankPackageByName(
-    YankPackageRequest body, {
+  _i3.FutureOr<RemovePackageResponse> removePackageByName(
+    RemovePackageRequest body, {
     required String name,
   });
 
@@ -1265,15 +1280,20 @@ abstract interface class PrittInterface {
     required String name,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (Remove) a package**
   /// DELETE /api/package/@{scope}/{name}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  /// In order to yank a package, all its versions must be empty, otherwise it will return a 402 error.
+  /// In order to deprecate a package, its latest (stable) version must be deprecated, otherwise it will return a 402 error.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
+  ///   - [InvalidError] on status code 402
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageResponse> yankPackageByNameWithScope(
-    YankPackageRequest body, {
+  _i3.FutureOr<RemovePackageResponse> removePackageByNameWithScope(
+    RemovePackageRequest body, {
     required String scope,
     required String name,
   });
@@ -1302,15 +1322,17 @@ abstract interface class PrittInterface {
     required String version,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (remove) a package**
   /// DELETE /api/package/{name}/{version}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
-    YankPackageByVersionResponse body, {
+  _i3.FutureOr<RemovePackageByVersionResponse> removePackageVersionByName(
+    RemovePackageByVersionRequest body, {
     required String name,
     required String version,
   });
@@ -1321,7 +1343,7 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [NotFoundError] on status code 404
   _i3.FutureOr<GetPackageByVersionResponse>
-      getPackageByNameWithScopeAndVersion({
+  getPackageByNameWithScopeAndVersion({
     String lang,
     bool all,
     required String scope,
@@ -1336,23 +1358,25 @@ abstract interface class PrittInterface {
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   _i3.FutureOr<PublishPackageByVersionResponse>
-      publishPackageWithScopeAndVersion(
+  publishPackageWithScopeAndVersion(
     PublishPackageByVersionRequest body, {
     required String scope,
     required String name,
     required String version,
   });
 
-  /// **Yank an empty package**
+  /// **Yank or Deprecate (Remove) a package**
   /// DELETE /api/package/@{scope}/{name}/{version}
   ///
-  /// This endpoint is for yanking packages from the pritt registry
+  /// This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+  ///
+  /// NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
   /// Throws:
   ///   - [UnauthorizedError] on status code 401
   ///   - [NotFoundError] on status code 404
-  _i3.FutureOr<YankPackageByVersionRequest>
-      yankPackageByNameWithScopeAndVersion(
-    YankPackageByVersionResponse body, {
+  _i3.FutureOr<RemovePackageByVersionResponse>
+  removePackageByNameWithScopeAndVersion(
+    RemovePackageByVersionRequest body, {
     required String scope,
     required String name,
     required String version,
@@ -1506,6 +1530,7 @@ abstract interface class PrittInterface {
 
   /// GET /api/archive/adapter/{name}
   ///
-  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName(
-      {required String name});
+  _i3.FutureOr<StreamedContent> getAdapterArchiveWithName({
+    required String name,
+  });
 }

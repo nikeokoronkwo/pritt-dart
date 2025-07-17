@@ -1,10 +1,4 @@
-enum PreReleaseType {
-  alpha,
-  beta,
-  rc,
-  dev,
-  unknown,
-}
+enum PreReleaseType { alpha, beta, rc, dev, unknown }
 
 class Version implements Comparable<Version> {
   final int major;
@@ -13,21 +7,16 @@ class Version implements Comparable<Version> {
   final String? preRelease;
   final String? build;
 
-  Version(
-    this.major,
-    this.minor,
-    this.patch, {
-    this.preRelease,
-    this.build,
-  });
+  Version(this.major, this.minor, this.patch, {this.preRelease, this.build});
 
   /// From the [semver.org](https://semver.org/) spec:
-  static final _semVerRegExp = RegExp(r'^(0|[1-9]\d*)\.' // major
-      r'(0|[1-9]\d*)\.' // minor
-      r'(0|[1-9]\d*)' // patch
-      r'(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?' // prerelease
-      r'(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$' // build metadata
-      );
+  static final _semVerRegExp = RegExp(
+    r'^(0|[1-9]\d*)\.' // major
+    r'(0|[1-9]\d*)\.' // minor
+    r'(0|[1-9]\d*)' // patch
+    r'(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?' // prerelease
+    r'(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$', // build metadata
+  );
 
   factory Version.parse(String input) {
     final match = _semVerRegExp.firstMatch(input.trim());

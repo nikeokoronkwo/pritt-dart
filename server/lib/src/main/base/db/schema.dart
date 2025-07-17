@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:pritt_common/version.dart';
 
 import 'annotations/schema.dart';
+import 'schema_json.dart';
 
 part 'schema.g.dart';
 
@@ -12,11 +13,13 @@ enum Privileges {
   ultimate;
 
   static Privileges fromString(String name) {
-    return Privileges.values
-        .singleWhere((v) => v.toString() == name.toLowerCase());
+    return Privileges.values.singleWhere(
+      (v) => v.toString() == name.toLowerCase(),
+    );
   }
 }
 
+@JsonEnum()
 enum VCS {
   git,
   svn,
@@ -25,12 +28,15 @@ enum VCS {
   other;
 
   static VCS fromString(String name) {
-    return VCS.values.firstWhere((v) => v.toString() == name.toLowerCase(),
-        orElse: () => VCS.other);
+    return VCS.values.firstWhere(
+      (v) => v.toString() == name.toLowerCase(),
+      orElse: () => VCS.other,
+    );
   }
 }
 
 /// A package, as represented in the pritt database
+@JsonSerializable(createFactory: false)
 class Package {
   /// The id of the package
   @primary
@@ -45,11 +51,13 @@ class Package {
 
   /// The latest version of the given package
   /// updated with every publish to the database
+  @JsonKey(name: 'latest_version')
   String version;
 
   /// The person who published the given package
   ///
   /// This is a foreign reference to a user
+  @UserJsonConverter()
   User author;
 
   /// The programming language
@@ -83,24 +91,35 @@ class Package {
   /// The scope of the package, if it is scoped
   String? scope;
 
-  Package(
-      {required this.id,
-      required this.name,
-      required this.version,
-      required this.author,
-      required this.language,
-      this.description,
-      DateTime? updated,
-      required this.created,
-      this.vcs = VCS.git,
-      required this.archive,
-      this.license,
-      this.scope,
-      this.vcsUrl})
-      : updated = updated ?? created;
+  /// Whether this package is public or not
+  bool? public;
+
+  Package({
+    required this.id,
+    required this.name,
+    required this.version,
+    required this.author,
+    required this.language,
+    this.description,
+    DateTime? updated,
+    required this.created,
+    this.vcs = VCS.git,
+    required this.archive,
+    this.license,
+    this.scope,
+    this.vcsUrl,
+    this.public,
+  }) : updated = updated ?? created,
+       assert(
+         scope != null || public != null,
+         "A package is either scoped (publicity inferred) or explicitly public/private",
+       );
+
+  Map<String, dynamic> toJson() => _$PackageToJson(this);
 }
 
 /// Maps packages to their versions, and info about those versions
+@JsonSerializable(createFactory: false)
 class PackageVersions {
   @primary
   @ForeignKey(Package, property: 'name')
@@ -139,6 +158,7 @@ class PackageVersions {
   /// The archive path of the given package.
   ///
   /// This archive is usually for the Object File System and so is relative to that
+  @JsonKey(name: 'archive_path')
   Uri archive;
 
   /// The archive SHA256 hash data
@@ -159,26 +179,34 @@ class PackageVersions {
   /// Whether a given package is yanked
   bool isYanked;
 
-  PackageVersions(
-      {required this.package,
-      required this.version,
-      required this.versionType,
-      required this.created,
-      this.readme,
-      this.config,
-      this.configName,
-      required this.info,
-      required this.env,
-      required this.metadata,
-      required this.archive,
-      required this.hash,
-      required this.signatures,
-      required this.integrity,
-      this.isDeprecated = false,
-      this.isYanked = false,
-      this.deprecationMessage})
-      : assert(config == null || configName != null,
-            "If config is set, then configName must be set as well");
+  /// The id of the package that this version was removed in favor of, if any
+  String? removedAlternativeId;
+
+  PackageVersions({
+    required this.package,
+    required this.version,
+    required this.versionType,
+    required this.created,
+    this.readme,
+    this.config,
+    this.configName,
+    required this.info,
+    required this.env,
+    required this.metadata,
+    required this.archive,
+    required this.hash,
+    required this.signatures,
+    required this.integrity,
+    this.isDeprecated = false,
+    this.isYanked = false,
+    this.deprecationMessage,
+    this.removedAlternativeId,
+  }) : assert(
+         config == null || configName != null,
+         "If config is set, then configName must be set as well",
+       );
+
+  Map<String, dynamic> toJson() => _$PackageVersionsToJson(this);
 }
 
 /// Join table for contributors for a package
@@ -205,13 +233,13 @@ class PackageContributors {
     required this.privileges,
     required this.addedAt,
   }) : assert(
-            privileges.contains(Privileges.ultimate) && privileges.length == 1,
-            "Ultimate privilege cannot be combined with read privilege");
+         privileges.contains(Privileges.ultimate) && privileges.length == 1,
+         "Ultimate privilege cannot be combined with read privilege",
+       );
 }
 
 /// User information
 ///
-/// TODO: Auth?
 class User {
   /// The id of the user
   @primary
@@ -232,13 +260,14 @@ class User {
   /// The last time the user updated information
   DateTime updatedAt;
 
-  User(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required this.createdAt,
-      required this.updatedAt,
-      this.avatarUrl});
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.createdAt,
+    required this.updatedAt,
+    this.avatarUrl,
+  });
 }
 
 // class NewUser extends User {
@@ -268,12 +297,16 @@ class Scope {
   /// The time the scope was last updated
   DateTime updatedAt;
 
+  /// Whether this organization is public or not
+  bool public;
+
   Scope({
     required this.id,
     required this.name,
     this.description,
     required this.createdAt,
     required this.updatedAt,
+    this.public = true,
   });
 }
 
@@ -307,17 +340,18 @@ class AccessToken {
   /// The device information
   Map<String, dynamic>? deviceInfo;
 
-  AccessToken(
-      {required this.id,
-      required this.userId,
-      required this.hash,
-      required this.tokenType,
-      this.description,
-      this.deviceId,
-      required this.expiresAt,
-      required this.lastUsedAt,
-      required this.createdAt,
-      this.deviceInfo});
+  AccessToken({
+    required this.id,
+    required this.userId,
+    required this.hash,
+    required this.tokenType,
+    this.description,
+    this.deviceId,
+    required this.expiresAt,
+    required this.lastUsedAt,
+    required this.createdAt,
+    this.deviceInfo,
+  });
 }
 
 enum AccessTokenType {
@@ -397,16 +431,17 @@ class Plugin {
 
   VCS? vcs;
 
-  Plugin(
-      {required this.id,
-      required this.name,
-      required this.language,
-      this.description,
-      required this.archive,
-      this.archiveType = PluginArchiveType.single,
-      required this.sourceType,
-      this.url,
-      this.vcs});
+  Plugin({
+    required this.id,
+    required this.name,
+    required this.language,
+    this.description,
+    required this.archive,
+    this.archiveType = PluginArchiveType.single,
+    required this.sourceType,
+    this.url,
+    this.vcs,
+  });
 }
 
 enum PluginArchiveType {
@@ -533,26 +568,32 @@ class PublishingTask {
   /// If a URL was specified, get the tarball associated with this request from there
   Uri? tarball;
 
-  PublishingTask(
-      {required this.id,
-      required this.name,
-      required this.status,
-      required this.user,
-      this.scope,
-      required this.version,
-      required this.$new,
-      this.language = 'unknown',
-      required this.config,
-      required this.configMap,
-      this.metadata = const {},
-      this.env = const {},
-      this.vcs = VCS.other,
-      this.vcsUrl,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.expiresAt})
-      : assert(
-            expiresAt.isAfter(createdAt), 'Expires at duration cannot be none');
+  /// Any description for error or success
+  String? message;
+
+  PublishingTask({
+    required this.id,
+    required this.name,
+    required this.status,
+    required this.user,
+    this.scope,
+    required this.version,
+    required this.$new,
+    this.language = 'unknown',
+    required this.config,
+    required this.configMap,
+    this.metadata = const {},
+    this.env = const {},
+    this.vcs = VCS.other,
+    this.vcsUrl,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.expiresAt,
+    required this.message,
+  }) : assert(
+         expiresAt.isAfter(createdAt),
+         'Expires at duration cannot be none',
+       );
 
   Map<String, dynamic> toJson() => _$PublishingTaskToJson(this);
 }

@@ -13,8 +13,9 @@ void main() {
     setUp(() {
       client = MockPrittClient();
 
-      when(client.getPackages())
-          .thenReturn(GetPackagesResponse(packages: createMockPackages()));
+      when(
+        client.getPackages(),
+      ).thenReturn(GetPackagesResponse(packages: createMockPackages()));
     });
 
     test('Client Usage', () {});

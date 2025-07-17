@@ -1,17 +1,12 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:json_annotation/json_annotation.dart';
 import '../../utils/user_agent.dart';
 
 part 'resolve.g.dart';
 
 @JsonEnum()
-enum RequestMethod {
-  GET,
-  POST,
-  PUT,
-  DELETE,
-  PATCH,
-  OPTIONS;
-}
+enum RequestMethod { GET, POST, PUT, DELETE, PATCH, OPTIONS }
 
 /// An object containing important information used for adapters to be able to distinguish and make requests for packages from the registry
 @JsonSerializable(createFactory: false)
@@ -39,6 +34,14 @@ class AdapterResolveObject {
   /// The query parameters
   Map<String, String> query;
 
+  String? _authToken;
+  String? get authToken => _authToken;
+  set authToken(String? token) {
+    if (token != null) {
+      _authToken = token;
+    }
+  }
+
   final Map<String, dynamic> _meta = {};
   Map<String, dynamic> get meta => _meta;
 
@@ -47,16 +50,18 @@ class AdapterResolveObject {
   /// User agent information
   UserAgent userAgent;
 
-  AdapterResolveObject(
-      {required Uri uri,
-      this.maxAge,
-      required this.method,
-      this.accept = 'application/json',
-      this.query = const {},
-      required this.userAgent})
-      : path = uri.path,
-        pathSegments = uri.pathSegments,
-        url = uri.replace(path: '').toString();
+  AdapterResolveObject({
+    required Uri uri,
+    this.maxAge,
+    required this.method,
+    this.accept = 'application/json',
+    this.query = const {},
+    required this.userAgent,
+    String? authorization,
+  }) : path = uri.path,
+       pathSegments = uri.pathSegments,
+       url = uri.replace(path: '').toString(),
+       _authToken = authorization;
 
   Map<String, dynamic> toJson() => _$AdapterResolveObjectToJson(this);
 }

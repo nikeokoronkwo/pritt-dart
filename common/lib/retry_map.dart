@@ -21,11 +21,11 @@ class RetryMap<K, V> extends MapBase<K, V> {
   /// Whether the retry loop on the given
   bool get active => _isActive;
 
-  RetryMap(
-      {Map<K, V>? map,
-      this.retry = const Duration(milliseconds: 100),
-      required FutureOr<bool> Function(K, V) onRetry})
-      : _onRetry = onRetry {
+  RetryMap({
+    Map<K, V>? map,
+    this.retry = const Duration(milliseconds: 100),
+    required FutureOr<bool> Function(K, V) onRetry,
+  }) : _onRetry = onRetry {
     _map.addAll(map ?? {});
 
     // begin retry loop asynchronously

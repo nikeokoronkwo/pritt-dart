@@ -14,8 +14,8 @@ final handler = defineRequestHandler((event) async {
   if (!userAgent.toString().toLowerCase().contains('pritt cli')) {
     setResponseCode(event, 401);
     return common.UnauthorizedError(
-            error: 'Unauthorized: You should not be accessing this')
-        .toJson();
+      error: 'Unauthorized: You should not be accessing this',
+    ).toJson();
   }
 
   try {
@@ -24,10 +24,11 @@ final handler = defineRequestHandler((event) async {
 
     // make a response
     final response = common.AuthResponse(
-        token: authSession.sessionId,
-        token_expires: authSession.expiresAt.toIso8601String(),
-        device: authSession.deviceId,
-        code: authSession.code);
+      token: authSession.sessionId,
+      token_expires: authSession.expiresAt.toIso8601String(),
+      device: authSession.deviceId,
+      code: authSession.code,
+    );
 
     return response.toJson();
   } catch (e) {

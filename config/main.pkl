@@ -188,14 +188,20 @@ paths {
             }
         }
         `delete` {
-            summary = "Yank an empty package"
-            operationId = "yankPackageByName"
-            description = "This endpoint is for yanking packages from the pritt registry"
+            summary = "Yank or Deprecate (remove) a package"
+            operationId = "removePackageByName"
+            description = """
+            This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+            In order to yank a package, all its versions must be empty, otherwise it will return a 402 error.
+            In order to deprecate a package, its latest (stable) version must be deprecated, otherwise it will return a 402 error.
+
+            NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
+            """
             requestBody {
                 required = false
                 content {
                     ["application/json"] {
-                        schema = schemaRef("YankPackageRequest")
+                        schema = schemaRef("RemovePackageRequest")
                     }
                 }
             }
@@ -204,7 +210,7 @@ paths {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("YankPackageResponse")
+                            schema = schemaRef("RemovePackageResponse")
                         }
                     }
                 }
@@ -217,10 +223,10 @@ paths {
                     }
                 }
                 ["402"] {
-                    description = "Package Already Exists"
+                    description = "Invalid Request. Package Cannot Be Removed/Deprecated"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("ExistsError")
+                            schema = schemaRef("InvalidError")
                         }
                     }
                 }
@@ -343,14 +349,20 @@ paths {
             }
         }
         `delete` {
-            summary = "Yank an empty package"
-            operationId = "yankPackageByNameWithScope"
-            description = "This endpoint is for yanking packages from the pritt registry"
+            summary = "Yank or Deprecate (Remove) a package"
+            operationId = "removePackageByNameWithScope"
+            description = """
+            This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+            In order to yank a package, all its versions must be empty, otherwise it will return a 402 error.
+            In order to deprecate a package, its latest (stable) version must be deprecated, otherwise it will return a 402 error.
+
+            NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
+            """
             requestBody {
                 required = false
                 content {
                     ["application/json"] {
-                        schema = schemaRef("YankPackageRequest")
+                        schema = schemaRef("RemovePackageRequest")
                     }
                 }
             }
@@ -359,7 +371,7 @@ paths {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("YankPackageResponse")
+                            schema = schemaRef("RemovePackageResponse")
                         }
                     }
                 }
@@ -368,6 +380,14 @@ paths {
                     content {
                         ["application/json"] {
                             schema = schemaRef("UnauthorizedError")
+                        }
+                    }
+                }
+                ["402"] {
+                    description = "Package Cannot Be Removed/Deprecated. Invalid Request"
+                    content {
+                        ["application/json"] {
+                            schema = schemaRef("InvalidError")
                         }
                     }
                 }
@@ -490,14 +510,18 @@ paths {
             }
         }
         `delete` {
-            summary = "Yank an empty package"
-            operationId = "yankPackageVersionByName"
-            description = "This endpoint is for yanking packages from the pritt registry"
+            summary = "Yank or Deprecate (remove) a package"
+            operationId = "removePackageVersionByName"
+            description = """
+            This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+
+            NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
+            """
             requestBody {
                 required = false
                 content {
                     ["application/json"] {
-                        schema = schemaRef("YankPackageByVersionRequest")
+                        schema = schemaRef("RemovePackageByVersionRequest")
                     }
                 }
             }
@@ -506,7 +530,7 @@ paths {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("YankPackageByVersionResponse")
+                            schema = schemaRef("RemovePackageByVersionResponse")
                         }
                     }
                 }
@@ -646,14 +670,18 @@ paths {
             }
         }
         `delete` {
-            summary = "Yank an empty package"
-            operationId = "yankPackageByNameWithScopeAndVersion"
-            description = "This endpoint is for yanking packages from the pritt registry"
+            summary = "Yank or Deprecate (Remove) a package"
+            operationId = "removePackageByNameWithScopeAndVersion"
+            description = """
+            This endpoint is for yanking or deprecating packages from the pritt registry. You can specify a reason for yanking/deprecating a package, as well as an alternative to use instead.
+
+            NOTE: Only empty packages can be yanked, deprecating a package will remove it from search results, but it will still be available for download.
+            """
             requestBody {
                 required = false
                 content {
                     ["application/json"] {
-                        schema = schemaRef("YankPackageByVersionRequest")
+                        schema = schemaRef("RemovePackageByVersionRequest")
                     }
                 }
             }
@@ -662,7 +690,7 @@ paths {
                     description = "OK Response"
                     content {
                         ["application/json"] {
-                            schema = schemaRef("YankPackageByVersionResponse")
+                            schema = schemaRef("RemovePackageByVersionResponse")
                         }
                     }
                 }

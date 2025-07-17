@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:shelf/shelf.dart';
 
 import '../main/adapter/adapter/resolve.dart';
@@ -9,12 +11,20 @@ AdapterResolveObject getAdapterResolveObject(Request request) {
     method: getMethodFromString(request.method),
     maxAge: int.tryParse(request.headers['max-age'] ?? ''),
     userAgent: getUserAgentFromHeader(request.headers),
+    authorization:
+        request.headers[HttpHeaders.authorizationHeader]?.startsWith(
+              'Bearer ',
+            ) ??
+            false
+        ? request.headers[HttpHeaders.authorizationHeader]!.substring(7)
+        : null,
   );
 }
 
 UserAgent getUserAgentFromHeader(Map<String, String> header) {
   return UserAgent.fromRaw(
-      header.map((k, v) => MapEntry(k.toLowerCase(), v))['user-agent'] ?? '');
+    header.map((k, v) => MapEntry(k.toLowerCase(), v))['user-agent'] ?? '',
+  );
 }
 
 RequestMethod getMethodFromString(String method) {
@@ -24,6 +34,6 @@ RequestMethod getMethodFromString(String method) {
     'post' => RequestMethod.DELETE,
     'put' => RequestMethod.PUT,
     'delete' => RequestMethod.DELETE,
-    _ => throw Exception('Unsupported Request Method $method')
+    _ => throw Exception('Unsupported Request Method $method'),
   };
 }

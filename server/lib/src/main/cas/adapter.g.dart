@@ -7,10 +7,10 @@ part of 'adapter.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$CustomAdapterResultToJson(
-        CustomAdapterResult instance) =>
-    <String, dynamic>{
-      'result_type': _$CustomAdapterResultTypeEnumMap[instance.resultType]!,
-    };
+  CustomAdapterResult instance,
+) => <String, dynamic>{
+  'result_type': _$CustomAdapterResultTypeEnumMap[instance.resultType]!,
+};
 
 const _$CustomAdapterResultTypeEnumMap = {
   CustomAdapterResultType.meta: 'meta',

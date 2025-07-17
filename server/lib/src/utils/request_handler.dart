@@ -35,10 +35,7 @@ Stream<List<int>> getStreamedBody(Event e) {
 Future<Uint8List> getBinaryBody(Event e) async {
   return await e.request
       .read()
-      .fold<BytesBuilder>(
-        BytesBuilder(),
-        (builder, data) => builder..add(data),
-      )
+      .fold<BytesBuilder>(BytesBuilder(), (builder, data) => builder..add(data))
       .then((b) => b.toBytes());
 }
 
@@ -55,14 +52,14 @@ Map<String, String> getQueryParams(Event e) {
 }
 
 String? getHeader(Event e, String name) {
-  var headerValue = e.request.headers[name];
+  final headerValue = e.request.headers[name];
   return headerValue;
 }
 
 Map<String, String> getHeaders(Event e) => e.request.headers;
 
 Object getParams(Event e, String name) {
-  var paramValue = e.request.params[name];
+  final paramValue = e.request.params[name];
   if (paramValue != null) {
     if (paramValue.contains('/')) return paramValue.split('/');
     if (int.tryParse(paramValue) != null) return int.parse(paramValue);
@@ -94,7 +91,7 @@ typedef EventHandler<T extends Object?> = FutureOr<T> Function(Event);
 
 Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
   return (Request req) async {
-    var event = Event.fromRequest(req);
+    final event = Event.fromRequest(req);
     final response = await handler(event);
 
     if (event._response != null) return event._response!;
@@ -108,22 +105,32 @@ Handler defineRequestHandler<T extends Object?>(EventHandler<T> handler) {
         return event.responseFunc(response);
       case Map():
         event._responseBuilder.headers.putIfAbsent(
-            HttpHeaders.contentTypeHeader, () => 'application/json');
+          HttpHeaders.contentTypeHeader,
+          () => 'application/json',
+        );
         return event.responseFunc(jsonEncode(response));
       case List<Map>():
         event._responseBuilder.headers.putIfAbsent(
-            HttpHeaders.contentTypeHeader, () => 'application/json');
+          HttpHeaders.contentTypeHeader,
+          () => 'application/json',
+        );
         return event.responseFunc(jsonEncode(response));
       case Stream<List<int>>():
         event._responseBuilder.headers.putIfAbsent(
-            HttpHeaders.contentTypeHeader, () => 'application/octet-stream');
+          HttpHeaders.contentTypeHeader,
+          () => 'application/octet-stream',
+        );
         return event.responseFunc(response);
       case Uint8List():
         event._responseBuilder.headers
           ..putIfAbsent(
-              HttpHeaders.contentTypeHeader, () => 'application/octet-stream')
-          ..putIfAbsent(HttpHeaders.contentLengthHeader,
-              () => response.lengthInBytes.toString());
+            HttpHeaders.contentTypeHeader,
+            () => 'application/octet-stream',
+          )
+          ..putIfAbsent(
+            HttpHeaders.contentLengthHeader,
+            () => response.lengthInBytes.toString(),
+          );
         return event.responseFunc(response);
       default:
         return event.responseFunc(response);

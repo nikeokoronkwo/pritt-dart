@@ -15,8 +15,9 @@ import 'adapter_test.mocks.dart';
 void main() {
   group('Adapter', () {
     late MockCRSDBController mockDBController;
+    // ignore: unused_local_variable
     late MockCRSArchiveController mockArchiveController;
-    MockJsonConvertible mockMetaResult = MockJsonConvertible();
+    final MockJsonConvertible mockMetaResult = MockJsonConvertible();
 
     setUp(() {
       mockDBController = MockCRSDBController();
@@ -31,18 +32,19 @@ void main() {
         id: 'test-adapter',
         resolve: (resolveObject) => AdapterResolveType.meta,
         request: (requestObject, controller) async {
-          return AdapterMetaResult(mockMetaResult);
+          return CoreAdapterMetaResult(mockMetaResult);
         },
         retrieve: (requestObject, controller) async {
-          return AdapterArchiveResult(Stream.empty(), 'test.tar.gz');
+          return CoreAdapterArchiveResult(const Stream.empty(), 'test.tar.gz');
         },
       );
 
       test('should handle onRequest', () {
         final resolveObject = AdapterResolveObject(
-            uri: Uri.http('example.org', '/api/packages/foo'),
-            method: RequestMethod.GET,
-            userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
+          uri: Uri.http('example.org', '/api/packages/foo'),
+          method: RequestMethod.GET,
+          userAgent: UserAgent.fromRaw('Dart test 3.7.0'),
+        );
         final result = adapter.resolve(resolveObject);
 
         expect(result.isResolved, isTrue);
@@ -51,18 +53,23 @@ void main() {
 
       test('should resolve correctly using onResolve', () async {
         final resolveObject = AdapterResolveObject(
-            uri: Uri.http('example.org', '/api/packages/foo'),
-            method: RequestMethod.GET,
-            userAgent: UserAgent.fromRaw('Dart test 3.7.0'));
+          uri: Uri.http('example.org', '/api/packages/foo'),
+          method: RequestMethod.GET,
+          userAgent: UserAgent.fromRaw('Dart test 3.7.0'),
+        );
         final result = await adapter.metaRequest(
-            AdapterRequestObject(
-                resolveObject: resolveObject,
-                resolveType: AdapterResolveType.meta),
-            mockDBController);
+          AdapterRequestObject(
+            resolveObject: resolveObject,
+            resolveType: AdapterResolveType.meta,
+          ),
+          mockDBController,
+        );
 
-        assert(result is AdapterMetaResult, "adapter should be meta");
-        expect((result as AdapterMetaResult).body.toJson(),
-            equals({'name': 1, 'age': 2}));
+        assert(result is CoreAdapterMetaResult, "adapter should be meta");
+        expect(
+          (result as CoreAdapterMetaResult).body.toJson(),
+          equals({'name': 1, 'age': 2}),
+        );
       });
     });
   });

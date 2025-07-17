@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:args/command_runner.dart';
+import 'package:chunked_stream/chunked_stream.dart';
 import 'package:io/ansi.dart';
 import 'package:path/path.dart' as p;
 
-import '../archive.dart';
 import '../cli/base.dart';
 import '../cli/progress_bar.dart';
 import '../client.dart';
@@ -28,8 +29,11 @@ class UnpackCommand extends PrittCommand {
         help: 'Overwrite the target directory if it already exists.',
       )
       ..addFlag('vcs', help: 'Unpack via VCS (Clone)', hide: true)
-      ..addOption('output',
-          abbr: 'o', help: 'The output directory to write this to');
+      ..addOption(
+        'output',
+        abbr: 'o',
+        help: 'The output directory to write this to',
+      );
   }
 
   @override
@@ -41,42 +45,51 @@ class UnpackCommand extends PrittCommand {
     }
 
     final argument = argResults!.rest.first;
-    final (name: name, scope: scope, version: version) =
-        parsePackageInfo(argument);
+    final (name: name, scope: scope, version: version) = parsePackageInfo(
+      argument,
+    );
 
     // check if user is logged in
-    var userCredentials = await UserCredentials.fetch();
+    final userCredentials = await UserCredentials.fetch();
 
     if (userCredentials == null || userCredentials.isExpired) {
       // if user not logged in, tell user to log in
-      logger.severe(userCredentials == null
-          ? 'You are not logged in to Pritt'
-          : 'Your login session has expired');
+      logger.severe(
+        userCredentials == null
+            ? 'You are not logged in to Pritt'
+            : 'Your login session has expired',
+      );
       logger.severe('To log in, run: ${styleBold.wrap('pritt login')}');
       exit(1);
     }
 
     // establish client
     final client = PrittClient(
-        url: userCredentials.uri.toString(),
-        accessToken: userCredentials.accessToken);
+      url: userCredentials.uri.toString(),
+      accessToken: userCredentials.accessToken,
+    );
 
     final pkgName = scope != null ? '@$scope/$name}' : name;
 
     // get archive of package
     logger.info('Fetching Package $pkgName');
 
-    final content =
-        await client.getPackageArchiveWithName(name: pkgName, version: version);
+    final content = await client.getPackageArchiveWithName(
+      name: pkgName,
+      version: version,
+    );
 
     final contentLength = content.length;
 
     // download contents
-    final ProgressBar progressBar = ProgressBar('Downloading Package',
-        completeMessage: 'Package Downloaded');
+    final ProgressBar progressBar = ProgressBar(
+      'Downloading Package',
+      completeMessage: 'Package Downloaded',
+    );
 
-    final outName = (argResults?['output'] ??
-        _suitableFileName(name: name, scope: scope, version: version));
+    final outName =
+        argResults?['output'] ??
+        _suitableFileName(name: name, scope: scope, version: version);
     final directory = Directory(outName);
 
     if (await directory.exists() && !argResults?['force']) {
@@ -87,8 +100,9 @@ class UnpackCommand extends PrittCommand {
       await directory.create(recursive: true);
     }
 
-    final File tarFile = await File(outName + '.tar.gz').create();
-    final sink = tarFile.openWrite();
+    // final File tarFile = await File(outName + '.tar.gz').create();
+    // final sink = tarFile.openWrite();
+    final controller = StreamController<List<int>>();
 
     int bytesReceived = 0;
 
@@ -96,20 +110,20 @@ class UnpackCommand extends PrittCommand {
 
     content.data.listen(
       (chunk) {
-        sink.add(chunk);
+        controller.add(chunk);
         bytesReceived += chunk.length;
         progressBar.tick(bytesReceived, contentLength);
-        sleep(Duration(milliseconds: 10));
+        sleep(const Duration(milliseconds: 10));
       },
       onDone: () async {
-        await sink.close();
-        sleep(Duration(milliseconds: 100));
+        await controller.close();
+        sleep(const Duration(milliseconds: 100));
         progressBar.end();
         downloadCompleter.complete();
       },
       onError: (e, st) async {
-        await sink.close();
-        sleep(Duration(milliseconds: 100));
+        await controller.close();
+        sleep(const Duration(milliseconds: 100));
         downloadCompleter.completeError(e, st);
       },
       cancelOnError: true,
@@ -122,10 +136,14 @@ class UnpackCommand extends PrittCommand {
     logger.info('Expanding Contents');
 
     // extract tar.gz and save to directory
-    await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+    // await safeExtractTarGz(tarGzFile: tarFile, outputDirectory: directory);
+    final Archive archive = TarDecoder().decodeBytes(
+      GZipDecoder().decodeBytes(await readByteStream(controller.stream)),
+    );
 
-    await sink.close();
-    await tarFile.delete();
+    await extractArchiveToDisk(archive, directory.path);
+
+    await controller.close();
 
     logger.stdout('Package $pkgName has been unpacked at $outName');
 
@@ -133,10 +151,15 @@ class UnpackCommand extends PrittCommand {
   }
 }
 
-String _suitableFileName(
-    {required String name, String? scope, String? version, String? outputDir}) {
+String _suitableFileName({
+  required String name,
+  String? scope,
+  String? version,
+  String? outputDir,
+}) {
   final directoryContext = Directory(
-      p.dirname(outputDir == null ? p.current : p.absolute(outputDir)));
+    p.dirname(outputDir == null ? p.current : p.absolute(outputDir)),
+  );
   final files = directoryContext.listSync();
 
   if (scope == null) {

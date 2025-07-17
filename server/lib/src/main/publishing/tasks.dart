@@ -6,7 +6,7 @@ import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/functions.dart';
+import 'package:pritt_common/config.dart' as common;
 import 'package:pritt_common/version.dart';
 
 import '../../../pritt_server.dart';
@@ -16,15 +16,16 @@ import 'interfaces.dart';
 
 final publishingTaskRunner =
     TaskRunner<PubTaskItem, Archive, void, Map<String, dynamic>>(
-        debug: true,
-        retryInterval:
-            Duration(seconds: 1), // TODO: Get better time via testing
-        onRetrieve: getTarballForTask,
-        workAction: processTarball,
-        onCheck: checkTarballStatus,
-        context: {
-      'createPackageVersionFromPublishingTask': (String id,
-              {VersionType? versionType,
+      debug: true,
+      retryInterval: const Duration(milliseconds: 800),
+      onRetrieve: getTarballForTask,
+      workAction: processTarball,
+      onCheck: checkTarballStatus,
+      context: {
+        'createPackageVersionFromPublishingTask':
+            (
+              String id, {
+              VersionType? versionType,
               String? readme,
               String? description,
               required String rawConfig,
@@ -34,8 +35,9 @@ final publishingTaskRunner =
               List<Signature> signatures = const [],
               required String integrity,
               PublishingTask? task,
-              List<String> contributorIds = const []}) =>
-          crs.db.createPackageVersionFromPublishingTask(id,
+              List<String> contributorIds = const [],
+            }) => crs.db.createPackageVersionFromPublishingTask(
+              id,
               versionType: versionType,
               readme: readme,
               description: description,
@@ -46,9 +48,12 @@ final publishingTaskRunner =
               signatures: signatures,
               integrity: integrity,
               task: task,
-              contributorIds: contributorIds),
-      'createPackageFromPublishingTask': (String id,
-              {String? description,
+              contributorIds: contributorIds,
+            ),
+        'createPackageFromPublishingTask':
+            (
+              String id, {
+              String? description,
               String? license,
               VersionType? versionType,
               String? readme,
@@ -59,8 +64,9 @@ final publishingTaskRunner =
               List<Signature> signatures = const [],
               required String integrity,
               PublishingTask? task,
-              List<String> contributorIds = const []}) =>
-          crs.db.createPackageFromPublishingTask(id,
+              List<String> contributorIds = const [],
+            }) => crs.db.createPackageFromPublishingTask(
+              id,
               versionType: versionType,
               readme: readme,
               description: description,
@@ -72,36 +78,41 @@ final publishingTaskRunner =
               signatures: signatures,
               integrity: integrity,
               task: task,
-              contributorIds: contributorIds)
-    });
+              contributorIds: contributorIds,
+            ),
+      },
+    );
 
 /// Processes the tarball
 FutureOr<void> processTarball(
-    WorkerItem<PubTaskItem, Archive, Map<String, dynamic>> item) async {
-  // TODO: Temporary fix for isolate discovery of variables
-  // in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
-  // which would require a reworking of the worker's serialization
+  WorkerItem<PubTaskItem, Archive, Map<String, dynamic>> item,
+) async {
+  // TODO(nikeokoronkwo): Temporary fix for isolate discovery of variables
+  //  in reality, we should try to minimize the number of connections at a time to allow more concurrent queue tasks
+  //  which would require a reworking of the worker's serialization
   await startPrittServices(customAdapters: false);
+
   // get task info
   final taskInfo = await item.task.taskInfo;
 
   // open tarball archive
   final archive = item.resource;
   final configName = taskInfo.config.toLowerCase();
-  final pkgName = scopedName(taskInfo.name, taskInfo.scope);
 
   if (archive.isEmpty) {
     throw Exception('Empty tarball');
   }
 
-  // check tarball size is on limits (double check)
-  // TODO: such check should be done on upload side
   ArchiveFile? readme;
-  ArchiveFile configFile = archive.firstWhere((f) =>
-      f.isFile && p.basename(f.name.toLowerCase()) == configName.toLowerCase());
-  ArchiveFile? changelog;
-  ArchiveFile? license;
-  ArchiveFile? prittConfig;
+  ArchiveFile configFile = archive.firstWhere(
+    (f) =>
+        f.isFile &&
+        p.basename(f.name.toLowerCase()) == configName.toLowerCase(),
+  );
+  // TODO(nikeokoronkwo): Incorporate files and file checks: changelog (changelog map), license, pritt config (contributors)
+  // ArchiveFile? changelog, license, prittConfig;
+  ArchiveFile? prittConfigFile;
+  ArchiveFile? authorsFile;
 
   for (final file in archive) {
     if (!file.isFile) break;
@@ -112,13 +123,17 @@ FutureOr<void> processTarball(
         readme = file;
         break;
       case 'changelog':
-        changelog = file;
+        // changelog = file;
         break;
       case 'license':
-        license = file;
+        // license = file;
         break;
+      case 'authors':
+        authorsFile = file;
+        break;
+      // TODO(nikeokoronkwo): What if the pritt config file is named differently?
       case 'pritt':
-        prittConfig = file;
+        prittConfigFile = file;
         break;
       default:
         if (p.basenameWithoutExtension(fileName.toLowerCase()) == configName) {
@@ -134,16 +149,64 @@ FutureOr<void> processTarball(
 
   // process license
 
-  // read pritt config (future)
+  // read pritt config
+  final prittConfig = prittConfigFile != null
+      ? common.PrittConfig.fromJson(
+          jsonDecode(utf8.decode(prittConfigFile.content as Uint8List)),
+        )
+      : null;
+  // read authors file
+  final authors = authorsFile != null
+      ? const LineSplitter()
+            .convert(utf8.decode(authorsFile.content as Uint8List))
+            .where((line) => line.isNotEmpty && !line.trim().startsWith('#'))
+      : null;
+
+  // =============== CONTRIBUTOR PROCESSING ===============
+  // contributors are either in the pritt config or in the AUTHORS file
+  final contributors = [
+    if (prittConfig?.contributors case final contribs?) ...contribs,
+    if (authors != null) ...authors.map(common.User.parse),
+  ];
+
+  final contributorsAsUsers = <User>[];
+  List<User>? usersTests;
+  if (!contributors.every((contrib) => contrib.email != null)) {
+    usersTests = (await crs.db.getUsers()).toList();
+  }
+
+  for (final contributor in contributors) {
+    if (usersTests case final userList?) {
+      if (userList.where(
+            (u) =>
+                u.name == contributor.name &&
+                (u.email == contributor.email || contributor.email == null),
+          )
+          case [final User existingUser?]) {
+        contributorsAsUsers.add(existingUser);
+      }
+    } else {
+      try {
+        final existingUser = await crs.db.getUserByEmail(contributor.email!);
+        contributorsAsUsers.add(existingUser);
+      } catch (e) {
+        // skip if user not found
+      }
+    }
+  }
+
+  // =============== END OF CONTRIBUTOR PROCESSING ===============
+
+  final private = prittConfig?.private ?? false;
 
   // zip up tarball
   // tarballData should not be null, else worker will fail before now
-  var tarballData = GZipEncoder().encode(TarEncoder().encode(archive))!;
+  final tarballData = GZipEncoder().encode(TarEncoder().encode(archive))!;
 
-  var archiveParts = [
+  final archiveParts = [
     if (taskInfo.scope != null) '@${taskInfo.scope}',
     taskInfo.name,
-    taskInfo.version
+    taskInfo.version,
   ];
 
   final tarballPath = '${archiveParts.join('/')}.tar.gz';
@@ -160,8 +223,7 @@ FutureOr<void> processTarball(
 
   if (taskInfo.$new) {
     // create new package, if not exists
-    final (Package pkg, PackageVersions pkgVer) =
-        await crs.db.createPackageFromPublishingTask(
+    await crs.db.createPackageFromPublishingTask(
       item.task.id,
       license: 'not detected',
       readme: readme?.content == null
@@ -171,10 +233,12 @@ FutureOr<void> processTarball(
       archive: Uri.file(tarballPath, windows: false),
       hash: tarballHash,
       integrity: tarballIntegrity,
+      contributorIds: contributorsAsUsers.map((c) => c.id).toList(),
+      private: private,
     );
   } else {
     // create new package version
-    final pkgVer = await crs.db.createPackageVersionFromPublishingTask(
+    await crs.db.createPackageVersionFromPublishingTask(
       item.task.id,
       readme: readme?.content == null
           ? null
@@ -183,25 +247,30 @@ FutureOr<void> processTarball(
       archive: Uri.file(tarballPath, windows: false),
       hash: tarballHash,
       integrity: tarballIntegrity,
+      contributorIds: contributorsAsUsers.map((c) => c.id).toList(),
     );
   }
 
   // prepare for upload
+  // TODO: URL signing for upload and URL generation
 
   // add to storage
-  await crs.ofs.createPackage(
-      tarballPath, Uint8List.fromList(tarballData), tarballHash,
-      contentType: 'application/gzip',
-      metadata: {
-        'integrity': tarballIntegrity,
-      }).then((_) async {
-    // remove pub tarball afterwards
-    await crs.ofs.removePubArchive('${archiveParts.join('-')}.tar.gz');
-  });
+  await crs.ofs
+      .createPackage(
+        tarballPath,
+        Uint8List.fromList(tarballData),
+        tarballHash,
+        contentType: 'application/gzip',
+        metadata: {'integrity': tarballIntegrity},
+      )
+      .then((_) async {
+        // remove pub tarball afterwards
+        await crs.ofs.removePubArchive('${archiveParts.join('-')}.tar.gz');
+      });
 }
 
-// TODO: The call to `getPublishingTaskById` is marked with `@Cacheable`
-//  caching this call would be very helpful
+// TODO(nikeokoronkwo): The call to `getPublishingTaskById` is marked with `@Cacheable`
+//  caching this call would be very helpful, https://github.com/nikeokoronkwo/pritt-dart/issues/31
 FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
   // get task details from db
   final taskInfo = await item.taskInfo;
@@ -215,8 +284,9 @@ FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
         final bytes = response.bodyBytes;
 
         // Save to disk or memory cache
-        final archive =
-            TarDecoder().decodeBytes(GZipDecoder().decodeBytes(bytes));
+        final archive = TarDecoder().decodeBytes(
+          GZipDecoder().decodeBytes(bytes),
+        );
 
         return archive;
       } else {
@@ -227,20 +297,22 @@ FutureOr<Archive?> getTarballForTask(PubTaskItem item) async {
     }
   } else {
     // use info to check storage S3
-    var archiveNameParts = [
+    final archiveNameParts = [
       if (taskInfo.scope != null) '@${taskInfo.scope}',
       taskInfo.name,
-      taskInfo.version
+      taskInfo.version,
     ];
 
     print('${archiveNameParts.join('-')}.tar.gz');
 
     try {
-      final output =
-          await crs.ofs.getPubArchive('${archiveNameParts.join('-')}.tar.gz');
+      final output = await crs.ofs.getPubArchive(
+        '${archiveNameParts.join('-')}.tar.gz',
+      );
 
-      final archive =
-          TarDecoder().decodeBytes(GZipDecoder().decodeBytes(output.data));
+      final archive = TarDecoder().decodeBytes(
+        GZipDecoder().decodeBytes(output.data),
+      );
 
       return archive;
     } catch (e, stackTrace) {
@@ -262,14 +334,15 @@ FutureOr<bool> checkTarballStatus(PubTaskItem item) async {
     return response.statusCode == 200;
   } else {
     // use info to check storage S3
-    var archiveNameParts = [
+    final archiveNameParts = [
       if (taskInfo.scope != null) '@${taskInfo.scope}',
       taskInfo.name,
-      taskInfo.version
+      taskInfo.version,
     ];
 
     print('${archiveNameParts.join('-')}.tar.gz');
-    return await crs.ofs
-        .pubArchiveExists('${archiveNameParts.join('-')}.tar.gz');
+    return await crs.ofs.pubArchiveExists(
+      '${archiveNameParts.join('-')}.tar.gz',
+    );
   }
 }

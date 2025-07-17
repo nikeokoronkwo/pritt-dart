@@ -1,6 +1,10 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:json_annotation/json_annotation.dart';
+
 import 'resolve.dart';
+
+part 'request_options.g.dart';
 
 class AdapterOptions {
   final AdapterResolveObject resolveObject;
@@ -21,6 +25,7 @@ class AdapterOptions {
   }
 }
 
+@JsonSerializable(createFactory: false)
 class AdapterRequestObject {
   AdapterResolveObject resolveObject;
 
@@ -33,4 +38,6 @@ class AdapterRequestObject {
     Map<String, dynamic>? env,
     required this.resolveType,
   }) : env = env ?? resolveObject.meta;
+
+  Map<String, dynamic> toJson() => _$AdapterRequestObjectToJson(this);
 }

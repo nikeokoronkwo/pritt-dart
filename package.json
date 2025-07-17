@@ -24,10 +24,23 @@
     "tf:plan": "cd infra && tofu plan -var-file=infra.tfvars -out=infra.tfplan",
     "tf:apply": "cd infra && tofu apply -input=false infra.tfplan"
   },
-  "packageManager": "pnpm@9.15.2+sha256.022309bb31359142b65bfa889e0406d2eebd5acfffca47e6944acf29d9d6a66b",
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@tailwindcss/oxide",
+      "better-sqlite3",
       "esbuild"
+    ],
+    "ignoredBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "cpu-features",
+      "prisma",
+      "protobufjs",
+      "sharp",
+      "ssh2",
+      "unrs-resolver",
+      "vue-demi"
     ]
   },
   "devDependencies": {

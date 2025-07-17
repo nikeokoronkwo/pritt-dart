@@ -26,17 +26,18 @@ class WebGenTemplateConfig {
 
   final Map<String, String>? env;
 
-  const WebGenTemplateConfig(
-      {required this.name,
-      required this.style,
-      this.icon,
-      this.logo,
-      this.assets = const [],
-      this.meta,
-      required this.auth,
-      this.catchLine,
-      this.description,
-      this.env});
+  const WebGenTemplateConfig({
+    required this.name,
+    required this.style,
+    this.icon,
+    this.logo,
+    this.assets = const [],
+    this.meta,
+    required this.auth,
+    this.catchLine,
+    this.description,
+    this.env,
+  });
 
   factory WebGenTemplateConfig.fromJson(Map<String, dynamic> json) =>
       _$WebGenTemplateConfigFromJson(json);
@@ -57,14 +58,15 @@ class WGTAuth {
   dynamic oidc;
   Iterable<WGTOAuth> oauth;
 
-  WGTAuth(
-      {required this.magicLink,
-      required this.passkey,
-      this.google = false,
-      this.github = false,
-      this.sso,
-      this.oidc,
-      this.oauth = const []});
+  WGTAuth({
+    required this.magicLink,
+    required this.passkey,
+    this.google = false,
+    this.github = false,
+    this.sso,
+    this.oidc,
+    this.oauth = const [],
+  });
 
   factory WGTAuth.fromJson(Map<String, dynamic> json) =>
       _$WGTAuthFromJson(json);
@@ -94,7 +96,7 @@ class WGTStyle {
         600: '#151515',
         700: '#121212', // Original color
         800: '#0e0e0e',
-        -1: '#121212'
+        -1: '#121212',
       },
       secondary: '#03DAC6',
       background: '#FFFFFF',
@@ -109,7 +111,7 @@ class WGTStyle {
         600: "#A00F1B",
         700: "#800C16",
         800: "#600A11",
-        -1: "#c1121f"
+        -1: "#c1121f",
       },
     ),
     font: WGTStyleFont.defaultFont,
@@ -118,10 +120,7 @@ class WGTStyle {
   final WGTStyleColours colours;
   final WGTStyleFont font;
 
-  const WGTStyle({
-    required this.colours,
-    required this.font,
-  });
+  const WGTStyle({required this.colours, required this.font});
 
   factory WGTStyle.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) {

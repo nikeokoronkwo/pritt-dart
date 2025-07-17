@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" beforeDir="false" afterPath="$PROJECT_DIR$/cli/docs/MANUAL.adoc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="minor changes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,31 +74,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Dart Command Line App.CLI.executor": "Run",
-    "Dart Command Line App.Server.executor": "Run",
-    "Dart Command Line App.house.dart.executor": "Run",
-    "Dart Test.CSV Encoding Testing in csv_test.dart.executor": "Run",
-    "Dart Test.Client Testing in list_test.dart.executor": "Run",
-    "Dart Test.Table Testing in table_test.dart.executor": "Run",
-    "Dart Test.Tests in progress_bar_test.dart.executor": "Run",
-    "Docker.Compose (services only).executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Shell Script.PKL Testing.executor": "Run",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feature/iac",
-    "last_opened_file_path": "/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.editor",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Dart Command Line App.CLI.executor&quot;: &quot;Run&quot;,
+    &quot;Dart Command Line App.Server.executor&quot;: &quot;Run&quot;,
+    &quot;Dart Command Line App.house.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Dart Test.CSV Encoding Testing in csv_test.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Dart Test.Client Testing in list_test.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Dart Test.Table Testing in table_test.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Dart Test.Tests in progress_bar_test.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Compose (services only).executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Shell Script.PKL Testing.executor&quot;: &quot;Run&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;#76 on nikeokoronkwo/issue25&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/common/test" />
@@ -417,7 +416,23 @@
       <option name="project" value="LOCAL" />
       <updated>1750978199143</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033">
+      <option name="closed" value="true" />
+      <created>1752638133440</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1752638133440</updated>
+    </task>
+    <task id="LOCAL-00034" summary="minor changes">
+      <option name="closed" value="true" />
+      <created>1752638263703</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1752638263703</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -432,7 +447,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLI: Implement `info`" />
     <MESSAGE value="CLI: Migrated Command Implementations" />
     <MESSAGE value="WIP: [cli] Implementing `unpack` command" />
     <MESSAGE value="[cli] Implemented `unpack` and `adapter unpack` command at unpack.dart&#10;&#10;Looking towards how I can redirect `package unpack` to `unpack`" />
@@ -457,6 +471,7 @@
     <MESSAGE value="[server] Implemented Task Manager and Queue for Publishing (publishing_tasks.dart)" />
     <MESSAGE value="[infra] Formatting" />
     <MESSAGE value="[idea] workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="[idea] workspace.xml" />
+    <MESSAGE value="minor changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
   </component>
 </project>

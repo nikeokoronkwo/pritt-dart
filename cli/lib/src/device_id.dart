@@ -15,19 +15,22 @@ Future<String> getDeviceId() async {
       }
     } else if (Platform.isMacOS) {
       // Use IOPlatformUUID from macOS
-      final result = await Process.run(
-        'ioreg',
-        ['-rd1', '-c', 'IOPlatformExpertDevice'],
-      );
-      final match = RegExp(r'"IOPlatformUUID" = "([^"]+)"')
-          .firstMatch(result.stdout.toString());
+      final result = await Process.run('ioreg', [
+        '-rd1',
+        '-c',
+        'IOPlatformExpertDevice',
+      ]);
+      final match = RegExp(
+        r'"IOPlatformUUID" = "([^"]+)"',
+      ).firstMatch(result.stdout.toString());
       rawIdentifier = match?.group(1) ?? Platform.localHostname;
     } else if (Platform.isWindows) {
       // Use Windows UUID
       final result = await Process.run('wmic', ['csproduct', 'get', 'uuid']);
       final lines = result.stdout.toString().split('\n');
-      rawIdentifier =
-          lines.length >= 2 ? lines[1].trim() : Platform.localHostname;
+      rawIdentifier = lines.length >= 2
+          ? lines[1].trim()
+          : Platform.localHostname;
     } else {
       // Fallback for unknown platforms
       rawIdentifier = Platform.localHostname;

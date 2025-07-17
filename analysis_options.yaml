@@ -2,19 +2,32 @@ include: package:lints/recommended.yaml
 
 linter:
   rules:
-    - flutter_style_todos
     - always_declare_return_types
-    - directives_ordering
-    - prefer_relative_imports
-    - sort_pub_dependencies
-    - use_string_buffers
-    - no_runtimeType_toString
-    - avoid_returning_this
     - annotate_redeclares
+    - avoid_bool_literals_in_conditional_expressions
+    - avoid_returning_this
+    - avoid_private_typedef_functions
+    - directives_ordering
+    - flutter_style_todos
+    - join_return_with_assignment
+    - no_runtimeType_toString
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_locals
+    - prefer_relative_imports
+    - slash_for_doc_comments
+    - sort_pub_dependencies
+    - sort_unnamed_constructors_first
     - type_annotate_public_apis
+    - unnecessary_lambdas
+    - unnecessary_parenthesis
+    - unreachable_from_main
     - use_named_constants
+    - use_string_buffers
 
 analyzer:
+  exclude:
+    - e2e/**
   errors:
     todo: ignore
 
