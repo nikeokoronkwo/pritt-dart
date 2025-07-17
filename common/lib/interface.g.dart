@@ -775,6 +775,7 @@ RemovePackageRequest _$RemovePackageRequestFromJson(
   reason: json['reason'] as String?,
   yank: json['yank'] as bool?,
   alternative: json['alternative'] as String?,
+  version: json['version'] as String?,
 );
 
 Map<String, dynamic> _$RemovePackageRequestToJson(
@@ -783,6 +784,7 @@ Map<String, dynamic> _$RemovePackageRequestToJson(
   if (instance.reason case final value?) 'reason': value,
   if (instance.yank case final value?) 'yank': value,
   if (instance.alternative case final value?) 'alternative': value,
+  if (instance.version case final value?) 'version': value,
 };
 
 RemovePackageResponse _$RemovePackageResponseFromJson(
@@ -793,6 +795,7 @@ RemovePackageResponse _$RemovePackageResponseFromJson(
   package_name: json['package_name'] as String,
   alternative: json['alternative'] as String?,
   request_type: $enumDecode(_$RequestTypeEnumMap, json['request_type']),
+  version: json['version'] as String,
 );
 
 Map<String, dynamic> _$RemovePackageResponseToJson(
@@ -803,6 +806,7 @@ Map<String, dynamic> _$RemovePackageResponseToJson(
   'package_name': instance.package_name,
   if (instance.alternative case final value?) 'alternative': value,
   'request_type': _$RequestTypeEnumMap[instance.request_type]!,
+  'version': instance.version,
 };
 
 ServerError _$ServerErrorFromJson(Map<String, dynamic> json) =>

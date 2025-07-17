@@ -1085,7 +1085,12 @@ class RemovePackageByVersionResponse {
 
 @JsonSerializable(includeIfNull: false)
 class RemovePackageRequest {
-  RemovePackageRequest({this.reason, this.yank, this.alternative});
+  RemovePackageRequest({
+    this.reason,
+    this.yank,
+    this.alternative,
+    this.version,
+  });
 
   factory RemovePackageRequest.fromJson(Map<String, dynamic> json) =>
       _$RemovePackageRequestFromJson(json);
@@ -1095,6 +1100,8 @@ class RemovePackageRequest {
   final bool? yank;
 
   final String? alternative;
+
+  final String? version;
 
   Map<String, dynamic> toJson() => _$RemovePackageRequestToJson(this);
 }
@@ -1107,6 +1114,7 @@ class RemovePackageResponse {
     required this.package_name,
     this.alternative,
     required this.request_type,
+    required this.version,
   });
 
   factory RemovePackageResponse.fromJson(Map<String, dynamic> json) =>
@@ -1121,6 +1129,8 @@ class RemovePackageResponse {
   final String? alternative;
 
   final RequestType request_type;
+
+  final String version;
 
   Map<String, dynamic> toJson() => _$RemovePackageResponseToJson(this);
 }

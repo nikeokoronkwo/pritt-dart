@@ -10,6 +10,7 @@ import '../../../../utils/request_handler.dart';
 final handler = defineRequestHandler((event) async {
   // parse info
   final pkgName = getParams(event, 'name') as String;
+  final pkgScope = getParams(event, 'scope') as String;
 
   try {
     // check if user is authenticated
@@ -28,9 +29,12 @@ final handler = defineRequestHandler((event) async {
       (s) => common.RemovePackageRequest.fromJson(json.decode(s)),
     );
 
-    final pkgDetails = await crs.db.getPackage(pkgName);
-    final pkgs = await crs.db.getAllVersionsOfPackage(pkgName);
-    final pkgContributors = crs.db.getContributorsForPackageStream(pkgName);
+    final pkgDetails = await crs.db.getPackage(pkgName, scope: pkgScope);
+    final pkgs = await crs.db.getAllVersionsOfPackage(pkgName, scope: pkgScope);
+    final pkgContributors = crs.db.getContributorsForPackageStream(
+      pkgName,
+      scope: pkgScope,
+    );
 
     // Only author can deprecate
     if (pkgDetails.author != user &&

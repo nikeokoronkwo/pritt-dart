@@ -683,8 +683,6 @@ class PrittClient extends ApiClient implements PrittInterface {
     throw UnimplementedError();
   }
 
-  
-
   @override
   FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id}) async {
     final response = await requestBasic(
@@ -712,27 +710,44 @@ class PrittClient extends ApiClient implements PrittInterface {
         throw ApiException(response.body, statusCode: response.statusCode);
     }
   }
-  
+
   @override
-  FutureOr<RemovePackageResponse> removePackageByName(RemovePackageRequest body, {required String name}) {
+  FutureOr<RemovePackageResponse> removePackageByName(
+    RemovePackageRequest body, {
+    required String name,
+  }) {
     // TODO: implement removePackageByName
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<RemovePackageResponse> removePackageByNameWithScope(RemovePackageRequest body, {required String scope, required String name}) {
+  FutureOr<RemovePackageResponse> removePackageByNameWithScope(
+    RemovePackageRequest body, {
+    required String scope,
+    required String name,
+  }) {
     // TODO: implement removePackageByNameWithScope
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<RemovePackageByVersionResponse> removePackageByNameWithScopeAndVersion(RemovePackageByVersionRequest body, {required String scope, required String name, required String version}) {
+  FutureOr<RemovePackageByVersionResponse>
+  removePackageByNameWithScopeAndVersion(
+    RemovePackageByVersionRequest body, {
+    required String scope,
+    required String name,
+    required String version,
+  }) {
     // TODO: implement removePackageByNameWithScopeAndVersion
     throw UnimplementedError();
   }
-  
+
   @override
-  FutureOr<RemovePackageByVersionResponse> removePackageVersionByName(RemovePackageByVersionRequest body, {required String name, required String version}) {
+  FutureOr<RemovePackageByVersionResponse> removePackageVersionByName(
+    RemovePackageByVersionRequest body, {
+    required String name,
+    required String version,
+  }) {
     // TODO: implement removePackageVersionByName
     throw UnimplementedError();
   }

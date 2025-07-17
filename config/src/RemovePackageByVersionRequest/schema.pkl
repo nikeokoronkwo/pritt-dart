@@ -1,3 +1,11 @@
-module RemovePackageByVersionRequest
+open module RemovePackageByVersionRequest
 
-extends "../RemovePackageRequest/schema.pkl"
+
+/// The reason for yanking the package
+reason: String?
+
+/// Whether this is a yank or deprecation request
+yank: Boolean? = false
+
+/// The alternative package to use instead of the yanked package
+alternative: String?
