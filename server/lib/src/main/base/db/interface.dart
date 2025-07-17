@@ -133,6 +133,8 @@ abstract interface class PrittDatabaseInterface
     String name,
     Version version, {
     String? scope,
+    Package? alternative,
+    String? message,
   });
 
   /// Get a package
@@ -198,7 +200,10 @@ abstract interface class PrittDatabaseInterface
   });
 
   /// Get contributors for a specific package via [Stream]
-  Stream<User> getContributorsForPackageStream(String name);
+  Stream<(User, Iterable<Privileges>)> getContributorsForPackageStream(
+    String name, {
+    String? scope,
+  });
 
   /// Create a user
   FutureOr<User> createUser({required String name, required String email});

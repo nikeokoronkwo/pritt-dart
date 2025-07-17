@@ -684,46 +684,6 @@ class PrittClient extends ApiClient implements PrittInterface {
   }
 
   @override
-  FutureOr<YankPackageResponse> yankPackageByName(
-    YankPackageRequest body, {
-    required String name,
-  }) {
-    // TODO: implement yankPackageByName
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<YankPackageResponse> yankPackageByNameWithScope(
-    YankPackageRequest body, {
-    required String scope,
-    required String name,
-  }) {
-    // TODO: implement yankPackageByNameWithScope
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<YankPackageByVersionRequest> yankPackageByNameWithScopeAndVersion(
-    YankPackageByVersionResponse body, {
-    required String scope,
-    required String name,
-    required String version,
-  }) {
-    // TODO: implement yankPackageByNameWithScopeAndVersion
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<YankPackageByVersionRequest> yankPackageVersionByName(
-    YankPackageByVersionResponse body, {
-    required String name,
-    required String version,
-  }) {
-    // TODO: implement yankPackageVersionByName
-    throw UnimplementedError();
-  }
-
-  @override
   FutureOr<AuthDetailsResponse> getAuthDetailsById({required String id}) async {
     final response = await requestBasic(
       '/api/auth/details/$id',
@@ -749,6 +709,47 @@ class PrittClient extends ApiClient implements PrittInterface {
       default:
         throw ApiException(response.body, statusCode: response.statusCode);
     }
+  }
+
+  @override
+  FutureOr<RemovePackageResponse> removePackageByName(
+    RemovePackageRequest body, {
+    required String name,
+  }) {
+    // TODO: implement removePackageByName
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<RemovePackageResponse> removePackageByNameWithScope(
+    RemovePackageRequest body, {
+    required String scope,
+    required String name,
+  }) {
+    // TODO: implement removePackageByNameWithScope
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<RemovePackageByVersionResponse>
+  removePackageByNameWithScopeAndVersion(
+    RemovePackageByVersionRequest body, {
+    required String scope,
+    required String name,
+    required String version,
+  }) {
+    // TODO: implement removePackageByNameWithScopeAndVersion
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<RemovePackageByVersionResponse> removePackageVersionByName(
+    RemovePackageByVersionRequest body, {
+    required String name,
+    required String version,
+  }) {
+    // TODO: implement removePackageVersionByName
+    throw UnimplementedError();
   }
 }
 

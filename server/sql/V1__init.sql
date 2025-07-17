@@ -161,10 +161,13 @@ CREATE TABLE package_versions (
     integrity TEXT NOT NULL,
     deprecated BOOLEAN NOT NULL DEFAULT FALSE,
     deprecated_message TEXT,
+    removed_alternative_id TEXT,
     yanked BOOLEAN NOT NULL DEFAULT FALSE,
 
     PRIMARY KEY (package_id, version),
-    FOREIGN KEY (package_id) REFERENCES packages (id)
+    FOREIGN KEY (package_id) REFERENCES packages (id),
+    FOREIGN KEY (removed_alternative_id) REFERENCES packages (id) ON DELETE SET NULL,
+    CONSTRAINT valid_version CHECK (version ~ '^[0-9]+(\.[0-9]+)*(-[a-zA-Z0-9_.-]+)?$')
 );
 
 CREATE TRIGGER update_package_versions_updated_at

@@ -23,7 +23,21 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@tailwindcss/oxide",
+      "better-sqlite3",
       "esbuild"
+    ],
+    "ignoredBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "cpu-features",
+      "prisma",
+      "protobufjs",
+      "sharp",
+      "ssh2",
+      "unrs-resolver",
+      "vue-demi"
     ]
   },
   "devDependencies": {

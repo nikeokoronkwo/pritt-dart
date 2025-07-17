@@ -145,7 +145,7 @@ RETURNING *''',
       _statements['getAllVersionsOfPackage'] = await _pool.prepare(
         Sql.named('''
 SELECT version, version_type, created_at, info, env, metadata, archive, hash, signatures, integrity, readme, config, config_name,
-       deprecated, deprecated_message, yanked
+       deprecated, deprecated_message, removed_alternative_id, yanked
 FROM package_versions
 WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
 '''),
@@ -183,6 +183,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT 
         isDeprecated: columnMap['deprecated'] as bool,
         isYanked: columnMap['yanked'] as bool,
         deprecationMessage: columnMap['deprecated_message'] as String?,
+        removedAlternativeId: columnMap['removed_alternative_id'] as String?,
       );
     });
   }
@@ -438,7 +439,7 @@ FROM users
         Sql.named('''
 SELECT pv.version, pv.version_type, pv.created_at, pv.info, pv.env, pv.metadata, pv.archive, 
        pv.hash, pv.signatures, pv.integrity, pv.readme, pv.config, pv.config_name, 
-       pv.deprecated, pv.deprecated_message, pv.yanked, 
+       pv.deprecated, pv.deprecated_message, pv.yanked, pv.removed_alternative_id, 
        p.id as package_id, p.name as package_name, p.scope as package_scope, p.language as package_language, p.created_at as package_created_at, 
        p.updated_at as package_updated_at, p.version as package_latest_version, p.vcs as package_vcs, p.vcs_url as package_vcs_url, 
        p.archive as package_archive, p.description as package_description, p.license as package_license, p.public as package_public,
@@ -516,6 +517,7 @@ LIMIT 1
       isDeprecated: columnMap['deprecated'] as bool,
       isYanked: columnMap['yanked'] as bool,
       deprecationMessage: columnMap['deprecated_message'] as String?,
+      removedAlternativeId: columnMap['removed_alternative_id'] as String?,
     );
   }
 
@@ -697,9 +699,39 @@ FROM users
   }
 
   @override
-  Stream<User> getContributorsForPackageStream(String name) {
-    // TODO: implement getContributorsForPackageStream
-    throw UnimplementedError();
+  Stream<(User, Iterable<Privileges>)> getContributorsForPackageStream(
+    String name, {
+    String? scope,
+  }) async* {
+    final result = _pool.execute(
+      Sql.named('''
+SELECT u.id, u.name, u.email, u.created_at, u.updated_at, u.avatar_url,
+       pc.package_id as package_id, pc.privileges as privileges
+FROM package_contributors pc
+LEFT JOIN users u ON pc.contributor_id = u.id
+WHERE pc.package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
+'''),
+      parameters: {'name': name, 'scope': scope},
+    );
+
+    yield* Stream.fromFuture(result).asyncExpand((res) {
+      return Stream.fromIterable(res).asyncMap((row) {
+        final columnMap = row.toColumnMap();
+        return (
+          User(
+            id: columnMap['id'] as String,
+            name: columnMap['name'] as String,
+            email: columnMap['email'] as String,
+            avatarUrl: columnMap['avatar_url'] as String?,
+            createdAt: columnMap['created_at'] as DateTime,
+            updatedAt: columnMap['updated_at'] as DateTime,
+          ),
+          (columnMap['privileges'] as Iterable<UndecodedBytes>).map(
+            (p) => Privileges.fromString(p.asString),
+          ),
+        );
+      });
+    });
   }
 
   @override
@@ -1201,9 +1233,36 @@ RETURNING *''',
     String name,
     Version version, {
     String? scope,
-  }) {
-    // TODO: implement deprecateVersionOfPackage
-    throw UnimplementedError();
+    Package? alternative,
+    String? message,
+  }) async {
+    try {
+      return await _pool
+          .execute(
+            Sql.named('''
+UPDATE package_versions pv
+INNER JOIN packages p ON pv.package_id = p.id
+SET pv.deprecated = TRUE, pv.deprecated_message = @message, pv.removed_alternative_id = @alt
+WHERE p.name = @name AND p.scope IS NOT DISTINCT FROM @scope AND pv.version = @version
+RETURNING pv.*
+'''),
+            parameters: {
+              'name': name,
+              'version': version.toString(),
+              'scope': scope,
+              'message': message,
+              'alt': alternative?.id,
+            },
+          ) // TODO: Should we do the SQL here ourselves as a transaction rather than redoing this request?
+          .then((_) => getPackageWithVersion(name, version, scope: scope));
+    } catch (e, stack) {
+      throw CRSException(
+        CRSExceptionType.CRITICAL_ERROR,
+        'Error deprecating package:',
+        e,
+        stack,
+      );
+    }
   }
 
   @override
@@ -1215,7 +1274,7 @@ RETURNING *''',
       _statements['getAllVersionsOfPackage'] = await _pool.prepare(
         Sql.named('''
 SELECT version, version_type, created_at, info, env, metadata, archive, hash, signatures, integrity, readme, config, config_name,
-       deprecated, deprecated_message, yanked
+       deprecated, deprecated_message, yanked, removed_alternative_id
 FROM package_versions
 WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT DISTINCT FROM @scope LIMIT 1)
 '''),
@@ -1254,6 +1313,7 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT 
           isDeprecated: columnMap['deprecated'] as bool,
           isYanked: columnMap['yanked'] as bool,
           deprecationMessage: columnMap['deprecated_message'] as String?,
+          removedAlternativeId: columnMap['removed_alternative_id'] as String?,
         );
       });
     });
