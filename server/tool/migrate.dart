@@ -59,7 +59,6 @@ CREATE TABLE IF NOT EXISTS ${argResults['table']} (
   applied_at TIMESTAMPTZ DEFAULT now()
 );''');
 
-
   // run migrations on files in `sql`
   final dir = Directory(argResults['directory']);
   if (!(await dir.exists())) {
