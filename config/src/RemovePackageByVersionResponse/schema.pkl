@@ -1,0 +1,18 @@
+open module RemovePackageByVersionResponse
+
+/// Whether the package was successfully yanked
+success: Boolean
+
+/// The reason for yanking the package
+reason: String?
+
+/// The name of the package that was yanked
+package_name: String
+
+/// The alternative package to use instead of the yanked package
+alternative: String?
+
+/// The type of request that was made
+request_type: RequestType
+
+typealias RequestType = "yank" | "deprecate"

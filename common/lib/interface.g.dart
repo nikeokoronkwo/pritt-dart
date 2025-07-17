@@ -728,6 +728,87 @@ Map<String, dynamic> _$PublishPackageStatusResponseToJson(
   'version': instance.version,
 };
 
+RemovePackageByVersionRequest _$RemovePackageByVersionRequestFromJson(
+  Map<String, dynamic> json,
+) => RemovePackageByVersionRequest(
+  reason: json['reason'] as String?,
+  yank: json['yank'] as bool?,
+  alternative: json['alternative'] as String?,
+);
+
+Map<String, dynamic> _$RemovePackageByVersionRequestToJson(
+  RemovePackageByVersionRequest instance,
+) => <String, dynamic>{
+  if (instance.reason case final value?) 'reason': value,
+  if (instance.yank case final value?) 'yank': value,
+  if (instance.alternative case final value?) 'alternative': value,
+};
+
+RemovePackageByVersionResponse _$RemovePackageByVersionResponseFromJson(
+  Map<String, dynamic> json,
+) => RemovePackageByVersionResponse(
+  success: json['success'] as bool,
+  reason: json['reason'] as String?,
+  package_name: json['package_name'] as String,
+  alternative: json['alternative'] as String?,
+  request_type: $enumDecode(_$RequestTypeEnumMap, json['request_type']),
+);
+
+Map<String, dynamic> _$RemovePackageByVersionResponseToJson(
+  RemovePackageByVersionResponse instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  if (instance.reason case final value?) 'reason': value,
+  'package_name': instance.package_name,
+  if (instance.alternative case final value?) 'alternative': value,
+  'request_type': _$RequestTypeEnumMap[instance.request_type]!,
+};
+
+const _$RequestTypeEnumMap = {
+  RequestType.yank: 'yank',
+  RequestType.deprecate: 'deprecate',
+};
+
+RemovePackageRequest _$RemovePackageRequestFromJson(
+  Map<String, dynamic> json,
+) => RemovePackageRequest(
+  reason: json['reason'] as String?,
+  yank: json['yank'] as bool?,
+  alternative: json['alternative'] as String?,
+  version: json['version'] as String?,
+);
+
+Map<String, dynamic> _$RemovePackageRequestToJson(
+  RemovePackageRequest instance,
+) => <String, dynamic>{
+  if (instance.reason case final value?) 'reason': value,
+  if (instance.yank case final value?) 'yank': value,
+  if (instance.alternative case final value?) 'alternative': value,
+  if (instance.version case final value?) 'version': value,
+};
+
+RemovePackageResponse _$RemovePackageResponseFromJson(
+  Map<String, dynamic> json,
+) => RemovePackageResponse(
+  success: json['success'] as bool,
+  reason: json['reason'] as String?,
+  package_name: json['package_name'] as String,
+  alternative: json['alternative'] as String?,
+  request_type: $enumDecode(_$RequestTypeEnumMap, json['request_type']),
+  version: json['version'] as String,
+);
+
+Map<String, dynamic> _$RemovePackageResponseToJson(
+  RemovePackageResponse instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  if (instance.reason case final value?) 'reason': value,
+  'package_name': instance.package_name,
+  if (instance.alternative case final value?) 'alternative': value,
+  'request_type': _$RequestTypeEnumMap[instance.request_type]!,
+  'version': instance.version,
+};
+
 ServerError _$ServerErrorFromJson(Map<String, dynamic> json) =>
     ServerError(error: json['error'] as String?);
 
@@ -773,37 +854,8 @@ Map<String, dynamic> _$UploadPackageResponseToJson(
 ) => <String, dynamic>{};
 
 YankAdapterResponse _$YankAdapterResponseFromJson(Map<String, dynamic> json) =>
-    YankAdapterResponse();
+    YankAdapterResponse(reason: json['reason'] as String?);
 
 Map<String, dynamic> _$YankAdapterResponseToJson(
   YankAdapterResponse instance,
-) => <String, dynamic>{};
-
-YankPackageByVersionRequest _$YankPackageByVersionRequestFromJson(
-  Map<String, dynamic> json,
-) => YankPackageByVersionRequest();
-
-Map<String, dynamic> _$YankPackageByVersionRequestToJson(
-  YankPackageByVersionRequest instance,
-) => <String, dynamic>{};
-
-YankPackageByVersionResponse _$YankPackageByVersionResponseFromJson(
-  Map<String, dynamic> json,
-) => YankPackageByVersionResponse();
-
-Map<String, dynamic> _$YankPackageByVersionResponseToJson(
-  YankPackageByVersionResponse instance,
-) => <String, dynamic>{};
-
-YankPackageRequest _$YankPackageRequestFromJson(Map<String, dynamic> json) =>
-    YankPackageRequest(version: json['version'] as String);
-
-Map<String, dynamic> _$YankPackageRequestToJson(YankPackageRequest instance) =>
-    <String, dynamic>{'version': instance.version};
-
-YankPackageResponse _$YankPackageResponseFromJson(Map<String, dynamic> json) =>
-    YankPackageResponse();
-
-Map<String, dynamic> _$YankPackageResponseToJson(
-  YankPackageResponse instance,
-) => <String, dynamic>{};
+) => <String, dynamic>{if (instance.reason case final value?) 'reason': value};

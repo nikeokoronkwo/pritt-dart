@@ -179,6 +179,9 @@ class PackageVersions {
   /// Whether a given package is yanked
   bool isYanked;
 
+  /// The id of the package that this version was removed in favor of, if any
+  String? removedAlternativeId;
+
   PackageVersions({
     required this.package,
     required this.version,
@@ -197,6 +200,7 @@ class PackageVersions {
     this.isDeprecated = false,
     this.isYanked = false,
     this.deprecationMessage,
+    this.removedAlternativeId,
   }) : assert(
          config == null || configName != null,
          "If config is set, then configName must be set as well",

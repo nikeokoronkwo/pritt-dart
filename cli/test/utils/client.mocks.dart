@@ -164,24 +164,24 @@ class _FakeYankAdapterResponse_21 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeYankPackageResponse_22 extends _i1.SmartFake
-    implements _i3.YankPackageResponse {
-  _FakeYankPackageResponse_22(Object parent, Invocation parentInvocation)
+class _FakeAuthDetailsResponse_22 extends _i1.SmartFake
+    implements _i3.AuthDetailsResponse {
+  _FakeAuthDetailsResponse_22(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeYankPackageByVersionRequest_23 extends _i1.SmartFake
-    implements _i3.YankPackageByVersionRequest {
-  _FakeYankPackageByVersionRequest_23(
+class _FakeRemovePackageResponse_23 extends _i1.SmartFake
+    implements _i3.RemovePackageResponse {
+  _FakeRemovePackageResponse_23(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeRemovePackageByVersionResponse_24 extends _i1.SmartFake
+    implements _i3.RemovePackageByVersionResponse {
+  _FakeRemovePackageByVersionResponse_24(
     Object parent,
     Invocation parentInvocation,
   ) : super(parent, parentInvocation);
-}
-
-class _FakeAuthDetailsResponse_24 extends _i1.SmartFake
-    implements _i3.AuthDetailsResponse {
-  _FakeAuthDetailsResponse_24(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
 }
 
 class _FakeResponse_25 extends _i1.SmartFake implements _i2.Response {
@@ -725,6 +725,25 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           as _i8.FutureOr<_i3.GetUserResponse>);
 
   @override
+  _i8.FutureOr<_i3.GetUserResponse> getCurrentUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentUser, []),
+            returnValue: _i8.Future<_i3.GetUserResponse>.value(
+              _FakeGetUserResponse_13(
+                this,
+                Invocation.method(#getCurrentUser, []),
+              ),
+            ),
+            returnValueForMissingStub: _i8.Future<_i3.GetUserResponse>.value(
+              _FakeGetUserResponse_13(
+                this,
+                Invocation.method(#getCurrentUser, []),
+              ),
+            ),
+          )
+          as _i8.FutureOr<_i3.GetUserResponse>);
+
+  @override
   _i8.FutureOr<_i3.GetUsersResponse> getUsers() =>
       (super.noSuchMethod(
             Invocation.method(#getUsers, []),
@@ -996,182 +1015,163 @@ class MockPrittClient extends _i1.Mock implements _i4.PrittClient {
           as _i8.FutureOr<_i3.YankAdapterResponse>);
 
   @override
-  _i8.FutureOr<_i3.YankPackageResponse> yankPackageByName(
-    _i3.YankPackageRequest? body, {
-    required String? name,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(#yankPackageByName, [body], {#name: name}),
-            returnValue: _i8.Future<_i3.YankPackageResponse>.value(
-              _FakeYankPackageResponse_22(
-                this,
-                Invocation.method(#yankPackageByName, [body], {#name: name}),
-              ),
-            ),
-            returnValueForMissingStub:
-                _i8.Future<_i3.YankPackageResponse>.value(
-                  _FakeYankPackageResponse_22(
-                    this,
-                    Invocation.method(
-                      #yankPackageByName,
-                      [body],
-                      {#name: name},
-                    ),
-                  ),
-                ),
-          )
-          as _i8.FutureOr<_i3.YankPackageResponse>);
-
-  @override
-  _i8.FutureOr<_i3.YankPackageResponse> yankPackageByNameWithScope(
-    _i3.YankPackageRequest? body, {
-    required String? scope,
-    required String? name,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #yankPackageByNameWithScope,
-              [body],
-              {#scope: scope, #name: name},
-            ),
-            returnValue: _i8.Future<_i3.YankPackageResponse>.value(
-              _FakeYankPackageResponse_22(
-                this,
-                Invocation.method(
-                  #yankPackageByNameWithScope,
-                  [body],
-                  {#scope: scope, #name: name},
-                ),
-              ),
-            ),
-            returnValueForMissingStub:
-                _i8.Future<_i3.YankPackageResponse>.value(
-                  _FakeYankPackageResponse_22(
-                    this,
-                    Invocation.method(
-                      #yankPackageByNameWithScope,
-                      [body],
-                      {#scope: scope, #name: name},
-                    ),
-                  ),
-                ),
-          )
-          as _i8.FutureOr<_i3.YankPackageResponse>);
-
-  @override
-  _i8.FutureOr<_i3.YankPackageByVersionRequest>
-  yankPackageByNameWithScopeAndVersion(
-    _i3.YankPackageByVersionResponse? body, {
-    required String? scope,
-    required String? name,
-    required String? version,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #yankPackageByNameWithScopeAndVersion,
-              [body],
-              {#scope: scope, #name: name, #version: version},
-            ),
-            returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
-              _FakeYankPackageByVersionRequest_23(
-                this,
-                Invocation.method(
-                  #yankPackageByNameWithScopeAndVersion,
-                  [body],
-                  {#scope: scope, #name: name, #version: version},
-                ),
-              ),
-            ),
-            returnValueForMissingStub:
-                _i8.Future<_i3.YankPackageByVersionRequest>.value(
-                  _FakeYankPackageByVersionRequest_23(
-                    this,
-                    Invocation.method(
-                      #yankPackageByNameWithScopeAndVersion,
-                      [body],
-                      {#scope: scope, #name: name, #version: version},
-                    ),
-                  ),
-                ),
-          )
-          as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
-
-  @override
-  _i8.FutureOr<_i3.YankPackageByVersionRequest> yankPackageVersionByName(
-    _i3.YankPackageByVersionResponse? body, {
-    required String? name,
-    required String? version,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #yankPackageVersionByName,
-              [body],
-              {#name: name, #version: version},
-            ),
-            returnValue: _i8.Future<_i3.YankPackageByVersionRequest>.value(
-              _FakeYankPackageByVersionRequest_23(
-                this,
-                Invocation.method(
-                  #yankPackageVersionByName,
-                  [body],
-                  {#name: name, #version: version},
-                ),
-              ),
-            ),
-            returnValueForMissingStub:
-                _i8.Future<_i3.YankPackageByVersionRequest>.value(
-                  _FakeYankPackageByVersionRequest_23(
-                    this,
-                    Invocation.method(
-                      #yankPackageVersionByName,
-                      [body],
-                      {#name: name, #version: version},
-                    ),
-                  ),
-                ),
-          )
-          as _i8.FutureOr<_i3.YankPackageByVersionRequest>);
-
-  @override
-  _i8.FutureOr<_i3.GetUserResponse> getCurrentUser() =>
-      (super.noSuchMethod(
-            Invocation.method(#getCurrentUser, []),
-            returnValue: _i8.Future<_i3.GetUserResponse>.value(
-              _FakeGetUserResponse_13(
-                this,
-                Invocation.method(#getCurrentUser, []),
-              ),
-            ),
-            returnValueForMissingStub: _i8.Future<_i3.GetUserResponse>.value(
-              _FakeGetUserResponse_13(
-                this,
-                Invocation.method(#getCurrentUser, []),
-              ),
-            ),
-          )
-          as _i8.FutureOr<_i3.GetUserResponse>);
-
-  @override
   _i8.FutureOr<_i3.AuthDetailsResponse> getAuthDetailsById({
     required String? id,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getAuthDetailsById, [], {#id: id}),
             returnValue: _i8.Future<_i3.AuthDetailsResponse>.value(
-              _FakeAuthDetailsResponse_24(
+              _FakeAuthDetailsResponse_22(
                 this,
                 Invocation.method(#getAuthDetailsById, [], {#id: id}),
               ),
             ),
             returnValueForMissingStub:
                 _i8.Future<_i3.AuthDetailsResponse>.value(
-                  _FakeAuthDetailsResponse_24(
+                  _FakeAuthDetailsResponse_22(
                     this,
                     Invocation.method(#getAuthDetailsById, [], {#id: id}),
                   ),
                 ),
           )
           as _i8.FutureOr<_i3.AuthDetailsResponse>);
+
+  @override
+  _i8.FutureOr<_i3.RemovePackageResponse> removePackageByName(
+    _i3.RemovePackageRequest? body, {
+    required String? name,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#removePackageByName, [body], {#name: name}),
+            returnValue: _i8.Future<_i3.RemovePackageResponse>.value(
+              _FakeRemovePackageResponse_23(
+                this,
+                Invocation.method(#removePackageByName, [body], {#name: name}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.RemovePackageResponse>.value(
+                  _FakeRemovePackageResponse_23(
+                    this,
+                    Invocation.method(
+                      #removePackageByName,
+                      [body],
+                      {#name: name},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.RemovePackageResponse>);
+
+  @override
+  _i8.FutureOr<_i3.RemovePackageResponse> removePackageByNameWithScope(
+    _i3.RemovePackageRequest? body, {
+    required String? scope,
+    required String? name,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #removePackageByNameWithScope,
+              [body],
+              {#scope: scope, #name: name},
+            ),
+            returnValue: _i8.Future<_i3.RemovePackageResponse>.value(
+              _FakeRemovePackageResponse_23(
+                this,
+                Invocation.method(
+                  #removePackageByNameWithScope,
+                  [body],
+                  {#scope: scope, #name: name},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.RemovePackageResponse>.value(
+                  _FakeRemovePackageResponse_23(
+                    this,
+                    Invocation.method(
+                      #removePackageByNameWithScope,
+                      [body],
+                      {#scope: scope, #name: name},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.RemovePackageResponse>);
+
+  @override
+  _i8.FutureOr<_i3.RemovePackageByVersionResponse>
+  removePackageByNameWithScopeAndVersion(
+    _i3.RemovePackageByVersionRequest? body, {
+    required String? scope,
+    required String? name,
+    required String? version,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #removePackageByNameWithScopeAndVersion,
+              [body],
+              {#scope: scope, #name: name, #version: version},
+            ),
+            returnValue: _i8.Future<_i3.RemovePackageByVersionResponse>.value(
+              _FakeRemovePackageByVersionResponse_24(
+                this,
+                Invocation.method(
+                  #removePackageByNameWithScopeAndVersion,
+                  [body],
+                  {#scope: scope, #name: name, #version: version},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.RemovePackageByVersionResponse>.value(
+                  _FakeRemovePackageByVersionResponse_24(
+                    this,
+                    Invocation.method(
+                      #removePackageByNameWithScopeAndVersion,
+                      [body],
+                      {#scope: scope, #name: name, #version: version},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.RemovePackageByVersionResponse>);
+
+  @override
+  _i8.FutureOr<_i3.RemovePackageByVersionResponse> removePackageVersionByName(
+    _i3.RemovePackageByVersionRequest? body, {
+    required String? name,
+    required String? version,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #removePackageVersionByName,
+              [body],
+              {#name: name, #version: version},
+            ),
+            returnValue: _i8.Future<_i3.RemovePackageByVersionResponse>.value(
+              _FakeRemovePackageByVersionResponse_24(
+                this,
+                Invocation.method(
+                  #removePackageVersionByName,
+                  [body],
+                  {#name: name, #version: version},
+                ),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i8.Future<_i3.RemovePackageByVersionResponse>.value(
+                  _FakeRemovePackageByVersionResponse_24(
+                    this,
+                    Invocation.method(
+                      #removePackageVersionByName,
+                      [body],
+                      {#name: name, #version: version},
+                    ),
+                  ),
+                ),
+          )
+          as _i8.FutureOr<_i3.RemovePackageByVersionResponse>);
 
   @override
   void close() => super.noSuchMethod(

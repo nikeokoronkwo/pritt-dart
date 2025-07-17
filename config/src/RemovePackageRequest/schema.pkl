@@ -1,8 +1,9 @@
 /// The schema of the request object for the add user endpoint `api/user/{id}`
 ///
 /// The object gets important information such as necessary information for registering the user
-module YankPackageRequest
+module RemovePackageRequest
 
-/// The version of the package
-version: String
+extends "../RemovePackageByVersionRequest/schema.pkl"
 
+/// The version to request for
+version: String?
