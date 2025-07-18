@@ -6,6 +6,7 @@ locals {
     default = {
 
     }
+
   }
 
   db_config = lookup(local.cases[var.tier], local.cases.default)
