@@ -1,5 +1,7 @@
+# Managing Pritt Images in GCP Registry (or other registry)
+
 resource "google_artifact_registry_repository" "pritt_artifacts" {
-  location      = var.location
+  location      = var.region
   repository_id = "pritt-repo"
   format        = "DOCKER"
 }

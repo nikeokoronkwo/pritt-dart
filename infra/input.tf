@@ -1,4 +1,4 @@
-variable "location" {
+variable "region" {
   type        = string
   description = "The main location for instances"
   default     = "us-central1"
@@ -9,9 +9,9 @@ variable "project_id" {
   description = "The (GCP) Project ID"
 }
 
-variable "instance_url" {
+variable "domain_name" {
   type        = string
-  description = "The Instance URL for the given service"
+  description = "The Instance Domain Name URL for the deployed service"
 }
 
 variable "api_image_id" {
