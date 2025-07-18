@@ -1,14 +1,21 @@
 terraform {
+  backend "local" {
+    path = "default.tfstate"
+  }
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "6.38.0"
+      version = "6.44.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.7.2"
     }
   }
 }
 
 provider "google" {
-  region = "us-central1"
-  zone   = "us-central1-c"
+  project = var.project_id
+  region  = var.location
 }
 
