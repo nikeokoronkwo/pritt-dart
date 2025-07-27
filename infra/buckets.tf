@@ -1,9 +1,26 @@
-resource "random_id" "default" {
-  byte_length = 8
+# S3 Compatible Storage Buckets
+locals {
+  location = "US"
 }
 
-resource "google_storage_bucket" "default" {
-  name                        = "${random_id.default.hex}-gcf-source" # Every bucket name must be globally unique
-  location                    = "US"
-  uniform_bucket_level_access = true
+resource "google_storage_bucket" "storage" {
+  name          = "pritt-packages"
+  location      = local.location
+  force_destroy = true
+
+  public_access_prevention = "enforced"
+}
+
+resource "google_storage_bucket" "publishing" {
+  name          = "pritt-publishing-archives"
+  location      = local.location
+  force_destroy = true
+}
+
+resource "google_storage_bucket" "adapters" {
+  name          = "pritt-adapters"
+  location      = local.location
+  force_destroy = true
+
+  public_access_prevention = "enforced"
 }

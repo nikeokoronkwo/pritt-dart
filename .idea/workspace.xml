@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="minor changes" />
+    <list default="true" id="ae7b472d-3fc3-47fa-b36d-510ac586b107" name="Changes" comment="Buckets and network infra">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infra/buckets.tf" beforeDir="false" afterPath="$PROJECT_DIR$/infra/buckets.tf" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +19,9 @@
         <option value="Pkl Template" />
         <option value="Pkl File" />
         <option value="Dart File" />
+        <option value="Outputs" />
+        <option value="Variables" />
+        <option value="Empty File" />
       </list>
     </option>
   </component>
@@ -93,7 +99,7 @@
     &quot;Shell Script.PKL Testing.executor&quot;: &quot;Run&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;#76 on nikeokoronkwo/issue25&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;#61 on feature/iac&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/nikechukwu/Desktop/projects/pritt/pritt-dart/config/src/AuthValidateResponse&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
@@ -115,7 +121,7 @@
       <recent name="$PROJECT_DIR$/cli/lib/src/cli" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Compose (services only)">
+  <component name="RunManager" selected="OpenTofu.OpenTofu Destroy">
     <configuration name="CSV Encoding Testing in csv_test.dart" type="DartTestRunConfigurationType" factoryName="Dart Test" temporary="true" nameIsGenerated="true">
       <option name="filePath" value="$PROJECT_DIR$/cli/test/unit/csv_test.dart" />
       <option name="scope" value="GROUP_OR_TEST_BY_NAME" />
@@ -148,6 +154,10 @@
       <item itemvalue="Dart Test.Table Testing in table_test.dart" />
       <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
       <item itemvalue="Docker.Compose (services only)" />
+      <item itemvalue="OpenTofu.OpenTofu Destroy" />
+      <item itemvalue="OpenTofu.OpenTofu Apply" />
+      <item itemvalue="OpenTofu.OpenTofu Validate" />
+      <item itemvalue="OpenTofu.OpenTofu Init" />
       <item itemvalue="Shell Script.PKL Testing" />
     </list>
     <recent_temporary>
@@ -156,7 +166,6 @@
         <item itemvalue="Dart Test.Table Testing in table_test.dart" />
         <item itemvalue="Dart Test.Client Testing in list_test.dart" />
         <item itemvalue="Dart Test.CSV Encoding Testing in csv_test.dart" />
-        <item itemvalue="Dart Test.Tests in progress_bar_test.dart" />
       </list>
     </recent_temporary>
   </component>
@@ -432,7 +441,55 @@
       <option name="project" value="LOCAL" />
       <updated>1752638263703</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="minor changes">
+      <option name="closed" value="true" />
+      <created>1752727067442</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1752727067442</updated>
+    </task>
+    <task id="LOCAL-00036" summary="formatting and linting changes">
+      <option name="closed" value="true" />
+      <created>1752727178183</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1752727178183</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Implementing TF Variables">
+      <option name="closed" value="true" />
+      <created>1752817182485</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1752817182485</updated>
+    </task>
+    <task id="LOCAL-00038" summary="WIP: Implementing DB Infra">
+      <option name="closed" value="true" />
+      <created>1752818850787</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1752818850787</updated>
+    </task>
+    <task id="LOCAL-00039" summary="WIP: Implementing DB Infra">
+      <option name="closed" value="true" />
+      <created>1752819045962</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1752819045962</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Buckets and network infra">
+      <option name="closed" value="true" />
+      <created>1753022168482</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1753022168482</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -447,10 +504,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLI: Migrated Command Implementations" />
-    <MESSAGE value="WIP: [cli] Implementing `unpack` command" />
-    <MESSAGE value="[cli] Implemented `unpack` and `adapter unpack` command at unpack.dart&#10;&#10;Looking towards how I can redirect `package unpack` to `unpack`" />
-    <MESSAGE value="added .gitattributes for generated files" />
     <MESSAGE value="added new SQL table" />
     <MESSAGE value="[server] Added Auth Workflow&#10;&#10;- added DB endpoints for auth status and sessions&#10;- added routes to interface&#10;- added SQL definitions in V1__init.sql" />
     <MESSAGE value="[server] Completed Access Token Updates and Auth Session Integration" />
@@ -472,6 +525,10 @@
     <MESSAGE value="[infra] Formatting" />
     <MESSAGE value="[idea] workspace.xml" />
     <MESSAGE value="minor changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor changes" />
+    <MESSAGE value="formatting and linting changes" />
+    <MESSAGE value="Implementing TF Variables" />
+    <MESSAGE value="WIP: Implementing DB Infra" />
+    <MESSAGE value="Buckets and network infra" />
+    <option name="LAST_COMMIT_MESSAGE" value="Buckets and network infra" />
   </component>
 </project>

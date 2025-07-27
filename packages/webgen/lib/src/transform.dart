@@ -212,7 +212,7 @@ Future<void> generateAuthAndDb(
 
   // generate drizzle migrations
   // ignore: non_constant_identifier_names
-  final __ = await Future.sync(
+  final _ = await Future.sync(
     () =>
         childProcess.execSync('pnpm db:generate', ExecOptions(cwd: outputDir)),
   );

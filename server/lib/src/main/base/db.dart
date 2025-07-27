@@ -80,6 +80,8 @@ class PrittDatabase with SQLDatabase implements PrittDatabaseInterface {
               ),
       );
 
+      // run migrations
+
       _preparePool(pool);
 
       db = PrittDatabase._(pool: pool);

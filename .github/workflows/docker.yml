@@ -1,8 +1,7 @@
 name: Server Docker Image CI
 
 on:
-  push:
-    branches: ["stable"]
+  workflow_call:
   workflow_dispatch:
 
 env:
@@ -19,6 +18,7 @@ jobs:
       attestations: write
       id-token: write
 
+    # TODO: Build two images
     steps:
       - uses: actions/checkout@v4
 
