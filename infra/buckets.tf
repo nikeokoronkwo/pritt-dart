@@ -23,6 +23,4 @@ resource "google_storage_bucket" "adapters" {
   force_destroy = true
 
   public_access_prevention = "enforced"
-
-
 }
