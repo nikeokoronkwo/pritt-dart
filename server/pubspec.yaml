@@ -24,7 +24,10 @@ dependencies:
   path: ^1.9.1
   pool: ^1.5.1
   postgres: ^3.5.6
+  pritt_adapter: ^0.0.0
+  pritt_api: ^0.0.0
   pritt_common: ^0.0.1
+  pritt_server_core: ^0.0.0
   retry: ^3.1.2
   shelf: ^1.4.2
   shelf_router: ^1.1.4

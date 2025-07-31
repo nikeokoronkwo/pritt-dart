@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:pritt_common/interface.dart';
+import '../../../../packages/common/lib/interface.dart';
 
 import 'base.dart';
 

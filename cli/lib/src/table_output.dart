@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:pritt_common/interface.dart';
+import '../../../packages/common/lib/interface.dart';
 
 import 'cli/table.dart';
 import 'parse_name.dart';

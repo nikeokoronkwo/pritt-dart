@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
-import 'package:pritt_common/interface.dart';
+import '../../../../packages/common/lib/interface.dart';
 
 import 'authentication.dart';
 

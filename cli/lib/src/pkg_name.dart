@@ -1,4 +1,4 @@
-import 'package:pritt_common/functions.dart';
+import '../../../packages/common/lib/functions.dart';
 
 typedef PkgRepName = ({String name, String? scope, String? version});
 

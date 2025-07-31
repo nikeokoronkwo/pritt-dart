@@ -2,9 +2,14 @@ name: pritt_workspace
 publish_to: none
 environment:
   sdk: ^3.8.0
+# TODO: Glob Support
 workspace:
   - cli
-  - common
+  - packages/common
+  - packages/server_core
+  - packages/ai
+  - packages/api
+  - packages/adapter
   - server
 dev_dependencies:
   lints: ^6.0.0

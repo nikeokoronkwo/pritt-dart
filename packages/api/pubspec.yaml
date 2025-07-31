@@ -1,0 +1,15 @@
+name: pritt_api
+resolution: workspace
+
+environment:
+  sdk: ^3.8.0
+dependencies:
+  archive: ^3.6.1
+  async: ^2.13.0
+  crypto: ^3.0.6
+  http: ^1.4.0
+  path: ^1.9.1
+  pritt_common: ^0.0.1
+  pritt_server_core: ^0.0.0
+  shelf: ^1.4.2
+  shelf_router: ^1.1.4

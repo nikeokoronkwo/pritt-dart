@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:glob/glob.dart';
-import 'package:pritt_common/interface.dart';
+import '../../../../packages/common/lib/interface.dart';
 
 class IgnoreMatcher {
   final List<IgnorePattern> patterns;

@@ -1,0 +1,136 @@
+import 'package:pritt_common/interface.dart' as common;
+import 'package:pritt_common/version.dart';
+import 'package:pritt_server_core/pritt_server_core.dart';
+
+import '../../../../../crs.dart';
+import '../../../../../utils/authorization.dart';
+import '../../../../../utils/request_handler.dart';
+
+final handler = defineRequestHandler((event) async {
+  // get pkg name
+  final pkgName = getParams(event, 'name') as String;
+  final pkgScope = getParams(event, 'scope') as String;
+  final pkgVer = Version.parse(getParams(event, 'version') as String);
+
+  // check authorization
+  final authToken = getHeader(event, 'Authorization');
+  final user = authToken != null ? await checkAuthorization(authToken) : null;
+  final isAuthorized = user != null;
+
+  try {
+    // get the package version
+    final pkg = await crs.db.getPackageWithVersion(
+      pkgName,
+      pkgVer,
+      scope: pkgScope,
+    );
+
+    // get contributors
+    final contributors = await crs.db.getContributorsForPackage(
+      pkgName,
+      scope: pkgScope,
+    );
+
+    final org = pkg.package.scope != null
+        ? await crs.db.getOrganizationByName(pkg.package.scope!)
+        : null;
+
+    if (!((pkg.package.public ?? true) && (org?.public ?? true)) &&
+        (pkg.package.author != user || !isAuthorized) &&
+        !contributors.keys.contains(user)) {
+      // check org membership
+      final members = crs.db.getMembersForOrganizationStream(pkgScope);
+      if (pkg.package.scoped && !(await members.contains(user))) {
+        throw const CRSException(
+          CRSExceptionType.UNAUTHORIZED,
+          'Package not found',
+        );
+      }
+    }
+
+    final author = common.Author(
+      name: pkg.package.author.name,
+      email: pkg.package.author.email,
+    );
+
+    // return
+    final resp = common.GetPackageByVersionResponse(
+      name: '${pkg.package.scope}/${pkg.package.name}',
+      scope: pkg.package.scope,
+      version: pkg.version,
+      author: author,
+      created_at: pkg.created.toIso8601String(),
+      info: pkg.info,
+      env: pkg.env,
+      metadata: pkg.metadata,
+      signatures: pkg.signatures
+          .map(
+            (sig) => common.Signature(
+              public_key_id: sig.publicKeyId,
+              signature: sig.signature,
+              created: sig.created.toIso8601String(),
+            ),
+          )
+          .toList(),
+      readme: pkg.readme,
+      config: pkg.config == null
+          ? null
+          : common.ConfigFile(name: pkg.configName!, data: pkg.config!),
+      deprecated: isAuthorized ? pkg.isDeprecated : null,
+      yanked: isAuthorized ? pkg.isYanked : null,
+      deprecationMessage: isAuthorized ? pkg.deprecationMessage : null,
+      hash: isAuthorized ? pkg.hash : null,
+      integrity: isAuthorized ? pkg.integrity : null,
+      contributors: contributors.entries.map((e) {
+        return common.Contributor(
+          name: e.key.name,
+          email: e.key.email,
+          privileges: isAuthorized
+              ? e.value.map((p) {
+                  return switch (p) {
+                    Privileges.read => common.Privilege.read,
+                    Privileges.write => common.Privilege.write,
+                    Privileges.publish => common.Privilege.publish,
+                    Privileges.ultimate => common.Privilege.ultimate,
+                  };
+                }).toList()
+              : null,
+        );
+      }).toList(),
+    );
+
+    return resp.toJson();
+
+    // if package not found, return 404
+  } on CRSException catch (e) {
+    switch (e.type) {
+      case CRSExceptionType.UNAUTHORIZED:
+        // TODO: 401 or 404?
+        setResponseCode(event, 401);
+        return common.UnauthorizedError(
+          error: 'Unauthorized',
+          reason: common.UnauthorizedReason.protected,
+          description: 'You are not authorized to access this package',
+        ).toJson();
+      case CRSExceptionType.PACKAGE_NOT_FOUND:
+        setResponseCode(event, 404);
+        return common.NotFoundError(
+          error: 'Package not found',
+          message: 'Package with name @$pkgScope/$pkgName not found',
+        ).toJson();
+      case CRSExceptionType.VERSION_NOT_FOUND:
+        setResponseCode(event, 404);
+        return common.NotFoundError(
+          error: 'Version not found',
+          message:
+              'Some versions of the package @$pkgScope/$pkgName were not found',
+        ).toJson();
+      default:
+        setResponseCode(event, 500);
+        return 'Internal server error';
+    }
+  } catch (e) {
+    setResponseCode(event, 500);
+    return 'Internal server error';
+  }
+});

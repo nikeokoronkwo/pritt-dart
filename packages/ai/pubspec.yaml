@@ -1,0 +1,5 @@
+name: pritt_ai
+resolution: workspace
+
+environment:
+  sdk: ^3.8.0

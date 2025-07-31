@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/interface.dart';
+import '../../../../packages/common/lib/interface.dart';
 
 import '../adapters/base.dart';
 import '../adapters/base/config.dart';

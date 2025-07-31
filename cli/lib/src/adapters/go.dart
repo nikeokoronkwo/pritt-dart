@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:pritt_common/interface.dart';
-import 'package:pritt_common/version.dart';
+import '../../../../packages/common/lib/interface.dart';
+import '../../../../packages/common/lib/version.dart';
 
 import '../loader.dart';
 import 'base.dart';

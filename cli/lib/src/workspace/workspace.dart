@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/config.dart';
-import 'package:pritt_common/interface.dart';
+import '../../../../packages/common/lib/config.dart';
+import '../../../../packages/common/lib/interface.dart';
 import 'package:yaml/yaml.dart';
 
 import '../adapters/base.dart';

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:http_multi_server/http_multi_server.dart';
+import 'package:pritt_api/pritt_api.dart';
 import 'package:pritt_server/adapter_handler.dart';
 import 'package:pritt_server/pritt_server.dart';
-import 'package:pritt_server/server_handler.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 

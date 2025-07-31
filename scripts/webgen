@@ -5,4 +5,4 @@ pnpm i
 pnpm compile
 pnpm bundle
 cd -
-node packages/webgen/dist/webgen.js $@
+node tool/webgen/dist/webgen.js $@

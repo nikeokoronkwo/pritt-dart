@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:io/ansi.dart';
-import 'package:pritt_common/interface.dart';
+import '../../../../packages/common/lib/interface.dart';
 
 import '../loader.dart';
 import 'base.dart';

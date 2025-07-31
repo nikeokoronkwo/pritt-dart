@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     # Begin
     print("Searching for OpenAPIGen dir...")
-    openapigen_dir = path.join(os.getcwd(), 'packages', 'openapigen')
+    openapigen_dir = path.join(os.getcwd(), 'tool', 'openapigen')
     openapigen_dest_dir = path.join(openapigen_dir, 'dist')
 
     oaig_js_dir = path.join(openapigen_dir, 'js')

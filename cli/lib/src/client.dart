@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:pritt_common/interface.dart';
+import '../../../packages/common/lib/interface.dart';
 import 'package:retry/retry.dart';
 
 import 'client/authentication.dart';

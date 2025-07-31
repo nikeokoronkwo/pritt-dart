@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
-import 'package:pritt_common/interface.dart';
+import '../../../packages/common/lib/interface.dart';
 import 'package:test/test.dart';
 
 Map<String, String> readEnvFile(String dir) {
