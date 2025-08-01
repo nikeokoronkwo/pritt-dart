@@ -49,7 +49,7 @@ extension SchemaGen on OpenAPIGenResult {
         ..directives.add(Directive.part('interface.g.dart'))
         ..body.addAll([
           ...generateBaseClasses(schemas),
-          ...(schemaClasses).values,
+          ...schemaClasses.values,
           clientClass,
         ]),
     );
@@ -92,8 +92,8 @@ Reference _generateSpecFromSchema<T extends Spec>(
     return TypeReference(
       (t) => t
         ..symbol = switch (componentSpecs![name]) {
-          Enum e => e.name,
-          Class c => c.name,
+          final Enum e => e.name,
+          final Class c => c.name,
           _ => throw Exception('Unknown'),
         }
         ..isNullable = !(required ?? true),
@@ -290,7 +290,7 @@ Reference _generateSpecFromSchema<T extends Spec>(
         final propIsRequired = requiredProperties.toDart
             .map((v) => v.toDart.toLowerCase())
             .contains(name.toLowerCase());
-        var type = _generateSpecFromSchema(
+        final type = _generateSpecFromSchema(
           obj,
           obj.getProperty('title'.toJS).dartify() as String? ?? name,
           componentSpecs: componentSpecs,
@@ -315,7 +315,7 @@ Reference _generateSpecFromSchema<T extends Spec>(
               ..required = propIsRequired
               ..defaultTo =
                   !propIsRequired && type.symbol.toString().startsWith('List')
-                  ? Code('const []')
+                  ? const Code('const []')
                   : null,
           ),
         );

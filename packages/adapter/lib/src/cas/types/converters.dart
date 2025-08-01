@@ -37,10 +37,11 @@ class PackageVersionsConverter
   @override
   Map<String, dynamic> toJson(PackageVersions object) {
     return object.toJson().map((k, v) {
-      if (k == 'package')
+      if (k == 'package') {
         return MapEntry(k, v['name']);
-      else if (omittedFields.contains(k))
+      } else if (omittedFields.contains(k)) {
         return MapEntry(k, null);
+      }
       return MapEntry(k, v);
     })..removeWhere((k, v) => v == null);
   }

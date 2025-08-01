@@ -45,14 +45,14 @@ class JSStreamIterator<T extends JSAny> implements StreamIterator<T> {
 
   @override
   Future<bool> moveNext() async {
-    final value = await (iterator.next().toDart);
+    final value = await iterator.next().toDart;
     if (value.done) {
       _currentValue = null;
       isDone = true;
     } else {
       _currentValue = value.value;
     }
-    return !(value.done);
+    return !value.done;
   }
 }
 

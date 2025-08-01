@@ -1,7 +1,7 @@
 import 'config.dart';
 
 String generateTailwindMainCssFile(WGTStyle style) {
-  StringBuffer buffer = StringBuffer();
+  final StringBuffer buffer = StringBuffer();
 
   // add tailwindcss line
   buffer.writeln('@import "tailwindcss";');

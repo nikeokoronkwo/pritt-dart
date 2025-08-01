@@ -1,4 +1,4 @@
-import '../../../../packages/common/lib/interface.dart' as common;
+import 'package:pritt_common/interface.dart' as common;
 
 typedef User = common.GetUserResponse;
 typedef DetailedPlugin = common.GetAdapterResponse;

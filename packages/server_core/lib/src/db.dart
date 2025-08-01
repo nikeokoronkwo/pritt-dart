@@ -1084,7 +1084,7 @@ RETURNING *''',
       final oldV = Version.parse(pkg.version);
       final versionType = v.versionType;
 
-      if (v > oldV)
+      if (v > oldV) {
         await session.execute(
           Sql.named(
             r'''UPDATE packages SET version = @version WHERE name = @name AND scope IS NOT DISTINCT FROM @scope''',
@@ -1095,6 +1095,7 @@ RETURNING *''',
             'version': version,
           },
         );
+      }
 
       return await session.execute(
         r'''
@@ -1174,13 +1175,14 @@ RETURNING *''',
       final oldV = Version.parse(p.version);
       final versionType = v.versionType;
 
-      if (v > oldV)
+      if (v > oldV) {
         await session.execute(
           Sql.named(
             r'''UPDATE packages SET version = @version WHERE name = @name AND scope IS NOT DISTINCT FROM @scope''',
           ),
           parameters: {'name': name, 'scope': scope, 'version': version},
         );
+      }
 
       return await session.execute(
         r'''
@@ -1374,8 +1376,9 @@ WHERE package_id = (SELECT id FROM packages WHERE name = @name AND scope IS NOT 
       );
       if (expiresAt.isBefore(DateTime.now()) && status == TaskStatus.pending) {
         status = TaskStatus.expired;
-      } else if (newStatus != null)
+      } else if (newStatus != null) {
         status = newStatus;
+      }
 
       return await session.execute(
         r'''

@@ -106,7 +106,7 @@ void main(List<String> args) async {
         } catch (e) {
           // ignore
         }
-        await (copyFile(srcPath, destPath).toDart);
+        await copyFile(srcPath, destPath).toDart;
       }
     }
   }

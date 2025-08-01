@@ -53,7 +53,7 @@ class CustomAdapterService {
     return cas;
   }
 
-  // TODO: Can we make the plugin code map typed?
+  // TODO(nikeokoronkwo): Can we make the plugin code map typed?
   Future _loadAdapters({
     required List<Plugin> plugins,
     required Map<String, Map<String, String>> pluginCodeMap,
@@ -140,6 +140,8 @@ class CustomAdapter implements AdapterInterface {
   WebSocketChannel channel;
   CRSController? crs;
   final String id;
+  @override
+  String? language;
 
   late Completer completer;
   late final rpc.Peer _peer;
@@ -331,10 +333,6 @@ class CustomAdapter implements AdapterInterface {
     _peer.sendNotification('complete');
     await _peer.close();
   }
-
-  @override
-  // TODO: implement language
-  String? get language => throw UnimplementedError();
 }
 
 extension type RpcCode._(int _) implements int {

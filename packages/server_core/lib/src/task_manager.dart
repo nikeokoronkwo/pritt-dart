@@ -72,7 +72,7 @@ enum TaskRunnerMode {
 ///
 /// -----------------------------------------------------
 ///
-/// TODO: Handling running outside the main loop
+// TODO(nikeokoronkwo): Handling running outside the main loop
 class TaskRunner<
   Task extends TaskBase,
   Res extends Object,
@@ -143,14 +143,16 @@ class TaskRunner<
       print(
         'LOG ${record.loggerName}:: ${record.level.name}: ${record.time}: ${record.message} :: Logged at ${record.time}',
       );
-      if (record.error case final err?)
+      if (record.error case final err?) {
         print(
           'ERROR ${record.loggerName}:: ${record.level.name}: ${record.time}: $err',
         );
-      if (record.stackTrace case final stack?)
+      }
+      if (record.stackTrace case final stack?) {
         print(
           'STACK TRACE ${record.loggerName}:: ${record.level.name}: ${record.time}: $stack',
         );
+      }
     });
 
     _logger?.shout(
@@ -168,8 +170,9 @@ class TaskRunner<
             // add value back to queue beginning
             queue.addFirst(value);
             return true;
-          } else
+          } else {
             return false;
+          }
         } else {
           final resource = await onRetrieve(value);
           if (resource != null) {
@@ -178,8 +181,9 @@ class TaskRunner<
             eagerWorkerAssets[key] = resource;
             queue.addFirst(value);
             return true;
-          } else
+          } else {
             return false;
+          }
         }
       },
     );

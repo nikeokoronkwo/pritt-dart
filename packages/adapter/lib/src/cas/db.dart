@@ -1,3 +1,5 @@
+// ignore_for_file: flutter_style_todos
+
 import 'dart:async';
 
 import 'package:pritt_server_core/pritt_server_core.dart';

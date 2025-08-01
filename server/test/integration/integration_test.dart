@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
-import '../../../packages/common/lib/interface.dart';
+import 'package:pritt_common/interface.dart';
 import 'package:test/test.dart';
 
 Map<String, String> readEnvFile(String dir) {
@@ -76,15 +77,16 @@ void main() {
             'tool/migrate.dart',
           ], environment: env).then((p) async {
             // Start your Dart server
-            if (await p.exitCode == 0)
+            if (await p.exitCode == 0) {
               return await Process.start('dart', [
                 'run',
                 'bin/server.dart',
               ], environment: env);
-            else
+            } else {
               throw Exception(
                 'Migration did not succeed: ${await serverProcess.stderr.transform(utf8.decoder).join('\n')}',
               );
+            }
           });
 
       await Future.delayed(const Duration(seconds: 40)).then((_) {
@@ -171,8 +173,9 @@ void main() {
     test('POST /api/auth/status returns 404 with ID not found', () async {
       final Random random = Random();
       final StringBuffer s = StringBuffer('');
-      for (int i = 0; i < 10; i += 2)
+      for (int i = 0; i < 10; i += 2) {
         s.write(String.fromCharCode(random.nextInt(26) + 65));
+      }
       final response = await http.post(
         Uri.parse('http://localhost:8080/api/auth/status?id=$s'),
       );

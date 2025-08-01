@@ -20,7 +20,7 @@ final goAdapter = Adapter(
         // initial retrieve
         resolve.addMeta('stage', '1');
         return AdapterResolveType.meta;
-        // TODO: Get actual URL routing for Go adapter
+        // TODO(nikeokoronkwo): Get actual URL routing for Go adapter
       } else {
         if (resolve.pathSegments.last == 'list') {
           resolve.addMeta('stage', '2');
@@ -87,12 +87,13 @@ final goAdapter = Adapter(
         );
         if (latestPkgResponse case CRSErrorResponse(
           statusCode: final statusCode,
-        ))
+        )) {
           return CoreAdapterErrorResult(
             'bad request: no package',
             statusCode: statusCode ?? 404,
             responseType: ResponseType.plainText,
           );
+        }
 
         final latestPkg = latestPkgResponse.body!;
 
@@ -110,7 +111,7 @@ final goAdapter = Adapter(
       if (segments.sublist(0, positionOfAtV).length == 1) {
         // get all versions
         // for now we do not support this
-        // TODO: throw
+        // TODO(nikeokoronkwo): throw instead of returning errors
         return CoreAdapterErrorResult(
           'bad request: unsupported',
           statusCode: 404,

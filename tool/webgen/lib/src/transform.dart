@@ -92,7 +92,7 @@ Future<void> generateAssets(
   // 1. generate the two svgs
 
   // start with dir
-  final assetsDir = 'assets/svg';
+  const assetsDir = 'assets/svg';
 
   await mkdir(
     path.join(outputDir, assetsDir),
@@ -137,7 +137,7 @@ Future<void> generateTailwindCss(
   print("LOG: Generating Tailwind CSS File");
   // generate CSS code
   final cssCode = generateTailwindMainCssFile(config.style);
-  final cssFileOutput = './assets/css/main.css';
+  const cssFileOutput = './assets/css/main.css';
 
   await mkdir(
     path.dirname(path.join(outputDir, cssFileOutput)),
@@ -175,9 +175,9 @@ Future<void> generateAuthAndDb(
 
   // run migrate migrations
   // read schema file
-  final schemaFile = "./server/db/schema.ts";
+  const schemaFile = "./server/db/schema.ts";
 
-  String schemaFileContents = await File(
+  final String schemaFileContents = await File(
     path.join(outputDir, schemaFile),
   ).readAsString();
 
@@ -212,7 +212,7 @@ Future<void> generateAuthAndDb(
 
   // generate drizzle migrations
   // ignore: non_constant_identifier_names
-  final __ = await Future.sync(
+  final _ = await Future.sync(
     () =>
         childProcess.execSync('pnpm db:generate', ExecOptions(cwd: outputDir)),
   );

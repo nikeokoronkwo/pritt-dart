@@ -84,7 +84,7 @@ class WGTOAuth {
 
 @JsonSerializable()
 class WGTStyle {
-  static final defaultStyle = WGTStyle(
+  static const defaultStyle = WGTStyle(
     colours: WGTStyleColours(
       primary: {
         50: '#e6e6e6',

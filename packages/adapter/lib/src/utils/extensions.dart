@@ -12,8 +12,8 @@ extension Implies on bool {
 
 extension StreamNullableExtensions<T> on Stream<T?> {
   /// Filters out null values from the stream.
-  // TODO: This is a temporary workaround for the issue with Stream<T?>.
-  // It should be replaced with a proper solution when available.
+  // TODO(nikeokoronowo): This is a temporary workaround for the issue with Stream<T?>.
+  //  It should be replaced with a proper solution when available.
   Stream<T> nonNull() {
     return where((element) => element != null).cast<T>();
   }

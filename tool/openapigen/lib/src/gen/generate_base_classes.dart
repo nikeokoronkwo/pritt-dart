@@ -7,7 +7,7 @@ Iterable<Class> generateBaseClasses(
   JSRecord<JSString, Schema> schemas, {
   List<String> contentTypes = const [],
 }) {
-  List<Class> classes = [
+  final List<Class> classes = [
     // base content
     Class(
       (c) => c

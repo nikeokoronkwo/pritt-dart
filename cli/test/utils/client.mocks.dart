@@ -11,7 +11,7 @@ import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:pritt_cli/src/client.dart' as _i4;
 import 'package:pritt_cli/src/client/authentication.dart' as _i7;
 import 'package:pritt_cli/src/client/base.dart' as _i9;
-import '../../../packages/common/lib/interface.dart' as _i3;
+import 'package:pritt_common/interface.dart' as _i3;
 import 'package:retry/retry.dart' as _i5;
 
 // ignore_for_file: type=lint

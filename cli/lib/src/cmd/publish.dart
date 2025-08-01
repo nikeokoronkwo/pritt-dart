@@ -7,8 +7,8 @@ import 'package:args/command_runner.dart';
 import 'package:chunked_stream/chunked_stream.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
-import '../../../../packages/common/lib/functions.dart';
-import '../../../../packages/common/lib/interface.dart' as common;
+import 'package:pritt_common/functions.dart';
+import 'package:pritt_common/interface.dart' as common;
 
 import '../adapters/base.dart';
 import '../adapters/base/config.dart';

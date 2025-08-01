@@ -1,5 +1,5 @@
 import 'package:mockito/mockito.dart';
-import '../../../packages/common/lib/interface.dart';
+import 'package:pritt_common/interface.dart';
 import 'package:test/scaffolding.dart';
 import 'package:test/test.dart';
 
