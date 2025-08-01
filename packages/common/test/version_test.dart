@@ -1,4 +1,4 @@
-import '../lib/version.dart';
+import 'package:pritt_common/version.dart';
 import 'package:test/test.dart';
 
 final versionTestMap = {

@@ -60,10 +60,10 @@ if __name__ == "__main__":
     
     # Generate JSON types
     print("Generating JSON types...")
-    subprocess.run(['dart', 'format', 'common'])
+    subprocess.run(['dart', 'format', args.out_package_dir])
 
     subprocess.run(['dart', 'run', 'build_runner', 'build'], cwd=args.out_package_dir)
 
-    subprocess.run(['dart', 'fix', 'common', '--apply'])
+    subprocess.run(['dart', 'fix', args.out_package_dir, '--apply'])
 
     

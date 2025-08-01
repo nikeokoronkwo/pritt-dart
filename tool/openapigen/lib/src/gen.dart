@@ -62,7 +62,7 @@ extension SchemaGen on OpenAPIGenResult {
 }
 
 Map<String, Spec> _generateClasses(JSRecord<JSString, Schema> schemas) {
-  Map<String, Spec> specs = {};
+  final Map<String, Spec> specs = {};
   entriesFromRecord(schemas).toDart.forEach((schemaTuple) {
     _generateSpecFromSchema(
       schemaTuple[1] as JSObject,
@@ -123,6 +123,7 @@ Reference _generateSpecFromSchema<T extends Spec>(
           ..constructors.add(
             Constructor(
               (c) => c
+                ..constant = true
                 ..requiredParameters.add(
                   Parameter(
                     (p) => p

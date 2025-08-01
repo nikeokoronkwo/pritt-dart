@@ -1,4 +1,4 @@
-import '../lib/config.dart';
+import 'package:pritt_common/config.dart';
 import 'package:test/test.dart';
 
 final nameTestInput = {
