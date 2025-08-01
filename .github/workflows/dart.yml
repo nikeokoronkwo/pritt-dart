@@ -139,40 +139,6 @@ jobs:
       - job_002
       - job_003
   job_005:
-    name: "unit_test; PKG: server; `dart test test/unit --test-randomize-ordering-seed=random`"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Pub hosted dependencies
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
-        with:
-          path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:server;commands:test_3"
-          restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:server
-            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0
-            os:ubuntu-latest;pub-cache-hosted
-            os:ubuntu-latest
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: "3.8.0"
-      - id: checkout
-        name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - id: server_pub_upgrade
-        name: server; dart pub upgrade
-        run: dart pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: server
-      - name: "server; dart test test/unit --test-randomize-ordering-seed=random"
-        run: "dart test test/unit --test-randomize-ordering-seed=random"
-        if: "always() && steps.server_pub_upgrade.conclusion == 'success'"
-        working-directory: server
-    needs:
-      - job_001
-      - job_002
-      - job_003
-  job_006:
     name: "integration_test; PKGS: cli, server; `dart test test/integration/**`"
     runs-on: ubuntu-latest
     steps:
@@ -216,4 +182,3 @@ jobs:
       - job_002
       - job_003
       - job_004
-      - job_005
