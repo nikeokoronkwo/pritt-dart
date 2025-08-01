@@ -13,13 +13,12 @@
     "format:dart": "dart format .",
     "format:js": "prettier . --write",
     "format": "pnpm format:dart && pnpm format:js; cd web; pnpm format; cd -",
-    "server": "./tools/denv.dart --cwd server -- dart run bin/server.dart",
-    "build:server": "",
+    "server": "./tool/denv.dart --cwd server -- dart run bin/server.dart",
     "docker:server": "exit 1 && docker build pritt-server",
     "docker:server-run": "docker run --rm --env-file .env pritt-server ",
     "compose:setup": "",
-    "gen:common": "pnpm schema:generate && ./scripts/openapigen ./config/out/openapi.yaml -o ./common",
-    "gen:web": "./scripts/webgen"
+    "gen:common": "pnpm schema:generate && ./tool/openapigen.py ./config/out/openapi.yaml -o ./packages/common",
+    "gen:web": "./tool/webgen.sh"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

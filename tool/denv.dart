@@ -3,10 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-// ignore: non_constant_identifier_names
-final SEPARATOR = Platform.isWindows ? "\\" : "/";
-
-final String usage = """
+const String usage = """
 denv: Dart with .env
 
 Usage: ./denv [--cwd <directory>] [.env file] -- <args>
@@ -48,7 +45,7 @@ void main(List<String> args) async {
       : "";
 
   final contents = Map.fromEntries(
-    LineSplitter().convert(dotEnv).map((line) {
+    const LineSplitter().convert(dotEnv).map((line) {
       final split = line.split("=");
       return MapEntry(split[0], split[1]);
     }),
@@ -60,9 +57,9 @@ void main(List<String> args) async {
     _ => throw Exception("denv only works for dart and flutter"),
   };
 
-  var executable = actualArgs[0];
-  var environment = contents;
-  var arguments = [
+  final executable = actualArgs[0];
+  final environment = contents;
+  final arguments = [
     if (dotEnv.isNotEmpty)
       ...(contents.entries.map((e) => "$defineArg=${e.key}=${e.value}")),
     ...(actualArgs.skip(1)),

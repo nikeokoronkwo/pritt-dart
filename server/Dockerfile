@@ -1,17 +1,25 @@
+FROM alpine AS copier
+WORKDIR /src
+COPY packages packages
+
+RUN mkdir -p /out && \
+    find packages -name pubspec.yaml -exec sh -c 'mkdir -p /out/$(dirname {}) && cp {} /out/{}' \;
+
 # Use latest stable channel SDK.
 FROM dart:stable AS build
 
 WORKDIR /
 
 # Resolve app dependencies.
-COPY tool /app/tool
 
 COPY ./pubspec.yaml /app/
-COPY common/pubspec.yaml /app/common/
+COPY --from=copier /out/packages /app/packages
 COPY cli/pubspec.yaml /app/cli/
 COPY server/pubspec.* /app/server/
 
 WORKDIR /app
+
+RUN ls
 
 RUN dart pub get
 

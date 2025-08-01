@@ -15,16 +15,16 @@ permissions: read-all
 
 jobs:
   job_001:
-    name: "test; PKG: common; `dart test`"
+    name: "test; PKG: packages/adapter; `dart test`"
     runs-on: ubuntu-latest
     steps:
       - name: Cache Pub hosted dependencies
         uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:common;commands:test_2"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:packages/adapter;commands:test_2"
           restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:common
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:packages/adapter
             os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
@@ -35,16 +35,76 @@ jobs:
       - id: checkout
         name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - id: common_pub_upgrade
-        name: common; dart pub upgrade
+      - id: packages_adapter_pub_upgrade
+        name: packages/adapter; dart pub upgrade
         run: dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: common
-      - name: common; dart test
+        working-directory: packages/adapter
+      - name: packages/adapter; dart test
         run: dart test
-        if: "always() && steps.common_pub_upgrade.conclusion == 'success'"
-        working-directory: common
+        if: "always() && steps.packages_adapter_pub_upgrade.conclusion == 'success'"
+        working-directory: packages/adapter
   job_002:
+    name: "test; PKG: packages/common; `dart test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:packages/common;commands:test_2"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:packages/common
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: "3.8.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - id: packages_common_pub_upgrade
+        name: packages/common; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: packages/common
+      - name: packages/common; dart test
+        run: dart test
+        if: "always() && steps.packages_common_pub_upgrade.conclusion == 'success'"
+        working-directory: packages/common
+  job_003:
+    name: "test; PKG: packages/server_core; `dart test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:packages/server_core;commands:test_2"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:packages/server_core
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: "3.8.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - id: packages_server_core_pub_upgrade
+        name: packages/server_core; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: packages/server_core
+      - name: packages/server_core; dart test
+        run: dart test
+        if: "always() && steps.packages_server_core_pub_upgrade.conclusion == 'success'"
+        working-directory: packages/server_core
+  job_004:
     name: "unit_test; PKG: cli; `dart test test/unit/** --test-randomize-ordering-seed=random`"
     runs-on: ubuntu-latest
     steps:
@@ -76,39 +136,9 @@ jobs:
         working-directory: cli
     needs:
       - job_001
-  job_003:
-    name: "unit_test; PKG: server; `dart test test/unit --test-randomize-ordering-seed=random`"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Pub hosted dependencies
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
-        with:
-          path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:server;commands:test_3"
-          restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0;packages:server
-            os:ubuntu-latest;pub-cache-hosted;sdk:3.8.0
-            os:ubuntu-latest;pub-cache-hosted
-            os:ubuntu-latest
-      - name: Setup Dart SDK
-        uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: "3.8.0"
-      - id: checkout
-        name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - id: server_pub_upgrade
-        name: server; dart pub upgrade
-        run: dart pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: server
-      - name: "server; dart test test/unit --test-randomize-ordering-seed=random"
-        run: "dart test test/unit --test-randomize-ordering-seed=random"
-        if: "always() && steps.server_pub_upgrade.conclusion == 'success'"
-        working-directory: server
-    needs:
-      - job_001
-  job_004:
+      - job_002
+      - job_003
+  job_005:
     name: "integration_test; PKGS: cli, server; `dart test test/integration/**`"
     runs-on: ubuntu-latest
     steps:
@@ -151,3 +181,4 @@ jobs:
       - job_001
       - job_002
       - job_003
+      - job_004
