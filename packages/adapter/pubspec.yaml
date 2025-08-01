@@ -1,4 +1,5 @@
 name: pritt_adapter
+version: 0.1.0-wip
 resolution: workspace
 
 environment:
@@ -12,8 +13,8 @@ dependencies:
   json_rpc_2: ^4.0.0
   mime: ^2.0.0
   path: ^1.9.1
-  pritt_common: ^0.0.1
-  pritt_server_core: ^0.0.0
+  pritt_common: ^0.1.0-wip
+  pritt_server_core: ^0.1.0-wip
   web_socket_channel: ^3.0.3
   yaml: ^3.1.3
 dev_dependencies:

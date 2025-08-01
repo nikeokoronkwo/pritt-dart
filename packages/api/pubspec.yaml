@@ -1,4 +1,5 @@
 name: pritt_api
+version: 0.1.0-wip
 resolution: workspace
 
 environment:
@@ -9,8 +10,8 @@ dependencies:
   crypto: ^3.0.6
   http: ^1.4.0
   path: ^1.9.1
-  pritt_common: ^0.0.1
-  pritt_server_core: ^0.0.0
+  pritt_common: ^0.1.0-wip
+  pritt_server_core: ^0.1.0-wip
   shelf: ^1.4.2
   shelf_router: ^1.1.4
   xml: ^6.6.0

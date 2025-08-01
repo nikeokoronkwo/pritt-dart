@@ -1,5 +1,5 @@
 name: pritt_common
-version: 0.0.1
+version: 0.1.0-wip
 description: A common package shared by the cli and the server containing the necessary types for both the client and server
 resolution: workspace
 

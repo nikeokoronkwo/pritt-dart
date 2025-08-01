@@ -1,5 +1,9 @@
 name: pritt_ai
+version: 0.1.0-wip
 resolution: workspace
 
 environment:
   sdk: ^3.8.0
+dependencies:
+  dart_mcp: ^0.3.3
+  meta: ^1.17.0
