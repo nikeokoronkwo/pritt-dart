@@ -1,5 +1,3 @@
-
-
 export 'src/adapter.dart';
 export 'src/adapter/base_result.dart';
 export 'src/adapter/exception.dart';

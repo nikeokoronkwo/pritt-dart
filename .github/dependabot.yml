@@ -2,8 +2,6 @@ version: 2
 updates:
   - package-ecosystem: "pub"
     directory: "/"
-    reviewers:
-      - nikeokoronkwo
     schedule:
       interval: "monthly"
     commit-message:

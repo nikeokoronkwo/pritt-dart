@@ -392,7 +392,8 @@ class CoreRegistryService implements CRSController {
       }
 
       final pkg = packages.firstOrNull?.package;
-      if (pkg != null && !(await userIsAuthorizedToPackage(pkg, user, db: db))) {
+      if (pkg != null &&
+          !(await userIsAuthorizedToPackage(pkg, user, db: db))) {
         return CRSResponse.error(
           error: 'Unauthorized to access package: $packageName',
           statusCode: 401,

@@ -12,7 +12,7 @@ late final AdapterRegistry registry;
 Future<void> startPrittServices({
   String? ofsUrl,
   String? dbUrl,
-  bool customAdapters = true
+  bool customAdapters = true,
 }) async {
   final (:storage, :db) = await startCRSServices(ofsUrl: ofsUrl, dbUrl: dbUrl);
 
@@ -32,7 +32,6 @@ Future<void> startPrittServices({
 
   publishingTaskRunner.start();
 }
-
 
 Handler createRouter() {
   // create router for openapi routes

@@ -8,7 +8,7 @@ late CoreRegistryService crs;
 /// (temporarily) in the publishing task runner
 Future<({PrittDatabase db, PrittStorage storage})> startCRSServices({
   String? ofsUrl,
-  String? dbUrl
+  String? dbUrl,
 }) async {
   // Load environment variables for the S3 URL and database connection
   ofsUrl ??=

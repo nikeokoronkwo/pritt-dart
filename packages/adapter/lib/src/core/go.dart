@@ -6,7 +6,6 @@ import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
 import 'package:pritt_server_core/pritt_server_core.dart';
 
-
 import '../adapter.dart';
 import '../adapter/base_result.dart';
 import '../adapter/resolve.dart';

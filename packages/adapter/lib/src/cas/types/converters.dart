@@ -3,8 +3,6 @@ import 'dart:typed_data';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pritt_server_core/pritt_server_core.dart';
 
-
-
 class Uint8ListConverter implements JsonConverter<Uint8List?, List<int>?> {
   const Uint8ListConverter();
 

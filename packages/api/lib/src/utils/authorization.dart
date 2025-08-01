@@ -2,7 +2,6 @@ import 'package:pritt_server_core/pritt_server_core.dart';
 
 import '../crs.dart';
 
-
 Future<User?> checkAuthorization(
   String authHeader, {
   bool throwExceptions = false,

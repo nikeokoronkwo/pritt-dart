@@ -1,6 +1,5 @@
-
 /// A set of utilities used across all Pritt Server Code
-/// 
+///
 /// The main utility exposed here is the utilities for the Pritt Core Registry Service [CoreRegistryService]
 /// which makes use of the [PrittDatabase] and [PrittStorage] to communicate with the singular, language-agnostic
 /// registry cocerning fetching packages and other things.

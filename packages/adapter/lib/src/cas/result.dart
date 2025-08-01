@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:json_annotation/json_annotation.dart';
 
-
 import '../adapter/base_result.dart';
 import 'types/converters.dart';
 

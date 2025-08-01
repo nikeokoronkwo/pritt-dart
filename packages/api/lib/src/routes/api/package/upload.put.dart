@@ -7,7 +7,6 @@ import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/interface.dart' as common;
 import 'package:pritt_server_core/pritt_server_core.dart';
 
-
 import '../../../crs.dart';
 import '../../../utils/authorization.dart';
 import '../../../utils/request_handler.dart';
