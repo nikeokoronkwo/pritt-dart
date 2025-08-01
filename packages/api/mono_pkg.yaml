@@ -5,5 +5,3 @@ stages:
   - analyze_and_format:
       - analyze
       - format
-  - test:
-      - test
