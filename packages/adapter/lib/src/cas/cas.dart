@@ -150,9 +150,11 @@ class CustomAdapter implements AdapterInterface {
   late final rpc.Peer _peer;
 
   // TODO(nikeokoronkwo): Implement Proxy Endpoints on Custom Adapter Side
-  CustomAdapter._(this.channel, this.id, {
+  CustomAdapter._(
+    this.channel,
+    this.id, {
     // ignore: unused_element_parameter
-    this.proxyEndpoints = const []
+    this.proxyEndpoints = const [],
   }) {
     _peer = rpc.Peer(channel.cast<String>());
 

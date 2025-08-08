@@ -14,9 +14,7 @@ import '../adapter/result.dart';
 final goAdapter = Adapter(
   id: 'go',
   language: 'go',
-  proxyEndpoints: [
-    'https://proxy.golang.org'
-  ],
+  proxyEndpoints: ['https://proxy.golang.org'],
   resolve: (resolve) {
     if (resolve.userAgent.toString().startsWith('Go-http-client')) {
       if (resolve.query['go-get'] == '1') {
