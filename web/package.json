@@ -56,7 +56,7 @@
     "@vue/test-utils": "^2.4.6",
     "drizzle-kit": "^0.31.1",
     "eslint-config-prettier": "^10.1.5",
-    "happy-dom": "^17.4.7",
+    "happy-dom": "^18.0.1",
     "openapi-typescript": "^7.8.0",
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.12",
