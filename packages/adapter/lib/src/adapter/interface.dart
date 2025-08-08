@@ -11,6 +11,8 @@ import 'request_options.dart';
 abstract interface class AdapterInterface {
   String? get language;
 
+  final List<String> proxyEndpoints = <String>[];
+
   /// Run an adapter
   FutureOr<AdapterBaseResult> run(CRSController crs, AdapterOptions options);
 }

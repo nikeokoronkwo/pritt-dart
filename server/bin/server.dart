@@ -38,6 +38,10 @@ enum ExperimentalFeature {
   dualEndpoint(
     'dual_endpoint',
     'Enable dual endpoint support for the Pritt server: \nRuns the main and adapter handlers as separate endpoints.',
+  ),
+  proxy(
+    'proxy',
+    "Enable proxying requests to the adapter's public registry if package is not in pritt. Disabled by default.",
   );
 
   const ExperimentalFeature(this.name, this.description);
@@ -81,9 +85,11 @@ void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 
+  final proxy = experimentalFeatures.contains(ExperimentalFeature.proxy);
+
   if (experimentalFeatures.contains(ExperimentalFeature.dualEndpoint)) {
     // implement dual endpoint support
-    final adapterApplication = adapterHandler(crs);
+    final adapterApplication = adapterHandler(crs, proxy: proxy);
     final apiApplication = Cascade()
         .add(preFlightHandler())
         .add(serverHandler());
@@ -117,7 +123,7 @@ void main(List<String> args) async {
     // implement single endpoint support
     // TODO: Make single endpoint concurrent
     // SERVER SETUP
-    final app = createRouter();
+    final app = createRouter(proxy: proxy);
 
     // Configure a pipeline that logs requests.
     final handler = const Pipeline()

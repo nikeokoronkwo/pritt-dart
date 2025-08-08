@@ -15,6 +15,9 @@ import 'npm/result.dart';
 final npmAdapter = Adapter(
   id: 'npm',
   language: 'javascript',
+  proxyEndpoints: [
+    'https://registry.npmjs.org/'
+  ],
   resolve: (resolve) {
     if (resolve.userAgent.toString().containsAllOf(['npm', 'node'])) {
       if (resolve.path.endsWith('.tgz') || resolve.path.endsWith('.tar.gz')) {

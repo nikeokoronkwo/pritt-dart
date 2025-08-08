@@ -16,6 +16,9 @@ import 'dart/result.dart';
 final dartAdapter = Adapter(
   id: 'dart',
   language: 'dart',
+  proxyEndpoints: [
+    'https://pub.dev/'
+  ],
   resolve: (resolve) {
     if (resolve.userAgent.toString().contains('Dart pub')) {
       if (resolve.path.startsWith('/api/packages')) {
