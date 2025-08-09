@@ -138,7 +138,7 @@ Handler _adapterWithProxyHandler(CoreRegistryService crs) {
         adapterProxyHandler = proxyCascade.handler;
       }
 
-      return Cascade()
+      return Cascade(statusCodes: [400, 401, 404, 405])
           .add((req) async {
             // once we get an adapter, we can then begin the adapter life cycle
             final AdapterBaseResult result;
@@ -155,6 +155,19 @@ Handler _adapterWithProxyHandler(CoreRegistryService crs) {
                   resolveType: adapterSearchResult!.resolve,
                 ),
               );
+            } on CRSException catch (e) {
+              return switch (e.type) {
+                CRSExceptionType.UNAUTHORIZED ||
+                CRSExceptionType.USER_NOT_FOUND => Response.unauthorized(
+                  e.message,
+                ),
+                CRSExceptionType.PACKAGE_NOT_FOUND ||
+                CRSExceptionType.VERSION_NOT_FOUND ||
+                CRSExceptionType.SCOPE_NOT_FOUND => Response.notFound(
+                  e.message,
+                ),
+                _ => Response.badRequest(body: e.message),
+              };
             } catch (_) {
               rethrow;
             }

@@ -392,9 +392,44 @@ WHERE id = @userId
   }
 
   @override
-  FutureOr<User> getUserByAccessToken(String accessToken) {
-    // TODO: implement getUserByAccessToken
-    throw UnimplementedError();
+  FutureOr<User> getUserByAccessToken(String accessToken) async {
+    try {
+      final result = await _pool.runTx((session) async {
+        final rs = await session.execute(r'''SELECT hash FROM access_tokens''');
+        final accessTokenHashes = rs.map((row) => row[0] as String);
+        final successFullToken = accessTokenHashes.firstWhere(
+          (hash) => auth.validateAccessToken(accessToken, hash),
+        );
+        return await session.execute(
+          Sql.named('''
+SELECT u.id, u.name, u.email, u.avatar_url, u.created_at, u.updated_at, u.avatar_url, a.token_type, a.expires_at as access_token_expires_at
+FROM users u
+INNER JOIN access_tokens a ON a.user_id = u.id
+WHERE a.hash = @accessToken'''),
+          parameters: {'accessToken': successFullToken},
+        );
+      });
+
+      final columnMap = result.first.toColumnMap();
+
+      return User(
+        id: columnMap['id'],
+        name: columnMap['name'],
+        email: columnMap['email'],
+        createdAt: columnMap['created_at'],
+        updatedAt: columnMap['updated_at'],
+        avatarUrl: columnMap['avatar_url'],
+      );
+    } on StateError catch (e, stack) {
+      throw CRSException(
+        CRSExceptionType.USER_NOT_FOUND,
+        'Could not find user for access token',
+        e,
+        stack,
+      );
+    } catch (e, stack) {
+      throw CRSException(CRSExceptionType.UNAUTHORIZED, 'Error', e, stack);
+    }
   }
 
   @override
