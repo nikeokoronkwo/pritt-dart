@@ -4,6 +4,7 @@ import 'cmd/add.dart';
 import 'cmd/configure.dart';
 import 'cmd/info.dart';
 import 'cmd/login.dart';
+import 'cmd/mcp_server.dart';
 import 'cmd/package.dart';
 import 'cmd/publish.dart';
 import 'cmd/remove.dart';
@@ -27,6 +28,7 @@ Future run(List<String> args) async {
         ..addCommand(PublishCommand())
         ..addCommand(YankCommand())
         ..addCommand(AdapterCommand())
+        ..addCommand(MCPServerCommand())
         ..run(args);
   return runner;
 }
