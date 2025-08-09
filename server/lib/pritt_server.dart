@@ -33,7 +33,7 @@ Future<void> startPrittServices({
   publishingTaskRunner.start();
 }
 
-Handler createRouter() {
+Handler createRouter({bool proxy = false}) {
   // create router for openapi routes
 
   // the main handler
@@ -53,7 +53,7 @@ Handler createRouter() {
   /// This will be very helpful in DS, where the `vm_isolates` preset may need some message passing,
   /// However, this means that the `Event` object will no longer be standard/based on Shelf [Request]
   final cascade = Cascade()
-      .add(adapterHandler(crs))
+      .add(adapterHandler(crs, proxy: proxy))
       .add(preFlightHandler())
       .add(serverHandler());
 

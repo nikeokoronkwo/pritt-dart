@@ -48,9 +48,13 @@ class Adapter implements AdapterInterface {
   /// Similar to [Adapter.metaRequest], but used for archive requests
   final AdapterRetrieveFn archiveRequest;
 
+  @override
+  final List<String> proxyEndpoints;
+
   const Adapter({
     required this.id,
     this.language,
+    this.proxyEndpoints = const [],
     required this.resolve,
     required AdapterRequestFn request,
     required AdapterRetrieveFn retrieve,
