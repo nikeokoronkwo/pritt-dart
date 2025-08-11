@@ -10,6 +10,7 @@ Map<String, dynamic> _$CustomAdapterResultToJson(
   CustomAdapterResult instance,
 ) => <String, dynamic>{
   'result_type': _$CustomAdapterResultTypeEnumMap[instance.resultType]!,
+  'headers': instance.headers,
 };
 
 const _$CustomAdapterResultTypeEnumMap = {
