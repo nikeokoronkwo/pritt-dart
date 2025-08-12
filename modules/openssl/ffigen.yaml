@@ -1,0 +1,36 @@
+name: OpenSSL
+description: Bindings to OpenSSL for ECDSA Signing/Verifying
+output: 'lib/src/native/openssl.dart'
+preamble: |
+  // ignore_for_file: unused_element, unused_field
+headers:
+  entry-points:
+    - 'third_party/openssl/*.h'
+  # include-directives:
+  #   - 'third_party/openssl/ssl.h'
+compiler-opts:
+  - '-Ithird_party'
+  # Platform-Dependent Parts
+  - '-I/opt/local/include/openssl'
+  - '-I/opt/homebrew/opt/openssl/include'
+functions:
+  include:
+    - '\b\w*ECDSA\w*\b'
+    - 'ECDSA.*'
+    - 'EC.*'
+    - 'ERR.*'
+    - 'BN.*'
+    - OPENSSL_malloc
+    - OPENSSL_init_crypto
+macros:
+  include:
+    - NID_.*
+    - SHA256_DIGEST_LENGTH
+    - OPENSSL_INIT.*
+globals:
+  rename:
+    '__(.*)': '$1'
+comments:
+  style: any
+  length: full
+# ffi-native:

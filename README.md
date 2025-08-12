@@ -15,25 +15,10 @@ packages in multiple languages.
 
 To learn more, check out the [docs](./docs).
 
-## Development
-Pritt requires Dart (at least 3.6) to build the server and CLI. 
+## Getting Started
+Pritt requires Dart 3.8 to run. 
+Clone
 
-The CLI can be built with:
-```bash
-cd cli
-dart compile exe bin/pritt.dart
-```
-
-The Server requires a few more dependencies:
-- PostgreSQL
-- An S3 Compatible Storage: We use MinIO for development
-
-Start PostgreSQL 
-
-## Building
-Pritt can be built as a Docker image. 
-
-### Compose Setup
-```bash
-docker compose up
-```
+### Building the Server
+Building the server requires a few more dependencies in order to work:
+- 
