@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pritt_common/version.dart';
 
 import '../../utils/mixins.dart';
 import 'error.dart';

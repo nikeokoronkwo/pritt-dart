@@ -78,8 +78,12 @@ class CoreAdapterArchiveResult extends CoreAdapterResult {
   final String name;
   final String contentType;
 
-  CoreAdapterArchiveResult(this.archive, this.name, {String? contentType})
-    : contentType =
-          contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
-      super(responseType: ResponseType.archive);
+  CoreAdapterArchiveResult(
+    this.archive,
+    this.name, {
+    String? contentType,
+    super.headers,
+  }) : contentType =
+           contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
+       super(responseType: ResponseType.archive);
 }

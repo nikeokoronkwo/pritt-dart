@@ -1,6 +1,7 @@
-import 'package:archive/archive.dart';
+import 'dart:typed_data';
+
+import 'package:chunked_stream/chunked_stream.dart';
 import 'package:html/dom.dart';
-import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
@@ -10,6 +11,7 @@ import '../adapter.dart';
 import '../adapter/base_result.dart';
 import '../adapter/resolve.dart';
 import '../adapter/result.dart';
+import '../utils/transform_archive.dart';
 
 final goAdapter = Adapter(
   id: 'go',
@@ -266,37 +268,12 @@ final goAdapter = Adapter(
         responseType: ResponseType.plainText,
       );
     }
-    final archive = TarDecoder().decodeBytes(
-      GZipDecoder().decodeBytes(
-        await ByteStream(archiveResult.body!.data).toBytes(),
-      ),
+    final Uint8List zipArchive = await transformTarToZip(
+      archiveResult.asSuccess.body,
+      basePath: [base, if (scope case final s?) s, '$name@v$version'].join('/'),
     );
-
-    print(archive.length);
-    print(archive.map((a) => a.name));
-
-    final Archive outArchive = Archive();
-
-    for (final archiveFile in archive) {
-      outArchive.addFile(
-        ArchiveFile(
-          [
-            base,
-            if (scope case final s?) s,
-            '$name@v$version',
-            // name,
-            archiveFile.name,
-          ].join('/'),
-          archiveFile.size,
-          archiveFile.content,
-          archiveFile.compressionType,
-        ),
-      );
-    }
-
-    final zipArchive = ZipEncoder().encode(outArchive);
     return CoreAdapterArchiveResult(
-      ByteStream.fromBytes(zipArchive ?? []),
+      asChunkedStream(16, Stream.fromIterable(zipArchive)),
       '$moduleName@$version',
       contentType: 'application/zip',
     );

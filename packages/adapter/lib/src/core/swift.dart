@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:chunked_stream/chunked_stream.dart';
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
 import 'package:pritt_server_core/pritt_server_core.dart';
@@ -8,6 +10,7 @@ import '../adapter.dart';
 import '../adapter/base_result.dart';
 import '../adapter/resolve.dart';
 import '../adapter/result.dart';
+import '../utils/transform_archive.dart';
 import 'swift/error.dart';
 import 'swift/responses.dart';
 
@@ -27,7 +30,7 @@ final swiftAdapter = Adapter(
   request: (req, crs) async {
     if (req.resolveObject.pathSegments case ['identifiers']) {
       // search for identifiers
-      // TODO: Support package searching
+      // TODO(nikeokoronkwo): Support package searching, #98
     }
     // get package name and scope
     final [virtualScope, name] = req.resolveObject.pathSegments;
@@ -168,7 +171,7 @@ final swiftAdapter = Adapter(
             HttpHeaders.contentLengthHeader: pkgVer.config?.length.toString(),
           },
         );
-      
+
       default:
         return CoreAdapterErrorJsonResult(
           SwiftError(detail: 'Unknown route ${req.resolveObject.url}'),
@@ -177,7 +180,30 @@ final swiftAdapter = Adapter(
     }
   },
   retrieve: (req, crs) async {
-    // TODO: They accept ZIP.
-    throw UnimplementedError();
+    final [virtualScope, name, versionDotZip] = req.resolveObject.pathSegments;
+    final [version] = versionDotZip.split('.zip');
+
+    final scope = virtualScope == 'pritt' ? null : virtualScope;
+
+    final archiveResult = await crs.getArchiveWithVersion(
+      scopedName(name, scope),
+      version,
+    );
+    if (archiveResult case CRSErrorResponse(error: final error)) {
+      return CoreAdapterErrorJsonResult(
+        SwiftError(detail: error),
+        statusCode: 404,
+      );
+    }
+
+    final CRSSuccessResponse(body: archiveBody) = archiveResult.asSuccess;
+
+    final Uint8List zipArchive = await transformTarToZip(archiveBody);
+    return CoreAdapterArchiveResult(
+      asChunkedStream(16, Stream.fromIterable(zipArchive)),
+      '$name-$version.zip',
+      contentType: 'application/zip',
+      // TODO(nikeokoronkwo): Signature headers
+    );
   },
 );
