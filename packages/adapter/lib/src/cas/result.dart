@@ -14,7 +14,10 @@ sealed class CustomAdapterResult implements AdapterBaseResult {
   @override
   final Map<String, String> headers;
 
-  const CustomAdapterResult({this.responseType = ResponseType.json, this.headers = const {}}) : super();
+  const CustomAdapterResult({
+    this.responseType = ResponseType.json,
+    this.headers = const {},
+  }) : super();
 }
 
 @JsonSerializable()

@@ -9,7 +9,7 @@ import 'result.dart';
 /// shared base result between [CoreAdapterResult] used internally and [CustomAdapterResult]
 abstract class AdapterBaseResult {
   abstract final ResponseTypeBase responseType;
-  final Map<String, String> headers;
+  final Map<String, String?> headers;
   const AdapterBaseResult({this.headers = const {}});
 }
 

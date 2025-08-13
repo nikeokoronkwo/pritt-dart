@@ -10,7 +10,10 @@ sealed class CoreAdapterResult extends AdapterBaseResult {
   @override
   final ResponseTypeBase responseType;
 
-  const CoreAdapterResult({this.responseType = ResponseType.json, super.headers = const {}}) : super();
+  const CoreAdapterResult({
+    this.responseType = ResponseType.json,
+    super.headers = const {},
+  }) : super();
 }
 
 class CoreAdapterErrorResult<T> extends CoreAdapterResult
@@ -25,7 +28,7 @@ class CoreAdapterErrorResult<T> extends CoreAdapterResult
     this.error, {
     this.statusCode = 500,
     super.responseType,
-    super.headers
+    super.headers,
   });
 
   static CoreAdapterErrorResult map(
@@ -47,7 +50,7 @@ class CoreAdapterErrorJsonResult<T extends JsonConvertible>
     super.error, {
     super.statusCode,
     super.responseType,
-    super.headers
+    super.headers,
   });
 }
 
@@ -66,7 +69,7 @@ class CoreAdapterMetaJsonResult<T extends JsonConvertible>
     super.body, {
     super.responseType,
     this.contentType = 'application/json',
-    super.headers
+    super.headers,
   });
 }
 
