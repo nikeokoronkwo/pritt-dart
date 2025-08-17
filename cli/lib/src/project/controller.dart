@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:pritt_common/config.dart' as config;
 import 'package:pritt_common/interface.dart';
+import 'package:yaml/yaml.dart';
 
 import '../adapters/base.dart';
 import '../adapters/base/config.dart';
@@ -18,13 +20,18 @@ import 'exception.dart';
 class PrittControllerManager {
   final PrittClient? apiClient;
   final String? dir;
+  final String? prittConfigFileName;
+  final config.PrittConfig? prittConfig;
 
-  const PrittControllerManager({this.apiClient, this.dir});
+  const PrittControllerManager({this.apiClient, this.dir, this.prittConfigFileName, this.prittConfig})
+    : assert(prittConfigFileName == null || prittConfig != null,
+      'prittConfigFileName or prittConfig must either be both provided, or both null');
 
   PrittConfigUnawareController makeConfigUnawareController(Handler handler) {
     return PrittConfigUnawareController(
       configLoader: handler.config,
       client: apiClient,
+      prittConfigFileName: prittConfigFileName
     );
   }
 
@@ -33,6 +40,7 @@ class PrittControllerManager {
     final configUnawareCtrl = PrittConfigUnawareController(
       configLoader: handler.config,
       client: apiClient,
+      prittConfigFileName: prittConfigFileName
     );
 
     Future<T> converter(String contents) async {
@@ -48,11 +56,16 @@ class PrittConfigUnawareController
   Loader<String, String> configLoader;
   PrittClient? client;
   String? token;
+  
+  String? prittConfigFileName;
+  final config.PrittConfig? prittConfig;
 
   PrittConfigUnawareController({
     required this.configLoader,
     this.client,
     String? token,
+    this.prittConfigFileName = 'pritt.yaml',
+    this.prittConfig
   }) : token =
            token ?? (client?.authentication as HttpBearerAuth?)?.accessToken;
 
@@ -150,6 +163,32 @@ class PrittConfigUnawareController
         ..addAll({if (token != null) 'PRITT_AUTH_TOKEN': token!}),
     )).stdout;
   }
+  
+  @override
+  FutureOr<String> readPrittConfigFile(String directory) {
+    return readFileAt(
+      p.join(directory, prittConfigFileName),
+    );
+  }
+  
+  @override
+  String readPrittConfigFileSync(String directory) {
+    return readFileAtSync(
+      p.join(directory, prittConfigFileName),
+    );
+  }
+  
+  @override
+  config.PrittConfig? getPrittConfig() {
+    try {
+      return prittConfig ??
+      config.PrittConfig.fromJson(
+        loadYaml(readPrittConfigFileSync(p.current)),
+      );
+    } catch (_) {
+      return null; // If the file doesn't exist or is invalid, return null
+    }
+  }
 }
 
 class PrittController<T extends Config> extends PrittConfigUnawareController
@@ -163,6 +202,7 @@ class PrittController<T extends Config> extends PrittConfigUnawareController
     required FutureOr<T> Function(String) convertConfig,
     required super.configLoader,
     required PrittClient? client,
+    super.prittConfigFileName
   }) : apiClient = client,
        builtConfigLoader = configLoader.stack(convertConfig),
        convertConfigLoader = Loader(configLoader.name, load: convertConfig);

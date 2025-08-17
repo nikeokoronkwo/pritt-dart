@@ -144,6 +144,10 @@ Future<Project> getProject(
   PrittClient? client,
 }) async {
   final dir = Directory(directory);
+
+  // check for the pritt configuration
+  final PrittConfig? prittConfig = await readPrittConfig(directory, config);
+
   // get basic workspace information
   final HandlerManager manager = HandlerManager(
     directory: directory,
@@ -156,9 +160,6 @@ Future<Project> getProject(
   final VCS vcs = await getVersionControlSystem(dir);
 
   // get the ignore file
-
-  // check for the pritt configuration
-  final PrittConfig? prittConfig = await readPrittConfig(directory, config);
 
   // check for a .prittignore
   final String prittIgnore =

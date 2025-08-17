@@ -7,16 +7,26 @@ part 'config.g.dart';
 ///
 /// The configuration file is a YAML file, and is used to configure the package.
 @JsonSerializable()
-class PrittConfig {
+final class PrittConfig {
   /// Contributors to the given package
   ///
   /// Either specify this, or have an [AUTHORS]() file at the root of the project
-  List<User>? contributors;
+  final List<User>? contributors;
 
   /// Whether the given package is private or not
-  bool? private;
+  final bool? private;
 
-  PrittConfig({this.contributors, this.private = false});
+  /// The name of the package
+  /// 
+  /// This overrides the name of the package in the configuration file
+  final String? name;
+
+  /// The version of the package
+  /// 
+  /// This overrides the version of the package in the configuration file
+  final String? version;
+
+  PrittConfig({this.contributors, this.private = false, this.name, this.version});
 
   factory PrittConfig.fromJson(Map<String, dynamic> json) =>
       _$PrittConfigFromJson(json);
