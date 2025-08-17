@@ -17,16 +17,21 @@ final class PrittConfig {
   final bool? private;
 
   /// The name of the package
-  /// 
+  ///
   /// This overrides the name of the package in the configuration file
   final String? name;
 
   /// The version of the package
-  /// 
+  ///
   /// This overrides the version of the package in the configuration file
   final String? version;
 
-  PrittConfig({this.contributors, this.private = false, this.name, this.version});
+  PrittConfig({
+    this.contributors,
+    this.private = false,
+    this.name,
+    this.version,
+  });
 
   factory PrittConfig.fromJson(Map<String, dynamic> json) =>
       _$PrittConfigFromJson(json);

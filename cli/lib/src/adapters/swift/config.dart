@@ -9,7 +9,6 @@ part 'config.g.dart';
 
 @JsonSerializable()
 final class PackageSwiftConfig extends Config {
-
   @override
   @JsonKey(includeToJson: false)
   final Author author;
@@ -21,26 +20,25 @@ final class PackageSwiftConfig extends Config {
   const PackageSwiftConfig({
     required super.name,
     required this.author,
-    required this.version
+    required this.version,
   }) : super(author: author, version: version);
-  
-  @override
-  // TODO: implement configMetadata
-  Map<String, dynamic> get configMetadata => throw UnimplementedError();
-  
-  @override
-  // TODO: implement rawConfig
-  Map<String, dynamic>? get rawConfig => throw UnimplementedError();
 
-  factory PackageSwiftConfig.fromJson(Map<String, dynamic> json, {
+  @override
+  // TODO(nikeokoronkwo): implement configMetadata
+  Map<String, dynamic> get configMetadata => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic>? get rawConfig => {};
+
+  factory PackageSwiftConfig.fromJson(
+    Map<String, dynamic> json, {
     required Author author,
     required String version,
-  })
-    => _$PackageSwiftConfigFromJson({
-      ...json,
-      'author': author.toJson(),
-      'version': version,
-    });
+  }) => _$PackageSwiftConfigFromJson({
+    ...json,
+    'author': author.toJson(),
+    'version': version,
+  });
 
   Map<String, dynamic> toJson() => _$PackageSwiftConfigToJson(this);
 }

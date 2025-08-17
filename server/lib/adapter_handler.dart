@@ -8,6 +8,7 @@ import 'package:shelf_proxy/shelf_proxy.dart';
 
 import 'pritt_server.dart';
 import 'src/resolve.dart';
+import 'src/utils/extensions.dart';
 import 'src/xml.dart';
 
 Handler adapterHandler(CoreRegistryService crs, {bool proxy = false}) {
@@ -133,7 +134,6 @@ Handler _adapterWithProxyHandler(CoreRegistryService crs) {
   };
 }
 
-
 Response _handleAdapterResult(AdapterBaseResult result) {
   return switch (result) {
     AdapterErrorResult(
@@ -147,8 +147,9 @@ Response _handleAdapterResult(AdapterBaseResult result) {
         body: switch (responseType) {
           ResponseType.json => jsonEncode(e.toJson()),
           ResponseType.xml => mapToXml(e.toJson()),
-          ResponseTypeBase(contentType: final contentType) when 
-            contentType.endsWith('+json') => jsonEncode(e.toJson()),
+          ResponseTypeBase(contentType: final contentType)
+              when contentType.endsWith('+json') =>
+            jsonEncode(e.toJson()),
           _ => switch (e) {
             final String s => s,
             final Map<String, dynamic> map => jsonEncode(map),
@@ -157,21 +158,19 @@ Response _handleAdapterResult(AdapterBaseResult result) {
           },
         },
         headers: {
-          ...extraHeaders,
-          HttpHeaders.contentTypeHeader: responseType.contentType
+          ...extraHeaders.nonNulls,
+          HttpHeaders.contentTypeHeader: responseType.contentType,
         },
       ),
-    CoreAdapterMetaJsonResult(
-      headers: final extraHeaders,
-    ) => Response.ok(
+    CoreAdapterMetaJsonResult(headers: final extraHeaders) => Response.ok(
       jsonEncode(result.body.toJson()),
       headers: {
-        ...extraHeaders,
-        HttpHeaders.contentTypeHeader: result.contentType
+        ...extraHeaders.nonNulls,
+        HttpHeaders.contentTypeHeader: result.contentType,
       },
     ),
     AdapterMetaResult(
-      responseType: final responseType, 
+      responseType: final responseType,
       body: final body,
       headers: final extraHeaders,
     ) =>
@@ -179,12 +178,13 @@ Response _handleAdapterResult(AdapterBaseResult result) {
         switch (responseType) {
           ResponseType.json => jsonEncode(body),
           ResponseType.xml => mapToXml(body.toJson()),
-          ResponseTypeBase(contentType: final contentType) when 
-            contentType.endsWith('+json') => jsonEncode(body),
+          ResponseTypeBase(contentType: final contentType)
+              when contentType.endsWith('+json') =>
+            jsonEncode(body),
           _ => body.toString(),
         },
         headers: {
-          ...extraHeaders,
+          ...extraHeaders.nonNulls,
           HttpHeaders.contentTypeHeader: switch (body) {
             Map<String, dynamic>() ||
             List<Map<String, dynamic>>() => 'application/json',
@@ -192,23 +192,18 @@ Response _handleAdapterResult(AdapterBaseResult result) {
           },
         },
       ),
-    AdapterArchiveResult(
-      headers: final extraHeaders,
-    ) => Response.ok(
+    AdapterArchiveResult(headers: final extraHeaders) => Response.ok(
       result.archive,
       headers: {
-        ...extraHeaders,
+        ...extraHeaders.nonNulls,
         HttpHeaders.contentTypeHeader: result.contentType,
-        HttpHeaders.contentDisposition:
-            'attachment; filename=${result.name}',
+        HttpHeaders.contentDisposition: 'attachment; filename=${result.name}',
       },
     ),
-    AdapterBaseResult(
-      headers: final extraHeaders,
-    ) => Response.ok(
+    AdapterBaseResult(headers: final extraHeaders) => Response.ok(
       null,
       headers: {
-        ...extraHeaders,
+        ...extraHeaders.nonNulls,
         HttpHeaders.contentTypeHeader: result.responseType.contentType,
       },
     ),
