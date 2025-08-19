@@ -8,9 +8,12 @@ import 'base_result.dart';
 
 sealed class CoreAdapterResult extends AdapterBaseResult {
   @override
-  final ResponseType responseType;
+  final ResponseTypeBase responseType;
 
-  const CoreAdapterResult({this.responseType = ResponseType.json}) : super();
+  const CoreAdapterResult({
+    this.responseType = ResponseType.json,
+    super.headers = const {},
+  }) : super();
 }
 
 class CoreAdapterErrorResult<T> extends CoreAdapterResult
@@ -25,6 +28,7 @@ class CoreAdapterErrorResult<T> extends CoreAdapterResult
     this.error, {
     this.statusCode = 500,
     super.responseType,
+    super.headers,
   });
 
   static CoreAdapterErrorResult map(
@@ -46,6 +50,7 @@ class CoreAdapterErrorJsonResult<T extends JsonConvertible>
     super.error, {
     super.statusCode,
     super.responseType,
+    super.headers,
   });
 }
 
@@ -54,7 +59,7 @@ class CoreAdapterMetaResult<T> extends CoreAdapterResult
   @override
   final T body;
 
-  CoreAdapterMetaResult(this.body, {super.responseType});
+  CoreAdapterMetaResult(this.body, {super.responseType, super.headers});
 }
 
 class CoreAdapterMetaJsonResult<T extends JsonConvertible>
@@ -64,6 +69,7 @@ class CoreAdapterMetaJsonResult<T extends JsonConvertible>
     super.body, {
     super.responseType,
     this.contentType = 'application/json',
+    super.headers,
   });
 }
 
@@ -72,8 +78,12 @@ class CoreAdapterArchiveResult extends CoreAdapterResult {
   final String name;
   final String contentType;
 
-  CoreAdapterArchiveResult(this.archive, this.name, {String? contentType})
-    : contentType =
-          contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
-      super(responseType: ResponseType.archive);
+  CoreAdapterArchiveResult(
+    this.archive,
+    this.name, {
+    String? contentType,
+    super.headers,
+  }) : contentType =
+           contentType ?? lookupMimeType(name) ?? 'application/octet-stream',
+       super(responseType: ResponseType.archive);
 }

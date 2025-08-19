@@ -21,7 +21,7 @@ sealed class CustomAdapterResult extends AdapterBaseResult implements Jsonable {
   @JsonKey(name: 'result_type')
   final CustomAdapterResultType resultType;
 
-  CustomAdapterResult({required this.resultType});
+  CustomAdapterResult({required this.resultType, super.headers});
 
   CoreAdapterResult toAdapterResult();
 

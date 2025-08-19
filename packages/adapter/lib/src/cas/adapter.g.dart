@@ -9,6 +9,7 @@ part of 'adapter.dart';
 Map<String, dynamic> _$CustomAdapterResultToJson(
   CustomAdapterResult instance,
 ) => <String, dynamic>{
+  'headers': instance.headers,
   'result_type': _$CustomAdapterResultTypeEnumMap[instance.resultType]!,
 };
 

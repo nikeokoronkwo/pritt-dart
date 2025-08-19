@@ -1,5 +1,6 @@
 import '../../utils/mixins.dart';
 
+// TODO(nikeokoronkwo): Check error handling for registry
 class NpmError with JsonConvertible {
   final String? error;
 

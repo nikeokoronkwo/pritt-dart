@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:pritt_common/functions.dart';
 import 'package:pritt_common/version.dart';
 
@@ -227,6 +228,7 @@ class CoreRegistryService implements CRSController {
     try {
       final (name, :scope) = parsePackageName(packageName);
       final package = await db.getPackage(name, scope: scope);
+      // TODO: Change response codes
       if (!(await userIsAuthorizedToPackage(package, user, db: db))) {
         return CRSResponse.error(
           error: 'Unauthorized to access package: $packageName',
@@ -468,6 +470,7 @@ class CoreRegistryService implements CRSController {
   }
 
   @override
+  @experimental
   FutureOr setFileServer(
     String packageName, {
     String? version,

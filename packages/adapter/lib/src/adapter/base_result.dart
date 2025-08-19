@@ -8,8 +8,9 @@ import 'result.dart';
 
 /// shared base result between [CoreAdapterResult] used internally and [CustomAdapterResult]
 abstract class AdapterBaseResult {
-  abstract final ResponseType responseType;
-  const AdapterBaseResult();
+  abstract final ResponseTypeBase responseType;
+  final Map<String, String?> headers;
+  const AdapterBaseResult({this.headers = const {}});
 }
 
 abstract interface class AdapterMetaResult<T> extends AdapterBaseResult {
@@ -30,8 +31,21 @@ abstract interface class AdapterErrorResult<T> extends AdapterBaseResult {
   int get statusCode;
 }
 
+abstract class ResponseTypeBase {
+  String get contentType;
+
+  factory ResponseTypeBase(String contentType) = ResponseTypeImpl;
+}
+
+class ResponseTypeImpl implements ResponseTypeBase {
+  @override
+  final String contentType;
+
+  ResponseTypeImpl(this.contentType);
+}
+
 @JsonEnum(valueField: 'mimeType')
-enum ResponseType {
+enum ResponseType implements ResponseTypeBase {
   json(mimeType: 'application/json'),
   archive(mimeType: 'application/octet-stream'),
   xml(mimeType: 'application/xml'),
@@ -40,5 +54,7 @@ enum ResponseType {
 
   final String mimeType;
   const ResponseType({required this.mimeType});
+
+  @override
   String get contentType => mimeType;
 }

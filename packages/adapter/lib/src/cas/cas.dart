@@ -115,9 +115,15 @@ class CustomAdapterService {
     // receive adapter info back
     final body = SorterResponse.fromJson(json.decode(response.body));
 
-    if (!body.success) {
+    if (body case SorterFailureResponse()) {
       return (adapter: null, type: AdapterResolveType.none);
     }
+
+    final SorterSuccessResponse(
+      adapterId: adapterId,
+      workerId: workerId,
+      type: type,
+    ) = body as SorterSuccessResponse;
 
     // send request to start worker for adapter
     final wsConn = WebSocketChannel.connect(
@@ -127,7 +133,7 @@ class CustomAdapterService {
     await wsConn.ready;
 
     // return WS
-    return (adapter: CustomAdapter._(wsConn, body.adapterId), type: body.type);
+    return (adapter: CustomAdapter._(wsConn, adapterId), type: type);
   }
 }
 

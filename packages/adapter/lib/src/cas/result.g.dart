@@ -52,6 +52,7 @@ Map<String, dynamic> _$CustomAdapterErrorResultToJson(
   CustomAdapterErrorResult instance,
 ) => <String, dynamic>{
   'responseType': _$ResponseTypeEnumMap[instance.responseType]!,
+  'headers': instance.headers,
   'error': instance.error,
   'message': instance.message,
   'statusCode': instance.statusCode,

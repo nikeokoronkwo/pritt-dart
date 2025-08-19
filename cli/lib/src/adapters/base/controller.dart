@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:pritt_common/config.dart' as config;
 import 'package:pritt_common/interface.dart' as common;
 
 import '../../utils/typedefs.dart';
@@ -13,6 +14,15 @@ abstract interface class PrittLocalConfigUnawareController {
 
   /// Similar to [readConfigFile], but reads the file synchronously
   String readConfigFileSync(String directory);
+
+  /// Get the pritt.yaml configuration as a [config.PrittConfig] object if it exists
+  config.PrittConfig? getPrittConfig();
+
+  /// Read the pritt.yaml configuration file synchronously at the given [directory]
+  String readPrittConfigFileSync(String directory);
+
+  /// Read the pritt.yaml configuration file at the given [directory]
+  FutureOr<String> readPrittConfigFile(String directory);
 
   /// Get the current user, and return the user object
   ///

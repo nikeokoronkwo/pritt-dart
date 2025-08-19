@@ -8,6 +8,7 @@ import 'package:shelf_proxy/shelf_proxy.dart';
 
 import 'pritt_server.dart';
 import 'src/resolve.dart';
+import 'src/utils/extensions.dart';
 import 'src/xml.dart';
 
 Handler adapterHandler(CoreRegistryService crs, {bool proxy = false}) {
@@ -49,60 +50,7 @@ Handler _adapterHandler(CoreRegistryService crs) {
       }
 
       // return response based on the result
-      return switch (result) {
-        AdapterErrorResult(
-          statusCode: final code,
-          responseType: final responseType,
-          error: final e,
-        ) =>
-          Response(
-            code,
-            body: switch (responseType) {
-              ResponseType.json => jsonEncode(e.toJson()),
-              ResponseType.xml => mapToXml(e.toJson()),
-              _ => switch (e) {
-                final String s => s,
-                final Map<String, dynamic> map => jsonEncode(map),
-                final List<Map<String, dynamic>> map => jsonEncode(map),
-                _ => result.error.toString(),
-              },
-            },
-            headers: {HttpHeaders.contentTypeHeader: responseType.mimeType},
-          ),
-        CoreAdapterMetaJsonResult() => Response.ok(
-          jsonEncode(result.body.toJson()),
-          headers: {HttpHeaders.contentTypeHeader: result.contentType},
-        ),
-        AdapterMetaResult(responseType: final responseType, body: final body) =>
-          Response.ok(
-            switch (responseType) {
-              ResponseType.json => jsonEncode(body),
-              ResponseType.xml => mapToXml(body.toJson()),
-              _ => body.toString(),
-            },
-            headers: {
-              HttpHeaders.contentTypeHeader: switch (body) {
-                Map<String, dynamic>() ||
-                List<Map<String, dynamic>>() => 'application/json',
-                _ => responseType.contentType,
-              },
-            },
-          ),
-        AdapterArchiveResult() => Response.ok(
-          result.archive,
-          headers: {
-            HttpHeaders.contentTypeHeader: result.contentType,
-            HttpHeaders.contentDisposition:
-                'attachment; filename=${result.name}',
-          },
-        ),
-        AdapterBaseResult() => Response.ok(
-          null,
-          headers: {
-            HttpHeaders.contentTypeHeader: result.responseType.contentType,
-          },
-        ),
-      };
+      return _handleAdapterResult(result);
     } on AdapterException catch (_) {
       // could not find adapter
       return Response.notFound('unsupported package manager');
@@ -173,66 +121,7 @@ Handler _adapterWithProxyHandler(CoreRegistryService crs) {
             }
 
             // return response based on the result
-            return switch (result) {
-              AdapterErrorResult(
-                statusCode: final code,
-                responseType: final responseType,
-                error: final e,
-              ) =>
-                Response(
-                  code,
-                  body: switch (responseType) {
-                    ResponseType.json => jsonEncode(e.toJson()),
-                    ResponseType.xml => mapToXml(e.toJson()),
-                    _ => switch (e) {
-                      final String s => s,
-                      final Map<String, dynamic> map => jsonEncode(map),
-                      final List<Map<String, dynamic>> map => jsonEncode(map),
-                      _ => result.error.toString(),
-                    },
-                  },
-                  headers: {
-                    HttpHeaders.contentTypeHeader: responseType.mimeType,
-                  },
-                ),
-              CoreAdapterMetaJsonResult() => Response.ok(
-                jsonEncode(result.body.toJson()),
-                headers: {HttpHeaders.contentTypeHeader: result.contentType},
-              ),
-              AdapterMetaResult(
-                responseType: final responseType,
-                body: final body,
-              ) =>
-                Response.ok(
-                  switch (responseType) {
-                    ResponseType.json => jsonEncode(body),
-                    ResponseType.xml => mapToXml(body.toJson()),
-                    _ => body.toString(),
-                  },
-                  headers: {
-                    HttpHeaders.contentTypeHeader: switch (body) {
-                      Map<String, dynamic>() ||
-                      List<Map<String, dynamic>>() => 'application/json',
-                      _ => responseType.contentType,
-                    },
-                  },
-                ),
-              AdapterArchiveResult() => Response.ok(
-                result.archive,
-                headers: {
-                  HttpHeaders.contentTypeHeader: result.contentType,
-                  HttpHeaders.contentDisposition:
-                      'attachment; filename=${result.name}',
-                },
-              ),
-              AdapterBaseResult() => Response.ok(
-                null,
-                headers: {
-                  HttpHeaders.contentTypeHeader:
-                      result.responseType.contentType,
-                },
-              ),
-            };
+            return _handleAdapterResult(result);
           })
           .add(adapterProxyHandler)
           .handler(req);
@@ -242,5 +131,81 @@ Handler _adapterWithProxyHandler(CoreRegistryService crs) {
     } on Exception catch (e) {
       return Response.notFound('error: $e');
     }
+  };
+}
+
+Response _handleAdapterResult(AdapterBaseResult result) {
+  return switch (result) {
+    AdapterErrorResult(
+      statusCode: final code,
+      responseType: final responseType,
+      error: final e,
+      headers: final extraHeaders,
+    ) =>
+      Response(
+        code,
+        body: switch (responseType) {
+          ResponseType.json => jsonEncode(e.toJson()),
+          ResponseType.xml => mapToXml(e.toJson()),
+          ResponseTypeBase(contentType: final contentType)
+              when contentType.endsWith('+json') =>
+            jsonEncode(e.toJson()),
+          _ => switch (e) {
+            final String s => s,
+            final Map<String, dynamic> map => jsonEncode(map),
+            final List<Map<String, dynamic>> map => jsonEncode(map),
+            _ => result.error.toString(),
+          },
+        },
+        headers: {
+          ...extraHeaders.nonNulls,
+          HttpHeaders.contentTypeHeader: responseType.contentType,
+        },
+      ),
+    CoreAdapterMetaJsonResult(headers: final extraHeaders) => Response.ok(
+      jsonEncode(result.body.toJson()),
+      headers: {
+        ...extraHeaders.nonNulls,
+        HttpHeaders.contentTypeHeader: result.contentType,
+      },
+    ),
+    AdapterMetaResult(
+      responseType: final responseType,
+      body: final body,
+      headers: final extraHeaders,
+    ) =>
+      Response.ok(
+        switch (responseType) {
+          ResponseType.json => jsonEncode(body),
+          ResponseType.xml => mapToXml(body.toJson()),
+          ResponseTypeBase(contentType: final contentType)
+              when contentType.endsWith('+json') =>
+            jsonEncode(body),
+          _ => body.toString(),
+        },
+        headers: {
+          ...extraHeaders.nonNulls,
+          HttpHeaders.contentTypeHeader: switch (body) {
+            Map<String, dynamic>() ||
+            List<Map<String, dynamic>>() => 'application/json',
+            _ => responseType.contentType,
+          },
+        },
+      ),
+    AdapterArchiveResult(headers: final extraHeaders) => Response.ok(
+      result.archive,
+      headers: {
+        ...extraHeaders.nonNulls,
+        HttpHeaders.contentTypeHeader: result.contentType,
+        HttpHeaders.contentDisposition: 'attachment; filename=${result.name}',
+      },
+    ),
+    AdapterBaseResult(headers: final extraHeaders) => Response.ok(
+      null,
+      headers: {
+        ...extraHeaders.nonNulls,
+        HttpHeaders.contentTypeHeader: result.responseType.contentType,
+      },
+    ),
   };
 }

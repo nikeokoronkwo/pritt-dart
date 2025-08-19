@@ -25,6 +25,9 @@ sealed class CRSResponse<T> {
     required int statusCode,
     required T body,
   }) => CRSErrorResponse(error: error, statusCode: statusCode, body: body);
+
+  CRSSuccessResponse<T> get asSuccess => this as CRSSuccessResponse<T>;
+  CRSErrorResponse<T> get asError => this as CRSErrorResponse<T>;
 }
 
 class CRSSuccessResponse<T> extends CRSResponse<T> {
