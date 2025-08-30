@@ -34,12 +34,12 @@ For more information, see the section of the docs on [using Pritt](./adapters/wo
 
 ## Packages
 
-| Package                                    | Description                                                                                                     | Version                                                                                                |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [pritt_cli](cli/)                          | The command-line interface to Pritt                                                                             | [![pub package](https://img.shields.io/pub/v/pritt_cli.svg)](https://pub.dev/packages/pritt_cli)       |
-| [pritt_adapter](packages/adapter/)         |                                                                                                                 |                                                                                                        |
-| [pritt_ai](packages/ai/)                   |                                                                                                                 |                                                                                                        |
-| [pritt_api](packages/api/)                 |                                                                                                                 |                                                                                                        |
-| [pritt_common](packages/common/)           | A common package shared by the cli and the server containing the necessary types for both the client and server | [![pub package](https://img.shields.io/pub/v/pritt_common.svg)](https://pub.dev/packages/pritt_common) |
-| [pritt_server_core](packages/server_core/) |                                                                                                                 |                                                                                                        |
-| [pritt_server](server/)                    |                                                                                                                 |
+| Package                                       | Description                                                                                                     |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [pritt_cli](../cli/)                          | The command-line interface to Pritt                                                                             |
+| [pritt_adapter](../packages/adapter/)         |                                                                                                                 |
+| [pritt_ai](../packages/ai/)                   |                                                                                                                 |
+| [pritt_api](../packages/api/)                 |                                                                                                                 |
+| [pritt_common](../packages/common/)           | A common package shared by the cli and the server containing the necessary types for both the client and server |
+| [pritt_server_core](../packages/server_core/) |                                                                                                                 |
+| [pritt_server](../server/)                    |                                                                                                                 |
