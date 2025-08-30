@@ -144,4 +144,35 @@ mono_repo generate
 Pritt is deployed via Terraform, to allow for easily configurable deployments for different needs, purposes, and features. 
 Development is ongoing on terraform integration, and you can check the progress on the [Terraform IaC PR](https://github.com/nikeokoronkwo/pritt-dart/pull/61).
 
+## CLI
+Pritt also has a CLI tool for working with Pritt via the command-line. The CLI is contained at [`/cli`](/cli).
+Run the CLI via:
+```bash
+pnpm cli <args>
+```
+
+Build the CLI via:
+```
+dart compile exe cli/bin/pritt.dart -o pritt
+```
+
+In order to begin using pritt, you will need to log into Pritt:
+```bash
+pritt login
+```
+
+You can set the registry URL, as well as the registry web URL via the `PRITT_API_URL` and `PRITT_URL` environment variables respectively
+
+```bash
+PRITT_API_URL=http://localhost:8080/ pritt login
+```
+
+For more information on the cli, see the [README at `/cli`](/cli/README.md).
+
+
+
+
+
+
+
 
