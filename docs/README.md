@@ -28,7 +28,7 @@ For now, only installing packages through Pritt is supported for the adapters. F
 You can use Pritt much like any other external package registry for the language you're using. 
 Pritt can help with setting up certain things to help you get started straight away via `pritt configure`
 
-For more information, see the section of the docs on [using Pritt](./using).
+For more information, see the section of the docs on [using Pritt](./adapters/working-with-packages.md).
 
 ## Packages
 
