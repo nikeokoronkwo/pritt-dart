@@ -89,7 +89,6 @@ describe('Collective E2E Testing', () => {
     expect(stdout).toContain('Login successful');
 
     // Process completed stdout will be available here for further assertions
-
   });
   test.todo('[WF]: Login Workflow when logged in on browser already');
   test.todo('[WF]: Login Workflow with invalid credentials');
