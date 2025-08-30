@@ -1,6 +1,3 @@
 {
-  "github.copilot.enable": {
-    // "*": false
-  },
   "editor.tabSize": 2
 }

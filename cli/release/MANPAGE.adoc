@@ -1,0 +1,52 @@
+= pritt(1)
+Nikechukwu Okoronkwo
+v1.0.0
+:doctype: manpage
+:description: 
+:manmanual: EVE
+:mansource: EVE
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+
+pritt - Pritt is a simple, lightweight, and powerful package registry for developers!
+
+== Synopsis
+
+*pritt* [...options] [...arguments]
+
+== Description
+
+The Pritt Command Line Interface (pritt(1)) is one of the main ways to communicate with Pritt from your system (other than the web application). It makes using pritt much easier, including for publishing packages, installing them into your projects, getting information about packages and pritt, and more.
+
+Run `pritt help` for more information on what Pritt can do.
+
+== Exit status
+
+*0*::
+  Success.
+  Operation succeeded.
+
+*1*::
+  Failure.
+  Operation failed due to some error.
+
+*255*::
+  Usage Failure.
+  Failure error/exception due to incorrect usage of CLI
+
+== Bugs
+
+Refer to the *Pritt* issue tracker at https://github.com/nikeokoronkwo/pritt-dart/issues?q=is%3Aopen.
+
+== Authors
+
+- Nikechukwu Okoronkwo
+
+== Resources
+
+*Project Github:* https://github.com/nikeokoronkwo/pritt-dart
+
+== Copying
+
+Copyright (C) 2025 {author}. +

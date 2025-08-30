@@ -45,23 +45,6 @@ only the dependencies to the generator cli (JVM) are required. If it doesn't
 find the JVM installed, it will fallback to looking for the generator cli itself
 on the host system.
 
-### Setting Up
-
-There are a few dependencies needed for working on this. To check if they are
-installed, you can run the following command
-
-```bash
-deno task schema --no-go-gen --no-openapi
-```
-
-In order to generate the schemas, you can run the following command
-
-```bash
-deno task schema
-deno task schema --no-go-gen # Do not generate CLI types
-deno task schema --no-openapi # Do not generate OpenAPI spec and Libraries
-```
-
 ### Contributing
 
 All contributions concerning APIs and other configurations should be made to the
